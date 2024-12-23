@@ -1,4 +1,5 @@
 using api.Context;
+using api.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,8 +10,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string key = Environment.GetEnvironmentVariable("ENCRYPT_KEY")!;
-api.Services.EncryptionConverter.InitializeKey(key);
+EncryptionConverter.InitializeKey(Environment.GetEnvironmentVariable("ENCRYPT_KEY")!);
+
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<MerContext>((provider, options) =>
 {
