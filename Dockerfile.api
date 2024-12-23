@@ -1,0 +1,27 @@
+ARG BASE_TAG=8.0
+
+# Etapa 1: Construcción
+FROM mcr.microsoft.com/dotnet/sdk:${BASE_TAG} AS build
+WORKDIR /src
+
+# Copiar csproj y restaurar dependencias
+COPY ./api/*.csproj ./
+RUN dotnet restore
+
+# Copiar el resto del código y compilar
+COPY ./api ./
+RUN dotnet publish -c Release -o /app
+
+# Etapa 2: Ejecución
+FROM mcr.microsoft.com/dotnet/aspnet:${BASE_TAG} AS runtime
+WORKDIR /app
+COPY --from=build /app .
+
+# Exponer el puerto de la aplicación
+EXPOSE 8080
+
+# Variables de entorno
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+# Comando para ejecutar la aplicación
+ENTRYPOINT ["dotnet", "api.dll"]

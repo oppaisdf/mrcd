@@ -1,0 +1,29 @@
+ARG BASE_TAG=22-alpine
+
+# Construcciones
+FROM node:${BASE_TAG} AS builder
+
+# Sistema
+WORKDIR /system
+COPY sys/package*.json .
+RUN npm install
+COPY sys/. .
+RUN npx ng build --configuration production
+
+# Configuración del servidor
+FROM nginx:alpine
+RUN mkdir -p /sites/sys
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# Script de inicio
+RUN \
+	echo "#!/bin/sh" > /usr/local/bin/entrypoint.sh && \
+	echo 'sed -i "s/_domain_/${DOMAIN}/g" /etc/nginx/conf.d/default.conf' >> /usr/local/bin/entrypoint.sh && \
+	echo "nginx -g 'daemon off;'" >> /usr/local/bin/entrypoint.sh && \
+	chmod +x /usr/local/bin/entrypoint.sh
+
+# Configuración de sistema en servidor
+COPY --from=builder /system/dist/sys /sites/sys
+
+EXPOSE 80
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

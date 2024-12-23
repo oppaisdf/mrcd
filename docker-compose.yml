@@ -1,0 +1,86 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: server
+    ports:
+      - 80:80
+    networks:
+      - network
+    depends_on:
+      - api
+    env_file:
+      - .env
+    environment:
+      - DOMAIN=${DOMAIN}
+    profiles:
+      - builder
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: api
+    expose:
+      - 8080
+    networks:
+      - network
+    env_file:
+      - .env
+    environment:
+      - DEFAULT_CONNECTION=${SERVER}
+      - ENCRYPT_KEY=${EKEY}
+    profiles:
+      - builder
+
+  server_prod:
+    container_name: server
+    image: kradbyte/kmd:server
+    ports:
+      - 80:80
+    networks:
+      - network
+    depends_on:
+      - api_prod
+    env_file:
+      - .env
+    environment:
+      - DOMAIN=${DOMAIN}
+    profiles:
+      - production
+
+  api_prod:
+    container_name: api
+    image: kradbyte/kmd:api
+    expose:
+      - 8080
+    networks:
+      - network
+    env_file:
+      - .env
+    environment:
+      - DEFAULT_CONNECTION=${SERVER}
+      - ENCRYPT_KEY=${EKEY}
+    profiles:
+      - production
+
+  db:
+    build: ./db
+    container_name: db
+    expose:
+      - 3306
+    networks:
+      - network
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=${DB}
+      - MYSQL_ROOT_PASSWORD=${PASSWD}
+    profiles:
+      - builder
+      - production
+
+networks:
+  network:
+    driver: bridge
