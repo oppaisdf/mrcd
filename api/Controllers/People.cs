@@ -23,10 +23,18 @@ public class PeopleController(
     )
     {
         if (!ModelState.IsValid)
-            return this.DefaultBadRequest("Data is required");
+            return this.DefaultBadRequest("Los datos son obligatorios");
         if (string.IsNullOrWhiteSpace(request.Name))
-            return this.DefaultBadRequest("Name is required");
+            return this.DefaultBadRequest("El nombre es obligatorio");
         request.Name = request.Name.Trim();
+        if (string.IsNullOrWhiteSpace(request.Address))
+            return this.DefaultBadRequest("La dirección es obligatoria");
+        if (request.Gender == null) return this.DefaultBadRequest("El género es obligatorio");
+        if (request.DOB == null) return this.DefaultBadRequest("La fecha de nacimiento es obligatorio");
+        if (request.Day == null) return this.DefaultBadRequest("El día es obligatorio");
+        if (request.DegreeId == null) return this.DefaultBadRequest("El grado académico es obligatorio");
+        if (string.IsNullOrWhiteSpace(request.Address)) return this.DefaultBadRequest("La dirección es obligatoria");
+        else request.Address = request.Address.Trim();
 
         if (request.Parents != null)
         {
@@ -72,7 +80,8 @@ public class PeopleController(
         bool? gender = null,
         bool? day = null,
         bool? isActive = null,
-        short? degreeId = null
+        short? degreeId = null,
+        string? name = null
     )
     {
         try
@@ -84,7 +93,8 @@ public class PeopleController(
                 Gender = gender,
                 Day = day,
                 IsActive = isActive,
-                DegreeId = degreeId
+                DegreeId = degreeId,
+                Name = name
             };
             var (people, counter) = await _service.GetAsync(userId, filters);
             return this.DefaultOk(people, counter);
@@ -110,6 +120,7 @@ public class PeopleController(
             request.Godparents = request.Godparents.Where(g => !string.IsNullOrWhiteSpace(g.Name)).ToList();
             if (request.Godparents.Count == 0) request.Godparents = null;
         }
+        if (!string.IsNullOrWhiteSpace(request.Address)) request.Address = request.Address.Trim();
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;

@@ -67,7 +67,7 @@ public partial class PeopleService(
     [System.Text.RegularExpressions.GeneratedRegex("[^a-z]")]
     private static partial System.Text.RegularExpressions.Regex LettersOnlyRegex();
 
-    public static string GetHash(
+    public static string GetNormalized(
         string name
     )
     {
@@ -81,8 +81,14 @@ public partial class PeopleService(
         }
 
         string recomposed = sb.ToString().Normalize(NormalizationForm.FormC);
-        string onlyLetters = LettersOnlyRegex().Replace(recomposed, "");
-        byte[] bytes = System.Security.Cryptography.SHA256.HashData(Encoding.UTF8.GetBytes(onlyLetters));
+        return LettersOnlyRegex().Replace(recomposed, "");
+    }
+
+    public static string GetHash(
+        string name
+    )
+    {
+        byte[] bytes = System.Security.Cryptography.SHA256.HashData(Encoding.UTF8.GetBytes(GetNormalized(name)));
         return BitConverter.ToString(bytes).Replace("-", "").ToLowerInvariant();
     }
     #endregion
@@ -139,30 +145,36 @@ public partial class PeopleService(
     )
     {
         await _logs.RegisterReadingAsync("Todos los confirmandos");
-        var query = _context.People.Select(p => new PersonResponse
-        {
-            Id = p.Id!.Value,
-            Name = p.Name,
-            Gender = p.Gender,
-            DOB = p.DOB,
-            Day = p.Day,
-            DegreeId = p.DegreeId,
-            Address = "",
-            IsActive = p.IsActive
-        }).AsQueryable();
+        var query = _context.People.AsQueryable();
 
         if (filter.Gender != null) query = query.Where(p => p.Gender == filter.Gender);
         if (filter.Day != null) query = query.Where(p => p.Day == filter.Day);
         if (filter.DegreeId != null) query = query.Where(p => p.DegreeId == filter.DegreeId);
         if (filter.IsActive != null) query = query.Where(p => p.IsActive == filter.IsActive);
 
-        var counter = (int)Math.Ceiling(await query.CountAsync() / 15.0);
-        var people = await query
+        var people = await query.ToListAsync();
+        people.ForEach(p => p.Hash = GetNormalized(p.Name));
+        if (!string.IsNullOrEmpty(filter.Name))
+            people = people.Where(p => p.Hash.Contains(GetNormalized(filter.Name))).ToList();
+
+        var counter = (int)Math.Ceiling(people.Count / 15.0);
+        var page = people
             .Skip((filter.Page - 1) * 15)
             .Take(15)
-            .ToListAsync();
+            .Select(p => new PersonResponse
+            {
+                Id = p.Id!.Value,
+                Name = p.Name,
+                Gender = p.Gender,
+                DOB = p.DOB,
+                Day = p.Day,
+                DegreeId = p.DegreeId,
+                Address = "",
+                IsActive = p.IsActive
+            })
+            .ToList();
 
-        return (people, $"{counter}");
+        return (page, $"{counter}");
     }
 
     public async Task<PersonResponse> GetByIdAsync(

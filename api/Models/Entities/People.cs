@@ -36,9 +36,8 @@ public class Person
     public string? Parish { get; set; }
     public required short DegreeId { get; set; }
 
-    [Required]
     [MaxLength(100)]
-    public required string Address { get; set; }
+    public string? Address { get; set; }
 }
 
 public class Parent
