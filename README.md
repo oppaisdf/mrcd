@@ -1,1 +1,0 @@
-- Pendiente estado por persona y dia sabado o domingo.
