@@ -1,0 +1,72 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace api.Models.Entities;
+
+public class Person
+{
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int? Id { get; set; }
+
+    [Required]
+    [MaxLength(64)]
+    public required string Hash { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public required string Name { get; set; }
+
+    [Required]
+    [DefaultValue(true)]
+    public required bool IsActive { get; set; }
+
+    [Required]
+    [DefaultValue(true)]
+    public required bool Gender { get; set; }
+
+    [Required]
+    [DefaultValue(false)]
+    public required bool Day { get; set; }
+
+    [Required]
+    public required DateTime DOB { get; set; }
+
+    [MaxLength(30)]
+    public string? Parish { get; set; }
+    public required short DegreeId { get; set; }
+
+    [Required]
+    [MaxLength(100)]
+    public required string Address { get; set; }
+}
+
+public class Parent
+{
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int? Id { get; set; }
+    public required int PersonId { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public required string Name { get; set; }
+
+    [Required]
+    [DefaultValue(true)]
+    public required bool Gender { get; set; }
+}
+
+public class Godparent
+{
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int? Id { get; set; }
+    public required int PersonId { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public required string Name { get; set; }
+
+    [Required]
+    [DefaultValue(true)]
+    public required bool Gender { get; set; }
+}

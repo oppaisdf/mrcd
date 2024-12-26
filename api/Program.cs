@@ -12,7 +12,9 @@ builder.Services.AddSwaggerGen();
 
 EncryptionConverter.InitializeKey(Environment.GetEnvironmentVariable("ENCRYPT_KEY")!);
 
+builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPeopleService, PeopleService>();
 
 builder.Services.AddDbContext<MerContext>((provider, options) =>
 {

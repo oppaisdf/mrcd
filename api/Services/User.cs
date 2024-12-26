@@ -12,8 +12,6 @@ public interface IUserService
     Task<ICollection<UserResponse>> GetAsync();
     Task<UserResponse> GetByIdAsync(string id);
     Task UpdateAsync(string id, UserRequest request, string userIdRequest);
-    Task DeleteAsync(string id);
-    Task ActivateAsync(string id);
     Task<ICollection<string>> LoginAsync(LoginRequest request);
     Task LogoutAsync();
 }
@@ -33,26 +31,23 @@ public class UserService(
         LoginRequest request
     )
     {
-        var user = await _userManager.FindByNameAsync(request.Name) ?? throw new DoesNotExistsException("Invalid username or password");
+        var user = await _userManager.FindByNameAsync(request.Name) ?? throw new DoesNotExistsException("Usuario o contraseña incorrecta");
 
-        if (!user.EmailConfirmed) throw new DoesNotExistsException("Invalid username or password");
+        if (!user.EmailConfirmed) throw new DoesNotExistsException("Usuario o contraseña incorrecta");
         var correctPassword = await _userManager.CheckPasswordAsync(user, request.Pass);
-        if (!correctPassword) throw new DoesNotExistsException("Invalid username or password");
+        if (!correctPassword) throw new DoesNotExistsException("Usuario o contraseña incorrecta");
 
         var role = await _userManager.GetRolesAsync(user);
         await _signInManager.SignInAsync(user, false);
         return role;
     }
 
-    public async Task LogoutAsync()
-    {
-        await _signInManager.SignOutAsync();
-    }
+    public async Task LogoutAsync() => await _signInManager.SignOutAsync();
     #endregion
 
     public async Task<IdentityUser> CreateAsync(
             UserRequest request
-        )
+    )
     {
         var user = new IdentityUser
         {
@@ -62,7 +57,7 @@ public class UserService(
         };
 
         var userNameAlreadyExists = await _userManager.FindByNameAsync(user.UserName!);
-        if (userNameAlreadyExists != null) throw new AlreadyExistsException("Username already exists");
+        if (userNameAlreadyExists != null) throw new AlreadyExistsException("El usuario ya existe");
 
         // Crea el Usuario
         var result = await _userManager.CreateAsync(user, request.Password!);
@@ -71,10 +66,10 @@ public class UserService(
         // Asigna los roles
         foreach (var role in request.Roles!)
         {
-            if (role.Equals("sys")) throw new BadRequestException("This role cannot be assigned");
+            if (role.Equals("sys")) throw new BadRequestException("Este rol no puede ser asignado");
 
             var roleExist = await _roleManager.RoleExistsAsync(role);
-            if (!roleExist) throw new DoesNotExistsException("Role to be assigned does not exist");
+            if (!roleExist) throw new DoesNotExistsException("El rol no existe para ser asignado");
 
             var addRoleResult = await _userManager.AddToRoleAsync(user, role);
             if (addRoleResult.Succeeded) continue;
@@ -128,8 +123,9 @@ public class UserService(
         string userIdRequest
     )
     {
-        var user = await _userManager.FindByIdAsync(id) ?? throw new DoesNotExistsException("User Not Found");
+        var user = await _userManager.FindByIdAsync(id) ?? throw new DoesNotExistsException("Usuario no encontrado");
         var sysUsers = await _userManager.GetUsersInRoleAsync("sys") ?? throw new Exception($"[+] Error al obtener los usuarios sys, actualizando el usuario {user.Id}");
+        if (!user.EmailConfirmed && request.IsActive != true) throw new BadRequestException("El usuario está inactivo, no se puede actualizar");
 
         /*
         Se verifica que el usuario a modificar no sea un usuario sys
@@ -138,13 +134,21 @@ public class UserService(
         if (sysUsers.Any(u => u.Id == id) && !sysUsers.Any(u => u.Id == userIdRequest))
             throw new BadRequestException("User cannot be changed!");
 
-        if (!string.IsNullOrWhiteSpace(request.Email) && request.Email.Trim() != user.Email) user.Email = request.Email.Trim();
-        if (!string.IsNullOrWhiteSpace(request.Username) && request.Username.Trim() != user.UserName)
+        if (!string.IsNullOrWhiteSpace(request.Email) && request.Email != user.Email) user.Email = request.Email;
+        if (!string.IsNullOrWhiteSpace(request.Username) && request.Username != user.UserName)
         {
-            user.UserName = request.Username.Trim();
+            user.UserName = request.Username;
             var userNameAlreadyExists = await _userManager.FindByNameAsync(user.UserName);
             if (userNameAlreadyExists != null && userNameAlreadyExists.Id != user.Id)
-                throw new AlreadyExistsException("Username already exists");
+                throw new AlreadyExistsException("El usuario ya existe");
+        }
+
+        if (request.IsActive != null && user.EmailConfirmed != request.IsActive)
+        {
+            var roles = await _userManager.GetRolesAsync(user) ?? throw new Exception($"[+] Error al consultar roles de usuario en inactivación de usuario {id}");
+            if (roles.Contains("sys")) throw new BadRequestException("This user cannot be inactivated");
+
+            user.EmailConfirmed = request.IsActive!.Value;
         }
 
         // Actalización de los datos del usuario
@@ -152,66 +156,35 @@ public class UserService(
         if (!updateResult.Succeeded) throw new Exception($"[+] Error al actualizar usuario {user.UserName}: {string.Join(", ", updateResult.Errors.Select(e => e.Description))}");
 
         // Actualización de roles
-        if (!sysUsers.Contains(user) && request.Roles!.Count > 0)
+        if (sysUsers.Contains(user) || request.Roles!.Count == 0) goto UpdatePass;
+
+        foreach (var role in request.Roles)
         {
-            foreach (var role in request.Roles)
-            {
-                if (role.Equals("sys")) throw new BadRequestException("This role cannot be assigned");
+            if (role.Equals("sys")) throw new BadRequestException("Este rol no puede ser asignado");
 
-                var roleExists = await _roleManager.RoleExistsAsync(role);
-                if (roleExists) continue;
-                throw new DoesNotExistsException("Role Not Found");
-            }
-
-            var removeRolesResult = await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
-            if (!removeRolesResult.Succeeded) throw new Exception($"[+] Error al remover roles de usuario {user.UserName}: {string.Join(", ", removeRolesResult.Errors.Select(e => e.Description))}");
-
-            var addRolesResult = await _userManager.AddToRolesAsync(user, request.Roles);
-            if (!addRolesResult.Succeeded) throw new Exception($"[+] Error al asignar roles a usuario {request.Username}: {string.Join(", ", addRolesResult.Errors.Select(e => e.Description))}");
+            var roleExists = await _roleManager.RoleExistsAsync(role);
+            if (roleExists) continue;
+            throw new DoesNotExistsException("El rol no existe");
         }
 
+        var removeRolesResult = await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
+        if (!removeRolesResult.Succeeded) throw new Exception($"[+] Error al remover roles de usuario {user.UserName}: {string.Join(", ", removeRolesResult.Errors.Select(e => e.Description))}");
+
+        var addRolesResult = await _userManager.AddToRolesAsync(user, request.Roles);
+        if (!addRolesResult.Succeeded) throw new Exception($"[+] Error al asignar roles a usuario {request.Username}: {string.Join(", ", addRolesResult.Errors.Select(e => e.Description))}");
+
+        UpdatePass:
         // Actualización de contraseña
-        if (!string.IsNullOrWhiteSpace(request.Password))
-        {
-            var removePasswordResult = await _userManager.RemovePasswordAsync(user);
-            if (!removePasswordResult.Succeeded)
-                throw new Exception(
-                    $"[+] Error al actualizar la contraseña del usuario {request.Username}: {string.Join(", ", removePasswordResult.Errors.Select(e => e.Description))}"
-                );
+        if (string.IsNullOrWhiteSpace(request.Password)) return;
+        var removePasswordResult = await _userManager.RemovePasswordAsync(user);
+        if (!removePasswordResult.Succeeded)
+            throw new Exception(
+                $"[+] Error al actualizar la contraseña del usuario {request.Username}: {string.Join(", ", removePasswordResult.Errors.Select(e => e.Description))}"
+            );
 
-            var addPasswordResult = await _userManager.AddPasswordAsync(user, request.Password);
-            if (!addPasswordResult.Succeeded) throw new Exception(
-                    $"[+] Error al actualizar la contraseña del usuario {request.Username}: {string.Join(",", addPasswordResult.Errors.Select(e => e.Description))}"
-                );
-        }
-    }
-
-    public async Task DeleteAsync(
-        string id
-    )
-    {
-        var user = await _userManager.FindByIdAsync(id) ?? throw new DoesNotExistsException("Invalid User Id");
-        var roles = await _userManager.GetRolesAsync(user) ?? throw new Exception($"[+] Error al consultar roles de usuario en inactivación de usuario {id}");
-
-        if (roles.Contains("sys")) throw new BadRequestException("This user cannot be inactivated");
-
-        user.EmailConfirmed = false;
-        var resultDelete = await _userManager.UpdateAsync(user);
-
-        if (!resultDelete.Succeeded)
-            throw new Exception($"[+] Error al inactivar al usuario {id}: {resultDelete.Errors.Select(e => e.Description)}");
-    }
-
-    public async Task ActivateAsync(
-        string id
-    )
-    {
-        var user = await _userManager.FindByIdAsync(id) ?? throw new DoesNotExistsException("Invalid User Id");
-
-        user.EmailConfirmed = true;
-        var resultDelete = await _userManager.UpdateAsync(user);
-
-        if (!resultDelete.Succeeded)
-            throw new Exception($"[+] Error al inactivar al usuario {id}: {resultDelete.Errors.Select(e => e.Description)}");
+        var addPasswordResult = await _userManager.AddPasswordAsync(user, request.Password);
+        if (!addPasswordResult.Succeeded) throw new Exception(
+                $"[+] Error al actualizar la contraseña del usuario {request.Username}: {string.Join(",", addPasswordResult.Errors.Select(e => e.Description))}"
+            );
     }
 }

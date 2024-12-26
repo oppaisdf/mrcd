@@ -17,7 +17,7 @@ public class UserController(
 
     #region "Login"
     [AllowAnonymous]
-    [HttpPost]
+    [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync(
         [FromBody] LoginRequest request
     )
@@ -47,7 +47,7 @@ public class UserController(
     }
 
     [Authorize]
-    [HttpDelete]
+    [HttpDelete("Logout")]
     public async Task<IActionResult> LogoutAsync()
     {
         try
@@ -170,50 +170,6 @@ public class UserController(
         catch (Exception e)
         {
             return this.DefaultServerError($"Error al actualizar usuario {id}: {e.Message}");
-        }
-    }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> ActivateAsync(
-        string id
-    )
-    {
-        if (string.IsNullOrWhiteSpace(id))
-            return this.DefaultBadRequest("Invalid User Id");
-
-        try
-        {
-            await _service.ActivateAsync(id);
-            return this.DefaultOk(new { }, "User has been deactivated successfully");
-        }
-        catch (DoesNotExistsException e)
-        { return this.DefaultNotFound(e.Message); }
-        catch (Exception e)
-        {
-            return this.DefaultServerError($"[+] Error al desactivar al usuario {id}: {e.Message}");
-        }
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(
-        string id
-    )
-    {
-        if (string.IsNullOrWhiteSpace(id))
-            return this.DefaultBadRequest("Invalid User Id");
-
-        try
-        {
-            await _service.DeleteAsync(id);
-            return this.DefaultOk(new { }, "User has been deactivated successfully");
-        }
-        catch (DoesNotExistsException e)
-        { return this.DefaultNotFound(e.Message); }
-        catch (BadRequestException e)
-        { return this.DefaultUnauthorized(e.Message); }
-        catch (Exception e)
-        {
-            return this.DefaultServerError($"[+] Error al desactivar al usuario {id}: {e.Message}");
         }
     }
 }
