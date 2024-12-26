@@ -20,6 +20,10 @@ public class PeopleRequest
 
     [MaxLength(100, ErrorMessage = "Dirección demasiado grande")]
     public string? Address { get; set; }
+
+    [MaxLength(8, ErrorMessage = "Número de teléfono inválido")]
+    [MinLength(8, ErrorMessage = "Número de teléfono inválido")]
+    public string? Phone { get; set; }
     public bool? IsActive { get; set; }
     public ICollection<ParentRequest>? Parents { get; set; }
     public ICollection<ParentRequest>? Godparents { get; set; }

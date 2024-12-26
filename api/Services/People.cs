@@ -116,7 +116,8 @@ public partial class PeopleService(
             DegreeId = request.DegreeId!.Value,
             Address = request.Address!,
             Hash = hash,
-            IsActive = true
+            IsActive = true,
+            Phone = request.Phone
         };
 
         _context.People.Add(person);
@@ -241,6 +242,7 @@ public partial class PeopleService(
             if (gradeExists) person.DegreeId = request.DegreeId!.Value;
         }
         if (request.Address != null && person.Address != request.Address) person.Address = request.Address;
+        if (request.Phone != null && person.Phone != request.Phone) person.Phone = request.Phone;
 
         var tran = await _context.Database.BeginTransactionAsync();
         try

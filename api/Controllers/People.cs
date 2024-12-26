@@ -17,6 +17,15 @@ public class PeopleController(
 {
     private readonly IPeopleService _service = service;
 
+    private static bool IsPhoneValid(
+        string phone
+    )
+    {
+        if (!long.TryParse(phone, out _)) return false;
+        var number = long.Parse(phone);
+        return number > 9999999;
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateAsync(
         [FromBody] PeopleRequest request
@@ -35,6 +44,8 @@ public class PeopleController(
         if (request.DegreeId == null) return this.DefaultBadRequest("El grado académico es obligatorio");
         if (string.IsNullOrWhiteSpace(request.Address)) return this.DefaultBadRequest("La dirección es obligatoria");
         else request.Address = request.Address.Trim();
+        if (string.IsNullOrWhiteSpace(request.Phone) || IsPhoneValid(request.Phone))
+            return this.DefaultBadRequest("El número telefónico es requerido");
 
         if (request.Parents != null)
         {
@@ -121,6 +132,7 @@ public class PeopleController(
             if (request.Godparents.Count == 0) request.Godparents = null;
         }
         if (!string.IsNullOrWhiteSpace(request.Address)) request.Address = request.Address.Trim();
+        if (string.IsNullOrWhiteSpace(request.Phone) || IsPhoneValid(request.Phone)) request.Phone = null;
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;

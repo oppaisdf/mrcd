@@ -38,6 +38,10 @@ public class Person
 
     [MaxLength(100)]
     public string? Address { get; set; }
+
+    [MaxLength(8)]
+    [MinLength(8)]
+    public string? Phone { get; set; }
 }
 
 public class Parent
