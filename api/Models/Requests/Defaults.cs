@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api.Models.Requests;
 
-public class DegreeRequest
+public class NameRequest
 {
     [Required]
     [MaxLength(10, ErrorMessage = "Nombre demasiado largo")]

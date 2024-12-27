@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api.Models.Entities;
 
-public class Degree
+public class Degree : INameEntity
 {
     public short? Id { get; set; }
 

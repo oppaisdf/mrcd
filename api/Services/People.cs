@@ -19,11 +19,13 @@ public interface IPeopleService
 
 public partial class PeopleService(
     MerContext context,
-    ILogService logs
+    ILogService logs,
+    ICommonFunctions functions
 ) : IPeopleService
 {
     private readonly MerContext _context = context;
     private readonly ILogService _logs = logs;
+    private readonly ICommonFunctions _functions = functions;
 
     #region "Métodos privados"
     private async Task CreateParentsAsync(
@@ -64,31 +66,11 @@ public partial class PeopleService(
         if (diff > 30) throw new BadRequestException("Muy grande para este grupo");
     }
 
-    [System.Text.RegularExpressions.GeneratedRegex("[^a-z]")]
-    private static partial System.Text.RegularExpressions.Regex LettersOnlyRegex();
-
-    public static string GetNormalized(
+    public string GetHash(
         string name
     )
     {
-        string decomposed = name.ToLowerInvariant().Normalize(NormalizationForm.FormD);
-
-        StringBuilder sb = new();
-        foreach (char c in decomposed)
-        {
-            if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark)
-                sb.Append(c);
-        }
-
-        string recomposed = sb.ToString().Normalize(NormalizationForm.FormC);
-        return LettersOnlyRegex().Replace(recomposed, "");
-    }
-
-    public static string GetHash(
-        string name
-    )
-    {
-        byte[] bytes = System.Security.Cryptography.SHA256.HashData(Encoding.UTF8.GetBytes(GetNormalized(name)));
+        byte[] bytes = System.Security.Cryptography.SHA256.HashData(Encoding.UTF8.GetBytes(_functions.GetNormalizedText(name)));
         return BitConverter.ToString(bytes).Replace("-", "").ToLowerInvariant();
     }
     #endregion
@@ -153,29 +135,50 @@ public partial class PeopleService(
         if (filter.DegreeId != null) query = query.Where(p => p.DegreeId == filter.DegreeId);
         if (filter.IsActive != null) query = query.Where(p => p.IsActive == filter.IsActive);
 
-        var people = await query.ToListAsync();
-        people.ForEach(p => p.Hash = GetNormalized(p.Name));
-        if (!string.IsNullOrEmpty(filter.Name))
-            people = people.Where(p => p.Hash.Contains(GetNormalized(filter.Name))).ToList();
+        int counter;
+        ICollection<PersonResponse> page;
+        if (string.IsNullOrWhiteSpace(filter.Name))
+        {
+            counter = (int)Math.Ceiling(await query.CountAsync() / 15.0);
+            page = await query
+                .Skip((filter.Page - 1) * 15)
+                .Take(15)
+                .Select(p => new PersonResponse
+                {
+                    Id = p.Id!.Value,
+                    Name = p.Name,
+                    Gender = p.Gender,
+                    DOB = p.DOB,
+                    Day = p.Day,
+                    DegreeId = p.DegreeId,
+                    Address = "",
+                    IsActive = p.IsActive
+                }).ToListAsync();
+        }
+        else
+        {
+            var people = await query.ToListAsync();
+            people.ForEach(p => p.Hash = _functions.GetNormalizedText(p.Name));
+            people = people.Where(p => p.Hash.Contains(_functions.GetNormalizedText(filter.Name))).ToList();
+            counter = (int)Math.Ceiling(people.Count / 15.0);
+            page = people
+                .Skip((filter.Page - 1) * 15)
+                .Take(15)
+                .Select(p => new PersonResponse
+                {
+                    Id = p.Id!.Value,
+                    Name = p.Name,
+                    Gender = p.Gender,
+                    DOB = p.DOB,
+                    Day = p.Day,
+                    DegreeId = p.DegreeId,
+                    Address = "",
+                    IsActive = p.IsActive
+                })
+                .ToList();
+        }
 
-        var counter = (int)Math.Ceiling(people.Count / 15.0);
-        var page = people
-            .Skip((filter.Page - 1) * 15)
-            .Take(15)
-            .Select(p => new PersonResponse
-            {
-                Id = p.Id!.Value,
-                Name = p.Name,
-                Gender = p.Gender,
-                DOB = p.DOB,
-                Day = p.Day,
-                DegreeId = p.DegreeId,
-                Address = "",
-                IsActive = p.IsActive
-            })
-            .ToList();
-
-        return (page, $"{counter}");
+        return (page, $"{filter.Page}/{counter}");
     }
 
     public async Task<PersonResponse> GetByIdAsync(

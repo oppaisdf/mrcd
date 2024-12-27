@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.Models.Entities;
 
-public class Sacrament
+public class Sacrament : INameEntity
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public short? Id { get; set; }

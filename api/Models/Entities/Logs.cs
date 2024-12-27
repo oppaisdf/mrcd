@@ -20,10 +20,11 @@ public class Log
     public string? Details { get; set; }
 }
 
-public class ActionLog
+public class ActionLog : INameEntity
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public short? Id { get; set; }
+
     [Required]
     [MaxLength(10)]
     public required string Name { get; set; }
