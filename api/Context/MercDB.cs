@@ -13,10 +13,11 @@ public class MerContext(
     public required DbSet<Parent> Parents { get; set; }
     public required DbSet<Godparent> Godparents { get; set; }
     public required DbSet<Sacrament> Sacraments { get; set; }
-    public required DbSet<PersonSacrament> PeopleSacraments { get; set; }
     public required DbSet<Degree> Degrees { get; set; }
-    public required DbSet<Log> Logs { get; set; }
     public required DbSet<ActionLog> ActionsLog { get; set; }
+    public required DbSet<PersonSacrament> PeopleSacraments { get; set; }
+    public required DbSet<Log> Logs { get; set; }
+    public required DbSet<Attendance> Attendance { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -66,6 +67,10 @@ public class MerContext(
             person
                 .Property(p => p.IsActive)
                 .HasDefaultValue(true);
+            person
+                .Property(p => p.Phone)
+                .HasConversion(encrypter)
+                .HasColumnType("varbinary(32)");
         });
 
         builder.Entity<Parent>(parent =>
@@ -147,6 +152,9 @@ public class MerContext(
                 .HasKey(l => l.Id)
                 .HasName("PK_Log_Id");
             log
+                .Property(l => l.Date)
+                .HasColumnType("datetime(0)");
+            log
                 .HasOne<ActionLog>()
                 .WithMany()
                 .HasForeignKey(l => l.ActionId)
@@ -159,6 +167,22 @@ public class MerContext(
             action
                 .HasKey(a => a.Id)
                 .HasName("PK_ActionLog_Id");
+        });
+
+        builder.Entity<Attendance>(attendance =>
+        {
+            attendance
+                .HasKey(a => a.Id)
+                .HasName("PK_Attendance_Id");
+            attendance
+                .Property(a => a.Date)
+                .HasColumnType("datetime(0)");
+            attendance
+                .HasOne<Person>()
+                .WithMany()
+                .HasForeignKey(a => a.PersonId)
+                .HasConstraintName("FK_Attendance_PersonId")
+                .IsRequired();
         });
     }
 }

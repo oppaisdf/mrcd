@@ -16,6 +16,7 @@ builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped(typeof(INameService<>), typeof(NameService<>));
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 
 builder.Services.AddDbContext<MerContext>((provider, options) =>
 {

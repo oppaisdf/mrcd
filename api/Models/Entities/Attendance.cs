@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.Models.Entities;
 
 public class Attendance
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
 
     [MaxLength(255)]
