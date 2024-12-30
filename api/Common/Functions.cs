@@ -4,12 +4,12 @@ using System.Text.RegularExpressions;
 
 namespace api.Common;
 
-public interface ICommonFunctions
+public interface ICommonService
 {
     string GetNormalizedText(string text);
 }
 
-public partial class Functions : ICommonFunctions
+public partial class CommonService : ICommonService
 {
     [GeneratedRegex("[^a-z]")]
     private static partial Regex LettersOnlyRegex();

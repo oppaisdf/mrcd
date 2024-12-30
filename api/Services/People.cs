@@ -20,12 +20,12 @@ public interface IPeopleService
 public partial class PeopleService(
     MerContext context,
     ILogService logs,
-    ICommonFunctions functions
+    ICommonService functions
 ) : IPeopleService
 {
     private readonly MerContext _context = context;
     private readonly ILogService _logs = logs;
-    private readonly ICommonFunctions _functions = functions;
+    private readonly ICommonService _functions = functions;
 
     #region "Métodos privados"
     private async Task CreateParentsAsync(

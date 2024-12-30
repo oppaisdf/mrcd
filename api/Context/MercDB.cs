@@ -106,7 +106,7 @@ public class MerContext(
                 .HasOne<Person>()
                 .WithMany()
                 .HasForeignKey(p => p.PersonId)
-                .HasConstraintName("FK_Parent_PersonId")
+                .HasConstraintName("FK_Godparent_PersonId")
                 .IsRequired();
             parent
                 .Property(p => p.Gender)
