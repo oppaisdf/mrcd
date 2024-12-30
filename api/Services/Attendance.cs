@@ -32,22 +32,23 @@ public class AttendanceService(
     )
     {
         if (date == null) date = DateTime.UtcNow;
-        var dateS = $"{date!.Value.Year}{date!.Value.Month}{date!.Value.Date}";
-        var person = await (
-            from p in _context.People
-            join temp in _context.Attendance on p.Id equals temp.PersonId into tempG
-            from a in tempG.DefaultIfEmpty()
-            group new { p, a } by p.IsActive into pg
-            select new
+        var person = await _context.People
+            .Where(p => p.Id == personId)
+            .Select(p => new
             {
-                IsActive = pg.Key,
-                Checks = pg
-                    .Where(x => $"{x.a.Date.Year}{x.a.Date.Month}{x.a.Date.Date}" == dateS)
-                    .Count()
-            }).FirstOrDefaultAsync() ?? throw new DoesNotExistsException("El confirmado no existe o está inactivo");
+                p.IsActive,
+                Dates = _context.Attendance
+                    .Where(a => a.PersonId == p.Id)
+                    .Select(a => a.Date)
+                    .ToList()
+            })
+            .FirstAsync() ?? throw new DoesNotExistsException("El confirmado no existe o está inactivo");
+
+        var dateS = $"{date!.Value.Year}{date!.Value.Month}{date!.Value.Day}";
+        var checks = person.Dates == null ? 0 : person.Dates.Where(d => $"{d.Date.Year}{d.Date.Month}{d.Date.Day}" == dateS).Count();
 
         if (!person.IsActive) throw new DoesNotExistsException("El confirmado no existe o está inactivo");
-        if (person.Checks > 0) throw new BadRequestException("Ya se ha pasado asistenncia de este cofirmando");
+        if (checks > 0) throw new BadRequestException("Ya se ha pasado asistenncia de este cofirmando");
         _context.Attendance.Add(new Attendance
         {
             UserId = userID,

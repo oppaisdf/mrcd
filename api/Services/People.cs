@@ -247,12 +247,11 @@ public partial class PeopleService(
                     from s in _context.Sacraments
                     join temp in _context.PeopleSacraments on s.Id equals temp.SacramentId into tempG
                     from ts in tempG.DefaultIfEmpty()
-                    where ts == null || ts.PersonId == p.Id
                     select new SacramentResponse
                     {
                         Id = s.Id!.Value,
                         Name = s.Name,
-                        IsActive = ts != null
+                        IsActive = ts.PersonId == p.Id
                     }
                 ).ToList()
             }).FirstOrDefaultAsync()

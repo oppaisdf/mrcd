@@ -52,7 +52,7 @@ public static class DefaultApiResponses
         this ControllerBase controller,
         string route,
         int id
-    ) => controller.CreatedAtAction(route, new { Id = id }, new Response<CreatedResponse> { Success = true, Message = "", Data = new CreatedResponse { Id = id } });
+    ) => controller.CreatedAtAction(route, new { id }, new Response<CreatedResponse> { Success = true, Message = "", Data = new CreatedResponse { Id = id } });
 
     public static ActionResult DefaultConflict(
         this ControllerBase controller,

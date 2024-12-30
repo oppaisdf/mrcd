@@ -62,6 +62,7 @@ public class LogService(
         var query =
             from l in _context.Logs
             join a in _context.ActionsLog on l.ActionId equals a.Id
+            orderby l.Date descending
             select new
             {
                 User = users[l.UserId]!,

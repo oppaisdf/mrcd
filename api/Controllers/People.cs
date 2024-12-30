@@ -17,7 +17,7 @@ public class PeopleController(
 {
     private readonly IPeopleService _service = service;
 
-    private static bool IsPhoneValid(
+    private static bool IsValidPhoneNumber(
         string phone
     )
     {
@@ -45,19 +45,19 @@ public class PeopleController(
         if (request.DegreeId == null) return this.DefaultBadRequest("El grado académico es obligatorio");
         if (string.IsNullOrWhiteSpace(request.Address)) return this.DefaultBadRequest("La dirección es obligatoria");
         else request.Address = request.Address.Trim();
-        if (string.IsNullOrWhiteSpace(request.Phone) || IsPhoneValid(request.Phone))
+        if (string.IsNullOrWhiteSpace(request.Phone) || !IsValidPhoneNumber(request.Phone))
             return this.DefaultBadRequest("El número telefónico es requerido");
 
         if (request.Parents != null)
         {
             request.Parents = request.Parents.Where(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
-            if (request.Parents.Count == 0) request.Parents = null;
+            if (request.Parents.Count == 0 || request.Parents.Count > 2) request.Parents = null;
         }
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             var id = await _service.CreateAsync(userId, request);
-            return this.DefaultCreated(nameof(GetByIdAsync), id);
+            return this.DefaultCreated(nameof(GetById), id);
         }
         catch (DoesNotExistsException e)
         { return this.DefaultNotFound(e.Message); }
@@ -70,7 +70,7 @@ public class PeopleController(
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetByIdAsync(
+    public async Task<IActionResult> GetById(
         int id
     )
     {
@@ -125,15 +125,15 @@ public class PeopleController(
         if (request.Parents != null)
         {
             request.Parents = request.Parents.Where(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
-            if (request.Parents.Count == 0) request.Parents = null;
+            if (request.Parents.Count == 0 || request.Parents.Count > 2) request.Parents = null;
         }
         if (request.Godparents != null)
         {
             request.Godparents = request.Godparents.Where(g => !string.IsNullOrWhiteSpace(g.Name)).ToList();
-            if (request.Godparents.Count == 0) request.Godparents = null;
+            if (request.Godparents.Count == 0 || request.Godparents.Count > 4) request.Godparents = null;
         }
         if (!string.IsNullOrWhiteSpace(request.Address)) request.Address = request.Address.Trim();
-        if (string.IsNullOrWhiteSpace(request.Phone) || IsPhoneValid(request.Phone)) request.Phone = null;
+        if (string.IsNullOrWhiteSpace(request.Phone) || !IsValidPhoneNumber(request.Phone)) request.Phone = null;
         if (request.Sacraments != null && request.Sacraments.Count > 10) request.Sacraments = null;
         try
         {

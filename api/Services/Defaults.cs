@@ -27,7 +27,9 @@ public class NameService<TEntity>(
         string name
     )
     {
-        var alreadyExists = await _entity.AnyAsync(e => _functions.GetNormalizedText(e.Name) == _functions.GetNormalizedText(name));
+        var actions = await _entity.AsNoTracking().ToListAsync();
+        actions.ForEach(a => a.Name = _functions.GetNormalizedText(a.Name));
+        var alreadyExists = actions.Any(a => a.Name == _functions.GetNormalizedText(name));
         if (alreadyExists) throw new AlreadyExistsException("Ya existe este registro");
     }
 
@@ -36,7 +38,8 @@ public class NameService<TEntity>(
         string name
     )
     {
-        await AlreadyExists(name);
+        var nName = name;
+        await AlreadyExists(nName);
         var record = new TEntity
         {
             Name = name
