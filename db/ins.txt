@@ -1,0 +1,8 @@
+
+  # MySQL                                                                         
+                                                                                  
+  ## Backup                                                                       
+                                                                                  
+    mysqldump -h ServerName -u User -p'Password' --no-data DBName Table1 > backup.
+  sql                                                                             
+
