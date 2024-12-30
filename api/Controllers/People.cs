@@ -41,6 +41,7 @@ public class PeopleController(
         if (request.Gender == null) return this.DefaultBadRequest("El género es obligatorio");
         if (request.DOB == null) return this.DefaultBadRequest("La fecha de nacimiento es obligatorio");
         if (request.Day == null) return this.DefaultBadRequest("El día es obligatorio");
+        if (request.Sacraments != null && request.Sacraments.Count > 10) request.Sacraments = null;
         if (request.DegreeId == null) return this.DefaultBadRequest("El grado académico es obligatorio");
         if (string.IsNullOrWhiteSpace(request.Address)) return this.DefaultBadRequest("La dirección es obligatoria");
         else request.Address = request.Address.Trim();
@@ -133,6 +134,7 @@ public class PeopleController(
         }
         if (!string.IsNullOrWhiteSpace(request.Address)) request.Address = request.Address.Trim();
         if (string.IsNullOrWhiteSpace(request.Phone) || IsPhoneValid(request.Phone)) request.Phone = null;
+        if (request.Sacraments != null && request.Sacraments.Count > 10) request.Sacraments = null;
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;

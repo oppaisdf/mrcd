@@ -38,7 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite = SameSiteMode.None;
     options.LoginPath = "/api/User/Login";
     options.AccessDeniedPath = "/api/User/Login/AccessDenied";
-    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+    options.ExpireTimeSpan = TimeSpan.FromHours(2);
     options.Events.OnRedirectToLogin = context =>
     {
         context.Response.StatusCode = StatusCodes.Status401Unauthorized;

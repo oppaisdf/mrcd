@@ -27,6 +27,7 @@ public class PeopleRequest
     public bool? IsActive { get; set; }
     public ICollection<ParentRequest>? Parents { get; set; }
     public ICollection<ParentRequest>? Godparents { get; set; }
+    public ICollection<short>? Sacraments { get; set; }
 }
 
 public class ParentRequest

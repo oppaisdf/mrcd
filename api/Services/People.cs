@@ -56,6 +56,31 @@ public partial class PeopleService(
         await CreateParentsAsync(personId, request);
     }
 
+    private async Task RegisterSacraments(
+        int personId,
+        ICollection<short> sacraments
+    )
+    {
+        var ids = sacraments.Distinct().ToList();
+        _context.PeopleSacraments.RemoveRange(
+            await _context
+                .PeopleSacraments
+                .Where(ps => ps.PersonId == personId)
+                .ToListAsync()
+        );
+        _context.PeopleSacraments.AddRange(
+            await _context.Sacraments
+                .Where(s => ids.Contains(s.Id!.Value))
+                .Select(s => new PersonSacrament
+                {
+                    PersonId = personId,
+                    SacramentId = s.Id!.Value
+                })
+                .ToListAsync()
+        );
+        await _context.SaveChangesAsync();
+    }
+
     private static void ValidateBirth(
         DateTime birth
     )
@@ -66,7 +91,7 @@ public partial class PeopleService(
         if (diff > 30) throw new BadRequestException("Muy grande para este grupo");
     }
 
-    public string GetHash(
+    private string GetHash(
         string name
     )
     {
@@ -108,8 +133,8 @@ public partial class PeopleService(
         try
         {
             await _context.SaveChangesAsync();
-            if (request.Parents != null && request.Parents.Count > 0)
-                await CreateParentsAsync(person.Id!.Value, request.Parents);
+            if (request.Parents != null && request.Parents.Count > 0) await CreateParentsAsync(person.Id!.Value, request.Parents);
+            if (request.Sacraments != null) await RegisterSacraments(person.Id!.Value, request.Sacraments);
             await _logs.RegisterCreationAsync(userId, $"Creó confirmando {person.Id}");
             await tran.CommitAsync();
         }
@@ -217,7 +242,19 @@ public partial class PeopleService(
                         Name = x.Name,
                         Gender = x.Gender
                     })
-                    .ToList()
+                    .ToList(),
+                Sacraments = (
+                    from s in _context.Sacraments
+                    join temp in _context.PeopleSacraments on s.Id equals temp.SacramentId into tempG
+                    from ts in tempG.DefaultIfEmpty()
+                    where ts == null || ts.PersonId == p.Id
+                    select new SacramentResponse
+                    {
+                        Id = s.Id!.Value,
+                        Name = s.Name,
+                        IsActive = ts != null
+                    }
+                ).ToList()
             }).FirstOrDefaultAsync()
             ?? throw new DoesNotExistsException("El confirmando no existe");
     }
@@ -251,8 +288,8 @@ public partial class PeopleService(
         try
         {
             await _context.SaveChangesAsync();
-            if (request.Parents != null)
-                await UpdateParentsAsync(id, request.Parents);
+            if (request.Parents != null) await UpdateParentsAsync(id, request.Parents);
+            if (request.Sacraments != null) await RegisterSacraments(id, request.Sacraments);
             await _logs.RegisterUpdateAsync(userId, $"Confirmando {id}");
             await tran.CommitAsync();
         }

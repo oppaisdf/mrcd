@@ -13,6 +13,7 @@ public class PersonResponse
     public required bool IsActive { get; set; }
     public ICollection<ParentResponse>? Parents { get; set; }
     public ICollection<ParentResponse>? Godparents { get; set; }
+    public ICollection<SacramentResponse>? Sacraments { get; set; }
 }
 
 public class ParentResponse
@@ -20,4 +21,11 @@ public class ParentResponse
     public required int Id { get; set; }
     public required string Name { get; set; }
     public required bool Gender { get; set; }
+}
+
+public class SacramentResponse
+{
+    public required short Id { get; set; }
+    public required string Name { get; set; }
+    public required bool IsActive { get; set; }
 }
