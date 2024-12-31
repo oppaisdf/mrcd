@@ -1,7 +1,6 @@
 <section class="section">
     <div class="container">
-        <div class="notification" [ngClass]="{'is-success': isSuccess, 'is-danger': !isSuccess}" *ngIf="lblMessage">
-            {{lblMessage}}</div>
+        <shared-alert [message]="lblMessage" [success]="isSuccess" />
 
         <form [formGroup]="form" class="box columns is-multiline" (ngSubmit)="Login()">
             <div class="column is-3 has-text-right">
