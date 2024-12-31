@@ -35,7 +35,7 @@ builder.Services
     .AddDefaultTokenProviders();
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.Cookie.Name = "kmd-session";
+    options.Cookie.Name = "mrcd-session";
     options.Cookie.HttpOnly = false;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.None;

@@ -1,0 +1,44 @@
+<nav class="navbar is-fixed-top is-transparent" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" routerLink="/home">
+            <img src="https://pub-e47275a009714794bcff2eb4713b67bb.r2.dev/logo.png">
+        </a>
+
+        <button (click)="ShowMenu()" [class.is-active]="burgerActive" class="navbar-burger" aria-label="menu"
+            aria-expanded="false" data-target="navbarBurger">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </button>
+    </div>
+
+    <div id="navbarBurger" class="navbar-menu" [class.is-active]="burgerActive">
+        <div class="navbar-start">
+            <a class="navbar-item" routerLink="/home">Confirmandos</a>
+            <a class="navbar-item" routerLink="/carwash">Impresiones</a>
+            <a class="navbar-item" routerLink="/tinting">Logs</a>
+            <a class="navbar-item" routerLink="/tinting">Usuarios</a>
+            <a class="navbar-item" routerLink="/tinting">Roles</a>
+            <a class="navbar-item" routerLink="/tinting">Acciones</a>
+            <a class="navbar-item" routerLink="/tinting">Grados</a>
+            <a class="navbar-item" routerLink="/tinting">Sacramentos</a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">About Us</a>
+
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">Blog</a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item" routerLink="/contact">Contact</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <a class="button">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
