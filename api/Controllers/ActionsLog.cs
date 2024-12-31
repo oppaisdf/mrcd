@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-[Authorize]
+[Authorize(Roles = "adm")]
 [ApiController]
 [Route("api/[controller]")]
 public class ActionLogController(

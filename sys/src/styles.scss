@@ -1,1 +1,1 @@
-@use "bulma/sass";
+@use "bulma/sass" with ($navbar-breakpoint: 700px);

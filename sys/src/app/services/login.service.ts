@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { LoginResponse } from '../core/models/responses/login';
-import { ApiResponse } from '../core/models/responses/api';
 import { LoginRequest } from '../core/models/requests/login';
 
 @Injectable({
@@ -12,9 +11,18 @@ export class LoginService {
     private _api: ApiService
   ) { }
 
+  public async IsLogged() {
+    const session = document.cookie.includes('mrcd-session');
+    if (session) {
+      const response = await this._api.Get<{ db: string }>("Public/Health");
+      if (response.success && response.data!.db === "Active") return true;
+    }
+    return false;
+  }
+
   public async Login(
     loginRequest: LoginRequest
-  ): Promise<ApiResponse<LoginResponse>> {
+  ) {
     const response = await this._api.Post<LoginResponse>('User/Login', loginRequest);
 
     if (response.success)

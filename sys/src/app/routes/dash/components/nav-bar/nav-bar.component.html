@@ -1,7 +1,7 @@
 <nav class="navbar is-fixed-top is-transparent" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item" routerLink="/home">
-            <img src="https://pub-e47275a009714794bcff2eb4713b67bb.r2.dev/logo.png">
+            <img src="https://pub-e47275a009714794bcff2eb4713b67bb.r2.dev/mrcd.png">
         </a>
 
         <button (click)="ShowMenu()" [class.is-active]="burgerActive" class="navbar-burger" aria-label="menu"
@@ -15,29 +15,49 @@
 
     <div id="navbarBurger" class="navbar-menu" [class.is-active]="burgerActive">
         <div class="navbar-start">
-            <a class="navbar-item" routerLink="/home">Confirmandos</a>
-            <a class="navbar-item" routerLink="/carwash">Impresiones</a>
-            <a class="navbar-item" routerLink="/tinting">Logs</a>
-            <a class="navbar-item" routerLink="/tinting">Usuarios</a>
-            <a class="navbar-item" routerLink="/tinting">Roles</a>
-            <a class="navbar-item" routerLink="/tinting">Acciones</a>
-            <a class="navbar-item" routerLink="/tinting">Grados</a>
-            <a class="navbar-item" routerLink="/tinting">Sacramentos</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Confirmandos</a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">Inscripciones</a>
+                    <a class="navbar-item">Actualizar</a>
+                    <a class="navbar-item">Asistencia</a>
+                </div>
+            </div>
+
+            @if (isAdm) {
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Impresiones</a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">Gafetes</a>
+                    <a class="navbar-item">Diplomas</a>
+                </div>
+            </div>
 
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">About Us</a>
-
+                <a class="navbar-link">Gestiones</a>
                 <div class="navbar-dropdown">
-                    <a class="navbar-item">Blog</a>
+                    <a class="navbar-item">Usuarios</a>
+                    <a class="navbar-item">Grados</a>
+                    <a class="navbar-item">Sacramentos</a>
                     <hr class="navbar-divider">
-                    <a class="navbar-item" routerLink="/contact">Contact</a>
+                    <a class="navbar-item">Logs</a>
+                    <a class="navbar-item">Acciones de logs</a>
+                </div>
+            </div>
+            }
+
+            <div class="navbar-item has-dropdown is-hoverable" *ngIf="isSys">
+                <a class="navbar-link">System</a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">Roles</a>
                 </div>
             </div>
         </div>
 
         <div class="navbar-end">
             <div class="navbar-item">
-                <a class="button">Logout</a>
+                <button class="button is-primary" [class.is-loading]="isLogouting" [disabled]="isLogouting"
+                    (click)="Logout()">Logout</button>
             </div>
         </div>
     </div>

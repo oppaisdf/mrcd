@@ -1,17 +1,13 @@
-import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { ApiService } from '../../services/api.service';
+import { LoginService } from '../../services/login.service';
+import { inject } from '@angular/core';
 
 export const loginGuard: CanActivateFn = async (route, state) => {
-  const _api = inject(ApiService);
+  const _login = inject(LoginService);
   const _router = inject(Router);
 
-  const session = document.cookie.includes('kmd-session');
-  if (session) {
-    const response = await _api.Get<{ db: string }>("Public/Health");
-    if (response.success && response.data!.db === "Active") return true;
-  }
+  if (!await _login.IsLogged()) return true;
 
-  _router.navigateByUrl("/login");
+  _router.navigateByUrl('/dash');
   return false;
 };
