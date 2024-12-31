@@ -10,7 +10,7 @@ namespace api.Services;
 
 public interface IAttendanceService
 {
-    Task CheckAsync(string userID, int personId, DateTime? date = null);
+    Task CheckAsync(string userID, string hash, DateTime? date = null);
     Task<ICollection<AttendanceResponse>> GetAsync(string userId, AttendanceFilter filter);
     Task RemoveCheckAsync(string userId, int attendanceId);
 }
@@ -27,15 +27,16 @@ public class AttendanceService(
 
     public async Task CheckAsync(
         string userID,
-        int personId,
+        string hash,
         DateTime? date = null
     )
     {
         if (date == null) date = DateTime.UtcNow;
         var person = await _context.People
-            .Where(p => p.Id == personId)
+            .Where(p => p.Hash == hash)
             .Select(p => new
             {
+                Id = p.Id!.Value,
                 p.IsActive,
                 Dates = _context.Attendance
                     .Where(a => a.PersonId == p.Id)
@@ -52,7 +53,7 @@ public class AttendanceService(
         _context.Attendance.Add(new Attendance
         {
             UserId = userID,
-            PersonId = personId,
+            PersonId = person.Id,
             Date = date!.Value
         });
         await _context.SaveChangesAsync();
@@ -71,6 +72,7 @@ public class AttendanceService(
             orderby a.Date descending
             select new
             {
+                Id = a.Id!.Value,
                 User = users[a.UserId]!,
                 a.UserId,
                 Person = p.Name,
@@ -86,6 +88,7 @@ public class AttendanceService(
             .Take(15)
             .Select(a => new AttendanceResponse
             {
+                Id = a.Id,
                 User = a.User,
                 Person = a.Person,
                 Date = a.Date

@@ -40,26 +40,29 @@ public class AttendanceController(
         { return this.DefaultServerError($"[+] Error al consultar asistencias: {e.Message}"); }
     }
 
-    [HttpPost("{personId}")]
+    [HttpPost("{hash}")]
     public async Task<IActionResult> CheckAsync(
-        int personId
+        string hash
     )
     {
+        if (string.IsNullOrWhiteSpace(hash))
+            return this.DefaultBadRequest("El hash es requerido");
+        hash = hash.Trim();
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.CheckAsync(userId, personId);
+            await _service.CheckAsync(userId, hash);
             return this.DefaultOk(new { }, "Se ha registrado la asistencia");
         }
         catch (DoesNotExistsException e)
         { return this.DefaultNotFound(e.Message); }
         catch (BadRequestException e)
         { return this.DefaultConflict(e.Message); }
-        catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al registar asistencia a {personId}: {e.Message}"); }
+        //catch (Exception e)
+        //{ return this.DefaultServerError($"[+] Error al registar asistencia a {hash}: {e.Message}"); }
     }
 
-    [Authorize(Roles = "amd")]
+    [Authorize(Roles = "adm")]
     [HttpDelete("{attendanceId}")]
     public async Task<IActionResult> Delete(
         int attendanceId
