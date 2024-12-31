@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'shared-alert',
@@ -7,7 +7,16 @@ import { Component, Input } from '@angular/core';
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.sass'
 })
-export class AlertComponent {
+export class AlertComponent implements OnChanges {
   @Input() message = '';
   @Input() success = false;
+
+  ngOnChanges(
+    changes: SimpleChanges
+  ) {
+    if (!changes['message'] || !this.message) return;
+    setTimeout(() => {
+      this.message = '';
+    }, 5000);
+  }
 }
