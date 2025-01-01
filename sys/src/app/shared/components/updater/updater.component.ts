@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DefaultResponse } from '../../../routes/dash/models/Response';
 import { UpdateService } from '../../services/update.service';
@@ -20,6 +20,7 @@ export class UpdaterComponent {
   }
 
   @Input() show = false;
+  @Output() showChange = new EventEmitter<boolean>();
   @Input() endpoint = '';
   @Input() record: DefaultResponse = {
     id: 0,
@@ -33,10 +34,9 @@ export class UpdaterComponent {
 
   get isInvalidName() { return this.form.controls['name'].touched && this.form.controls['name'].invalid; }
 
-  ShowAlert(
-    show: boolean
-  ) {
-    this.show = show;
+  Hide() {
+    this.show = false;
+    this.showChange.emit(this.show);
   }
 
   async UpdateAsync() {
@@ -52,6 +52,6 @@ export class UpdaterComponent {
 
     this.isUpdating = false;
     this.form.enable();
-    if (response.success) window.location.reload();
+    if (!response.success) window.location.reload();
   }
 }
