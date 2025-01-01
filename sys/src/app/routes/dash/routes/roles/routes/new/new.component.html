@@ -1,24 +1,19 @@
-<section class="section">
-    <div class="container">
-        <shared-alert [message]="lblMessage" [success]="isSuccess" />
+<shared-alert [message]="lblMessage" [success]="isSuccess" />
 
-        <div class="buttons are-medium">
-            <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
-                (click)="AddAsync()">+
-                Add</button>
-            <a class="button" routerLink="/role/all">Back</a>
-        </div>
+<div class="buttons are-medium">
+    <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
+        (click)="AddAsync()">+
+        Add</button>
+    <a class="button" routerLink="/role/all">Back</a>
+</div>
 
-        <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
-            <div class="column is-3 has-text-rigth">
-                <label for="txtName" class="subtitle">Nombre</label>
-            </div>
-            <div class="column is-9">
-                <div class="controlk" [class.is-loading]="isAdding">
-                    <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName"
-                        formControlName="name">
-                </div>
-            </div>
-        </form>
+<form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
+    <div class="column is-3 has-text-rigth">
+        <label for="txtName" class="subtitle">Nombre</label>
     </div>
-</section>
+    <div class="column is-9">
+        <div class="controlk" [class.is-loading]="isAdding">
+            <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName" formControlName="name">
+        </div>
+    </div>
+</form>

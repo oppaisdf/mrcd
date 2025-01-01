@@ -1,22 +1,18 @@
-<section class="section">
-    <div class="container">
-        <div class="buttons are-medium">
-            <a class="button is-primary" routerLink="/degree/new">Agregar</a>
-        </div>
+<div class="buttons are-medium">
+    <a class="button is-primary" routerLink="/degree/new">Agregar</a>
+</div>
 
-        <table class="table is-fullwidth is-hoverable is-striped">
-            <thead>
-                <th>Nombre</th>
-                <th>Acción</th>
-            </thead>
-            <tbody>
-                <tr *ngFor="let degree of degrees">
-                    <td>{{degree.name}}</td>
-                    <td>
-                        <button class="button">Actualizar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</section>
+<table class="table is-fullwidth is-hoverable is-striped">
+    <thead>
+        <th>Nombre</th>
+        <th>Acción</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let degree of degrees">
+            <td>{{degree.name}}</td>
+            <td>
+                <button class="button">Actualizar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
