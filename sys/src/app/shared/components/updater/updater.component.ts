@@ -52,6 +52,6 @@ export class UpdaterComponent {
 
     this.isUpdating = false;
     this.form.enable();
-    if (!response.success) window.location.reload();
+    if (response.success) window.location.reload();
   }
 }
