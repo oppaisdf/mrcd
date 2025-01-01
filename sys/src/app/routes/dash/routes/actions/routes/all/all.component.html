@@ -1,7 +1,7 @@
 <shared-alert [message]="message" [success]="success" />
 <shared-updater [show]="showUpdater" [endpoint]="'ActionLog'" [record]="selectedAction" />
 
-<div class="buttons are-medium">
+<div class="buttons are-medium" *ngIf="isSys">
     <a class="button is-primary" routerLink="/action/new">Agregar</a>
 </div>
 

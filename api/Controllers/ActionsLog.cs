@@ -30,6 +30,7 @@ public class ActionLogController(
         { return this.DefaultServerError($"[+] Error al consultar acciones de logs: {e.Message}"); }
     }
 
+    [Authorize(Roles = "sys")]
     [HttpPost]
     public async Task<IActionResult> CreateAsync(
         [FromBody] NameRequest request

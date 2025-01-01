@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '', component: DashComponent, children: [
       { path: 'role', loadChildren: () => import('./routes/roles/roles.module').then(m => m.RolesModule), canActivate: [sysGuard] },
-      { path: 'action', loadChildren: () => import('./routes/actions/actions.module').then(m => m.ActionsModule) },
+      { path: 'action', loadChildren: () => import('./routes/actions/actions.module').then(m => m.ActionsModule), canActivate: [admGuard] },
       { path: 'degree', loadChildren: () => import('./routes/degrees/degrees.module').then(m => m.DegreesModule), canActivate: [admGuard] }
     ]
   }

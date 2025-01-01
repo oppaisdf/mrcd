@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionService } from '../../services/action.service';
 import { DefaultResponse } from '../../../../models/Response';
+import { LoginService } from '../../../../../../services/login.service';
 
 @Component({
   selector: 'app-all',
@@ -11,12 +12,14 @@ import { DefaultResponse } from '../../../../models/Response';
 })
 export class AllComponent implements OnInit {
   constructor(
-    private _service: ActionService
+    private _service: ActionService,
+    private _role: LoginService
   ) { }
 
   isUpdating = false;
   success = true;
   showUpdater = false;
+  isSys = false;
   message = '';
   actions: DefaultResponse[] = [];
   selectedAction: DefaultResponse = {
@@ -25,6 +28,7 @@ export class AllComponent implements OnInit {
   };
 
   async ngOnInit() {
+    this.isSys = this._role.HasUserPermission('sys');
     const response = await this._service.GetAsync();
     if (response.success) this.actions = response.data!;
     else {
