@@ -1,0 +1,20 @@
+<section class="section">
+    <div class="container">
+        <div class="buttons are-medium">
+            <a class="button is-primary" routerLink="/role/new">+ Add</a>
+        </div>
+
+        <table class="table is-hoverable is-stripted is-fullwidth">
+            <thead>
+                <th>Id</th>
+                <th>Name</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let role of roles">
+                    <td>{{role.id}}</td>
+                    <td>{{role.name}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

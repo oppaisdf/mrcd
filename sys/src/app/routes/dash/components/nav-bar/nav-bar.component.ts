@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LoginService } from '../../../../services/login.service';
 import { Router } from '@angular/router';
 
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.sass'
 })
-export class NavBarComponent implements OnInit {
+export class NavBarComponent {
   constructor(
     private _service: LoginService,
     private _router: Router

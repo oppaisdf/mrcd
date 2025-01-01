@@ -5,10 +5,9 @@ import { LoginComponent } from './routes/login/login.component';
 import { loginGuard } from './core/guards/login.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dash', pathMatch: 'full' },
+  { path: '', loadChildren: () => import('./routes/dash/dash.module').then(m => m.DashModule), canActivate: [dashGuard] },
   { path: 'login', component: LoginComponent, canActivate: [loginGuard] },
-  { path: 'dash', loadChildren: () => import('./routes/dash/dash.module').then(m => m.DashModule), canActivate: [dashGuard] },
-  { path: '**', redirectTo: 'dash' }
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 <nav class="navbar is-fixed-top is-transparent" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="navbar-item" routerLink="/home">
+        <a class="navbar-item" routerLink="/">
             <img src="https://pub-e47275a009714794bcff2eb4713b67bb.r2.dev/mrcd.png">
         </a>
 
@@ -49,7 +49,7 @@
             <div class="navbar-item has-dropdown is-hoverable" *ngIf="isSys">
                 <a class="navbar-link">System</a>
                 <div class="navbar-dropdown">
-                    <a class="navbar-item">Roles</a>
+                    <a class="navbar-item" routerLink="/role/all">Roles</a>
                 </div>
             </div>
         </div>
