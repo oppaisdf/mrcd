@@ -46,10 +46,22 @@ public class LogsController(
                 Start = start,
                 End = end
             };
-            var logs = await _service.GetAsync(filters);
-            return this.DefaultOk(logs);
+            var (logs, pages) = await _service.GetAsync(filters);
+            return this.DefaultOk(logs, pages);
         }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al obtener logs: {e.Message}"); }
+    }
+
+    [HttpGet("Filters")]
+    public async Task<IActionResult> GetFiltersAsync()
+    {
+        try
+        {
+            var filters = await _service.GetFiltersAsync();
+            return this.DefaultOk(filters);
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al obtener filtros de logs: {e.Message}"); }
     }
 }

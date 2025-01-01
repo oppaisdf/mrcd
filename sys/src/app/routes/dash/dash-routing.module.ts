@@ -10,7 +10,8 @@ const routes: Routes = [
       { path: 'role', loadChildren: () => import('./routes/roles/roles.module').then(m => m.RolesModule), canActivate: [sysGuard] },
       { path: 'action', loadChildren: () => import('./routes/actions/actions.module').then(m => m.ActionsModule), canActivate: [admGuard] },
       { path: 'degree', loadChildren: () => import('./routes/degrees/degrees.module').then(m => m.DegreesModule), canActivate: [admGuard] },
-      { path: 'sacrament', loadChildren: () => import('./routes/sacraments/sacraments.module').then(m => m.SacramentsModule), canActivate: [admGuard] }
+      { path: 'sacrament', loadChildren: () => import('./routes/sacraments/sacraments.module').then(m => m.SacramentsModule), canActivate: [admGuard] },
+      { path: 'logs', loadChildren: () => import('./routes/logs/logs.module').then(m => m.LogsModule), canActivate: [admGuard] }
     ]
   }
 ];

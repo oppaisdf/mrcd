@@ -160,11 +160,13 @@ public partial class PeopleService(
         if (filter.DegreeId != null) query = query.Where(p => p.DegreeId == filter.DegreeId);
         if (filter.IsActive != null) query = query.Where(p => p.IsActive == filter.IsActive);
 
-        int counter;
+        short counter;
         ICollection<PersonResponse> page;
         if (string.IsNullOrWhiteSpace(filter.Name))
         {
-            counter = (int)Math.Ceiling(await query.CountAsync() / 15.0);
+            counter = (short)Math.Ceiling(await query.CountAsync() / 15.0);
+            if (filter.Page < 1) filter.Page = 1;
+            if (filter.Page > counter) filter.Page = counter;
             page = await query
                 .Skip((filter.Page - 1) * 15)
                 .Take(15)
@@ -182,10 +184,10 @@ public partial class PeopleService(
         }
         else
         {
-            var people = await query.ToListAsync();
+            var people = await query.AsNoTracking().ToListAsync();
             people.ForEach(p => p.Hash = _functions.GetNormalizedText(p.Name));
             people = people.Where(p => p.Hash.Contains(_functions.GetNormalizedText(filter.Name))).ToList();
-            counter = (int)Math.Ceiling(people.Count / 15.0);
+            counter = (short)Math.Ceiling(people.Count / 15.0);
             page = people
                 .Skip((filter.Page - 1) * 15)
                 .Take(15)

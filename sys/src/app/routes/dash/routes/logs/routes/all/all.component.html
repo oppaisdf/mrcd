@@ -1,0 +1,79 @@
+<shared-alert [message]="messsage" [success]="success" />
+
+<div class="buttons are-medium">
+    <button class="button is-primary" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="FindAsync()">Buscar</button>
+</div>
+
+<form [formGroup]="form" class="columns is-multiline" (ngSubmit)="FindAsync()">
+    <div class="column is-3 has-text-right">
+        <label for="lstUser" class="subtitle">Usuario</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isSearching">
+            <div class="select">
+                <select name="lstUser" formControlName="userId">
+                    <option *ngFor="let user of users" value="{{user.id}}">{{user.name}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="lstAction" class="subtitle">Acción de log</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isSearching">
+            <div class="select">
+                <select name="lstAction" formControlName="action">
+                    <option *ngFor="let action of actions" value="{{action.id}}">{{action.name}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="txtStart" class="subtitle">Fecha de inicio</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isSearching">
+            <input name="txtStart" type="date" class="input" formControlName="start" [max]="maxDate">
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="txtEnd" class="subtitle">Fecha final</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-searching]="isSearching">
+            <input name="txtEnd" type="date" class="input" formControlName="end" [min]="minEndDate" [max]="maxDate">
+        </div>
+    </div>
+</form>
+
+<table class="table is-fullwidth is-striped" *ngIf="logs.length > 0">
+    <thead>
+        <th>Usuario</th>
+        <th>Accción</th>
+        <th>Detalles</th>
+        <th>Hora</th>
+        <th>Fecha</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let log of logs">
+            <td>{{log.user}}</td>
+            <td>{{log.action}}</td>
+            <td>{{log.details}}</td>
+            <td>{{GetHour(log.date)}}</td>
+            <td>{{GetDate(log.date)}}</td>
+        </tr>
+    </tbody>
+</table>
+
+<nav class="pagination is-centered" role="navigation" aria-label="pagination" *ngIf="logs.length > 0">
+    <button type="button" class="pagination-previous" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="ChangePage(false)" *ngIf="page > 1">Página anterior</button>
+    <button type="button" class="pagination-next" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="ChangePage(true)" *ngIf="page < lastPage">Siguiente página</button>
+    <p class="pagination-list">{{page}}/{{lastPage}}</p>
+</nav>

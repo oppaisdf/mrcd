@@ -1,4 +1,4 @@
-import { Component, OnInit, RESPONSE_INIT } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SacramentService } from '../../services/sacrament.service';
 import { DefaultResponse } from '../../../../models/Response';
 
