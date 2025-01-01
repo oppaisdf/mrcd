@@ -1,3 +1,4 @@
+<shared-updater [endpoint]="'Degree'" [record]="selectedDegree" [show]="showUpdater" />
 <div class="buttons are-medium">
     <a class="button is-primary" routerLink="/degree/new">Agregar</a>
 </div>
@@ -11,7 +12,7 @@
         <tr *ngFor="let degree of degrees">
             <td>{{degree.name}}</td>
             <td>
-                <button class="button">Actualizar</button>
+                <button class="button" (click)="Update(degree)">Actualizar</button>
             </td>
         </tr>
     </tbody>

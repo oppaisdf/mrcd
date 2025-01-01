@@ -15,9 +15,21 @@ export class AllComponent implements OnInit {
   ) { }
 
   degrees: DefaultResponse[] = [];
+  showUpdater = false;
+  selectedDegree: DefaultResponse = {
+    id: 0,
+    name: ''
+  };
 
   async ngOnInit() {
     const response = await this._service.GetAsync();
     if (response.success) this.degrees = response.data!;
+  }
+
+  Update(
+    degree: DefaultResponse
+  ) {
+    this.selectedDegree = degree;
+    this.showUpdater = true;
   }
 }
