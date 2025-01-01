@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../../../../services/api.service';
-import { RoleResponse } from '../models/responses/role';
-import { RoleRequest } from '../models/requests/role';
+import { RoleResponse } from '../responses/role';
+import { DefaultRequest } from '../../../models/Request';
 
 @Injectable()
 export class RoleService {
@@ -14,7 +14,7 @@ export class RoleService {
   }
 
   public async AddAsync(
-    request: RoleRequest
+    request: DefaultRequest
   ) {
     return await this._api.Post('Role', request);
   }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { RoleService } from '../../services/role.service';
-import { RoleResponse } from '../../responses/role';
+import { DegreeService } from '../../services/degree.service';
+import { DefaultResponse } from '../../../../models/Response';
 
 @Component({
-  selector: 'role-all',
+  selector: 'app-all',
   standalone: false,
 
   templateUrl: './all.component.html',
@@ -11,13 +11,13 @@ import { RoleResponse } from '../../responses/role';
 })
 export class AllComponent implements OnInit {
   constructor(
-    private _service: RoleService
+    private _service: DegreeService
   ) { }
 
-  roles: RoleResponse[] = [];
+  degrees: DefaultResponse[] = [];
 
   async ngOnInit() {
     const response = await this._service.GetAsync();
-    if (response.success) this.roles = response.data!;
+    if (response.success) this.degrees = response.data!;
   }
 }
