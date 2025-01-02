@@ -33,6 +33,7 @@ export class NavBarComponent {
     if (this.isLogouting) return;
     this.isLogouting = true;
     const response = await this._service.Logout();
+    this.isLogouting = false;
     if (response.success) this._router.navigateByUrl('/login');
   }
 }

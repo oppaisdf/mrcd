@@ -1,6 +1,6 @@
 <section class="section">
     <div class="container">
-        <shared-alert [message]="lblMessage" [success]="isSuccess" />
+        <shared-alert [(message)]="lblMessage" [success]="isSuccess" />
 
         <form [formGroup]="form" class="box columns is-multiline" (ngSubmit)="Login()">
             <div class="column is-3 has-text-right">

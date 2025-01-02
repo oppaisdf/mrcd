@@ -47,13 +47,13 @@ public class UserController(
     }
 
     [Authorize]
-    [HttpDelete("Logout")]
-    public async Task<IActionResult> LogoutAsync()
+    [HttpDelete("Login")]
+    public async Task<IActionResult> Logout()
     {
         try
         {
             await _service.LogoutAsync();
-            return this.DefaultOk(new { }, "Sucessful logout!");
+            return this.DefaultOk(new { }, "Sucessfull logout!");
         }
         catch (Exception e)
         {

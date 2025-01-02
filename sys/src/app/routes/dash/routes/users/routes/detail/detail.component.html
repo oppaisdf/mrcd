@@ -1,4 +1,4 @@
-<shared-alert [message]="message" [success]="success" />
+<shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
     <button class="button is-primary" [class.is-loading]="isUpdating" [disabled]="isUpdating || form.invalid"

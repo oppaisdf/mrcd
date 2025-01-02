@@ -1,4 +1,4 @@
-<shared-alert [message]="lblMessage" [success]="isSuccess" />
+<shared-alert [(message)]="lblMessage" [success]="isSuccess" />
 
 <div class="buttons are-medium">
     <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"

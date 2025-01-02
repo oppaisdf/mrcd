@@ -12,7 +12,8 @@ const routes: Routes = [
       { path: 'degree', loadChildren: () => import('./routes/degrees/degrees.module').then(m => m.DegreesModule), canActivate: [admGuard] },
       { path: 'sacrament', loadChildren: () => import('./routes/sacraments/sacraments.module').then(m => m.SacramentsModule), canActivate: [admGuard] },
       { path: 'logs', loadChildren: () => import('./routes/logs/logs.module').then(m => m.LogsModule), canActivate: [admGuard] },
-      { path: 'user', loadChildren: () => import('./routes/users/users.module').then(m => m.UsersModule), canActivate: [admGuard] }
+      { path: 'user', loadChildren: () => import('./routes/users/users.module').then(m => m.UsersModule), canActivate: [admGuard] },
+      { path: 'person', loadChildren: () => import('./routes/people/people.module').then(m => m.PeopleModule) }
     ]
   }
 ];

@@ -34,7 +34,7 @@ export class LoginService {
   }
 
   public async Logout() {
-    const response = await this._api.Delete('User/Logout');
+    const response = await this._api.Delete('User/Login');
     if (response.success) this.RemoveSession();
     return response;
   }
