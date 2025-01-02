@@ -152,7 +152,7 @@ public partial class PeopleService(
         PeopleFilter filter
     )
     {
-        await _logs.RegisterReadingAsync("Todos los confirmandos");
+        await _logs.RegisterReadingAsync(userId, "Todos los confirmandos");
         var query = _context.People.AsQueryable();
 
         if (filter.Gender != null) query = query.Where(p => p.Gender == filter.Gender);
@@ -167,20 +167,22 @@ public partial class PeopleService(
             counter = (short)Math.Ceiling(await query.CountAsync() / 15.0);
             if (filter.Page < 1) filter.Page = 1;
             if (filter.Page > counter) filter.Page = counter;
-            page = await query
-                .Skip((filter.Page - 1) * 15)
-                .Take(15)
-                .Select(p => new PersonResponse
-                {
-                    Id = p.Id!.Value,
-                    Name = p.Name,
-                    Gender = p.Gender,
-                    DOB = p.DOB,
-                    Day = p.Day,
-                    DegreeId = p.DegreeId,
-                    Address = "",
-                    IsActive = p.IsActive
-                }).ToListAsync();
+            if (counter == 0) page = [];
+            else
+                page = await query
+                    .Skip((filter.Page - 1) * 15)
+                    .Take(15)
+                    .Select(p => new PersonResponse
+                    {
+                        Id = p.Id!.Value,
+                        Name = p.Name,
+                        Gender = p.Gender,
+                        DOB = p.DOB,
+                        Day = p.Day,
+                        DegreeId = p.DegreeId,
+                        Address = "",
+                        IsActive = p.IsActive
+                    }).ToListAsync();
         }
         else
         {
@@ -188,21 +190,25 @@ public partial class PeopleService(
             people.ForEach(p => p.Hash = _functions.GetNormalizedText(p.Name));
             people = people.Where(p => p.Hash.Contains(_functions.GetNormalizedText(filter.Name))).ToList();
             counter = (short)Math.Ceiling(people.Count / 15.0);
-            page = people
-                .Skip((filter.Page - 1) * 15)
-                .Take(15)
-                .Select(p => new PersonResponse
-                {
-                    Id = p.Id!.Value,
-                    Name = p.Name,
-                    Gender = p.Gender,
-                    DOB = p.DOB,
-                    Day = p.Day,
-                    DegreeId = p.DegreeId,
-                    Address = "",
-                    IsActive = p.IsActive
-                })
-                .ToList();
+            if (filter.Page < 1) filter.Page = 1;
+            if (filter.Page > counter) filter.Page = counter;
+            if (counter == 0) page = [];
+            else
+                page = people
+                    .Skip((filter.Page - 1) * 15)
+                    .Take(15)
+                    .Select(p => new PersonResponse
+                    {
+                        Id = p.Id!.Value,
+                        Name = p.Name,
+                        Gender = p.Gender,
+                        DOB = p.DOB,
+                        Day = p.Day,
+                        DegreeId = p.DegreeId,
+                        Address = "",
+                        IsActive = p.IsActive
+                    })
+                    .ToList();
         }
 
         return (page, $"{filter.Page}/{counter}");

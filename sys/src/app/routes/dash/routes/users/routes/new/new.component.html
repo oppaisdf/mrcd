@@ -1,0 +1,41 @@
+<shared-alert [message]="message" [success]="success" />
+
+<div class="buttons are-medium">
+    <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
+        (click)="AddAsync()">Agregar</button>
+    <a class="button" routerLink="/user/all">Regresar</a>
+</div>
+
+<form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
+    <div class="column is-3 has-text-right">
+        <label for="txtUser" class="subtitle">Nombre de usuario</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isAdding">
+            <input name="txtUser" type="text" class="input" [class.is-danger]="IsInvalidField('username')"
+                formControlName="username" maxlength="15">
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="txtPass" class="subtitle">Contraseña</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isAdding">
+            <input name="txtPass" type="password" class="input" [class.is-danger]="IsInvalidField('password')"
+                formControlName="password" maxlength="30" minlength="5">
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label class="subtitle">Roles</label>
+    </div>
+    <div class="column is-9">
+        <div class="checkboxes" *ngFor="let role of roles">
+            <label class="checkbox">
+                <input type="checkbox" (click)="OnCheckRole(role.name)" value="{{role.name}}">
+                {{role.name}}
+            </label>
+        </div>
+    </div>
+</form>

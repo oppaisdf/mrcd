@@ -75,29 +75,29 @@ public class UserController(
     )
     {
         if (!ModelState.IsValid)
-            return this.DefaultBadRequest("Invalid User data");
+            return this.DefaultBadRequest("Información inválida");
         if (string.IsNullOrWhiteSpace(request.Username))
-            return this.DefaultBadRequest("Username is required");
+            return this.DefaultBadRequest("El usuario es requerido");
         request.Username = request.Username.Trim();
         if (request.Username == "")
-            return this.DefaultBadRequest("Username is required");
+            return this.DefaultBadRequest("El usuario es requerido");
 
         if (string.IsNullOrWhiteSpace(request.Password))
-            return this.DefaultBadRequest("Password is required");
+            return this.DefaultBadRequest("La contraseña es requerida");
         request.Password = request.Password.Trim();
         if (request.Password == "")
-            return this.DefaultBadRequest("Password is required");
+            return this.DefaultBadRequest("La contraseña es requerida");
 
         if (string.IsNullOrWhiteSpace(request.Email))
             request.Email = "fake@fake.com";
 
         if (request.Roles == null || request.Roles.Count == 0)
-            return this.DefaultBadRequest("Roles is required");
+            return this.DefaultBadRequest("Los roles son requeridos");
 
         try
         {
             var user = await _service.CreateAsync(request);
-            return this.DefaultOk(new { user.Id }, "User has been created!");
+            return this.DefaultOk(new { user.Id }, "El usuario ha sido creado correctamente");
         }
         catch (AlreadyExistsException e)
         { return this.DefaultConflict(e.Message); }
@@ -129,7 +129,7 @@ public class UserController(
     )
     {
         if (string.IsNullOrWhiteSpace(id))
-            return this.DefaultBadRequest("Invalid User Id");
+            return this.DefaultBadRequest("ID de usuario inválido");
 
         try
         {
@@ -151,17 +151,17 @@ public class UserController(
     )
     {
         if (!ModelState.IsValid)
-            return this.DefaultBadRequest("Invalid user data");
+            return this.DefaultBadRequest("Datos inválidos");
 
         request.Roles ??= ([]);
-        if (string.IsNullOrWhiteSpace(request.Email) && string.IsNullOrWhiteSpace(request.Username) && string.IsNullOrWhiteSpace(request.Password) && request.Roles.Count == 0)
-            return this.DefaultBadRequest("No data found to update");
+        if (string.IsNullOrWhiteSpace(request.Email) && string.IsNullOrWhiteSpace(request.Username) && string.IsNullOrWhiteSpace(request.Password) && request.Roles.Count == 0 && request.IsActive == null)
+            return this.DefaultBadRequest("No se encontró información para actualizar");
 
         try
         {
             var _userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             await _service.UpdateAsync(id, request, _userId!);
-            return this.DefaultOk(new { }, "User has been updated :3");
+            return this.DefaultOk(new { }, "El usuario se actualizó correctamente :3");
         }
         catch (AlreadyExistsException e)
         { return this.DefaultConflict(e.Message); }

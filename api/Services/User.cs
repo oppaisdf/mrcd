@@ -66,7 +66,7 @@ public class UserService(
         // Asigna los roles
         foreach (var role in request.Roles!)
         {
-            if (role.Equals("sys")) throw new BadRequestException("Este rol no puede ser asignado");
+            if (role.Equals("sys")) throw new BadRequestException("Este rol sys no puede ser asignado");
 
             var roleExist = await _roleManager.RoleExistsAsync(role);
             if (!roleExist) throw new DoesNotExistsException("El rol no existe para ser asignado");
@@ -103,7 +103,7 @@ public class UserService(
         string id
     )
     {
-        var user = await _userManager.FindByIdAsync(id) ?? throw new DoesNotExistsException("Invalid User Id");
+        var user = await _userManager.FindByIdAsync(id) ?? throw new DoesNotExistsException("El ID del usuario es inválido o no existe");
         var roles = await _userManager.GetRolesAsync(user) ?? throw new Exception($"[+] Error al buscar los roles del usuario {id}");
 
         var userResponse = new UserResponse
@@ -132,7 +132,7 @@ public class UserService(
         Si el usuario es sys, se valida que el usuario que hace la petición también sea sys
         */
         if (sysUsers.Any(u => u.Id == id) && !sysUsers.Any(u => u.Id == userIdRequest))
-            throw new BadRequestException("User cannot be changed!");
+            throw new BadRequestException("El usuario sys no puede ser cambiado por otro usuario");
 
         if (!string.IsNullOrWhiteSpace(request.Email) && request.Email != user.Email) user.Email = request.Email;
         if (!string.IsNullOrWhiteSpace(request.Username) && request.Username != user.UserName)
@@ -146,7 +146,7 @@ public class UserService(
         if (request.IsActive != null && user.EmailConfirmed != request.IsActive)
         {
             var roles = await _userManager.GetRolesAsync(user) ?? throw new Exception($"[+] Error al consultar roles de usuario en inactivación de usuario {id}");
-            if (roles.Contains("sys")) throw new BadRequestException("This user cannot be inactivated");
+            if (roles.Contains("sys")) throw new BadRequestException("El usuario sys no puede ser inactivado");
 
             user.EmailConfirmed = request.IsActive!.Value;
         }

@@ -15,7 +15,11 @@ public class LoginRequest
 
 public class UserRequest
 {
+    [MaxLength(15, ErrorMessage = "Nombre demasiado largo")]
     public string? Username { get; set; }
+
+    [MaxLength(30, ErrorMessage = "Contraseña demasiado larga")]
+    [MinLength(5, ErrorMessage = "Contraseña muy corta")]
     public string? Password { get; set; }
     public bool? IsActive { get; set; }
     public List<string>? Roles { get; set; }

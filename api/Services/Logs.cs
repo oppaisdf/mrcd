@@ -84,6 +84,8 @@ public class LogService(
         if (filter.Page < 1) filter.Page = 1;
         if (filter.Page > lastPage) filter.Page = lastPage;
 
+        if (lastPage == 0) return ([], $"{filter.Page}/{lastPage}");
+
         return (await query
             .Skip((filter.Page - 1) * 15)
             .Take(15)
