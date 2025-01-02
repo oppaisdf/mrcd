@@ -77,7 +77,7 @@ public class LogService(
 
         if (filter.Action != null) query = query.Where(l => l.ActionId == filter.Action);
         if (!string.IsNullOrEmpty(filter.UserId)) query = query.Where(l => l.UserId == filter.UserId);
-        if (filter.Start != null && filter.End != null) query = query.Where(l => l.Date >= filter.Start && l.Date <= filter.End);
+        if (filter.Start != null && filter.End != null) query = query.Where(l => l.Date >= filter.Start && l.Date < filter.End);
 
         var first = await query.FirstOrDefaultAsync();
         var lastPage = (short)Math.Ceiling((first == null ? 0 : first.Id) / 15.0);

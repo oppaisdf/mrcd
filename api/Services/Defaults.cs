@@ -46,7 +46,7 @@ public class NameService<TEntity>(
         };
         _entity.Add(record);
         await _context.SaveChangesAsync();
-        var table = _context.Model.FindEntityType(typeof(TEntity));
+        var table = _context.Model.FindEntityType(typeof(TEntity))!.DisplayName();
         await _logs.RegisterCreationAsync(userId, $"{table} {record.Id}");
     }
 
@@ -54,7 +54,7 @@ public class NameService<TEntity>(
         string userId
     )
     {
-        var table = _context.Model.FindEntityType(typeof(TEntity));
+        var table = _context.Model.FindEntityType(typeof(TEntity))!.DisplayName();
         await _logs.RegisterReadingAsync(userId, $"Todos de {table}");
         return await _entity.ToListAsync();
     }
@@ -70,7 +70,7 @@ public class NameService<TEntity>(
         await AlreadyExists(name);
         record.Name = name;
         await _context.SaveChangesAsync();
-        var table = _context.Model.FindEntityType(typeof(TEntity));
+        var table = _context.Model.FindEntityType(typeof(TEntity))!.DisplayName();
         await _logs.RegisterUpdateAsync(userId, $"{table} {id}");
     }
 }

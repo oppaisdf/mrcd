@@ -3,6 +3,8 @@
 <div class="buttons are-medium">
     <button class="button is-primary" [class.is-loading]="isSearching" [disabled]="isSearching"
         (click)="FindAsync()">Buscar</button>
+
+    <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
 </div>
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="FindAsync()">

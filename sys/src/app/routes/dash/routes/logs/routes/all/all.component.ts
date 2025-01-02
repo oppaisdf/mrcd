@@ -102,4 +102,15 @@ export class AllComponent implements OnInit {
     this.form.controls['page'].setValue(this.page);
     await this.FindAsync();
   }
+
+  ClearFilters() {
+    this.form.patchValue({
+      page: 1,
+      userId: undefined,
+      action: undefined,
+      start: undefined,
+      end: undefined
+    });
+    this.logs = [];
+  }
 }
