@@ -79,4 +79,18 @@ public class AttendanceController(
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al eliminar asistenncia {attendanceId}: {e.Message}"); }
     }
+
+    [Authorize(Roles = "adm")]
+    [HttpGet("QR")]
+    public async Task<IActionResult> GetQRsAsync()
+    {
+        try
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var qrs = await _service.GetQRsAsync(userId);
+            return this.DefaultOk(qrs);
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al consultar QRs: {e.Message}"); }
+    }
 }

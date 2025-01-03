@@ -7,3 +7,10 @@ public class AttendanceResponse
     public required string Person { get; set; }
     public required DateTime Date { get; set; }
 }
+
+public class QRResponse
+{
+    public required string Name { get; set; }
+    public required bool Day { get; set; }
+    public required string Hash { get; set; }
+}

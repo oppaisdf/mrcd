@@ -13,6 +13,7 @@ public interface IAttendanceService
     Task CheckAsync(string userID, string hash, DateTime? date = null);
     Task<ICollection<AttendanceResponse>> GetAsync(string userId, AttendanceFilter filter);
     Task RemoveCheckAsync(string userId, int attendanceId);
+    Task<ICollection<QRResponse>> GetQRsAsync(string userId);
 }
 
 public class AttendanceService(
@@ -92,6 +93,22 @@ public class AttendanceService(
                 User = a.User,
                 Person = a.Person,
                 Date = a.Date
+            })
+            .ToListAsync();
+    }
+
+    public async Task<ICollection<QRResponse>> GetQRsAsync(
+        string userId
+    )
+    {
+        await _logs.RegisterReadingAsync(userId, "Todos los códigos QR");
+        return await _context.People
+            .Where(p => p.IsActive)
+            .Select(p => new QRResponse
+            {
+                Name = p.Name,
+                Day = p.Day,
+                Hash = p.Hash
             })
             .ToListAsync();
     }
