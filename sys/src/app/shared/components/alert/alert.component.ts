@@ -19,4 +19,8 @@ export class AlertComponent implements OnChanges {
       this.messageChange.emit('');
     }, 5000);
   }
+
+  Hide() {
+    this.message = '';
+  }
 }

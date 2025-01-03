@@ -1,0 +1,144 @@
+<shared-alert [(message)]="message" [success]="success" />
+
+<div class="buttons are-medium">
+    <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
+        (click)="AddAsync()">Agregar</button>
+    <a class="button" routerLink="/person/all">Regresar</a>
+</div>
+
+<form [formGroup]="form" class="box columns is-multiline" (ngSubmit)="AddAsync()">
+    <div class="column is-3 has-text-right">
+        <label for="txtName" class="subtitle">Nombre</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isAdding">
+            <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
+                formControlName="name" maxlength="50" placeholder="Nombre completo">
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label class="subtitle">Género</label>
+    </div>
+    <div class="column is-9">
+        <label class="checkbox">
+            <input type="checkbox" formControlName="gender">
+            @if (GetValue('gender')) { Masculino}@else { Femenino}
+        </label>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="txtDOB" class="subtitle">Fecha de nacimiento</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isAdding">
+            <input name="txtDOB" type="date" class="input" [class.is-danger]="IsInvalidField('dob')"
+                formControlName="dob" [max]="GetMDate(true)" [min]="GetMDate(false)">
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="chkDay" class="subtitle">Día</label>
+    </div>
+    <div class="column is-9">
+        <label class="checkbox">
+            <input type="checkbox" formControlName="day">
+            @if (GetValue('day')) { Domingo}@else { Sábado}
+        </label>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label class="subtitle">Sacramentos que tiene</label>
+    </div>
+    <div class="column is-9">
+        <div class="checkboxes" *ngFor="let sacrament of sacraments">
+            <label class="checkbox">
+                <input type="checkbox" [value]="sacrament.id" (click)="SelectSacrament(sacrament.id)">
+                {{sacrament.name}}
+            </label>
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="lstDegree" class="subtitle">Grado académico</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isAdding">
+            <div class="select">
+                <select name="lstDegree" formControlName="degreeId">
+                    <option *ngFor="let degree of degrees" [value]="degree.id">{{degree.name}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="txtAddress" class="subtitle">Dirección</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isAdding">
+            <textarea name="txtAddress" class="textarea" [class.is-danger]="IsInvalidField('address')"
+                formControlName="address" maxlength="100"></textarea>
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="txtPhone" class="subtitle">Número telefónico</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isAdding">
+            <input name="txtPhone" type="text" class="input" [class.is-danger]="IsInvalidField('phone')"
+                formControlName="phone" maxlength="9" (input)="FormatPhone()" placeholder="xxxx-xxxx">
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label class="subtitle">Encargados</label>
+    </div>
+    <div class="column is-9">
+        <table class="table is-fullwidth is-striped is-hoverable" *ngIf="parents.length > 0">
+            <thead>
+                <th>Nombre</th>
+                <th>Género</th>
+                <th>Acción</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let parent of parents">
+                    <td>{{parent.name}}</td>
+                    <td>@if (parent.gender) { Masculino} @else { Femenino}</td>
+                    <td>
+                        <button class="button is-danger" (click)="DeleteParent(parent)">Remover</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+
+<div class="box" *ngIf="parents.length < 3">
+    <form [formGroup]="parentForm" (ngSubmit)="AddParent()">
+        <div class="field">
+            <label class="title is-5">Agregar encargado</label>
+        </div>
+
+        <div class="field">
+            <label for="txtParent" class="subtitle">Nombre de encargado</label>
+            <div class="control">
+                <input name="txtParent" type="text" class="input" [class.is-danger]="invalidParentName"
+                    formControlName="name" maxlength="50">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="subtitle">Género</label>
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox" formControlName="gender">
+                    @if (parentGender) { Masculino} @else { Femenino}
+                </label>
+            </div>
+        </div>
+
+        <button class="button is-primary" [disabled]="parentForm.invalid" (click)="AddParent()">Agregar</button>
+    </form>
+</div>

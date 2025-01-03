@@ -35,7 +35,7 @@ public class LogService(
             ActionId = actionId,
             UserId = userId!,
             Details = details,
-            Date = DateTime.UtcNow
+            Date = DateTime.UtcNow.AddHours(-6)
         });
         await _context.SaveChangesAsync();
     }
@@ -63,7 +63,7 @@ public class LogService(
         var query =
             from l in _context.Logs
             join a in _context.ActionsLog on l.ActionId equals a.Id
-            orderby l.Date descending
+            orderby l.Id descending
             select new
             {
                 Id = l.Id!.Value,

@@ -1,0 +1,52 @@
+<div class="box">
+    <shared-alert [(message)]="message" [success]="success" />
+    <label class="title is-5">
+        @if (isParent) {Encargados}@else {Padrinos}
+    </label>
+    <hr>
+
+    <table class="table is-hoverable is-striped is-fullwidth" *ngIf="parents.length > 0">
+        <thead>
+            <th>Nombre</th>
+            <th>Género</th>
+            <th *ngIf="parents.length > 1">Acción</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let parent of parents">
+                <td>{{parent.name}}</td>
+                <td>
+                    @if (parent.gender) {Masculino}@else {Femenino}
+                </td>
+                <td *ngIf="parents.length > 1">
+                    <button class="button is-danger" [disabled]="updating"
+                        (click)="RemoveAsync(parent)">Remover</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <form [formGroup]="form" class="box" (ngSubmit)="AddAsync()">
+        <div class="field">
+            <label for="txtName" class="subtitle">Nombre</label>
+            <div class="control">
+                <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName"
+                    formControlName="name">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="subatitle">Género</label>
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox" formControlName="gender">
+                    @if (gender) { Masculino}@else { Femenino}
+                </label>
+            </div>
+        </div>
+
+        <button class="button is-info" [class.is-loading]="updating" [disabled]="updating || form.invalid"
+            (click)="AddAsync()">Agregar</button>
+    </form>
+</div>

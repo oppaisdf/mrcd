@@ -1,0 +1,103 @@
+<shared-alert [(message)]="message" [success]="success" />
+
+<div class="buttons are-medium">
+    <a class="button is-primary" routerLink="/person/new">Inscribir</a>
+    <button class="button is-info" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="FillAsync()">Buscar</button>
+    <button class="button" (click)="ClearFilters()">Limpiar filtros</button>
+</div>
+
+<form [formGroup]="form" class="box columns is-multiline" (ngSubmit)="FillAsync()">
+    <div class="column is-3 has-text-right">
+        <label class="subtitle">Género</label>
+    </div>
+    <div class="column is-9">
+        <div class="select" [class.is-loading]="isSearching">
+            <select formControlName="gender">
+                <option [value]="true">Masculino</option>
+                <option [value]="false">Femenino</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label class="subtitle">Día</label>
+    </div>
+    <div class="column is-9">
+        <div class="select" [class.is-loading]="isSearching">
+            <select formControlName="day">
+                <option value="{{true}}">Domingo</option>
+                <option value="{{false}}">Sábado</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="chkActive" class="subtitle">Activos</label>
+    </div>
+    <div class="column is-9">
+        <label class="checkbox">
+            <input type="checkbox" formControlName="isActive">
+            @if (GetValue('isActive')) { Solo activos} @else { Solo inactivos}
+        </label>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="lstDegrees" class="subtitle">Grado académico</label>
+    </div>
+    <div class="column is-9">
+        <div class="select" [class.is-loading]="isSearching">
+            <select formControlName="degreeId">
+                <option *ngFor="let degree of degrees" [value]="degree.id">{{degree.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="column is-3 has-text-right">
+        <label for="txtName" class="subtitle">Nombre de confirmando</label>
+    </div>
+    <div class="column is-9">
+        <div class="control" [class.is-loading]="isSearching">
+            <input name="txtName" type="text" class="input" formControlName="name" maxlength="30">
+        </div>
+    </div>
+</form>
+
+@if (people.length > 0) {
+<table class="table is-hoverable is-fullwidth is-striped">
+    <thead>
+        <th>Activo</th>
+        <th>Nombre</th>
+        <th>Día</th>
+        <th>Género</th>
+        <th>Acción</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let person of people">
+            <th>
+                <label class="checkbox">
+                    <input type="checkbox" checked="{{person.isActive}}">
+                </label>
+            </th>
+            <td>{{person.name}}</td>
+            <td>@if (person.day) {Domingo}@else {Sábado}</td>
+            <td>@if (person.gender) {Masculino}@else {Femenino}</td>
+            <td>
+                <a class="button is-info" routerLink="/person/{{person.id}}">Actualizar</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+}@else {
+<div class="notification is-warning">
+    <p>No hay información para mostrar</p>
+</div>
+}
+
+<nav class="pagination is-centered" role="navigation" aria-label="pagination" *ngIf="people.length > 0">
+    <button type="button" class="pagination-previous" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="ChangePage(false)" *ngIf="page > 1">Página anterior</button>
+    <button type="button" class="pagination-next" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="ChangePage(true)" *ngIf="page < lastPage">Siguiente página</button>
+    <p class="pagination-list">{{page}}/{{lastPage}}</p>
+</nav>

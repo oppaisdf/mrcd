@@ -15,6 +15,7 @@ public interface IPeopleService
     Task<(ICollection<PersonResponse> people, string pages)> GetAsync(string userId, PeopleFilter filter);
     Task<PersonResponse> GetByIdAsync(string userId, int id);
     Task UpdateAsync(string userId, int id, PeopleRequest request);
+    Task<PersonFilterResponse> GetFiltersAsync();
 }
 
 public partial class PeopleService(
@@ -54,6 +55,25 @@ public partial class PeopleService(
             await _context.Parents.Where(p => p.PersonId == personId).ToListAsync()
         );
         await CreateParentsAsync(personId, request);
+    }
+
+    private async Task UpdateGodparents(
+        int personId,
+        ICollection<ParentRequest> request
+    )
+    {
+        _context.Godparents.RemoveRange(
+            await _context.Godparents.Where(p => p.PersonId == personId).ToListAsync()
+        );
+        _context.Godparents.AddRange(
+            request.Select(p => new Godparent
+            {
+                Name = p.Name,
+                Gender = p.Gender,
+                PersonId = personId
+            }).ToList()
+        );
+        await _context.SaveChangesAsync();
     }
 
     private async Task RegisterSacraments(
@@ -177,9 +197,9 @@ public partial class PeopleService(
                         Id = p.Id!.Value,
                         Name = p.Name,
                         Gender = p.Gender,
-                        DOB = p.DOB,
+                        DOB = DateTime.UtcNow,
                         Day = p.Day,
-                        DegreeId = p.DegreeId,
+                        DegreeId = 0,
                         Address = "",
                         IsActive = p.IsActive
                     }).ToListAsync();
@@ -202,9 +222,9 @@ public partial class PeopleService(
                         Id = p.Id!.Value,
                         Name = p.Name,
                         Gender = p.Gender,
-                        DOB = p.DOB,
+                        DOB = DateTime.UtcNow,
                         Day = p.Day,
-                        DegreeId = p.DegreeId,
+                        DegreeId = 0,
                         Address = "",
                         IsActive = p.IsActive
                     })
@@ -233,6 +253,7 @@ public partial class PeopleService(
                 Parish = p.Parish,
                 DegreeId = p.DegreeId,
                 Address = p.Address,
+                Phone = p.Phone,
                 Parents = _context.Parents
                     .Where(x => x.PersonId == id)
                     .Select(x => new ParentResponse
@@ -261,7 +282,14 @@ public partial class PeopleService(
                         Name = s.Name,
                         IsActive = ts.PersonId == p.Id
                     }
-                ).ToList()
+                ).ToList(),
+                Degrees = _context.Degrees
+                    .Select(d => new DefaultEntityResponse
+                    {
+                        Id = d.Id!.Value,
+                        Name = d.Name
+                    })
+                    .ToList()
             }).FirstOrDefaultAsync()
             ?? throw new DoesNotExistsException("El confirmando no existe");
     }
@@ -291,11 +319,24 @@ public partial class PeopleService(
         if (request.Address != null && person.Address != request.Address) person.Address = request.Address;
         if (request.Phone != null && person.Phone != request.Phone) person.Phone = request.Phone;
 
+        if (request.IsActive != null && request.IsActive != person.IsActive)
+        {
+            if (request.IsActive == true) person.IsActive = true;
+            else
+            {
+                person.IsActive = false;
+                person.Phone = null;
+                person.Address = null;
+                person.Parish = null;
+            }
+        }
+
         var tran = await _context.Database.BeginTransactionAsync();
         try
         {
             await _context.SaveChangesAsync();
             if (request.Parents != null) await UpdateParentsAsync(id, request.Parents);
+            if (request.Godparents != null) await UpdateGodparents(id, request.Godparents);
             if (request.Sacraments != null) await RegisterSacraments(id, request.Sacraments);
             await _logs.RegisterUpdateAsync(userId, $"Confirmando {id}");
             await tran.CommitAsync();
@@ -305,5 +346,14 @@ public partial class PeopleService(
             await tran.RollbackAsync();
             throw;
         }
+    }
+
+    public async Task<PersonFilterResponse> GetFiltersAsync()
+    {
+        return new PersonFilterResponse
+        {
+            Degrees = await _context.Degrees.Select(d => new DefaultEntityResponse { Id = d.Id!.Value, Name = d.Name }).ToListAsync(),
+            Sacraments = await _context.Sacraments.Select(s => new DefaultEntityResponse { Id = s.Id!.Value, Name = s.Name }).ToListAsync()
+        };
     }
 }

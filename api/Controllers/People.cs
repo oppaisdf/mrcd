@@ -115,6 +115,18 @@ public class PeopleController(
         { return this.DefaultServerError($"[+] Error al consultar personas: {e.Message}"); }
     }
 
+    [HttpGet("Filters")]
+    public async Task<IActionResult> GetFiltersAsync()
+    {
+        try
+        {
+            var filters = await _service.GetFiltersAsync();
+            return this.DefaultOk(filters);
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al consultar filtros de confirmandos: {e.Message}"); }
+    }
+
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateAsync(
         int id,
@@ -139,7 +151,7 @@ public class PeopleController(
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             await _service.UpdateAsync(userId, id, request);
-            return this.DefaultOk(new { }, "Person has been successfully updated!");
+            return this.DefaultOk(new { }, "El confirmando se actualizó correctamente");
         }
         catch (BadRequestException e)
         { return this.DefaultBadRequest(e.Message); }
