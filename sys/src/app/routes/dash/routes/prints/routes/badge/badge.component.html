@@ -1,1 +1,5 @@
-<p>badge works!</p>
+<div class="box" *ngFor="let qr of qrs">
+    {{qr.name}} (@if (qr.day) {Domingo}@else {Sábado})
+    <hr>
+    {{qr.hash}}
+</div>
