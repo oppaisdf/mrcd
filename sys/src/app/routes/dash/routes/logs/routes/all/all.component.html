@@ -53,24 +53,26 @@
     </div>
 </form>
 
-<table class="table is-fullwidth is-striped" *ngIf="logs.length > 0">
-    <thead>
-        <th>Usuario</th>
-        <th>Accción</th>
-        <th>Detalles</th>
-        <th>Hora</th>
-        <th>Fecha</th>
-    </thead>
-    <tbody>
-        <tr *ngFor="let log of logs">
-            <td>{{log.user}}</td>
-            <td>{{log.action}}</td>
-            <td>{{log.details}}</td>
-            <td>{{GetHour(log.date)}}</td>
-            <td>{{GetDate(log.date)}}</td>
-        </tr>
-    </tbody>
-</table>
+<div class="table-container" *ngIf="logs.length > 0">
+    <table class="table is-fullwidth is-striped">
+        <thead>
+            <th>Usuario</th>
+            <th>Accción</th>
+            <th>Detalles</th>
+            <th>Hora</th>
+            <th>Fecha</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let log of logs">
+                <td>{{log.user}}</td>
+                <td>{{log.action}}</td>
+                <td>{{log.details}}</td>
+                <td>{{GetHour(log.date)}}</td>
+                <td>{{GetDate(log.date)}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 <nav class="pagination is-centered" role="navigation" aria-label="pagination" *ngIf="logs.length > 0">
     <button type="button" class="pagination-previous" [class.is-loading]="isSearching" [disabled]="isSearching"

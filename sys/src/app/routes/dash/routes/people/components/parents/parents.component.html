@@ -1,9 +1,5 @@
-<div class="box">
+<shared-pan-expand [title]="isParent ? 'Encargados': 'Padrinos'">
     <shared-alert [(message)]="message" [success]="success" />
-    <label class="title is-5">
-        @if (isParent) {Encargados}@else {Padrinos}
-    </label>
-    <hr>
 
     <table class="table is-hoverable is-striped is-fullwidth" *ngIf="parents.length > 0">
         <thead>
@@ -49,4 +45,4 @@
         <button class="button is-info" [class.is-loading]="updating" [disabled]="updating || form.invalid"
             (click)="AddAsync()">Agregar</button>
     </form>
-</div>
+</shared-pan-expand>

@@ -1,0 +1,12 @@
+<div class="card">
+    <header class="card-header" (click)="Expand()">
+        <h1 class="card-header-title">{{title}}</h1>
+        <label class="card-header-icon">{{icon}}</label>
+    </header>
+
+    <div class="card-content" *ngIf="isExpanded">
+        <div class="content">
+            <ng-content></ng-content>
+        </div>
+    </div>
+</div>

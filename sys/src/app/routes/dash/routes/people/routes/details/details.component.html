@@ -1,9 +1,9 @@
 <shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
-    <button class="button is-primary" [class.is-loading]="isUpdating" [disabled]="isUpdating || form.invalid"
+    <button class="button is-warning" [class.is-loading]="isUpdating" [disabled]="isUpdating || form.invalid"
         (click)="UpdateAsync()">Actualizar</button>
-    <a class="button" routerLink="/person/all">Regresar</a>
+    <a class="button is-info is-light" routerLink="/person/all">Regresar</a>
 </div>
 
 <form [formGroup]="form" class="box columns is-multiline" (ngSubmit)="UpdateAsync()">
@@ -112,5 +112,5 @@
 </form>
 
 <people-comp-parents [(updating)]="isUpdating" [id]="id" [isParent]="true" [parents]="parents" />
-
+<hr>
 <people-comp-parents [(updating)]="isUpdating" [id]="id" [isParent]="false" [parents]="godparents" />

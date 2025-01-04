@@ -4,11 +4,13 @@ import { AlertComponent } from './components/alert/alert.component';
 import { UpdaterComponent } from './components/updater/updater.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UpdateService } from './services/update.service';
+import { PanExpandComponent } from './components/pan-expand/pan-expand.component';
 
 @NgModule({
   declarations: [
     AlertComponent,
-    UpdaterComponent
+    UpdaterComponent,
+    PanExpandComponent
   ],
   imports: [
     CommonModule,
@@ -16,7 +18,8 @@ import { UpdateService } from './services/update.service';
   ],
   exports: [
     AlertComponent,
-    UpdaterComponent
+    UpdaterComponent,
+    PanExpandComponent
   ],
   providers: [
     UpdateService

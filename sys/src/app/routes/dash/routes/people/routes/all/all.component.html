@@ -64,30 +64,32 @@
 </form>
 
 @if (people.length > 0) {
-<table class="table is-hoverable is-fullwidth is-striped">
-    <thead>
-        <th>Activo</th>
-        <th>Nombre</th>
-        <th>Día</th>
-        <th>Género</th>
-        <th>Acción</th>
-    </thead>
-    <tbody>
-        <tr *ngFor="let person of people">
-            <th>
-                <label class="checkbox">
-                    <input type="checkbox" checked="{{person.isActive}}">
-                </label>
-            </th>
-            <td>{{person.name}}</td>
-            <td>@if (person.day) {Domingo}@else {Sábado}</td>
-            <td>@if (person.gender) {Masculino}@else {Femenino}</td>
-            <td>
-                <a class="button is-info" routerLink="/person/{{person.id}}">Actualizar</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div class="table-container">
+    <table class="table is-hoverable is-fullwidth is-striped">
+        <thead>
+            <th>Activo</th>
+            <th>Nombre</th>
+            <th>Día</th>
+            <th>Género</th>
+            <th>Acción</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let person of people">
+                <th>
+                    <label class="checkbox">
+                        <input type="checkbox" checked="{{person.isActive}}">
+                    </label>
+                </th>
+                <td>{{person.name}}</td>
+                <td>@if (person.day) {Domingo}@else {Sábado}</td>
+                <td>@if (person.gender) {Masculino}@else {Femenino}</td>
+                <td>
+                    <a class="button is-info" routerLink="/person/{{person.id}}">Actualizar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 }@else {
 <div class="notification is-warning">
     <p>No hay información para mostrar</p>
