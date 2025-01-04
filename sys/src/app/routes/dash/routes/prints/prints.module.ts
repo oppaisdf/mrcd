@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PrintsRoutingModule } from './prints-routing.module';
 import { BadgeComponent } from './routes/badge/badge.component';
 import { PrinterService } from './services/printer.service';
+import { QRCodeComponent } from 'angularx-qrcode'
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { PrinterService } from './services/printer.service';
   ],
   imports: [
     CommonModule,
-    PrintsRoutingModule
+    PrintsRoutingModule,
+    QRCodeComponent
   ],
   providers: [
     PrinterService

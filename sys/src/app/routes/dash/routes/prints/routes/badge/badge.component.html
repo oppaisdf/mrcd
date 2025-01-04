@@ -1,5 +1,24 @@
-<div class="box" *ngFor="let qr of qrs">
-    {{qr.name}} (@if (qr.day) {Domingo}@else {Sábado})
-    <hr>
-    {{qr.hash}}
+<div class="buttons are-medium">
+    <button class="button is-primary" (click)="GeneratePDF()">Imprimir</button>
+</div>
+
+<div class="box">
+    <div #pageA4 class="columns is-multiline is-vcentered" *ngFor="let qr of qrs">
+        <div class="card column" style="background-color: white;">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image">
+                            <qrcode [qrdata]="qr.hash" [elementType]="'img'" />
+                        </figure>
+                    </div>
+
+                    <div class="media-content">
+                        <p class="title is-4">{{qr.name}}</p>
+                        <p class="subtitle is-6">@if (qr.day) {Domingo}@else {Sábado}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
