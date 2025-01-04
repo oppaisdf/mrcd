@@ -144,7 +144,8 @@ export class DetailsComponent implements OnInit {
       degreeId: this.GetValue('degreeId') !== this._old.degreeId ? this.GetValue('degreeId') : undefined,
       address: this.GetValue('address') !== this._old.address ? this.GetValue('address') : undefined,
       phone: this.GetValue('phone').replace(/\D/g, '') !== this._old.phone ? this.GetValue('phone').replace(/\D/g, '') : undefined,
-      parish: this.GetValue('parish') !== this._old.parish ? this.GetValue('parish') : undefined
+      parish: this.GetValue('parish') !== this._old.parish ? this.GetValue('parish') : undefined,
+      sacraments: this._sacraments
     };
     if (!request.phone || request.phone.length < 8) request.phone = undefined;
     const response = await this._service.UpdateAsync(this.id, request);

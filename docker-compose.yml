@@ -36,7 +36,7 @@ services:
 
   server_prod:
     container_name: server
-    image: kradbyte/kmd:server
+    image: kradbyte/mrcd:server
     ports:
       - 80:80
     networks:
@@ -52,7 +52,7 @@ services:
 
   api_prod:
     container_name: api
-    image: kradbyte/kmd:api
+    image: kradbyte/mrcd:api
     expose:
       - 8080
     networks:

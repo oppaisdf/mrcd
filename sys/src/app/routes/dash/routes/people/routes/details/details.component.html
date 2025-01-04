@@ -104,7 +104,7 @@
     <div class="column is-9">
         <div class="checkboxes" *ngFor="let sacrament of sacraments">
             <label class="checkbox">
-                <input type="checkbox" (click)="SelectSacrament(sacrament)">
+                <input type="checkbox" [checked]="sacrament.isActive" (click)="SelectSacrament(sacrament)">
                 {{sacrament.name}}
             </label>
         </div>

@@ -276,11 +276,12 @@ public partial class PeopleService(
                     from s in _context.Sacraments
                     join temp in _context.PeopleSacraments on s.Id equals temp.SacramentId into tempG
                     from ts in tempG.DefaultIfEmpty()
+                    group ts by new { s.Id, s.Name } into gs
                     select new SacramentResponse
                     {
-                        Id = s.Id!.Value,
-                        Name = s.Name,
-                        IsActive = ts.PersonId == p.Id
+                        Id = gs.Key.Id!.Value,
+                        Name = gs.Key.Name,
+                        IsActive = gs.Any(x => x != null && x.PersonId == p.Id)
                     }
                 ).ToList(),
                 Degrees = _context.Degrees

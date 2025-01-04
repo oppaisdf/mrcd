@@ -14,8 +14,7 @@ import { DefaultEntityResponse } from '../../models/responses/person';
 export class NewComponent implements OnInit {
   constructor(
     private _service: PersonService,
-    private _form: FormBuilder,
-    private _router: Router
+    private _form: FormBuilder
   ) {
     this.form = this._form.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
@@ -139,6 +138,13 @@ export class NewComponent implements OnInit {
 
     this.form.enable();
     this.isAdding = false;
-    if (response.success) this._router.navigateByUrl(`/person/${response.data!.id}`);
+    if (!response.success) return;
+    this.message = 'Se inscribió el confirmando correctamente';
+    this.form.reset();
+    this.form.patchValue({
+      day: true,
+      gender: true
+    });
+    this.parents = [];
   }
 }

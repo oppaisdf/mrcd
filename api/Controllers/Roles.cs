@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-[Authorize(Roles = "sys")]
+[Authorize(Roles = "adm")]
 [ApiController]
 [Route("api/[controller]")]
 public class RoleController(
@@ -29,6 +29,7 @@ public class RoleController(
         { return this.DefaultServerError($"[+] Error al obtener roles: {e.Message}"); }
     }
 
+    [Authorize(Roles = "sys")]
     [HttpPost]
     public async Task<IActionResult> CreateAsync(
         [FromBody] NameRequest request

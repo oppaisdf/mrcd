@@ -17,7 +17,7 @@
         <div class="navbar-start">
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">Confirmandos</a>
-                <div class="navbar-dropdown">
+                <div class="navbar-dropdown" (click)="ShowMenu()">
                     <a class="navbar-item" routerLink="/person/new">Inscribir</a>
                     <a class="navbar-item" routerLink="/person/all">Actualizar</a>
                     <a class="navbar-item">Asistencia</a>
@@ -27,15 +27,16 @@
             @if (isAdm) {
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">Impresiones</a>
-                <div class="navbar-dropdown">
+                <div class="navbar-dropdown" (click)="ShowMenu()">
                     <a class="navbar-item" routerLink="/print/badge">Gafetes</a>
                     <a class="navbar-item">Diplomas</a>
+                    <a class="navbar-item">Listado</a>
                 </div>
             </div>
 
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">Gestiones</a>
-                <div class="navbar-dropdown">
+                <div class="navbar-dropdown" (click)="ShowMenu()">
                     <a class="navbar-item" routerLink="/user/all">Usuarios</a>
                     <a class="navbar-item" routerLink="/degree/all">Grados académicos</a>
                     <a class="navbar-item" routerLink="/sacrament/all">Sacramentos</a>
@@ -57,7 +58,7 @@
         <div class="navbar-end">
             <div class="navbar-item">
                 <button class="button is-primary" [class.is-loading]="isLogouting" [disabled]="isLogouting"
-                    (click)="Logout()">Logout</button>
+                    (click)="Logout()">Cerrar sesión</button>
             </div>
         </div>
     </div>
