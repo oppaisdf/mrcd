@@ -155,7 +155,7 @@ public partial class PeopleService(
             await _context.SaveChangesAsync();
             if (request.Parents != null && request.Parents.Count > 0) await CreateParentsAsync(person.Id!.Value, request.Parents);
             if (request.Sacraments != null) await RegisterSacraments(person.Id!.Value, request.Sacraments);
-            await _logs.RegisterCreationAsync(userId, $"Creó confirmando {person.Id}");
+            await _logs.RegisterCreationAsync(userId, $"Confirmando {person.Id}");
             await tran.CommitAsync();
         }
         catch (Exception)

@@ -23,7 +23,7 @@ export class LoginService {
   public async Login(
     loginRequest: LoginRequest
   ) {
-    const response = await this._api.Post<LoginResponse>('User/Login', loginRequest);
+    const response = await this._api.Post<LoginResponse>('/Login', loginRequest);
 
     if (response.success)
       this.SaveRole(response.data!.toString());
@@ -34,7 +34,7 @@ export class LoginService {
   }
 
   public async Logout() {
-    const response = await this._api.Delete('User/Login');
+    const response = await this._api.Delete('/Login');
     if (response.success) this.RemoveSession();
     return response;
   }
