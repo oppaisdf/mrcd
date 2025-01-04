@@ -83,6 +83,10 @@ public class MerContext(
                 .HasConversion(encrypter!)
                 .HasColumnType("varbinary(128)");
             parent
+                .Property(p => p.Phone)
+                .HasConversion(encrypter)
+                .HasColumnType("varbinary(32)");
+            parent
                 .HasOne<Person>()
                 .WithMany()
                 .HasForeignKey(p => p.PersonId)

@@ -28,7 +28,8 @@ export class NewComponent implements OnInit {
 
     this.parentForm = this._form.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
-      gender: [true, Validators.required]
+      gender: [true, Validators.required],
+      phone: ['', [Validators.maxLength(9), Validators.minLength(9)]]
     });
   }
 
@@ -87,6 +88,16 @@ export class NewComponent implements OnInit {
     this.form.controls['phone'].setValue(`${first}-${last}`, { emitEvent: false });
   }
 
+  FormatPhoneParent() {
+    const phone = `${this.parentForm.controls['phone'].value}`.replace(/\D/g, '').slice(0, 8);
+    if (!phone) {
+      this.parentForm.controls['phone'].setValue('', { emitEvent: false });
+      return;
+    }
+    if (phone.length < 5) this.parentForm.controls['phone'].setValue(phone, { emitEvent: false });
+    else this.parentForm.controls['phone'].setValue(`${phone.substring(0, 4)}-${phone.substring(4, 8)}`, { emitEvent: false });
+  }
+
   SelectSacrament(
     id: number
   ) {
@@ -132,6 +143,10 @@ export class NewComponent implements OnInit {
       parents: this.parents,
       sacraments: this._sacraments
     };
+    if (request.parents) request.parents!.forEach(p => {
+      if (!p.phone || p.phone.length !== 9) p.phone = undefined;
+      else p.phone = p.phone.replace('-', '')
+    });
     const response = await this._service.AddAsync(request);
     this.message = response.message;
     this.success = response.success;

@@ -139,6 +139,14 @@
             </div>
         </div>
 
+        <div class="field">
+            <label class="subtitle">Teléfono</label>
+            <div class="control">
+                <input type="text" class="input" formControlName="phone" (input)="FormatPhoneParent()"
+                    placeholder="xxxx-xxxx">
+            </div>
+        </div>
+
         <button class="button is-primary" [disabled]="parentForm.invalid" (click)="AddParent()">Agregar
             encargado</button>
     </form>

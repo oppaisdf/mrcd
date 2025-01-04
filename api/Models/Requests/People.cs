@@ -37,4 +37,8 @@ public class ParentRequest
 
     [DefaultValue(true)]
     public required bool Gender { get; set; }
+
+    [MaxLength(8, ErrorMessage = "Teléfono inválido")]
+    [MinLength(8, ErrorMessage = "Teléfono inválido")]
+    public string? Phone { get; set; }
 }

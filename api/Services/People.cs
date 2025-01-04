@@ -34,12 +34,18 @@ public partial class PeopleService(
         ICollection<ParentRequest> request
     )
     {
+        var x = request.ToList();
+        x.ForEach(x =>
+        {
+            Console.WriteLine($"[+] Phone: {x.Phone}");
+        });
         _context.Parents.AddRange(request
             .Select(p => new Parent
             {
                 Name = p.Name.Trim(),
                 Gender = p.Gender,
-                PersonId = personId
+                PersonId = personId,
+                Phone = p.Phone
             })
             .ToList()
         );
@@ -260,7 +266,8 @@ public partial class PeopleService(
                     {
                         Id = x.Id!.Value,
                         Name = x.Name,
-                        Gender = x.Gender
+                        Gender = x.Gender,
+                        Phone = x.Phone
                     })
                     .ToList(),
                 Godparents = _context.Godparents

@@ -19,6 +19,7 @@ export interface ParentResponse {
     id: number;
     name: string;
     gender: boolean;
+    phone?: string;
 }
 
 export interface SacramentResponse {

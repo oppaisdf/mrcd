@@ -5,6 +5,7 @@
         <thead>
             <th>Nombre</th>
             <th>Género</th>
+            <th *ngIf="isParent">Teléfono</th>
             <th *ngIf="parents.length > 1">Acción</th>
         </thead>
         <tbody>
@@ -13,6 +14,7 @@
                 <td>
                     @if (parent.gender) {Masculino}@else {Femenino}
                 </td>
+                <td *ngIf="isParent">{{parent.phone}}</td>
                 <td *ngIf="parents.length > 1">
                     <button class="button is-danger" [disabled]="updating"
                         (click)="RemoveAsync(parent)">Remover</button>
@@ -27,7 +29,7 @@
         <div class="field">
             <label for="txtName" class="subtitle">Nombre</label>
             <div class="control">
-                <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName"
+                <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
                     formControlName="name">
             </div>
         </div>
@@ -41,6 +43,16 @@
                 </label>
             </div>
         </div>
+
+        @if (isParent) {
+        <div class="field">
+            <label class="subtitle">Teléfono</label>
+            <div class="control">
+                <input type="text" class="input" [class.is-danger]="IsInvalidField('phone')" formControlName="phone"
+                    (input)="FormatNumber()" maxlength="9" placeholder="xxxx-xxxx">
+            </div>
+        </div>
+        }
 
         <button class="button is-info" [class.is-loading]="updating" [disabled]="updating || form.invalid"
             (click)="AddAsync()">Agregar</button>

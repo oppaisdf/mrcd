@@ -57,6 +57,8 @@ public class Parent
     [Required]
     [DefaultValue(true)]
     public required bool Gender { get; set; }
+
+    public string? Phone { get; set; }
 }
 
 public class Godparent

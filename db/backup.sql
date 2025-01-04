@@ -35,7 +35,7 @@ CREATE TABLE `__efmigrationshistory` (
 
 LOCK TABLES `__efmigrationshistory` WRITE;
 /*!40000 ALTER TABLE `__efmigrationshistory` DISABLE KEYS */;
-INSERT INTO `__efmigrationshistory` VALUES ('20241230165024_InitialCreate','8.0.8');
+INSERT INTO `__efmigrationshistory` VALUES ('20241230165024_InitialCreate','8.0.8'),('20250104235103_AddParentPhone', '8.0.8');
 /*!40000 ALTER TABLE `__efmigrationshistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -379,6 +379,7 @@ CREATE TABLE `parents` (
   `PersonId` int NOT NULL,
   `Name` varbinary(128) NOT NULL,
   `Gender` tinyint(1) NOT NULL DEFAULT '1',
+  `Phone` varbinary(32) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `IX_parents_PersonId` (`PersonId`),
   CONSTRAINT `FK_Parent_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `people` (`Id`) ON DELETE CASCADE

@@ -52,6 +52,11 @@ public class PeopleController(
         {
             request.Parents = request.Parents.Where(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
             if (request.Parents.Count == 0 || request.Parents.Count > 2) request.Parents = null;
+            else request.Parents.ToList().ForEach(p =>
+            {
+                Console.WriteLine($"[+] Dirty Phone: {p.Phone}");
+                if (p.Phone != null) p.Phone = IsValidPhoneNumber(p.Phone) ? p.Phone : null;
+            });
         }
         try
         {
@@ -138,6 +143,11 @@ public class PeopleController(
         {
             request.Parents = request.Parents.Where(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
             if (request.Parents.Count == 0 || request.Parents.Count > 2) request.Parents = null;
+            else request.Parents.ToList().ForEach(p =>
+            {
+                Console.WriteLine($"[+] DIrty Phone: {p.Phone}");
+                if (p.Phone != null) p.Phone = IsValidPhoneNumber(p.Phone) ? p.Phone : null;
+            });
         }
         if (request.Godparents != null)
         {

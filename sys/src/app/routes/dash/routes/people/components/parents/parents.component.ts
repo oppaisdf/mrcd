@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ParentResponse } from '../../models/responses/person';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PersonService } from '../../services/person.service';
-import { ParentRequest, PersonRequest } from '../../models/requests/person';
+import { PersonRequest } from '../../models/requests/person';
 
 @Component({
   selector: 'people-comp-parents',
@@ -17,7 +17,8 @@ export class ParentsComponent {
   ) {
     this.form = this._form.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],
-      gender: [true, Validators.required]
+      gender: [true, Validators.required],
+      phone: ['', [Validators.minLength(9), Validators.maxLength(9)]]
     });
   }
 
@@ -30,10 +31,14 @@ export class ParentsComponent {
   message = '';
   success = true;
 
-  get isInvalidName() {
-    return this.form.controls['name'].touched && this.form.controls['name'].invalid;
+  IsInvalidField(
+    control: string
+  ) {
+    return this.form.controls[control].touched && this.form.controls[control].invalid;
   }
+
   get gender() { return this.form.controls['gender'].value; }
+  get phone() { return `${this.form.controls['phone'].value}`.replace(/\D/g, ''); }
 
   async AddAsync() {
     if (this.updating) return;
@@ -46,10 +51,12 @@ export class ParentsComponent {
     this.parents.push(({
       name: this.form.controls['name'].value,
       gender: this.gender,
+      phone: this.phone,
       id: 0
     }));
+
     const request: PersonRequest = {};
-    if (this.isParent) request.parents = this.parents.map(p => ({ name: p.name, gender: p.gender }));
+    if (this.isParent) request.parents = this.parents.map(p => ({ name: p.name, gender: p.gender, phone: p.phone }));
     else request.godparents = this.parents.map(p => ({ name: p.name, gender: p.gender }));
     const response = await this._service.UpdateAsync(this.id, request);
     this.message = response.message;
@@ -58,15 +65,16 @@ export class ParentsComponent {
     this.updating = false;
     this.updatingChange.emit(false);
     this.form.enable();
-    this.form.controls['gender'].setValue(false);
 
     if (response.message) {
       this.form.reset();
+      this.form.controls['gender'].setValue(false);
       return;
     }
 
     this.parents.pop();
     this.form.reset();
+    this.form.controls['gender'].setValue(false);
   }
 
   async RemoveAsync(
@@ -93,5 +101,16 @@ export class ParentsComponent {
     this.updating = false;
     this.updatingChange.emit(false);
     if (!response.success) this.parents.push(parent);
+  }
+
+  FormatNumber() {
+    const phone = `${this.form.controls['phone'].value}`.replace(/\D/g, '').substring(0, 8);
+    if (!phone) {
+      this.form.controls['phone'].setValue('', { emitEvent: false })
+      return;
+    };
+
+    if (phone.length < 5) this.form.controls['phone'].setValue(phone, { emitEvent: false });
+    else this.form.controls['phone'].setValue(`${phone.substring(0, 4)}-${phone.substring(4, 8)}`);
   }
 }

@@ -23,6 +23,7 @@ public class ParentResponse
     public required int Id { get; set; }
     public required string Name { get; set; }
     public required bool Gender { get; set; }
+    public string? Phone { get; set; }
 }
 
 public class SacramentResponse
