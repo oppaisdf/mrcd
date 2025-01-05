@@ -14,6 +14,8 @@ services:
       - ENCRYPT_KEY=${EKEY}
     volumes:
       - ./api:/app
+    profiles:
+      - api
 
   sys:
     build: ./sys
@@ -39,6 +41,8 @@ services:
     environment:
       - MYSQL_DATABASE=${DB}
       - MYSQL_ROOT_PASSWORD=${PASSWD}
+    profiles:
+      - api
 
 networks:
   network:

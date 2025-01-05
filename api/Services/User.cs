@@ -1,4 +1,6 @@
+using System.Text.RegularExpressions;
 using api.Common;
+using api.Context;
 using api.Models.Requests;
 using api.Models.Responses;
 using Microsoft.AspNetCore.Identity;
@@ -16,15 +18,53 @@ public interface IUserService
     Task LogoutAsync();
 }
 
-public class UserService(
+public partial class UserService(
     SignInManager<IdentityUser> signInManager,
     UserManager<IdentityUser> userManager,
-    RoleManager<IdentityRole> roleManager
+    RoleManager<IdentityRole> roleManager,
+    MerContext context,
+    ICommonService common
 ) : IUserService
 {
     private readonly SignInManager<IdentityUser> _signInManager = signInManager;
     private readonly UserManager<IdentityUser> _userManager = userManager;
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+    private readonly MerContext _context = context;
+    private readonly ICommonService _common = common;
+
+    #region "Private"
+    private async Task AssignRolesAsync(
+        IdentityUser user,
+        List<string> roles
+    )
+    {
+        var _roles = await _roleManager.Roles
+            .AsNoTracking()
+            .Where(r => r.Name != "sys")
+            .Select(r => r.Name)
+            .ToListAsync() ?? throw new DoesNotExistsException("Los roles no fueron encontrados");
+        var cleanRoles = roles.Contains("adm") ? _roles! : roles.Where(_roles.Contains).ToList();
+        if (cleanRoles == null || cleanRoles.Count == 0) throw new DoesNotExistsException("Los roles no fueron encontrados");
+
+        var addRoleResult = await _userManager.AddToRolesAsync(user, cleanRoles);
+        if (!addRoleResult.Succeeded)
+            throw new Exception($"[+] Error al asignar roles al usuario {user.UserName}, verificar usuario y sus roles: {string.Join(", ", addRoleResult.Errors.Select(e => e.Description))}");
+    }
+
+    [GeneratedRegex("^(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{6,}$")]
+    private partial Regex IsValidPasswordRegex();
+    private bool IsValidPassword(string pass) => IsValidPasswordRegex().IsMatch(pass);
+    private async Task AssignPassAsync(
+        IdentityUser user,
+        string pass
+    )
+    {
+        if (!IsValidPassword(pass)) throw new BadRequestException("La contraseña debe tener, por lo menos, un número, una mayúscula y un caráacter especial");
+        var result = await _userManager.AddPasswordAsync(user, pass);
+        if (result.Succeeded) return;
+        throw new Exception($"[+] Error al actualizar la contraseña del usuario {user.UserName}: {string.Join(",", result.Errors.Select(e => e.Description))}");
+    }
+    #endregion
 
     #region "Login"
     public async Task<ICollection<string>> LoginAsync(
@@ -52,29 +92,32 @@ public class UserService(
         var user = new IdentityUser
         {
             UserName = request.Username,
-            Email = request.Email,
+            Email = "fake@fake.com",
             EmailConfirmed = true
         };
 
-        var userNameAlreadyExists = await _userManager.FindByNameAsync(user.UserName!);
-        if (userNameAlreadyExists != null) throw new AlreadyExistsException("El usuario ya existe");
+        var normalized = _common.GetNormalizedText(request.Username!);
+        var alreadyExist = await _userManager.Users.AnyAsync(u => u.NormalizedUserName == normalized);
+        if (alreadyExist) throw new AlreadyExistsException("El usuario ya existe");
 
-        // Crea el Usuario
-        var result = await _userManager.CreateAsync(user, request.Password!);
-        if (!result.Succeeded) throw new Exception($"[+] Error al crear el usuario: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-
-        // Asigna los roles
-        foreach (var role in request.Roles!)
+        using var tran = await _context.Database.BeginTransactionAsync();
+        try
         {
-            if (role.Equals("sys")) throw new BadRequestException("Este rol sys no puede ser asignado");
+            if (!IsValidPassword(request.Password!)) throw new BadRequestException("La contraseña debe tener, por lo menos, un número, una mayúscula y un caráacter especial");
+            // Crea el Usuario
+            var result = await _userManager.CreateAsync(user, request.Password!);
+            if (!result.Succeeded) throw new Exception($"[+] Error al crear el usuario: {string.Join(", ", result.Errors.Select(e => e.Description))}");
 
-            var roleExist = await _roleManager.RoleExistsAsync(role);
-            if (!roleExist) throw new DoesNotExistsException("El rol no existe para ser asignado");
-
-            var addRoleResult = await _userManager.AddToRoleAsync(user, role);
-            if (addRoleResult.Succeeded) continue;
-            throw new Exception($"[+] Error al asignar el rol {role} al usuario {user.UserName}, verificar usuario y sus roles: {string.Join(", ", addRoleResult.Errors.Select(e => e.Description))}");
+            // Asigna los roles
+            await AssignRolesAsync(user, request.Roles!);
+            await tran.CommitAsync();
         }
+        catch (Exception)
+        {
+            await tran.RollbackAsync();
+            throw;
+        }
+
         return user;
     }
 
@@ -124,67 +167,40 @@ public class UserService(
     )
     {
         var user = await _userManager.FindByIdAsync(id) ?? throw new DoesNotExistsException("Usuario no encontrado");
-        var sysUsers = await _userManager.GetUsersInRoleAsync("sys") ?? throw new Exception($"[+] Error al obtener los usuarios sys, actualizando el usuario {user.Id}");
-        if (!user.EmailConfirmed && request.IsActive != true) throw new BadRequestException("El usuario está inactivo, no se puede actualizar");
 
-        /*
-        Se verifica que el usuario a modificar no sea un usuario sys
-        Si el usuario es sys, se valida que el usuario que hace la petición también sea sys
-        */
-        if (sysUsers.Any(u => u.Id == id) && !sysUsers.Any(u => u.Id == userIdRequest))
-            throw new BadRequestException("El usuario sys no puede ser cambiado por otro usuario");
+        if (!user.EmailConfirmed && request.IsActive != true) throw new BadRequestException("Ese usuario está incativo, no se puede actualizar");
 
-        if (!string.IsNullOrWhiteSpace(request.Email) && request.Email != user.Email) user.Email = request.Email;
-        if (!string.IsNullOrWhiteSpace(request.Username) && request.Username != user.UserName)
+        if (request.Username != null && user.UserName != request.Username)
         {
+            var normalized = _common.GetNormalizedText(request.Username);
+            var alreadyExists = await _userManager.Users
+                .AnyAsync(u => u.NormalizedUserName == normalized && u.Id != id);
+            if (alreadyExists) throw new AlreadyExistsException("El usuario ya existe");
             user.UserName = request.Username;
-            var userNameAlreadyExists = await _userManager.FindByNameAsync(user.UserName);
-            if (userNameAlreadyExists != null && userNameAlreadyExists.Id != user.Id)
-                throw new AlreadyExistsException("El usuario ya existe");
         }
 
-        if (request.IsActive != null && user.EmailConfirmed != request.IsActive)
+        if (request.IsActive != null && user.EmailConfirmed != request.IsActive) user.EmailConfirmed = request.IsActive!.Value;
+
+        using var tran = await _context.Database.BeginTransactionAsync();
+        try
         {
-            var roles = await _userManager.GetRolesAsync(user) ?? throw new Exception($"[+] Error al consultar roles de usuario en inactivación de usuario {id}");
-            if (roles.Contains("sys")) throw new BadRequestException("El usuario sys no puede ser inactivado");
+            if (request.Password != null) await AssignPassAsync(user, request.Password);
+            if (request.Roles != null && request.Roles.Count != 0)
+            {
+                var removeRolesResult = await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
+                if (!removeRolesResult.Succeeded) throw new Exception($"[+] Error al remover roles de usuario {user.UserName}: {string.Join(", ", removeRolesResult.Errors.Select(e => e.Description))}");
+                await AssignRolesAsync(user, request.Roles);
+            }
 
-            user.EmailConfirmed = request.IsActive!.Value;
+            // Actalización de los datos del usuario
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded) throw new Exception($"[+] Error al actualizar usuario {user.UserName}: {string.Join(", ", updateResult.Errors.Select(e => e.Description))}");
+            await tran.CommitAsync();
         }
-
-        // Actalización de los datos del usuario
-        var updateResult = await _userManager.UpdateAsync(user);
-        if (!updateResult.Succeeded) throw new Exception($"[+] Error al actualizar usuario {user.UserName}: {string.Join(", ", updateResult.Errors.Select(e => e.Description))}");
-
-        // Actualización de roles
-        if (sysUsers.Contains(user) || request.Roles!.Count == 0) goto UpdatePass;
-
-        foreach (var role in request.Roles)
+        catch (Exception)
         {
-            if (role.Equals("sys")) throw new BadRequestException("Este rol no puede ser asignado");
-
-            var roleExists = await _roleManager.RoleExistsAsync(role);
-            if (roleExists) continue;
-            throw new DoesNotExistsException("El rol no existe");
+            await tran.RollbackAsync();
+            throw;
         }
-
-        var removeRolesResult = await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
-        if (!removeRolesResult.Succeeded) throw new Exception($"[+] Error al remover roles de usuario {user.UserName}: {string.Join(", ", removeRolesResult.Errors.Select(e => e.Description))}");
-
-        var addRolesResult = await _userManager.AddToRolesAsync(user, request.Roles);
-        if (!addRolesResult.Succeeded) throw new Exception($"[+] Error al asignar roles a usuario {request.Username}: {string.Join(", ", addRolesResult.Errors.Select(e => e.Description))}");
-
-        UpdatePass:
-        // Actualización de contraseña
-        if (string.IsNullOrWhiteSpace(request.Password)) return;
-        var removePasswordResult = await _userManager.RemovePasswordAsync(user);
-        if (!removePasswordResult.Succeeded)
-            throw new Exception(
-                $"[+] Error al actualizar la contraseña del usuario {request.Username}: {string.Join(", ", removePasswordResult.Errors.Select(e => e.Description))}"
-            );
-
-        var addPasswordResult = await _userManager.AddPasswordAsync(user, request.Password);
-        if (!addPasswordResult.Succeeded) throw new Exception(
-                $"[+] Error al actualizar la contraseña del usuario {request.Username}: {string.Join(",", addPasswordResult.Errors.Select(e => e.Description))}"
-            );
     }
 }

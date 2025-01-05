@@ -48,7 +48,7 @@ public class RoleService(
             {
                 Id = r.Id,
                 Name = r.Name!
-            }).ToListAsync() ?? throw new DoesNotExistsException("No roles found");
+            }).ToListAsync() ?? throw new DoesNotExistsException("Los roles no fueron encontrados");
         return roles;
     }
 }
