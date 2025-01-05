@@ -3,13 +3,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { AllComponent } from './routes/all/all.component';
 import { NewComponent } from './routes/new/new.component';
 import { DetailComponent } from './routes/detail/detail.component';
+import { admGuard } from '../../guards/adm.guard';
+import { MeComponent } from './routes/me/me.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'all', pathMatch: 'full' },
-  { path: 'all', component: AllComponent },
-  { path: 'new', component: NewComponent },
-  { path: ':id', component: DetailComponent },
-  { path: '**', redirectTo: 'all' }
+  { path: '', redirectTo: 'me', pathMatch: 'full' },
+  { path: 'me', component: MeComponent },
+  { path: 'all', component: AllComponent, canActivate: [admGuard] },
+  { path: 'new', component: NewComponent, canActivate: [admGuard] },
+  { path: ':id', component: DetailComponent, canActivate: [admGuard] },
+  { path: '**', redirectTo: 'me' }
 ];
 
 @NgModule({

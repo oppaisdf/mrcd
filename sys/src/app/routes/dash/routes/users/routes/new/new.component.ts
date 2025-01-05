@@ -19,7 +19,11 @@ export class NewComponent implements OnInit {
   ) {
     this.form = this._form.group({
       username: ['', [Validators.required, Validators.maxLength(15)]],
-      password: ['', [Validators.required, Validators.maxLength(30), Validators.minLength(5)]]
+      password: ['', [
+        Validators.required,
+        Validators.maxLength(30),
+        Validators.pattern('^(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{5,}$')
+      ]]
     });
   }
 

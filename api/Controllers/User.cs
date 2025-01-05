@@ -73,7 +73,7 @@ public class UserController(
     )
     {
         var myRoles = User.Claims.Where(u => u.Type == ClaimTypes.Role).Select(u => u.Value).ToList();
-        if (string.IsNullOrWhiteSpace(id) || !myRoles.Contains("adm")) id = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        if (id == "me" || !myRoles.Contains("adm")) id = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
         try
         {
             var user = await _service.GetByIdAsync(id);
@@ -109,6 +109,7 @@ public class UserController(
             request.IsActive = null;
         }
 
+        if (id == "me") id = _userId;
         if (_userId != id && !myRoles.Contains("adm"))
         {
             id = _userId;

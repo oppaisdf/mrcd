@@ -56,6 +56,13 @@
         </div>
 
         <div class="navbar-end">
+            <div class="navbar-item" (click)="ShowMenu()">
+                <a class="is-flex" routerLink="/user/me">
+                    <figure class="image">
+                        <img src="https://pub-e47275a009714794bcff2eb4713b67bb.r2.dev/icons/user.png" />
+                    </figure>
+                </a>
+            </div>
             <div class="navbar-item">
                 <button class="button is-primary" [class.is-loading]="isLogouting" [disabled]="isLogouting"
                     (click)="Logout()">Cerrar sesión</button>

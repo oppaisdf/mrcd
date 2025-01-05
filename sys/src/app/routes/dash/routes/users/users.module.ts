@@ -8,12 +8,14 @@ import { DetailComponent } from './routes/detail/detail.component';
 import { SharedModule } from '../../../../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UserService } from './services/user.service';
+import { MeComponent } from './routes/me/me.component';
 
 @NgModule({
   declarations: [
     AllComponent,
     NewComponent,
-    DetailComponent
+    DetailComponent,
+    MeComponent
   ],
   imports: [
     CommonModule,
