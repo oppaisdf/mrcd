@@ -54,7 +54,6 @@ public class PeopleController(
             if (request.Parents.Count == 0 || request.Parents.Count > 2) request.Parents = null;
             else request.Parents.ToList().ForEach(p =>
             {
-                Console.WriteLine($"[+] Dirty Phone: {p.Phone}");
                 if (p.Phone != null) p.Phone = IsValidPhoneNumber(p.Phone) ? p.Phone : null;
             });
         }
@@ -145,7 +144,6 @@ public class PeopleController(
             if (request.Parents.Count == 0 || request.Parents.Count > 2) request.Parents = null;
             else request.Parents.ToList().ForEach(p =>
             {
-                Console.WriteLine($"[+] DIrty Phone: {p.Phone}");
                 if (p.Phone != null) p.Phone = IsValidPhoneNumber(p.Phone) ? p.Phone : null;
             });
         }
