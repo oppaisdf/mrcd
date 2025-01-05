@@ -2,7 +2,7 @@
 
 <div class="buttons are-medium">
     <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
-        (click)="AddAsync()">Agregar</button>
+        (click)="AddAsync()">Inscribir</button>
     <a class="button" routerLink="/person/all">Regresar</a>
 </div>
 
@@ -13,7 +13,7 @@
     <div class="column is-9">
         <div class="control" [class.is-loading]="isAdding">
             <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
-                formControlName="name" maxlength="50" placeholder="Nombre completo">
+                formControlName="name" maxdrshlength="50" placeholder="Nombre completo">
         </div>
     </div>
 
@@ -154,5 +154,5 @@
 
 <div class="buttons are-medium">
     <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
-        (click)="AddAsync()">Agregar</button>
+        (click)="AddAsync()">Inscribir</button>
 </div>

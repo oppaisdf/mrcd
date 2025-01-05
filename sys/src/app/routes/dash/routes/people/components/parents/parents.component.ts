@@ -51,7 +51,7 @@ export class ParentsComponent {
     this.parents.push(({
       name: this.form.controls['name'].value,
       gender: this.gender,
-      phone: this.phone,
+      phone: this.phone ? this.phone : undefined,
       id: 0
     }));
 

@@ -16,6 +16,7 @@ services:
       - ./api:/app
     profiles:
       - api
+      - all
 
   sys:
     build: ./sys
@@ -28,6 +29,8 @@ services:
       - api
     volumes:
       - ./sys:/app
+    profiles:
+      - all
 
   db:
     build: ./db
@@ -43,6 +46,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${PASSWD}
     profiles:
       - api
+      - all
 
 networks:
   network:

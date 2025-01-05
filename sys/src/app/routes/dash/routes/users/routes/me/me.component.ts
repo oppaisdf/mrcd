@@ -18,7 +18,7 @@ export class MeComponent implements OnInit {
       username: ['', [Validators.required, Validators.maxLength(15)]],
       password: ['', [
         Validators.maxLength(30),
-        Validators.pattern('^(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{5,}$')
+        Validators.pattern('^(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{6,}$')
       ]]
     });
   }

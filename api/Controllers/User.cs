@@ -110,7 +110,7 @@ public class UserController(
         }
 
         if (id == "me") id = _userId;
-        if (_userId != id && !myRoles.Contains("adm"))
+        if (!myRoles.Contains("adm"))
         {
             id = _userId;
             request.Roles = null;

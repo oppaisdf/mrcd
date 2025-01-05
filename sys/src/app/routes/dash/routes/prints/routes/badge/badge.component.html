@@ -1,9 +1,5 @@
-<div class="buttons are-medium">
-    <button class="button is-primary" (click)="GeneratePDF()">Imprimir</button>
-</div>
-
-<div class="box">
-    <div #pageA4 class="columns is-multiline is-vcentered" *ngFor="let qr of qrs">
+<prints-printer fileName="Gafetes">
+    <div class="columns is-multiline is-vcentered" *ngFor="let qr of qrs">
         <div class="card column" style="background-color: white;">
             <div class="card-content">
                 <div class="media">
@@ -21,4 +17,4 @@
             </div>
         </div>
     </div>
-</div>
+</prints-printer>

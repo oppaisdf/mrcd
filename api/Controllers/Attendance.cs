@@ -40,6 +40,19 @@ public class AttendanceController(
         { return this.DefaultServerError($"[+] Error al consultar asistencias: {e.Message}"); }
     }
 
+    [HttpGet("List")]
+    public async Task<IActionResult> GetListAync()
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var list = await _service.GetListAsync(userId);
+            return this.DefaultOk(list);
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al obtener listado general: {e.Message}"); }
+    }
+
     [HttpPost("{hash}")]
     public async Task<IActionResult> CheckAsync(
         string hash

@@ -22,7 +22,7 @@ export class NewComponent implements OnInit {
       password: ['', [
         Validators.required,
         Validators.maxLength(30),
-        Validators.pattern('^(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{5,}$')
+        Validators.pattern('^(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{6,}$')
       ]]
     });
   }

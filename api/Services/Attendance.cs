@@ -14,6 +14,7 @@ public interface IAttendanceService
     Task<ICollection<AttendanceResponse>> GetAsync(string userId, AttendanceFilter filter);
     Task RemoveCheckAsync(string userId, int attendanceId);
     Task<ICollection<QRResponse>> GetQRsAsync(string userId);
+    Task<ICollection<GeneralListResponse>> GetListAsync(string userId);
 }
 
 public class AttendanceService(
@@ -93,6 +94,24 @@ public class AttendanceService(
                 User = a.User,
                 Person = a.Person,
                 Date = a.Date
+            })
+            .ToListAsync();
+    }
+
+    public async Task<ICollection<GeneralListResponse>> GetListAsync(
+        string userId
+    )
+    {
+        await _logs.RegisterReadingAsync(userId, "Listado general");
+        return await _context.People
+            .Where(p => p.IsActive)
+            .Select(p => new GeneralListResponse
+            {
+                Name = p.Name,
+                Gender = p.Gender,
+                Day = p.Day,
+                DOB = p.DOB,
+                Parents = _context.Parents.Select(p => p.Name).ToList()
             })
             .ToListAsync();
     }

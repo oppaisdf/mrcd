@@ -59,6 +59,7 @@ CREATE TABLE `actionslog` (
 
 LOCK TABLES `actionslog` WRITE;
 /*!40000 ALTER TABLE `actionslog` DISABLE KEYS */;
+INSERT INTO `actionslog`(Name) VALUES('Creó'),("Wachó"),("Actualizó");
 /*!40000 ALTER TABLE `actionslog` ENABLE KEYS */;
 UNLOCK TABLES;
 

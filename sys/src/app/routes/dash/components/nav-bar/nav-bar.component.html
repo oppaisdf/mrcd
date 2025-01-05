@@ -24,16 +24,18 @@
                 </div>
             </div>
 
-            @if (isAdm) {
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">Impresiones</a>
                 <div class="navbar-dropdown" (click)="ShowMenu()">
+                    @if (isAdm) {
                     <a class="navbar-item" routerLink="/print/badge">Gafetes</a>
                     <a class="navbar-item">Diplomas</a>
-                    <a class="navbar-item">Listado</a>
+                    }
+                    <a class="navbar-item" routerLink="/print/list">Listado</a>
                 </div>
             </div>
 
+            @if (isAdm) {
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">Gestiones</a>
                 <div class="navbar-dropdown" (click)="ShowMenu()">

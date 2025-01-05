@@ -1,0 +1,65 @@
+<shared-pan-expand title="Filtros">
+    <div class="buttons are-medium">
+        <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
+    </div>
+
+    <form [formGroup]="form" class="column is-multiline">
+        <div class="column is-3">
+            <label class="subtitle">Nombre</label>
+        </div>
+        <div class="column is-9">
+            <input type="text" class="input" (input)="FilterBy('name')" formControlName="name">
+        </div>
+
+        <div class="column is-3">
+            <label class="subtitle">Género</label>
+        </div>
+        <div class="column is-9">
+            <div class="control select">
+                <select formControlName="gender">
+                    <option (click)="FilterBy('gender')" value="true">Masculino</option>
+                    <option (click)="FilterBy('gender')" value="false">Femenino</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="column is-3">
+            <label class="subtitle">Día</label>
+        </div>
+        <div class="column is-9">
+            <div class="control select">
+                <select formControlName="day">
+                    <option (click)="FilterBy('day')" value="true">Domingo</option>
+                    <option (click)="FilterBy('day')" value="false">Sábado</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</shared-pan-expand>
+
+<hr>
+
+<prints-printer fileName="ListadoGeneral">
+    <table class="table is-striped is-fullwidth">
+        <thead>
+            <th>Nombre</th>
+            <th>Género</th>
+            <th>Día</th>
+            <th>Fecha de nacimiento</th>
+            <th>Encargados</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let person of people">
+                <td>{{person.name}}</td>
+                <td>
+                    @if (person.gender) {Masculino}@else {Femenino}
+                </td>
+                <td>
+                    @if (person.day) {Domingo} @else {Sábado}
+                </td>
+                <td>{{GetDOB(person.dob)}}</td>
+                <td>{{person.parents?.toString()}}</td>
+            </tr>
+        </tbody>
+    </table>
+</prints-printer>

@@ -23,8 +23,10 @@
     <div class="column is-9">
         <div class="control" [class.is-loading]="isAdding">
             <input name="txtPass" type="password" class="input" [class.is-danger]="IsInvalidField('password')"
-                formControlName="password" maxlength="30" minlength="5">
+                formControlName="password" maxlength="30" minlength="6">
         </div>
+        <p class="help is-danger" *ngIf="IsInvalidField('password')">La contraseña debe tener, por lo menos: un número,
+            una letra mayúscula, un carácter especial y una longitud de 6</p>
     </div>
 
     <div class="column is-3 has-text-right">
