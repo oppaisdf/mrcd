@@ -7,48 +7,50 @@
     <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
 </div>
 
-<form [formGroup]="form" class="columns is-multiline" (ngSubmit)="FindAsync()">
-    <div class="column is-3 has-text-right">
-        <label for="lstUser" class="subtitle">Usuario</label>
-    </div>
-    <div class="column is-9">
-        <div class="control" [class.is-loading]="isSearching">
-            <div class="select">
-                <select name="lstUser" formControlName="userId">
-                    <option *ngFor="let user of users" value="{{user.id}}">{{user.name}}</option>
-                </select>
+<form [formGroup]="form" class="box columns is-multiline" (ngSubmit)="FindAsync()">
+    <div class="column is-half">
+        <div class="field">
+            <label for="lstUser" class="subtitle">Usuario</label>
+            <div class="control" [class.is-loading]="isSearching">
+                <div class="select">
+                    <select name="lstUser" formControlName="userId">
+                        <option *ngFor="let user of users" value="{{user.id}}">{{user.name}}</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="column is-3 has-text-right">
-        <label for="lstAction" class="subtitle">Acción de log</label>
-    </div>
-    <div class="column is-9">
-        <div class="control" [class.is-loading]="isSearching">
-            <div class="select">
-                <select name="lstAction" formControlName="action">
-                    <option *ngFor="let action of actions" value="{{action.id}}">{{action.name}}</option>
-                </select>
+    <div class="column is-half">
+        <div class="field">
+            <label for="lstAction" class="subtitle">Acción de log</label>
+        </div>
+        <div class="column is-9">
+            <div class="control" [class.is-loading]="isSearching">
+                <div class="select">
+                    <select name="lstAction" formControlName="action">
+                        <option *ngFor="let action of actions" value="{{action.id}}">{{action.name}}</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="column is-3 has-text-right">
-        <label for="txtStart" class="subtitle">Fecha de inicio</label>
-    </div>
-    <div class="column is-9">
-        <div class="control" [class.is-loading]="isSearching">
-            <input name="txtStart" type="date" class="input" formControlName="start" [max]="maxDate">
+    <div class="column is-half">
+        <div class="field">
+            <label for="txtStart" class="subtitle">Fecha de inicio</label>
+            <div class="control" [class.is-loading]="isSearching">
+                <input name="txtStart" type="date" class="input" formControlName="start" [max]="maxDate">
+            </div>
         </div>
     </div>
 
-    <div class="column is-3 has-text-right">
-        <label for="txtEnd" class="subtitle">Fecha final</label>
-    </div>
-    <div class="column is-9">
-        <div class="control" [class.is-searching]="isSearching">
-            <input name="txtEnd" type="date" class="input" formControlName="end" [min]="minEndDate" [max]="maxDate">
+    <div class="column is-half">
+        <div class="field">
+            <label for="txtEnd" class="subtitle">Fecha final</label>
+            <div class="control" [class.is-searching]="isSearching">
+                <input name="txtEnd" type="date" class="input" formControlName="end" [min]="minEndDate" [max]="maxDate">
+            </div>
         </div>
     </div>
 </form>

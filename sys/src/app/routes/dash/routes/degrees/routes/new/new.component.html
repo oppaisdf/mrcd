@@ -6,11 +6,9 @@
     <a class="button" routerLink="/degree/all">Regresar</a>
 </div>
 
-<form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
-    <div class="column is-3 has-text-right">
+<form [formGroup]="form" (ngSubmit)="AddAsync()">
+    <div class="field box">
         <label for="txtName" class="subtitle">Nombre de grado académico</label>
-    </div>
-    <div class="column is-9">
         <div class="control" [class.is-loading]="isAdding">
             <input name="txtName" type="text" class="input" [class.is-danager]="isInvalidName" formControlName="name"
                 maxlength="10">

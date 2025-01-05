@@ -7,37 +7,40 @@
 </div>
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
-    <div class="column is-3 has-text-right">
-        <label for="txtUser" class="subtitle">Nombre de usuario</label>
-    </div>
-    <div class="column is-9">
-        <div class="control" [class.is-loading]="isAdding">
-            <input name="txtUser" type="text" class="input" [class.is-danger]="IsInvalidField('username')"
-                formControlName="username" maxlength="15">
+    <div class="column is-half">
+        <div class="field box">
+            <label for="txtUser" class="subtitle">Nombre de usuario</label>
+            <div class="control" [class.is-loading]="isAdding">
+                <input name="txtUser" type="text" class="input" [class.is-danger]="IsInvalidField('username')"
+                    formControlName="username" maxlength="15">
+            </div>
         </div>
     </div>
 
-    <div class="column is-3 has-text-right">
-        <label for="txtPass" class="subtitle">Contraseña</label>
-    </div>
-    <div class="column is-9">
-        <div class="control" [class.is-loading]="isAdding">
-            <input name="txtPass" type="password" class="input" [class.is-danger]="IsInvalidField('password')"
-                formControlName="password" maxlength="30" minlength="6">
+    <div class="column is-half">
+        <div class="field box">
+            <label for="txtPass" class="subtitle">Contraseña</label>
+            <div class="control" [class.is-loading]="isAdding">
+                <input name="txtPass" type="password" class="input" [class.is-danger]="IsInvalidField('password')"
+                    formControlName="password" maxlength="30" minlength="6">
+            </div>
+            <p class="help is-danger" *ngIf="IsInvalidField('password')">La contraseña debe tener, por lo menos: un
+                número,
+                una letra mayúscula, un carácter especial y una longitud de 6</p>
         </div>
-        <p class="help is-danger" *ngIf="IsInvalidField('password')">La contraseña debe tener, por lo menos: un número,
-            una letra mayúscula, un carácter especial y una longitud de 6</p>
     </div>
 
-    <div class="column is-3 has-text-right">
-        <label class="subtitle">Roles</label>
-    </div>
-    <div class="column is-9">
-        <div class="checkboxes" *ngFor="let role of roles">
-            <label class="checkbox">
-                <input type="checkbox" (click)="OnCheckRole(role.name)" value="{{role.name}}">
-                {{role.name}}
-            </label>
+    <div class="column is-half">
+        <div class="field box">
+            <label class="subtitle">Roles</label>
+            <div class="control">
+                <div class="checkboxes" *ngFor="let role of roles">
+                    <label class="checkbox">
+                        <input type="checkbox" (click)="OnCheckRole(role.name)" value="{{role.name}}">
+                        {{role.name}}
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 </form>

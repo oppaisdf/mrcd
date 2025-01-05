@@ -8,57 +8,65 @@
 </div>
 
 <form [formGroup]="form" class="box columns is-multiline" (ngSubmit)="FillAsync()">
-    <div class="column is-3 has-text-right">
-        <label class="subtitle">Género</label>
-    </div>
-    <div class="column is-9">
-        <div class="select" [class.is-loading]="isSearching">
-            <select formControlName="gender">
-                <option [value]="true">Masculino</option>
-                <option [value]="false">Femenino</option>
-            </select>
+    <div class="column is-half">
+        <div class="field">
+            <label class="subtitle">Género</label>
+            <div class="control">
+                <div class="select" [class.is-loading]="isSearching">
+                    <select formControlName="gender">
+                        <option [value]="true">Masculino</option>
+                        <option [value]="false">Femenino</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="column is-3 has-text-right">
-        <label class="subtitle">Día</label>
-    </div>
-    <div class="column is-9">
-        <div class="select" [class.is-loading]="isSearching">
-            <select formControlName="day">
-                <option value="{{true}}">Domingo</option>
-                <option value="{{false}}">Sábado</option>
-            </select>
+    <div class="column is-half">
+        <div class="field">
+            <label class="subtitle">Día</label>
+            <div class="control">
+                <div class="select" [class.is-loading]="isSearching">
+                    <select formControlName="day">
+                        <option value="{{true}}">Domingo</option>
+                        <option value="{{false}}">Sábado</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="column is-3 has-text-right">
-        <label for="chkActive" class="subtitle">Activos</label>
-    </div>
-    <div class="column is-9">
-        <label class="checkbox">
-            <input type="checkbox" formControlName="isActive">
-            @if (GetValue('isActive')) { Solo activos} @else { Solo inactivos}
-        </label>
-    </div>
-
-    <div class="column is-3 has-text-right">
-        <label for="lstDegrees" class="subtitle">Grado académico</label>
-    </div>
-    <div class="column is-9">
-        <div class="select" [class.is-loading]="isSearching">
-            <select formControlName="degreeId">
-                <option *ngFor="let degree of degrees" [value]="degree.id">{{degree.name}}</option>
-            </select>
+    <div class="column is-half">
+        <div class="field">
+            <label for="chkActive" class="subtitle">Activos</label>
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox" formControlName="isActive">
+                    @if (GetValue('isActive')) { Solo activos} @else { Solo inactivos}
+                </label>
+            </div>
         </div>
     </div>
 
-    <div class="column is-3 has-text-right">
-        <label for="txtName" class="subtitle">Nombre de confirmando</label>
+    <div class="column is-half">
+        <div class="field">
+            <label for="lstDegrees" class="subtitle">Grado académico</label>
+            <div class="control">
+                <div class="select" [class.is-loading]="isSearching">
+                    <select formControlName="degreeId">
+                        <option *ngFor="let degree of degrees" [value]="degree.id">{{degree.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="column is-9">
-        <div class="control" [class.is-loading]="isSearching">
-            <input name="txtName" type="text" class="input" formControlName="name" maxlength="30">
+
+    <div class="column is-half">
+        <div class="field">
+            <label for="txtName" class="subtitle">Nombre de confirmando</label>
+            <div class="control" [class.is-loading]="isSearching">
+                <input name="txtName" type="text" class="input" formControlName="name" maxlength="30">
+            </div>
         </div>
     </div>
 </form>
@@ -84,7 +92,7 @@
                 <td>@if (person.day) {Domingo}@else {Sábado}</td>
                 <td>@if (person.gender) {Masculino}@else {Femenino}</td>
                 <td>
-                    <a class="button is-info" routerLink="/person/{{person.id}}">Actualizar</a>
+                    <a class="button is-warning" routerLink="/person/{{person.id}}">Actualizar</a>
                 </td>
             </tr>
         </tbody>

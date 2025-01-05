@@ -3,35 +3,41 @@
         <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
     </div>
 
-    <form [formGroup]="form" class="column is-multiline">
-        <div class="column is-3">
-            <label class="subtitle">Nombre</label>
-        </div>
-        <div class="column is-9">
-            <input type="text" class="input" (input)="FilterBy('name')" formControlName="name">
-        </div>
-
-        <div class="column is-3">
-            <label class="subtitle">Género</label>
-        </div>
-        <div class="column is-9">
-            <div class="control select">
-                <select formControlName="gender">
-                    <option (click)="FilterBy('gender')" value="true">Masculino</option>
-                    <option (click)="FilterBy('gender')" value="false">Femenino</option>
-                </select>
+    <form [formGroup]="form" class="columns is-multiline">
+        <div class="column is-half">
+            <div class="field">
+                <label class="subtitle">Nombre</label>
+                <div class="control">
+                    <input type="text" class="input" (input)="FilterBy('name')" formControlName="name">
+                </div>
             </div>
         </div>
 
-        <div class="column is-3">
-            <label class="subtitle">Día</label>
+        <div class="column is-half">
+            <div class="field">
+                <label class="subtitle">Género</label>
+                <div class="control">
+                    <div class="select">
+                        <select formControlName="gender">
+                            <option (click)="FilterBy('gender')" value="true">Masculino</option>
+                            <option (click)="FilterBy('gender')" value="false">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="column is-9">
-            <div class="control select">
-                <select formControlName="day">
-                    <option (click)="FilterBy('day')" value="true">Domingo</option>
-                    <option (click)="FilterBy('day')" value="false">Sábado</option>
-                </select>
+
+        <div class="column is-half">
+            <div class="field">
+                <label class="subtitle">Día</label>
+                <div class="control">
+                    <div class="select">
+                        <select formControlName="day">
+                            <option (click)="FilterBy('day')" value="true">Domingo</option>
+                            <option (click)="FilterBy('day')" value="false">Sábado</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </form>

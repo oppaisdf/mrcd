@@ -9,11 +9,9 @@
         <section class="modal-card-body">
             <shared-alert [(message)]="message" [success]="success" />
 
-            <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="UpdateAsync()">
-                <div class="column is-3 has-text-right">
+            <form [formGroup]="form" (ngSubmit)="UpdateAsync()">
+                <div class="field">
                     <label for="txtName" class="subtitle">Nombre</label>
-                </div>
-                <div class="column is-9">
                     <div class="control" [class.is-loading]="isUpdating">
                         <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName"
                             formControlName="name" maxlength="10">
