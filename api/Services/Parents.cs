@@ -12,6 +12,7 @@ public interface IParentService
     Task<int> CreateAsync(string userId, ParentRequest request);
     Task UpdateAsync(string userId, int id, ParentRequest request);
     Task DeleteAsync(string userId, int id);
+    Task AssignAsync(string userId, int id, ICollection<AssignParentRequest> parents);
     Task UnassignAsync(string userId, int personId, int parentId);
     Task<int?> GetIdByNameAsync(string name);
     Task<ICollection<ParentResponse>> GetByPersonId(int id);
@@ -24,40 +25,6 @@ public class ParentService(
 {
     private readonly MerContext _context = context;
     private readonly ICommonService _service = service;
-
-    #region "Private"
-    private async Task CreatePersonParentAsync(
-        ICollection<PersonParentRequest> request
-    )
-    {
-        var peopleId = request.Select(r => r.PersonId).Distinct().ToList();
-        var parentsId = request.Select(r => r.ParentId).Distinct().ToList();
-
-        var people = await _context.People
-            .AsNoTracking()
-            .Where(p => peopleId.Contains(p.Id!.Value) && p.IsActive == true)
-            .Select(p => p.Id!.Value)
-            .ToListAsync();
-        var parents = await _context.Parents
-            .AsNoTracking()
-            .Where(p => parentsId.Contains(p.Id!.Value))
-            .Select(p => p.Id!.Value)
-            .ToListAsync();
-
-        foreach (var pp in request)
-        {
-            if (!people.Contains(pp.PersonId) || !parents.Contains(pp.ParentId)) continue;
-            _context.ParentsPeople.Add(new ParentPerson
-            {
-                ParentId = pp.ParentId,
-                PersonId = pp.PersonId,
-                IsParent = pp.IsParent
-            });
-        }
-
-        await _context.SaveChangesAsync();
-    }
-    #endregion
 
     public async Task<int?> GetIdByNameAsync(
         string name
@@ -126,6 +93,32 @@ public class ParentService(
         await _context.SaveChangesAsync();
     }
 
+    public async Task AssignAsync(
+        string userId,
+        int id,
+        ICollection<AssignParentRequest> parents
+    )
+    {
+        var ids = parents.Select(p => p.Id).Distinct().ToList();
+        var cleanIds = await _context.Parents
+            .AsNoTracking()
+            .Where(p => ids.Contains(p.Id!.Value))
+            .Select(p => p.Id)
+            .ToListAsync() ?? throw new DoesNotExistsException("Los padres/padrinos no existen");
+
+        foreach (var parent in parents)
+        {
+            _context.ParentsPeople.Add(new ParentPerson
+            {
+                PersonId = id,
+                ParentId = parent.Id,
+                IsParent = parent.IsParent
+            });
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<int> CreateAsync(
         string userId,
         ParentRequest request
@@ -141,21 +134,10 @@ public class ParentService(
             Gender = request.Gender!.Value,
             Phone = request.Phone
         };
-        _context.Parents.Add(parent);
 
-        using var tran = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            await _context.SaveChangesAsync();
-            if (request.People != null) await CreatePersonParentAsync(request.People);
-            await tran.CommitAsync();
-            return parent.Id!.Value;
-        }
-        catch (Exception)
-        {
-            await tran.RollbackAsync();
-            throw;
-        }
+        _context.Parents.Add(parent);
+        await _context.SaveChangesAsync();
+        return parent.Id!.Value;
     }
 
     public async Task UpdateAsync(
@@ -180,7 +162,6 @@ public class ParentService(
         using var tran = await _context.Database.BeginTransactionAsync();
         try
         {
-            if (request.People != null) await CreatePersonParentAsync(request.People);
             await _context.SaveChangesAsync();
             await tran.CommitAsync();
         }

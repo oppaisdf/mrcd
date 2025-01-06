@@ -50,13 +50,14 @@ public class PeopleController(
 
         if (request.Parents != null)
         {
-            request.Parents = request.Parents.Where(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
+            request.Parents = request.Parents.Where(p => !string.IsNullOrWhiteSpace(p.Name) && p.Gender != null).ToList();
             if (request.Parents.Count == 0 || request.Parents.Count > 2) request.Parents = null;
             else request.Parents.ToList().ForEach(p =>
             {
                 if (p.Phone != null) p.Phone = IsValidPhoneNumber(p.Phone) ? p.Phone : null;
             });
         }
+        else if (request.Parents?.Count > 2) request.Parents = null;
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;

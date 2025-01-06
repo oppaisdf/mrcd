@@ -13,17 +13,12 @@ public class ParentRequest
     [MaxLength(8, ErrorMessage = "Teléfono inválido")]
     [MinLength(8, ErrorMessage = "Teléfono inválido")]
     public string? Phone { get; set; }
-
-    public ICollection<PersonParentRequest>? People { get; set; }
 }
 
-public class PersonParentRequest
+public class AssignParentRequest
 {
     [Required]
-    public required int PersonId { get; set; }
-
-    [Required]
-    public required int ParentId { get; set; }
+    public required int Id { get; set; }
 
     [Required]
     public required bool IsParent { get; set; }

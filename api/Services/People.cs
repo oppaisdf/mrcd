@@ -99,10 +99,27 @@ public partial class PeopleService(
         try
         {
             await _context.SaveChangesAsync();
-            if (request.Parents != null && request.Parents.Count > 0)
-                request.Parents.ToList().ForEach(async p => await _parents.CreateAsync(userId, p));
             if (request.Sacraments != null) await RegisterSacraments(person.Id!.Value, request.Sacraments);
             await _logs.RegisterCreationAsync(userId, $"Confirmando {person.Id}");
+            if (request.Parents != null)
+            {
+                var ids = new List<int>();
+                foreach (var parent in request.Parents)
+                {
+                    var id = await _parents.GetIdByNameAsync(parent.Name!) ?? await _parents.CreateAsync(userId, parent);
+                    ids.Add(id);
+                }
+                await _parents.AssignAsync(
+                    userId,
+                    person.Id!.Value,
+                    ids.Select(i => new AssignParentRequest
+                    {
+                        Id = i,
+                        IsParent = true
+                    }).ToList()
+                );
+            }
+
             await tran.CommitAsync();
         }
         catch (Exception)
