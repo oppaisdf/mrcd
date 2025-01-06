@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations;
 
 /// <inheritdoc />
-public partial class InitialCreate : Migration
+public partial class Initial : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -85,6 +84,22 @@ public partial class InitialCreate : Migration
             .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateTable(
+            name: "charges",
+            columns: table => new
+            {
+                Id = table.Column<short>(type: "smallint", nullable: false)
+                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                Name = table.Column<string>(type: "longtext", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Total = table.Column<decimal>(type: "decimal(6,2)", precision: 6, scale: 2, nullable: false)
+            },
+            constraints: table =>
+            {
+                table.PrimaryKey("PK_Charge_Id", x => x.Id);
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
+
+        migrationBuilder.CreateTable(
             name: "degrees",
             columns: table => new
             {
@@ -96,6 +111,24 @@ public partial class InitialCreate : Migration
             constraints: table =>
             {
                 table.PrimaryKey("PK_Degree_Id", x => x.Id);
+            })
+            .Annotation("MySql:CharSet", "utf8mb4");
+
+        migrationBuilder.CreateTable(
+            name: "parents",
+            columns: table => new
+            {
+                Id = table.Column<int>(type: "int", nullable: false)
+                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                Name = table.Column<byte[]>(type: "varbinary(128)", maxLength: 50, nullable: false),
+                NameHash = table.Column<string>(type: "varchar(255)", nullable: false)
+                    .Annotation("MySql:CharSet", "utf8mb4"),
+                Gender = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                Phone = table.Column<byte[]>(type: "varbinary(32)", nullable: true)
+            },
+            constraints: table =>
+            {
+                table.PrimaryKey("PK_Parent_Id", x => x.Id);
             })
             .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -320,21 +353,25 @@ public partial class InitialCreate : Migration
             .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateTable(
-            name: "godparents",
+            name: "parentspeople",
             columns: table => new
             {
-                Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                 PersonId = table.Column<int>(type: "int", nullable: false),
-                Name = table.Column<byte[]>(type: "varbinary(128)", maxLength: 50, nullable: false),
-                Gender = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
+                ParentId = table.Column<int>(type: "int", nullable: false),
+                IsParent = table.Column<bool>(type: "tinyint(1)", nullable: false)
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_Godparent_Id", x => x.Id);
+                table.PrimaryKey("PK_ParentPerson_ParentId_PersonId_IsParent", x => new { x.ParentId, x.PersonId, x.IsParent });
                 table.ForeignKey(
-                    name: "FK_Godparent_PersonId",
-                    column: x => x.PersonId,
+                    name: "FK_PersonParent_ParentId",
+                    column: x => x.ParentId,
+                    principalTable: "parents",
+                    principalColumn: "Id",
+                    onDelete: ReferentialAction.Cascade);
+                table.ForeignKey(
+                    name: "FK_PersonParent_PersonId",
+                    column: x => x.ParentId,
                     principalTable: "people",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
@@ -342,20 +379,24 @@ public partial class InitialCreate : Migration
             .Annotation("MySql:CharSet", "utf8mb4");
 
         migrationBuilder.CreateTable(
-            name: "parents",
+            name: "peoplecharges",
             columns: table => new
             {
-                Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                 PersonId = table.Column<int>(type: "int", nullable: false),
-                Name = table.Column<byte[]>(type: "varbinary(128)", maxLength: 50, nullable: false),
-                Gender = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
+                ChargeId = table.Column<short>(type: "smallint", nullable: false),
+                Total = table.Column<decimal>(type: "decimal(6,2)", precision: 6, scale: 2, nullable: false)
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_Parent_Id", x => x.Id);
+                table.PrimaryKey("PK_PersonCharge_PersonId_ChargeId", x => new { x.PersonId, x.ChargeId });
                 table.ForeignKey(
-                    name: "FK_Parent_PersonId",
+                    name: "FK_PersonCharge_ChargeId",
+                    column: x => x.ChargeId,
+                    principalTable: "charges",
+                    principalColumn: "Id",
+                    onDelete: ReferentialAction.Cascade);
+                table.ForeignKey(
+                    name: "FK_PersonCharge_PersonId",
                     column: x => x.PersonId,
                     principalTable: "people",
                     principalColumn: "Id",
@@ -431,24 +472,25 @@ public partial class InitialCreate : Migration
             column: "PersonId");
 
         migrationBuilder.CreateIndex(
-            name: "IX_godparents_PersonId",
-            table: "godparents",
-            column: "PersonId");
-
-        migrationBuilder.CreateIndex(
             name: "IX_logs_ActionId",
             table: "logs",
             column: "ActionId");
 
         migrationBuilder.CreateIndex(
-            name: "IX_parents_PersonId",
+            name: "UX_Parents_NameHash",
             table: "parents",
-            column: "PersonId");
+            column: "NameHash",
+            unique: true);
 
         migrationBuilder.CreateIndex(
             name: "IX_people_DegreeId",
             table: "people",
             column: "DegreeId");
+
+        migrationBuilder.CreateIndex(
+            name: "IX_peoplecharges_ChargeId",
+            table: "peoplecharges",
+            column: "ChargeId");
 
         migrationBuilder.CreateIndex(
             name: "IX_peoplesacraments_SacramentId",
@@ -478,13 +520,13 @@ public partial class InitialCreate : Migration
             name: "attendance");
 
         migrationBuilder.DropTable(
-            name: "godparents");
-
-        migrationBuilder.DropTable(
             name: "logs");
 
         migrationBuilder.DropTable(
-            name: "parents");
+            name: "parentspeople");
+
+        migrationBuilder.DropTable(
+            name: "peoplecharges");
 
         migrationBuilder.DropTable(
             name: "peoplesacraments");
@@ -497,6 +539,12 @@ public partial class InitialCreate : Migration
 
         migrationBuilder.DropTable(
             name: "actionslog");
+
+        migrationBuilder.DropTable(
+            name: "parents");
+
+        migrationBuilder.DropTable(
+            name: "charges");
 
         migrationBuilder.DropTable(
             name: "people");

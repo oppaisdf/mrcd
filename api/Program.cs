@@ -21,6 +21,7 @@ builder.Services.AddScoped(typeof(INameService<>), typeof(NameService<>));
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IPublicService, PublicService>();
+builder.Services.AddScoped<IParentService, ParentService>();
 
 builder.Services.AddDbContext<MerContext>((provider, options) =>
 {

@@ -26,19 +26,5 @@ public class PeopleRequest
     public string? Phone { get; set; }
     public bool? IsActive { get; set; }
     public ICollection<ParentRequest>? Parents { get; set; }
-    public ICollection<ParentRequest>? Godparents { get; set; }
     public ICollection<short>? Sacraments { get; set; }
-}
-
-public class ParentRequest
-{
-    [MaxLength(50, ErrorMessage = "Nombre demasiado largo")]
-    public required string Name { get; set; }
-
-    [DefaultValue(true)]
-    public required bool Gender { get; set; }
-
-    [MaxLength(8, ErrorMessage = "Teléfono inválido")]
-    [MinLength(8, ErrorMessage = "Teléfono inválido")]
-    public string? Phone { get; set; }
 }

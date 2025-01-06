@@ -10,14 +10,16 @@ public class MerContext(
 ) : IdentityDbContext<IdentityUser>(options)
 {
     public required DbSet<Person> People { get; set; }
+    public required DbSet<ParentPerson> ParentsPeople { get; set; }
     public required DbSet<Parent> Parents { get; set; }
-    public required DbSet<Godparent> Godparents { get; set; }
     public required DbSet<Sacrament> Sacraments { get; set; }
     public required DbSet<Degree> Degrees { get; set; }
     public required DbSet<ActionLog> ActionsLog { get; set; }
     public required DbSet<PersonSacrament> PeopleSacraments { get; set; }
     public required DbSet<Log> Logs { get; set; }
     public required DbSet<Attendance> Attendance { get; set; }
+    public required DbSet<Charge> Charges { get; set; }
+    public required DbSet<PersonCharge> PeopleCharges { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -73,6 +75,25 @@ public class MerContext(
                 .HasColumnType("varbinary(32)");
         });
 
+        builder.Entity<ParentPerson>(pp =>
+        {
+            pp
+                .HasKey(p => new { p.ParentId, p.PersonId, p.IsParent })
+                .HasName("PK_ParentPerson_ParentId_PersonId_IsParent");
+            pp
+                .HasOne<Person>()
+                .WithMany()
+                .HasForeignKey(p => p.ParentId)
+                .HasConstraintName("FK_PersonParent_PersonId")
+                .IsRequired();
+            pp
+                .HasOne<Parent>()
+                .WithMany()
+                .HasForeignKey(p => p.ParentId)
+                .HasConstraintName("FK_PersonParent_ParentId")
+                .IsRequired();
+        });
+
         builder.Entity<Parent>(parent =>
         {
             parent
@@ -87,34 +108,12 @@ public class MerContext(
                 .HasConversion(encrypter)
                 .HasColumnType("varbinary(32)");
             parent
-                .HasOne<Person>()
-                .WithMany()
-                .HasForeignKey(p => p.PersonId)
-                .HasConstraintName("FK_Parent_PersonId")
-                .IsRequired();
-            parent
                 .Property(p => p.Gender)
                 .HasDefaultValue(true);
-        });
-
-        builder.Entity<Godparent>(parent =>
-        {
             parent
-                .HasKey(p => p.Id)
-                .HasName("PK_Godparent_Id");
-            parent
-                .Property(p => p.Name)
-                .HasConversion(encrypter!)
-                .HasColumnType("varbinary(128)");
-            parent
-                .HasOne<Person>()
-                .WithMany()
-                .HasForeignKey(p => p.PersonId)
-                .HasConstraintName("FK_Godparent_PersonId")
-                .IsRequired();
-            parent
-                .Property(p => p.Gender)
-                .HasDefaultValue(true);
+                .HasIndex(c => c.NameHash)
+                .IsUnique()
+                .HasDatabaseName("UX_Parents_NameHash");
         });
 
         builder.Entity<Sacrament>(sacrament =>
@@ -186,6 +185,30 @@ public class MerContext(
                 .WithMany()
                 .HasForeignKey(a => a.PersonId)
                 .HasConstraintName("FK_Attendance_PersonId")
+                .IsRequired();
+        });
+
+        builder
+            .Entity<Charge>()
+            .HasKey(c => c.Id)
+            .HasName("PK_Charge_Id");
+
+        builder.Entity<PersonCharge>(charge =>
+        {
+            charge
+                .HasKey(c => new { c.PersonId, c.ChargeId })
+                .HasName("PK_PersonCharge_PersonId_ChargeId");
+            charge
+                .HasOne<Person>()
+                .WithMany()
+                .HasForeignKey(c => c.PersonId)
+                .HasConstraintName("FK_PersonCharge_PersonId")
+                .IsRequired();
+            charge
+                .HasOne<Charge>()
+                .WithMany()
+                .HasForeignKey(c => c.ChargeId)
+                .HasConstraintName("FK_PersonCharge_ChargeId")
                 .IsRequired();
         });
     }

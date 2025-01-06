@@ -9,8 +9,8 @@ using api.Context;
 namespace api.Migrations;
 
 [DbContext(typeof(MerContext))]
-[Migration("20241230165024_InitialCreate")]
-partial class InitialCreate
+[Migration("20250106160133_Initial")]
+partial class Initial
 {
     /// <inheritdoc />
     protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -264,6 +264,28 @@ partial class InitialCreate
                 b.ToTable("attendance");
             });
 
+        modelBuilder.Entity("api.Models.Entities.Charge", b =>
+            {
+                b.Property<short?>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("smallint");
+
+                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<short?>("Id"));
+
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("longtext");
+
+                b.Property<decimal>("Total")
+                    .HasPrecision(6, 2)
+                    .HasColumnType("decimal(6,2)");
+
+                b.HasKey("Id")
+                    .HasName("PK_Charge_Id");
+
+                b.ToTable("charges");
+            });
+
         modelBuilder.Entity("api.Models.Entities.Degree", b =>
             {
                 b.Property<short?>("Id")
@@ -281,35 +303,6 @@ partial class InitialCreate
                     .HasName("PK_Degree_Id");
 
                 b.ToTable("degrees");
-            });
-
-        modelBuilder.Entity("api.Models.Entities.Godparent", b =>
-            {
-                b.Property<int?>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
-
-                MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int?>("Id"));
-
-                b.Property<bool>("Gender")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("tinyint(1)")
-                    .HasDefaultValue(true);
-
-                b.Property<byte[]>("Name")
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnType("varbinary(128)");
-
-                b.Property<int>("PersonId")
-                    .HasColumnType("int");
-
-                b.HasKey("Id")
-                    .HasName("PK_Godparent_Id");
-
-                b.HasIndex("PersonId");
-
-                b.ToTable("godparents");
             });
 
         modelBuilder.Entity("api.Models.Entities.Log", b =>
@@ -361,15 +354,38 @@ partial class InitialCreate
                     .HasMaxLength(50)
                     .HasColumnType("varbinary(128)");
 
-                b.Property<int>("PersonId")
-                    .HasColumnType("int");
+                b.Property<string>("NameHash")
+                    .IsRequired()
+                    .HasColumnType("varchar(255)");
+
+                b.Property<byte[]>("Phone")
+                    .HasColumnType("varbinary(32)");
 
                 b.HasKey("Id")
                     .HasName("PK_Parent_Id");
 
-                b.HasIndex("PersonId");
+                b.HasIndex("NameHash")
+                    .IsUnique()
+                    .HasDatabaseName("UX_Parents_NameHash");
 
                 b.ToTable("parents");
+            });
+
+        modelBuilder.Entity("api.Models.Entities.ParentPerson", b =>
+            {
+                b.Property<int>("ParentId")
+                    .HasColumnType("int");
+
+                b.Property<int>("PersonId")
+                    .HasColumnType("int");
+
+                b.Property<bool>("IsParent")
+                    .HasColumnType("tinyint(1)");
+
+                b.HasKey("ParentId", "PersonId", "IsParent")
+                    .HasName("PK_ParentPerson_ParentId_PersonId_IsParent");
+
+                b.ToTable("parentspeople");
             });
 
         modelBuilder.Entity("api.Models.Entities.Person", b =>
@@ -429,6 +445,26 @@ partial class InitialCreate
                 b.HasIndex("DegreeId");
 
                 b.ToTable("people");
+            });
+
+        modelBuilder.Entity("api.Models.Entities.PersonCharge", b =>
+            {
+                b.Property<int>("PersonId")
+                    .HasColumnType("int");
+
+                b.Property<short>("ChargeId")
+                    .HasColumnType("smallint");
+
+                b.Property<decimal>("Total")
+                    .HasPrecision(6, 2)
+                    .HasColumnType("decimal(6,2)");
+
+                b.HasKey("PersonId", "ChargeId")
+                    .HasName("PK_PersonCharge_PersonId_ChargeId");
+
+                b.HasIndex("ChargeId");
+
+                b.ToTable("peoplecharges");
             });
 
         modelBuilder.Entity("api.Models.Entities.PersonSacrament", b =>
@@ -527,16 +563,6 @@ partial class InitialCreate
                     .HasConstraintName("FK_Attendance_PersonId");
             });
 
-        modelBuilder.Entity("api.Models.Entities.Godparent", b =>
-            {
-                b.HasOne("api.Models.Entities.Person", null)
-                    .WithMany()
-                    .HasForeignKey("PersonId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired()
-                    .HasConstraintName("FK_Godparent_PersonId");
-            });
-
         modelBuilder.Entity("api.Models.Entities.Log", b =>
             {
                 b.HasOne("api.Models.Entities.ActionLog", null)
@@ -547,14 +573,21 @@ partial class InitialCreate
                     .HasConstraintName("FK_Log_ActionId");
             });
 
-        modelBuilder.Entity("api.Models.Entities.Parent", b =>
+        modelBuilder.Entity("api.Models.Entities.ParentPerson", b =>
             {
-                b.HasOne("api.Models.Entities.Person", null)
+                b.HasOne("api.Models.Entities.Parent", null)
                     .WithMany()
-                    .HasForeignKey("PersonId")
+                    .HasForeignKey("ParentId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired()
-                    .HasConstraintName("FK_Parent_PersonId");
+                    .HasConstraintName("FK_PersonParent_ParentId");
+
+                b.HasOne("api.Models.Entities.Person", null)
+                    .WithMany()
+                    .HasForeignKey("ParentId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired()
+                    .HasConstraintName("FK_PersonParent_PersonId");
             });
 
         modelBuilder.Entity("api.Models.Entities.Person", b =>
@@ -565,6 +598,23 @@ partial class InitialCreate
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired()
                     .HasConstraintName("FK_Person_DegreeId");
+            });
+
+        modelBuilder.Entity("api.Models.Entities.PersonCharge", b =>
+            {
+                b.HasOne("api.Models.Entities.Charge", null)
+                    .WithMany()
+                    .HasForeignKey("ChargeId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired()
+                    .HasConstraintName("FK_PersonCharge_ChargeId");
+
+                b.HasOne("api.Models.Entities.Person", null)
+                    .WithMany()
+                    .HasForeignKey("PersonId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired()
+                    .HasConstraintName("FK_PersonCharge_PersonId");
             });
 
         modelBuilder.Entity("api.Models.Entities.PersonSacrament", b =>

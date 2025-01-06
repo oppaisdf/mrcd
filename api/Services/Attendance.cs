@@ -111,8 +111,8 @@ public class AttendanceService(
                 Name = p.Name,
                 Gender = p.Gender,
                 Day = p.Day,
-                DOB = p.DOB,
-                Parents = _context.Parents.Where(pp => pp.PersonId == p.Id).Select(p => p.Name).ToList()
+                DOB = p.DOB
+                //Parents = _context.Parents.Where(pp => pp.PersonId == p.Id).Select(p => p.Name).ToList()
             })
             .ToListAsync();
     }

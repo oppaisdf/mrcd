@@ -43,35 +43,3 @@ public class Person
     [MinLength(8)]
     public string? Phone { get; set; }
 }
-
-public class Parent
-{
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int? Id { get; set; }
-    public required int PersonId { get; set; }
-
-    [Required]
-    [MaxLength(50)]
-    public required string Name { get; set; }
-
-    [Required]
-    [DefaultValue(true)]
-    public required bool Gender { get; set; }
-
-    public string? Phone { get; set; }
-}
-
-public class Godparent
-{
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int? Id { get; set; }
-    public required int PersonId { get; set; }
-
-    [Required]
-    [MaxLength(50)]
-    public required string Name { get; set; }
-
-    [Required]
-    [DefaultValue(true)]
-    public required bool Gender { get; set; }
-}

@@ -147,11 +147,6 @@ public class PeopleController(
                 if (p.Phone != null) p.Phone = IsValidPhoneNumber(p.Phone) ? p.Phone : null;
             });
         }
-        if (request.Godparents != null)
-        {
-            request.Godparents = request.Godparents.Where(g => !string.IsNullOrWhiteSpace(g.Name)).ToList();
-            if (request.Godparents.Count == 0 || request.Godparents.Count > 4) request.Godparents = null;
-        }
         if (!string.IsNullOrWhiteSpace(request.Address)) request.Address = request.Address.Trim();
         if (string.IsNullOrWhiteSpace(request.Phone) || !IsValidPhoneNumber(request.Phone)) request.Phone = null;
         if (request.Sacraments != null && request.Sacraments.Count > 10) request.Sacraments = null;

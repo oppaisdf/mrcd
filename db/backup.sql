@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
 --
--- Host: kmd-db.mysql.database.azure.com    Database: mercdb
+-- Host: kmd-db.mysql.database.azure.com    Database: mrcdb
 -- ------------------------------------------------------
 -- Server version	8.0.37-azure
 
@@ -35,7 +35,7 @@ CREATE TABLE `__efmigrationshistory` (
 
 LOCK TABLES `__efmigrationshistory` WRITE;
 /*!40000 ALTER TABLE `__efmigrationshistory` DISABLE KEYS */;
-INSERT INTO `__efmigrationshistory` VALUES ('20241230165024_InitialCreate','8.0.8'),('20250104235103_AddParentPhone', '8.0.8');
+INSERT INTO `__efmigrationshistory` VALUES ('20250106160133_Initial','8.0.8');
 /*!40000 ALTER TABLE `__efmigrationshistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,7 +59,7 @@ CREATE TABLE `actionslog` (
 
 LOCK TABLES `actionslog` WRITE;
 /*!40000 ALTER TABLE `actionslog` DISABLE KEYS */;
-INSERT INTO `actionslog`(Name) VALUES('Creó'),("Wachó"),("Actualizó");
+INSERT INTO `actionslog` VALUES (1,'Creó'),(2,'Wachó'),(3,'Actualizó');
 /*!40000 ALTER TABLE `actionslog` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -113,7 +113,7 @@ CREATE TABLE `aspnetroles` (
 
 LOCK TABLES `aspnetroles` WRITE;
 /*!40000 ALTER TABLE `aspnetroles` DISABLE KEYS */;
-INSERT INTO `aspnetroles` VALUES ('42d88a0a-2ad5-4041-89ca-6ce45d43209d','sys','SYS',NULL),('b1629496-8eda-4c1a-ade6-560103dd2a0f','adm','ADM',NULL);
+INSERT INTO `aspnetroles` VALUES ('42d88a0a-2ad5-4041-89ca-6ce45d43209d','sys','SYS',NULL),('486f4696-8845-44c4-9f38-815edc2f5231','usr','USR',NULL),('b1629496-8eda-4c1a-ade6-560103dd2a0f','adm','ADM',NULL);
 /*!40000 ALTER TABLE `aspnetroles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,7 +194,7 @@ CREATE TABLE `aspnetuserroles` (
 
 LOCK TABLES `aspnetuserroles` WRITE;
 /*!40000 ALTER TABLE `aspnetuserroles` DISABLE KEYS */;
-INSERT INTO `aspnetuserroles` VALUES ('fbf2a2d9-6eda-4fcb-be23-80620c31fc73','42d88a0a-2ad5-4041-89ca-6ce45d43209d'),('fbf2a2d9-6eda-4fcb-be23-80620c31fc73','b1629496-8eda-4c1a-ade6-560103dd2a0f');
+INSERT INTO `aspnetuserroles` VALUES ('fbf2a2d9-6eda-4fcb-be23-80620c31fc73','42d88a0a-2ad5-4041-89ca-6ce45d43209d'),('fbf2a2d9-6eda-4fcb-be23-80620c31fc73','486f4696-8845-44c4-9f38-815edc2f5231'),('fbf2a2d9-6eda-4fcb-be23-80620c31fc73','b1629496-8eda-4c1a-ade6-560103dd2a0f');
 /*!40000 ALTER TABLE `aspnetuserroles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -233,7 +233,7 @@ CREATE TABLE `aspnetusers` (
 
 LOCK TABLES `aspnetusers` WRITE;
 /*!40000 ALTER TABLE `aspnetusers` DISABLE KEYS */;
-INSERT INTO `aspnetusers` VALUES ('fbf2a2d9-6eda-4fcb-be23-80620c31fc73','Misha','MISHA','tarduvias@gmail.com','TARDUVIAS@GMAIL.COM',1,'AQAAAAIAAYagAAAAEIh/8XmrR4QfQceOI0rpAeBOq0DfF6swZcaoVpL7y3i5h9q8x+a15XVuLAKR+z3Fsw==','AE26PMYXFXZVUFMF54WSNNCQ6IRRI42Y','f71183ef-142c-4c4f-a205-cd970dbc5dbc',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` VALUES ('fbf2a2d9-6eda-4fcb-be23-80620c31fc73','Misha','MISHA','tarduvias@gmail.com','TARDUVIAS@GMAIL.COM',1,'AQAAAAIAAYagAAAAEIh/8XmrR4QfQceOI0rpAeBOq0DfF6swZcaoVpL7y3i5h9q8x+a15XVuLAKR+z3Fsw==','AE26PMYXFXZVUFMF54WSNNCQ6IRRI42Y','3f24521e-da8b-489c-9350-bafa6138dfb8',NULL,0,0,NULL,1,0);
 /*!40000 ALTER TABLE `aspnetusers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -291,6 +291,30 @@ LOCK TABLES `attendance` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `charges`
+--
+
+DROP TABLE IF EXISTS `charges`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `charges` (
+  `Id` smallint NOT NULL AUTO_INCREMENT,
+  `Name` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Total` decimal(6,2) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `charges`
+--
+
+LOCK TABLES `charges` WRITE;
+/*!40000 ALTER TABLE `charges` DISABLE KEYS */;
+/*!40000 ALTER TABLE `charges` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `degrees`
 --
 
@@ -311,33 +335,6 @@ CREATE TABLE `degrees` (
 LOCK TABLES `degrees` WRITE;
 /*!40000 ALTER TABLE `degrees` DISABLE KEYS */;
 /*!40000 ALTER TABLE `degrees` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `godparents`
---
-
-DROP TABLE IF EXISTS `godparents`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `godparents` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `PersonId` int NOT NULL,
-  `Name` varbinary(128) NOT NULL,
-  `Gender` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`Id`),
-  KEY `IX_godparents_PersonId` (`PersonId`),
-  CONSTRAINT `FK_Godparent_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `people` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `godparents`
---
-
-LOCK TABLES `godparents` WRITE;
-/*!40000 ALTER TABLE `godparents` DISABLE KEYS */;
-/*!40000 ALTER TABLE `godparents` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -377,13 +374,12 @@ DROP TABLE IF EXISTS `parents`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `parents` (
   `Id` int NOT NULL AUTO_INCREMENT,
-  `PersonId` int NOT NULL,
   `Name` varbinary(128) NOT NULL,
+  `NameHash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Gender` tinyint(1) NOT NULL DEFAULT '1',
   `Phone` varbinary(32) DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  KEY `IX_parents_PersonId` (`PersonId`),
-  CONSTRAINT `FK_Parent_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `people` (`Id`) ON DELETE CASCADE
+  UNIQUE KEY `UX_Parents_NameHash` (`NameHash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -394,6 +390,32 @@ CREATE TABLE `parents` (
 LOCK TABLES `parents` WRITE;
 /*!40000 ALTER TABLE `parents` DISABLE KEYS */;
 /*!40000 ALTER TABLE `parents` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `parentspeople`
+--
+
+DROP TABLE IF EXISTS `parentspeople`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `parentspeople` (
+  `PersonId` int NOT NULL,
+  `ParentId` int NOT NULL,
+  `IsParent` tinyint(1) NOT NULL,
+  PRIMARY KEY (`ParentId`,`PersonId`,`IsParent`),
+  CONSTRAINT `FK_PersonParent_ParentId` FOREIGN KEY (`ParentId`) REFERENCES `parents` (`Id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_PersonParent_PersonId` FOREIGN KEY (`ParentId`) REFERENCES `people` (`Id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `parentspeople`
+--
+
+LOCK TABLES `parentspeople` WRITE;
+/*!40000 ALTER TABLE `parentspeople` DISABLE KEYS */;
+/*!40000 ALTER TABLE `parentspeople` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -428,6 +450,33 @@ CREATE TABLE `people` (
 LOCK TABLES `people` WRITE;
 /*!40000 ALTER TABLE `people` DISABLE KEYS */;
 /*!40000 ALTER TABLE `people` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `peoplecharges`
+--
+
+DROP TABLE IF EXISTS `peoplecharges`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `peoplecharges` (
+  `PersonId` int NOT NULL,
+  `ChargeId` smallint NOT NULL,
+  `Total` decimal(6,2) NOT NULL,
+  PRIMARY KEY (`PersonId`,`ChargeId`),
+  KEY `IX_peoplecharges_ChargeId` (`ChargeId`),
+  CONSTRAINT `FK_PersonCharge_ChargeId` FOREIGN KEY (`ChargeId`) REFERENCES `charges` (`Id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_PersonCharge_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `people` (`Id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `peoplecharges`
+--
+
+LOCK TABLES `peoplecharges` WRITE;
+/*!40000 ALTER TABLE `peoplecharges` DISABLE KEYS */;
+/*!40000 ALTER TABLE `peoplecharges` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -488,4 +537,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-30 17:07:37
+-- Dump completed on 2025-01-06 16:06:38
