@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'prints-printer',
@@ -12,18 +11,25 @@ export class PrinterComponent {
   @ViewChild('pageA4') page!: ElementRef;
   @Input() fileName = 'defaultName';
 
+  isCreating = false;
+
   SaveToPDF() {
-    const _page = this.page.nativeElement;
+    if (this.isCreating) return;
+    this.isCreating = true;
+    const pageElement = this.page.nativeElement;
 
-    html2canvas(_page, { scale: 2 }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+    const opt = {
+      margin: 0,
+      filename: `${this.fileName}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${this.fileName}.pdf`);
-    });
+    html2pdf()
+      .from(pageElement)
+      .set(opt)
+      .save();
+    this.isCreating = false;
   }
 }

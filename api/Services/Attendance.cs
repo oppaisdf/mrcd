@@ -105,13 +105,14 @@ public class AttendanceService(
         await _logs.RegisterReadingAsync(userId, "Listado general");
         return await _context.People
             .Where(p => p.IsActive)
+            .OrderBy(p => p.Name)
             .Select(p => new GeneralListResponse
             {
                 Name = p.Name,
                 Gender = p.Gender,
                 Day = p.Day,
                 DOB = p.DOB,
-                Parents = _context.Parents.Select(p => p.Name).ToList()
+                Parents = _context.Parents.Where(pp => pp.PersonId == p.Id).Select(p => p.Name).ToList()
             })
             .ToListAsync();
     }
@@ -127,6 +128,7 @@ public class AttendanceService(
             {
                 Name = p.Name,
                 Day = p.Day,
+                Gender = p.Gender,
                 Hash = p.Hash
             })
             .ToListAsync();

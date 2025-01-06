@@ -43,6 +43,7 @@ export class ListComponent implements OnInit {
     const response = await this._service.GetGeneralList();
     if (!response.success) return;
     this._list = response.data!;
+    this._list.sort((a, b) => a.name.localeCompare(b.name));
     this.people = response.data!;
   }
 

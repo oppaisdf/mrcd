@@ -1,18 +1,58 @@
-<prints-printer fileName="Gafetes">
-    <div class="columns is-multiline is-vcentered" *ngFor="let qr of qrs">
-        <div class="card column" style="background-color: white;">
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-left">
-                        <figure class="image">
-                            <qrcode [qrdata]="qr.hash" [elementType]="'img'" />
-                        </figure>
-                    </div>
+<shared-pan-expand title="Filtros">
+    <div class="buttons are-medium">
+        <button class="button" (click)="ClearFilters()">Limpiar filtros</button>
+    </div>
 
-                    <div class="media-content">
-                        <p class="title is-4">{{qr.name}}</p>
-                        <p class="subtitle is-6">@if (qr.day) {Domingo}@else {Sábado}</p>
+    <form [formGroup]="form" class="columns is-multiline">
+        <div class="column is-half">
+            <div class="field">
+                <label class="subtitle">Nombre</label>
+                <div class="control">
+                    <input type="text" class="input" formControlName="name" (input)="FilterBy('name')">
+                </div>
+            </div>
+        </div>
+
+        <div class="column is-half">
+            <div class="field">
+                <label class="subtitle">Día</label>
+                <div class="control">
+                    <div class="select">
+                        <select formControlName="day">
+                            <option value="true" (click)="FilterBy('day')">Domingo</option>
+                            <option value="false" (click)="FilterBy('day')">Sábado</option>
+                        </select>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column is-half">
+            <div class="field">
+                <label class="subtitle">Género</label>
+                <div class="control">
+                    <div class="select">
+                        <select formControlName="gender">
+                            <option value="true" (click)="FilterBy('gender')">Masculino</option>
+                            <option value="false" (click)="FilterBy('gender')">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</shared-pan-expand>
+
+<prints-printer fileName="Gafetes">
+    <div class="columns is-multiline is-mobile is-5">
+        <div class="column is-one-third" *ngFor="let qr of qrs">
+            <div class="columns is-mobile is-vcentered is-gapless">
+                <div class="column is-half has-text-right">
+                    <qrcode [qrdata]="qr.hash" [elementType]="'img'" [scale]="2" />
+                </div>
+                <div class="column is-half has-text-centered">
+                    <p class="title is-4 has-text-black-bis">{{qr.name}}</p>
+                    <p class="subtitle is-6 has-text-grey-dark">@if (qr.day) {Domingo}@else {Sábado} </p>
                 </div>
             </div>
         </div>

@@ -1,9 +1,10 @@
 <div class="buttons are-medium">
-    <button class="button is-warning" (click)="SaveToPDF()">Guardar PDF</button>
+    <button class="button is-warning" [class.is-loading]="isCreating" [disabled]="isCreating"
+        (click)="SaveToPDF()">Guardar PDF</button>
 </div>
 
-<div class="box table-container">
-    <div #pageA4 class="table" style="background-color: white; width: 794px; height: 1123px; padding: 40px;">
+<div class="box table-container has-background-dark">
+    <div #pageA4 class="table has-background-white p-6" style="width: 794px;">
         <ng-content />
     </div>
 </div>

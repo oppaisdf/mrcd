@@ -12,6 +12,7 @@ public class QRResponse
 {
     public required string Name { get; set; }
     public required bool Day { get; set; }
+    public required bool Gender { get; set; }
     public required string Hash { get; set; }
 }
 
