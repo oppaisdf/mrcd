@@ -5,4 +5,3 @@
 
 - Trabajando creación de códigos QR. Falta lectura de estos.
 - Pendiente agregar cobros.
-- Pendiente los roles con transacciones

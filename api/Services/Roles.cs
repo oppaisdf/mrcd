@@ -1,4 +1,5 @@
 using api.Common;
+using api.Context;
 using api.Models.Responses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,13 @@ public interface IRoleService
 
 public class RoleService(
     RoleManager<IdentityRole> roleManager,
-    UserManager<IdentityUser> userManager
+    UserManager<IdentityUser> userManager,
+    MerContext context
 ) : IRoleService
 {
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
     private readonly UserManager<IdentityUser> _userManager = userManager;
+    private readonly MerContext _context = context;
 
     public async Task CreateAsync(
         string name
@@ -26,17 +29,26 @@ public class RoleService(
         var rolExist = await _roleManager.RoleExistsAsync(name);
         if (rolExist) throw new AlreadyExistsException("Role already exists! :0");
 
-        var result = await _roleManager.CreateAsync(new IdentityRole(name));
-
-        if (!result.Succeeded) throw new Exception($"[+] Error al crear el rol {name}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-
-        var usersSys = await _userManager.GetUsersInRoleAsync("sys") ?? throw new Exception($"[+] Error al asignar el rol {name} al usuairo sys");
-
-        foreach (var user in usersSys)
+        using var tran = await _context.Database.BeginTransactionAsync();
+        try
         {
-            var addRoleResult = await _userManager.AddToRoleAsync(user, name);
-            if (addRoleResult.Succeeded) continue;
-            throw new Exception($"[+] Error al asignar el rol {name} al usuairo sys");
+            var result = await _roleManager.CreateAsync(new IdentityRole(name));
+            if (!result.Succeeded) throw new Exception($"[+] Error al crear el rol {name}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+
+            var users = await _userManager.GetUsersInRoleAsync("adm") ?? throw new Exception($"[+] Error al asignar el rol {name} a los usuarios adm");
+            foreach (var user in users)
+            {
+                var addRoleResult = await _userManager.AddToRoleAsync(user, name);
+                if (addRoleResult.Succeeded) continue;
+                throw new Exception($"[+] Error al asignar el rol {name} al usuairo {user.UserName}");
+            }
+
+            await tran.CommitAsync();
+        }
+        catch (Exception)
+        {
+            await tran.RollbackAsync();
+            throw;
         }
     }
 
