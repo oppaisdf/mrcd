@@ -1,7 +1,7 @@
 <charge-updater [(show)]="showUpdater" [record]="selectedCharge" />
 
 <div class="buttons are-medium">
-    <a class="button is-primary" routerLink="/charge/new">Nuevo</a>
+    <a class="button is-primary" routerLink="/charge/new" *ngIf="isAdm">Nuevo</a>
 </div>
 
 <div class="table-container">
@@ -9,14 +9,17 @@
         <thead>
             <th>Nombre</th>
             <th>Total</th>
-            <th>Acción</th>
+            <th>Acciones</th>
         </thead>
         <tbody>
             <tr *ngFor="let charge of charges">
                 <td>{{charge.name}}</td>
                 <td>{{charge.total|currency:currencySymbol}}</td>
                 <td>
-                    <button class="button is-info" (click)="SelectCharge(charge)">Actualizar</button>
+                    <div class="buttons">
+                        <button *ngIf="isAdm" class="button is-info" (click)="SelectCharge(charge)">Actualizar</button>
+                        <a class="button" routerLink="/charge/{{charge.id}}">Seleccionar</a>
+                    </div>
                 </td>
             </tr>
         </tbody>

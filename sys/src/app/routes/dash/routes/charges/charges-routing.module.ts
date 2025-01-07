@@ -2,11 +2,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AllComponent } from './routes/all/all.component';
 import { NewComponent } from './routes/new/new.component';
+import { DetailComponent } from './routes/detail/detail.component';
+import { detailGuard } from './guards/detail.guard';
+import { admGuard } from '../../guards/adm.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'all', pathMatch: 'full' },
   { path: 'all', component: AllComponent },
-  { path: 'new', component: NewComponent },
+  { path: 'new', component: NewComponent, canActivate: [admGuard] },
+  { path: ':id', component: DetailComponent, canActivate: [detailGuard] },
   { path: '**', redirectTo: 'all' }
 ];
 

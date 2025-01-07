@@ -15,7 +15,7 @@ const routes: Routes = [
       { path: 'user', loadChildren: () => import('./routes/users/users.module').then(m => m.UsersModule) },
       { path: 'person', loadChildren: () => import('./routes/people/people.module').then(m => m.PeopleModule) },
       { path: 'print', loadChildren: () => import('./routes/prints/prints.module').then(m => m.PrintsModule) },
-      { path: 'charge', loadChildren: () => import('./routes/charges/charges.module').then(m => m.ChargesModule), canActivate: [admGuard] }
+      { path: 'charge', loadChildren: () => import('./routes/charges/charges.module').then(m => m.ChargesModule) }
     ]
   }
 ];

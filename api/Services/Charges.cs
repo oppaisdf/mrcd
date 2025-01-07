@@ -1,3 +1,4 @@
+using System.Runtime.Intrinsics.X86;
 using api.Common;
 using api.Context;
 using api.Models.Entities;
@@ -12,6 +13,7 @@ public interface IChargeService
     Task CreateAsync(string userId, ChargeRequest request);
     Task UpdateAsync(string userId, short id, ChargeRequest request);
     Task<ICollection<ChargeResponse>> GetAsync(string userId);
+    Task<ChargeResponse> GetByIdAsync(string userId, short id);
     Task AssignAsync(string userId, int personId, short chargeId);
     Task UnassignAsync(string userId, int personId, short chargeId);
 }
@@ -96,6 +98,7 @@ public class ChargeService(
         string userId
     )
     {
+        await _logs.RegisterReadingAsync(userId, "Todos los cobros");
         return await _context.Charges
             .AsNoTracking()
             .Select(c => new ChargeResponse
@@ -126,5 +129,45 @@ public class ChargeService(
 
         await _context.SaveChangesAsync();
         await _logs.RegisterUpdateAsync(userId, $"Cobro {id}");
+    }
+
+    public async Task<ChargeResponse> GetByIdAsync(
+        string userId,
+        short id
+    )
+    {
+        await _logs.RegisterReadingAsync(userId, $"Cobro {id}");
+        return await (
+            from c in _context.Charges
+            join tempC in _context.PeopleCharges on c.Id equals tempC.ChargeId into tempCG
+            from pc in tempCG.DefaultIfEmpty()
+            where
+                c.Id == id
+            group pc by new
+            {
+                Id = c.Id!.Value,
+                c.Name,
+                c.Total
+            } into r
+            select new ChargeResponse
+            {
+                Id = r.Key.Id,
+                Name = r.Key.Name,
+                IsActive = true,
+                Total = r.Key.Total,
+                People = _context.People
+                    .AsNoTracking()
+                    .Where(x => x.IsActive)
+                    .Select(x => new PersonChargeResponse
+                    {
+                        Id = x.Id!.Value,
+                        Name = x.Name,
+                        IsActive = r.Any(y => x.Id == y.PersonId),
+                        Gender = x.Gender,
+                        Day = x.Day
+                    })
+                    .ToList()
+            }
+        ).FirstOrDefaultAsync() ?? throw new DoesNotExistsException("El cobro no existe");
     }
 }

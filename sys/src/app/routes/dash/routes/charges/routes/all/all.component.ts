@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ChargeService } from '../../services/charge.service';
 import { ChargeResponse } from '../../models/responses/charge';
 import { environment } from '../../../../environments/environment';
+import { LoginService } from '../../../../../../services/login.service';
 
 @Component({
   selector: 'charge-all',
@@ -11,7 +12,8 @@ import { environment } from '../../../../environments/environment';
 })
 export class AllComponent implements OnInit {
   constructor(
-    private _service: ChargeService
+    private _service: ChargeService,
+    private _login: LoginService
   ) { }
 
   charges: ChargeResponse[] = [];
@@ -23,8 +25,10 @@ export class AllComponent implements OnInit {
   };
   showUpdater = false;
   currencySymbol = environment.currencySymbol;
+  isAdm = false;
 
   async ngOnInit() {
+    this.isAdm = this._login.HasUserPermission('adm');
     const response = await this._service.GetAsync();
     if (response.success) this.charges = response.data!;
   }

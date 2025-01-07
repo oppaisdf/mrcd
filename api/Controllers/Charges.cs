@@ -76,6 +76,23 @@ public class ChargeController(
         { return this.DefaultServerError($"[+] Error al obtener todos los cobros: {e.Message}"); }
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetByIdAsync(
+        short id
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var charge = await _service.GetByIdAsync(userId, id);
+            return this.DefaultOk(charge);
+        }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al obtener el cobro {id}: {e.Message}"); }
+    }
+
     [HttpPost("{id}/{personId}")]
     public async Task<IActionResult> AssingAsync(
         short id,

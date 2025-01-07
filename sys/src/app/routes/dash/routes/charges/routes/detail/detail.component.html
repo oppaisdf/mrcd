@@ -1,0 +1,58 @@
+<shared-alert [(message)]="message" [success]="success" />
+
+<div class="buttons are-medium">
+    <a class="button" routerLink="/charge/all">Regresar</a>
+</div>
+
+<p class="title">{{name}}</p>
+<p class="subtitle">{{total|currency:currencySymbol}}</p>
+
+<shared-pan-expand title="Filtros">
+    <div class="columns is-multiline">
+        <div class="column is-hafl">
+            <shared-field [inBox]="false" field="Nombre">
+                <input type="text" class="input" [(ngModel)]="txt" (ngModelChange)="Filter()">
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field [inBox]="false" field="Género">
+                <div class="select">
+                    <select [(ngModel)]="gender" (ngModelChange)="Filter()">
+                        <option value="1">Todos</option>
+                        <option value="2">Masculino</option>
+                        <option value="3">Femenino</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+    </div>
+</shared-pan-expand>
+
+<hr>
+
+<div class="columns">
+    <div class="column is-half">
+        <shared-field field="Domingo">
+            <div class="checkboxes" *ngFor="let person of sunday">
+                <label class="checkbox">
+                    <input type="checkbox" [disabled]="isUpdating" [checked]="person.isActive"
+                        (click)="SelectPerson(person)">
+                    {{person.name}}
+                </label>
+            </div>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field field="Sábado">
+            <div class="checkboxes" *ngFor="let person of saturday">
+                <label class="checkbox">
+                    <input type="checkbox" [disabled]="isUpdating" [checked]="person.isActive"
+                        (click)="SelectPerson(person)">
+                    {{person.name}}
+                </label>
+            </div>
+        </shared-field>
+    </div>
+</div>
