@@ -1,27 +1,29 @@
 <shared-pan-expand [title]="isParent ? 'Encargados': 'Padrinos'">
     <shared-alert [(message)]="message" [success]="success" />
 
-    <table class="table is-hoverable is-striped is-fullwidth" *ngIf="parents.length > 0">
-        <thead>
-            <th>Nombre</th>
-            <th>Género</th>
-            <th *ngIf="isParent">Teléfono</th>
-            <th *ngIf="parents.length > 1">Acción</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let parent of parents">
-                <td>{{parent.name}}</td>
-                <td>
-                    @if (parent.gender) {Masculino}@else {Femenino}
-                </td>
-                <td *ngIf="isParent">{{parent.phone}}</td>
-                <td>
-                    <button class="button is-danger" [disabled]="updating"
-                        (click)="RemoveAsync(parent)">Remover</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table class="table is-hoverable is-striped is-fullwidth" *ngIf="parents.length > 0">
+            <thead>
+                <th>Nombre</th>
+                <th>Género</th>
+                <th *ngIf="isParent">Teléfono</th>
+                <th *ngIf="parents.length > 1">Acción</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let parent of parents">
+                    <td>{{parent.name}}</td>
+                    <td>
+                        @if (parent.gender) {Masculino}@else {Femenino}
+                    </td>
+                    <td *ngIf="isParent">{{parent.phone}}</td>
+                    <td>
+                        <button class="button is-danger" [disabled]="updating"
+                            (click)="RemoveAsync(parent)">Remover</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <hr>
 

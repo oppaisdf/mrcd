@@ -11,6 +11,8 @@ import { PersonService } from './services/person.service';
 import { ParentsComponent } from './components/parents/parents.component';
 import { InParentComponent } from './components/in-parent/in-parent.component';
 import { ParentService } from './services/parent.service';
+import { ChargeService } from './services/charge.service';
+import { ChargesComponent } from './components/charges/charges.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { ParentService } from './services/parent.service';
     AllComponent,
     DetailsComponent,
     ParentsComponent,
-    InParentComponent
+    InParentComponent,
+    ChargesComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +31,8 @@ import { ParentService } from './services/parent.service';
   ],
   providers: [
     PersonService,
-    ParentService
+    ParentService,
+    ChargeService
   ]
 })
 export class PeopleModule { }

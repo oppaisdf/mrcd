@@ -34,6 +34,7 @@ export class NewComponent implements OnInit {
   form: FormGroup;
   parents: ParentRequest[] = [];
   private _sacraments: number[] = [];
+  price = 0;
   message = '';
   success = true;
   isAdding = false;
@@ -58,6 +59,7 @@ export class NewComponent implements OnInit {
     if (!response.success) return;
     this.degrees = response.data!.degrees;
     this.sacraments = response.data!.sacraments;
+    if (response.data!.price) this.price = response.data!.price;
   }
 
   IsInvalidField(
@@ -105,7 +107,8 @@ export class NewComponent implements OnInit {
       address: this.GetValue('address'),
       phone: `${this.GetValue('phone')}`.replace(/\D/g, ''),
       parents: this.parents,
-      sacraments: this._sacraments
+      sacraments: this._sacraments,
+      pay: this.GetValue('pay')
     };
     if (request.parents) request.parents!.forEach(p => {
       if (!p.phone || p.phone.length !== 9) p.phone = undefined;

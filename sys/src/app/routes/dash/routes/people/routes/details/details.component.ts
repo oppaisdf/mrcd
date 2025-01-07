@@ -4,6 +4,7 @@ import { PersonService } from '../../services/person.service';
 import { DefaultEntityResponse, ParentResponse, SacramentResponse } from '../../models/responses/person';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PersonRequest } from '../../models/requests/person';
+import { ChargeResponse } from '../../../charges/models/responses/charge';
 
 @Component({
   selector: 'person-details',
@@ -36,6 +37,7 @@ export class DetailsComponent implements OnInit {
   sacraments: SacramentResponse[] = [];
   parents: ParentResponse[] = [];
   godparents: ParentResponse[] = [];
+  charges: ChargeResponse[] = [];
   private _old: PersonRequest = {};
   message = '';
   success = true;
@@ -72,6 +74,7 @@ export class DetailsComponent implements OnInit {
 
     this.degrees = response.data!.degrees!;
     if (response.data!.parents) this.parents = response.data!.parents;
+    if (response.data!.charges) this.charges = response.data!.charges;
     this.sacraments = response.data!.sacraments;
     if (response.data!.godparents) this.godparents = response.data!.godparents;
     this._sacraments = response.data!.sacraments.reduce((lst, s) => {

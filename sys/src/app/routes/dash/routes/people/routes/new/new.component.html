@@ -8,25 +8,19 @@
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
     <div class="column is-half">
-        <div class="field box">
-            <label for="txtName" class="subtitle">Nombre</label>
-            <div class="control" [class.is-loading]="isAdding">
-                <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
-                    formControlName="name" maxdrshlength="50" placeholder="Nombre completo">
-            </div>
-        </div>
+        <shared-field [loading]="isAdding" field="Nombre">
+            <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
+                formControlName="name" maxdrshlength="50" placeholder="Nombre completo">
+        </shared-field>
     </div>
 
     <div class="column is-half">
-        <div class="field box">
-            <label class="subtitle">Género</label>
-            <div class="control">
-                <label class="checkbox">
-                    <input type="checkbox" formControlName="gender">
-                    @if (GetValue('gender')) { Masculino}@else { Femenino}
-                </label>
-            </div>
-        </div>
+        <shared-field [loading]="isAdding" field="Género">
+            <label class="checkbox">
+                <input type="checkbox" formControlName="gender">
+                @if (GetValue('gender')) { Masculino}@else { Femenino}
+            </label>
+        </shared-field>
     </div>
 
     <div class="column is-half">
@@ -98,15 +92,15 @@
         </div>
     </div>
 
-    <div class="column is-half">
+    <div class="column is-half" *ngIf="price > 0">
         <div class="field box">
             <label class="subtitle">Pagó inscripción</label>
-        </div>
-        <div class="control">
-            <label class="checkbox">
-                <input type="checkbox" formControlName="pay">
-                @if (GetValue('pay')) { Sí}@else { No} ({{100|currency:currencySymbol}})
-            </label>
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox" formControlName="pay">
+                    @if (GetValue('pay')) { Sí}@else { No} ({{price|currency:currencySymbol}})
+                </label>
+            </div>
         </div>
     </div>
 </form>

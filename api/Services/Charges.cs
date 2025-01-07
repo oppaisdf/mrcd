@@ -102,7 +102,8 @@ public class ChargeService(
             {
                 Id = c.Id!.Value,
                 Name = c.Name,
-                Total = c.Total
+                Total = c.Total,
+                IsActive = true
             })
             .ToListAsync();
     }

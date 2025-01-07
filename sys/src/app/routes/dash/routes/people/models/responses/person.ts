@@ -1,3 +1,5 @@
+import { ChargeResponse } from "../../../charges/models/responses/charge";
+
 export interface PersonResponse {
     id: number;
     name: string;
@@ -13,6 +15,7 @@ export interface PersonResponse {
     godparents?: ParentResponse[];
     sacraments: SacramentResponse[];
     degrees?: DefaultEntityResponse[];
+    charges?: ChargeResponse[];
 }
 
 export interface ParentResponse {
@@ -31,6 +34,7 @@ export interface SacramentResponse {
 export interface PersonFilterResponse {
     degrees: DefaultEntityResponse[];
     sacraments: DefaultEntityResponse[];
+    price?: number;
 }
 
 export interface DefaultEntityResponse {

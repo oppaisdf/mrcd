@@ -16,6 +16,7 @@ public class PersonResponse
     public ICollection<ParentResponse>? Godparents { get; set; }
     public ICollection<SacramentResponse>? Sacraments { get; set; }
     public ICollection<DefaultEntityResponse>? Degrees { get; set; }
+    public ICollection<ChargeResponse>? Charges { get; set; }
 }
 
 public class SacramentResponse
@@ -29,6 +30,7 @@ public class PersonFilterResponse
 {
     public required ICollection<DefaultEntityResponse> Degrees { get; set; }
     public required ICollection<DefaultEntityResponse> Sacraments { get; set; }
+    public decimal? Price { get; set; }
 }
 
 public class DefaultEntityResponse

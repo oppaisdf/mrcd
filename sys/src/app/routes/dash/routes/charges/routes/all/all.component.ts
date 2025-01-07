@@ -18,7 +18,8 @@ export class AllComponent implements OnInit {
   selectedCharge: ChargeResponse = {
     id: 0,
     name: '',
-    total: 0
+    total: 0,
+    isActive: true
   };
   showUpdater = false;
   currencySymbol = environment.currencySymbol;

@@ -64,6 +64,52 @@ public partial class PeopleService(
         if (diff < 14) throw new BadRequestException("Muy jóven para el sacramento");
         if (diff > 30) throw new BadRequestException("Muy grande para este grupo");
     }
+
+    private async Task AssignParents(
+        string userId,
+        int personId,
+        ICollection<ParentRequest> parents
+    )
+    {
+        var ids = new List<int>();
+        foreach (var parent in parents)
+        {
+            var id = await _parents.GetIdByNameAsync(parent.Name!) ?? await _parents.CreateAsync(userId, parent);
+            ids.Add(id);
+        }
+        await _parents.AssignAsync(
+            userId,
+            personId,
+            ids.Select(i => new AssignParentRequest
+            {
+                Id = i,
+                IsParent = true
+            }).ToList()
+        );
+    }
+
+    private async Task RegisterCharge(
+        int personId
+    )
+    {
+        var charge = await (
+            from c in _context.Charges
+            where c.Id == 1
+            select new
+            {
+                Id = c.Id!.Value,
+                c.Total
+            }
+        ).FirstOrDefaultAsync();
+        if (charge == null) return;
+        _context.PeopleCharges.Add(new PersonCharge
+        {
+            PersonId = personId,
+            ChargeId = charge.Id,
+            Total = charge.Total
+        });
+        await _context.SaveChangesAsync();
+    }
     #endregion
 
     public async Task<int> CreateAsync(
@@ -100,25 +146,9 @@ public partial class PeopleService(
         {
             await _context.SaveChangesAsync();
             if (request.Sacraments != null) await RegisterSacraments(person.Id!.Value, request.Sacraments);
+            if (request.Parents != null) await AssignParents(userId, person.Id!.Value, request.Parents);
+            if (request.Pay == true) await RegisterCharge(person.Id!.Value);
             await _logs.RegisterCreationAsync(userId, $"Confirmando {person.Id}");
-            if (request.Parents != null)
-            {
-                var ids = new List<int>();
-                foreach (var parent in request.Parents)
-                {
-                    var id = await _parents.GetIdByNameAsync(parent.Name!) ?? await _parents.CreateAsync(userId, parent);
-                    ids.Add(id);
-                }
-                await _parents.AssignAsync(
-                    userId,
-                    person.Id!.Value,
-                    ids.Select(i => new AssignParentRequest
-                    {
-                        Id = i,
-                        IsParent = true
-                    }).ToList()
-                );
-            }
 
             await tran.CommitAsync();
         }
@@ -235,7 +265,27 @@ public partial class PeopleService(
                         Id = d.Id!.Value,
                         Name = d.Name
                     })
-                    .ToList()
+                    .ToList(),
+                Charges = (
+                    from c in _context.Charges
+                    join temp in _context.PeopleCharges on c.Id equals temp.ChargeId into tempG
+                    from pc in tempG.DefaultIfEmpty()
+                    group pc by new
+                    {
+                        Id = c.Id!.Value,
+                        c.Name,
+                        c.Total
+                    } into r
+                    select new ChargeResponse
+                    {
+                        Id = r.Key.Id,
+                        Name = r.Key.Name,
+                        Total = r.Any(x => x.PersonId == p.Id) ?
+                            r.Where(x => x.PersonId == p.Id).Select(x => x.Total).FirstOrDefault() :
+                            r.Key.Total,
+                        IsActive = r.Any(x => x.PersonId == p.Id)
+                    }
+                ).ToList()
             }).FirstOrDefaultAsync()
             ?? throw new DoesNotExistsException("El confirmando no existe");
 
@@ -303,7 +353,12 @@ public partial class PeopleService(
         return new PersonFilterResponse
         {
             Degrees = await _context.Degrees.Select(d => new DefaultEntityResponse { Id = d.Id!.Value, Name = d.Name }).ToListAsync(),
-            Sacraments = await _context.Sacraments.Select(s => new DefaultEntityResponse { Id = s.Id!.Value, Name = s.Name }).ToListAsync()
+            Sacraments = await _context.Sacraments.Select(s => new DefaultEntityResponse { Id = s.Id!.Value, Name = s.Name }).ToListAsync(),
+            Price = await (
+                from c in _context.Charges
+                where c.Id == 1
+                select c.Total
+            ).FirstOrDefaultAsync()
         };
     }
 }

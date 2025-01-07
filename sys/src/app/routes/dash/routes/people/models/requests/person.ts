@@ -8,6 +8,7 @@ export interface PersonRequest {
     address?: string;
     phone?: string;
     isActive?: boolean;
+    pay?: boolean;
     sacraments?: number[];
     parents?: ParentRequest[];
 }

@@ -25,6 +25,7 @@ public class PeopleRequest
     [MinLength(8, ErrorMessage = "Número de teléfono inválido")]
     public string? Phone { get; set; }
     public bool? IsActive { get; set; }
+    public bool? Pay { get; set; }
     public ICollection<ParentRequest>? Parents { get; set; }
     public ICollection<short>? Sacraments { get; set; }
 }
