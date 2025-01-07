@@ -8,22 +8,16 @@
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
     <div class="column is-half">
-        <div class="field box">
-            <label class="subtitle">Nombre</label>
-            <div class="control" [class.is-loading]="creating">
-                <input type="text" class="input" [class.is-danger]="IsInvalidField('name')" formControlName="name"
-                    maxlength="11">
-            </div>
-        </div>
+        <shared-field [loading]="creating" field="Nombre">
+            <input type="text" class="input" [class.is-danger]="IsInvalidField('name')" formControlName="name"
+                maxlength="11">
+        </shared-field>
     </div>
 
     <div class="column is-half">
-        <div class="field box">
-            <label class="subtitle">Total del cobro</label>
-            <div class="control" [class.is-loading]="creating">
-                <input type="number" class="input" [class.i-danger]="IsInvalidField('total')" formControlName="total"
-                    placeholder="{{0|currency:symbolCurrency}}">
-            </div>
-        </div>
+        <shared-field [loading]="creating" field="Total del cobro">
+            <input type="number" class="input" [class.i-danger]="IsInvalidField('total')" formControlName="total"
+                placeholder="{{0|currency:symbolCurrency}}">
+        </shared-field>
     </div>
 </form>

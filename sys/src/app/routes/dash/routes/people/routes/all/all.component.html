@@ -9,65 +9,50 @@
 
 <form [formGroup]="form" class="box columns is-multiline" (ngSubmit)="FillAsync()">
     <div class="column is-half">
-        <div class="field">
-            <label class="subtitle">Género</label>
-            <div class="control">
-                <div class="select" [class.is-loading]="isSearching">
-                    <select formControlName="gender">
-                        <option [value]="true">Masculino</option>
-                        <option [value]="false">Femenino</option>
-                    </select>
-                </div>
+        <shared-field [loading]="isSearching" [inBox]="false" field="Género">
+            <div class="select" [class.is-loading]="isSearching">
+                <select formControlName="gender">
+                    <option [value]="true">Masculino</option>
+                    <option [value]="false">Femenino</option>
+                </select>
             </div>
-        </div>
+        </shared-field>
     </div>
 
     <div class="column is-half">
-        <div class="field">
-            <label class="subtitle">Día</label>
-            <div class="control">
-                <div class="select" [class.is-loading]="isSearching">
-                    <select formControlName="day">
-                        <option value="{{true}}">Domingo</option>
-                        <option value="{{false}}">Sábado</option>
-                    </select>
-                </div>
+        <shared-field [loading]="isSearching" [inBox]="false" field="Día">
+            <div class="select" [class.is-loading]="isSearching">
+                <select formControlName="day">
+                    <option value="{{true}}">Domingo</option>
+                    <option value="{{false}}">Sábado</option>
+                </select>
             </div>
-        </div>
+        </shared-field>
     </div>
 
     <div class="column is-half">
-        <div class="field">
-            <label for="chkActive" class="subtitle">Activos</label>
-            <div class="control">
-                <label class="checkbox">
-                    <input type="checkbox" formControlName="isActive">
-                    @if (GetValue('isActive')) { Solo activos} @else { Solo inactivos}
-                </label>
-            </div>
-        </div>
+        <shared-field [loading]="isSearching" [inBox]="false" field="Activos">
+            <label class="checkbox">
+                <input type="checkbox" formControlName="isActive">
+                @if (GetValue('isActive')) { Solo activos} @else { Solo inactivos}
+            </label>
+        </shared-field>
     </div>
 
     <div class="column is-half">
-        <div class="field">
-            <label for="lstDegrees" class="subtitle">Grado académico</label>
-            <div class="control">
-                <div class="select" [class.is-loading]="isSearching">
-                    <select formControlName="degreeId">
-                        <option *ngFor="let degree of degrees" [value]="degree.id">{{degree.name}}</option>
-                    </select>
-                </div>
+        <shared-field [loading]="isSearching" [inBox]="false" field="Grado académico">
+            <div class="select">
+                <select formControlName="degreeId">
+                    <option *ngFor="let degree of degrees" [value]="degree.id">{{degree.name}}</option>
+                </select>
             </div>
-        </div>
+        </shared-field>
     </div>
 
     <div class="column is-half">
-        <div class="field">
-            <label for="txtName" class="subtitle">Nombre de confirmando</label>
-            <div class="control" [class.is-loading]="isSearching">
-                <input name="txtName" type="text" class="input" formControlName="name" maxlength="30">
-            </div>
-        </div>
+        <shared-field [loading]="isSearching" [inBox]="false" field="Nombre de confirmando">
+            <input name="txtName" type="text" class="input" formControlName="name" maxlength="30">
+        </shared-field>
     </div>
 </form>
 

@@ -9,4 +9,5 @@ import { Component, Input } from '@angular/core';
 export class FieldComponent {
   @Input() loading = false;
   @Input() field = '';
+  @Input() inBox = true;
 }

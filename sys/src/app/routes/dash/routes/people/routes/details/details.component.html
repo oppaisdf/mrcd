@@ -8,116 +8,86 @@
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="UpdateAsync()">
     <div class="column is-half">
-        <div class="field box">
-            <label for="txtName" class="subtitle">Nombre</label>
-            <div class="control" [class.is-loading]="isUpdating">
-                <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
-                    formControlName="name" maxlength="30">
-            </div>
-        </div>
+        <shared-field [loading]="isUpdating" field="Nombre">
+            <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
+                formControlName="name" maxlength="30">
+        </shared-field>
     </div>
 
     <div class="column is-half">
-        <div class="field box">
-            <label class="subtitle">Género</label>
-            <div class="control">
+        <shared-field [loading]="isUpdating" field="Género">
+            <label class="checkbox">
+                <input type="checkbox" formControlName="gender">
+                @if (GetValue('gender')) { Masculino} @else { Femenino}
+            </label>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Fecha de nacimiento">
+            <input name="txtDob" type="date" class="input" formControlName="dob" [max]="GetMDate(true)"
+                [min]="GetMDate(false)">
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Día">
+            <label class="checkbox">
+                <input type="checkbox" formControlName="day">
+                @if (GetValue('day')) { Domingo} @else { Sábado}
+            </label>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Activo">
+            <label class="checkbox">
+                <input type="checkbox" formControlName="isActive">
+                @if (GetValue('isActive')) { Activo} @else { Inactivo}
+            </label>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Grado académico">
+            <div class="select">
+                <select name="lstDegree" formControlName="degreeId">
+                    <option *ngFor="let degree of degrees" value="{{degree.id}}">{{degree.name}}</option>
+                </select>
+            </div>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Dirección">
+            <textarea name="txtAddress" class="textarea" [class.is-danger]="IsInvalidField('address')"
+                formControlName="address" maxlength="100"></textarea>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Sacramentos">
+            <div class="checkboxes" *ngFor="let sacrament of sacraments">
                 <label class="checkbox">
-                    <input type="checkbox" formControlName="gender">
-                    @if (GetValue('gender')) { Masculino} @else { Femenino}
+                    <input type="checkbox" [checked]="sacrament.isActive" (click)="SelectSacrament(sacrament)">
+                    {{sacrament.name}}
                 </label>
             </div>
-        </div>
+        </shared-field>
     </div>
 
     <div class="column is-half">
-        <div class="field box">
-            <label for="txtDob" class="subtitle">Fecha de nacimiento</label>
-            <div class="control" [class.is-loading]="isUpdating">
-                <input name="txtDob" type="date" class="input" formControlName="dob" [max]="GetMDate(true)"
-                    [min]="GetMDate(false)">
-            </div>
-        </div>
+        <shared-field [loading]="isUpdating" field="Parroquia de bautizo">
+            <input type="text" class="input" [class.is-danger]="IsInvalidField('parish')" formControlName="parish"
+                maxlength="30">
+        </shared-field>
     </div>
 
     <div class="column is-half">
-        <div class="field box">
-            <label class="subtitle">Día</label>
-            <div class="control">
-                <label class="checkbox">
-                    <input type="checkbox" formControlName="day">
-                    @if (GetValue('day')) { Domingo} @else { Sábado}
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="column is-half">
-        <div class="field box">
-            <label class="subtitle">Activo</label>
-            <div class="control">
-                <label class="checkbox">
-                    <input type="checkbox" formControlName="isActive">
-                    @if (GetValue('isActive')) { Activo} @else { Inactivo}
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="column is-half">
-        <div class="field box">
-            <label for="lstDegree" class="subtitle">Grado académico</label>
-            <div class="control">
-                <div class="select" [class.is-loading]="isUpdating">
-                    <select name="lstDegree" formControlName="degreeId">
-                        <option *ngFor="let degree of degrees" value="{{degree.id}}">{{degree.name}}</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="column is-half">
-        <div class="field box">
-            <label for="txtAddress" class="subtitle">Dirección</label>
-            <div class="control" [class.is-loading]="isUpdating">
-                <textarea name="txtAddress" class="textarea" [class.is-danger]="IsInvalidField('address')"
-                    formControlName="address" maxlength="100"></textarea>
-            </div>
-        </div>
-    </div>
-
-    <div class="column is-half">
-        <div class="field box">
-            <label class="subtitle">Parroquia de bautizo</label>
-            <div class="control" [class.is-loading]="isUpdating">
-                <input type="text" class="input" [class.is-danger]="IsInvalidField('parish')" formControlName="parish"
-                    maxlength="30">
-            </div>
-        </div>
-    </div>
-
-    <div class="column is-half">
-        <div class="field box">
-            <label for="txtPhone" class="subtitle">Número telefónico</label>
-            <div class="control" [class.is-loading]="isUpdating">
-                <input name="txtPhone" type="text" class="input" [class.is-danger]="IsInvalidField('phone')"
-                    formControlName="phone" maxlength="9" (input)="FormatPhone()">
-            </div>
-        </div>
-    </div>
-
-    <div class="column is-half">
-        <div class="field box">
-            <label class="subtitle">Sacramentos</label>
-            <div class="control">
-                <div class="checkboxes" *ngFor="let sacrament of sacraments">
-                    <label class="checkbox">
-                        <input type="checkbox" [checked]="sacrament.isActive" (click)="SelectSacrament(sacrament)">
-                        {{sacrament.name}}
-                    </label>
-                </div>
-            </div>
-        </div>
+        <shared-field [loading]="isUpdating" field="Número telefónico">
+            <input name="txtPhone" type="text" class="input" [class.is-danger]="IsInvalidField('phone')"
+                formControlName="phone" maxlength="9" (input)="FormatPhone()">
+        </shared-field>
     </div>
 </form>
 

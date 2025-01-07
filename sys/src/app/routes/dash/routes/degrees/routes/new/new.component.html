@@ -7,11 +7,8 @@
 </div>
 
 <form [formGroup]="form" (ngSubmit)="AddAsync()">
-    <div class="field box">
-        <label for="txtName" class="subtitle">Nombre de grado académico</label>
-        <div class="control" [class.is-loading]="isAdding">
-            <input name="txtName" type="text" class="input" [class.is-danager]="isInvalidName" formControlName="name"
-                maxlength="10">
-        </div>
-    </div>
+    <shared-field [loading]="isAdding" field="Nombre de grado académico">
+        <input name="txtName" type="text" class="input" [class.is-danager]="isInvalidName" formControlName="name"
+            maxlength="10">
+    </shared-field>
 </form>

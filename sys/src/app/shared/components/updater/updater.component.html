@@ -10,13 +10,10 @@
             <shared-alert [(message)]="message" [success]="success" />
 
             <form [formGroup]="form" (ngSubmit)="UpdateAsync()">
-                <div class="field">
-                    <label for="txtName" class="subtitle">Nombre</label>
-                    <div class="control" [class.is-loading]="isUpdating">
-                        <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName"
-                            formControlName="name" maxlength="10">
-                    </div>
-                </div>
+                <shared-field [loading]="isUpdating" field="Nombre" [inBox]="false">
+                    <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName"
+                        formControlName="name" maxlength="10">
+                </shared-field>
             </form>
         </section>
 

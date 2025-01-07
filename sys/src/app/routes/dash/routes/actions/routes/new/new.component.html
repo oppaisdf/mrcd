@@ -7,11 +7,8 @@
 </div>
 
 <form [formGroup]="form" (ngSubmit)="AddAsync()">
-    <div class="field box">
-        <label for="txtName" class="subtitle">Nombre de acción</label>
-        <div class="control" [class.is-loading]="isAdding">
-            <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName" formControlName="name"
-                maxlength="10">
-        </div>
-    </div>
+    <shared-field [loading]="isAdding" field="Nombre de acción">
+        <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName" formControlName="name"
+            maxlength="10">
+    </shared-field>
 </form>

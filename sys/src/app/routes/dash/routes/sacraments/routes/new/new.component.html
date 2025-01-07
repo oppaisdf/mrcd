@@ -6,12 +6,9 @@
     <a class="button" routerLink="/sacrament/all">Regresar</a>
 </div>
 
-<form [formGroup]="form" class="box" (ngSubmit)="AddAsync()">
-    <div class="field">
-        <label for="txtName" class="subtitle">Nombre del sacramento</label>
-        <div class="control" [class.is-loading]="isAdding">
-            <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName" formControlName="name"
-                maxlength="10">
-        </div>
-    </div>
+<form [formGroup]="form" (ngSubmit)="AddAsync()">
+    <shared-field [loading]="isAdding" field="Nombre del sacramento">
+        <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName" formControlName="name"
+            maxlength="10">
+    </shared-field>
 </form>

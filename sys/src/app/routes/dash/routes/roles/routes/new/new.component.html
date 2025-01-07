@@ -7,13 +7,8 @@
     <a class="button" routerLink="/role/all">Back</a>
 </div>
 
-<form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
-    <div class="column is-3 has-text-rigth">
-        <label for="txtName" class="subtitle">Nombre</label>
-    </div>
-    <div class="column is-9">
-        <div class="controlk" [class.is-loading]="isAdding">
-            <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName" formControlName="name">
-        </div>
-    </div>
+<form [formGroup]="form" (ngSubmit)="AddAsync()">
+    <shared-field [loading]="isAdding" field="Nombre">
+        <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName" formControlName="name">
+    </shared-field>
 </form>
