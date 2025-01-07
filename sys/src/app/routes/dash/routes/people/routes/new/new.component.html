@@ -97,68 +97,9 @@
             </div>
         </div>
     </div>
-
-    <div class="column is-half">
-        <div class="field box">
-            <label class="subtitle">Encargados</label>
-            <div class="control">
-                <table class="table is-fullwidth is-striped is-hoverable" *ngIf="parents.length > 0">
-                    <thead>
-                        <th>Nombre</th>
-                        <th>Género</th>
-                        <th>Acción</th>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let parent of parents">
-                            <td>{{parent.name}}</td>
-                            <td>@if (parent.gender) { Masculino} @else { Femenino}</td>
-                            <td>
-                                <button class="button is-danger" (click)="DeleteParent(parent)">Remover</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 </form>
 
-<div class="box" *ngIf="parents.length < 3">
-    <form [formGroup]="parentForm" (ngSubmit)="AddParent()">
-        <div class="field">
-            <label class="title is-5">Agregar encargado</label>
-        </div>
-
-        <div class="field">
-            <label for="txtParent" class="subtitle">Nombre de encargado</label>
-            <div class="control">
-                <input name="txtParent" type="text" class="input" [class.is-danger]="invalidParentName"
-                    formControlName="name" maxlength="50">
-            </div>
-        </div>
-
-        <div class="field">
-            <label class="subtitle">Género</label>
-            <div class="control">
-                <label class="checkbox">
-                    <input type="checkbox" formControlName="gender">
-                    @if (parentGender) { Masculino} @else { Femenino}
-                </label>
-            </div>
-        </div>
-
-        <div class="field">
-            <label class="subtitle">Teléfono</label>
-            <div class="control">
-                <input type="text" class="input" formControlName="phone" (input)="FormatPhoneParent()"
-                    placeholder="xxxx-xxxx">
-            </div>
-        </div>
-
-        <button class="button is-primary" [disabled]="parentForm.invalid" (click)="AddParent()">Agregar
-            encargado</button>
-    </form>
-</div>
+<people-in-parent [(parents)]="parents" />
 
 <div class="buttons are-medium">
     <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"

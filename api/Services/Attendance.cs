@@ -111,8 +111,13 @@ public class AttendanceService(
                 Name = p.Name,
                 Gender = p.Gender,
                 Day = p.Day,
-                DOB = p.DOB
-                //Parents = _context.Parents.Where(pp => pp.PersonId == p.Id).Select(p => p.Name).ToList()
+                DOB = p.DOB,
+                Parents = (
+                    from parent in _context.Parents
+                    join pp in _context.ParentsPeople on parent.Id equals pp.ParentId
+                    where pp.PersonId == p.Id && pp.IsParent
+                    select parent.Name
+                ).ToList()
             })
             .ToListAsync();
     }

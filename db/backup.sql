@@ -35,7 +35,7 @@ CREATE TABLE `__efmigrationshistory` (
 
 LOCK TABLES `__efmigrationshistory` WRITE;
 /*!40000 ALTER TABLE `__efmigrationshistory` DISABLE KEYS */;
-INSERT INTO `__efmigrationshistory` VALUES ('20250106160133_Initial','8.0.8');
+INSERT INTO `__efmigrationshistory` VALUES ('20250106160133_Initial','8.0.8'),(`MigrationId`, `ProductVersion`),('20250107005115_FixFKPersonsPeople', '8.0.8');
 /*!40000 ALTER TABLE `__efmigrationshistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -405,7 +405,7 @@ CREATE TABLE `parentspeople` (
   `IsParent` tinyint(1) NOT NULL,
   PRIMARY KEY (`ParentId`,`PersonId`,`IsParent`),
   CONSTRAINT `FK_PersonParent_ParentId` FOREIGN KEY (`ParentId`) REFERENCES `parents` (`Id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_PersonParent_PersonId` FOREIGN KEY (`ParentId`) REFERENCES `people` (`Id`) ON DELETE CASCADE
+  CONSTRAINT `FK_PersonParent_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `people` (`Id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

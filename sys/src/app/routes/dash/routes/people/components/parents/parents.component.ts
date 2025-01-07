@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ParentResponse } from '../../models/responses/person';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PersonService } from '../../services/person.service';
-import { PersonRequest } from '../../models/requests/person';
+import { ParentRequest } from '../../models/requests/person';
+import { ParentService } from '../../services/parent.service';
 
 @Component({
   selector: 'people-comp-parents',
@@ -13,7 +13,7 @@ import { PersonRequest } from '../../models/requests/person';
 export class ParentsComponent {
   constructor(
     private _form: FormBuilder,
-    private _service: PersonService
+    private _service: ParentService
   ) {
     this.form = this._form.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],
@@ -37,7 +37,8 @@ export class ParentsComponent {
     return this.form.controls[control].touched && this.form.controls[control].invalid;
   }
 
-  get gender() { return this.form.controls['gender'].value; }
+  get gender() { return `${this.form.controls['gender'].value}` === 'true'; }
+  get name() { return `${this.form.controls['name'].value}`.trim(); }
   get phone() { return `${this.form.controls['phone'].value}`.replace(/\D/g, ''); }
 
   async AddAsync() {
@@ -48,33 +49,27 @@ export class ParentsComponent {
     this.updatingChange.emit(true);
     this.form.disable();
 
-    this.parents.push(({
-      name: this.form.controls['name'].value,
+    const request: ParentRequest = {
+      name: this.name,
       gender: this.gender,
-      phone: this.phone ? this.phone : undefined,
-      id: 0
-    }));
-
-    const request: PersonRequest = {};
-    if (this.isParent) request.parents = this.parents.map(p => ({ name: p.name, gender: p.gender, phone: p.phone }));
-    else request.godparents = this.parents.map(p => ({ name: p.name, gender: p.gender }));
-    const response = await this._service.UpdateAsync(this.id, request);
+      isParent: this.isParent,
+      phone: this.phone.length > 0 ? this.phone : undefined
+    };
+    const response = await this._service.CreateAsync(this.id, request);
     this.message = response.message;
     this.success = response.success;
 
     this.updating = false;
-    this.updatingChange.emit(false);
+    this.updatingChange.emit(this.updating);
     this.form.enable();
-
-    if (response.message) {
-      this.form.reset();
-      this.form.controls['gender'].setValue(false);
-      return;
-    }
-
-    this.parents.pop();
-    this.form.reset();
-    this.form.controls['gender'].setValue(false);
+    if (!response.success) return;
+    const parent: ParentResponse = {
+      id: response.data!.id,
+      name: this.name,
+      gender: this.gender,
+      phone: this.phone
+    };
+    this.parents.push(parent);
   }
 
   async RemoveAsync(
@@ -85,22 +80,16 @@ export class ParentsComponent {
     this.updatingChange.emit(true);
     this.form.disable();
 
-    const index = this.parents.findIndex(p => p == parent);
-    this.parents.splice(index, 1);
-    const request: PersonRequest = {};
-    if (this.isParent) request.parents = this.parents;
-    else request.godparents = this.parents;
-
-    const response = await this._service.UpdateAsync(this.id, request);
+    const response = await this._service.UnassignAsync(this.id, parent.id);
     this.message = response.message;
     this.success = response.success;
 
-    this.form.enable();
-    this.form.reset();
-    this.form.controls['gender'].setValue(false);
     this.updating = false;
-    this.updatingChange.emit(false);
-    if (!response.success) this.parents.push(parent);
+    this.updatingChange.emit(this.updating);
+    this.form.enable();
+    if (!response.success) return;
+    const index = this.parents.findIndex(p => p === parent);
+    this.parents.splice(index, 1);
   }
 
   FormatNumber() {

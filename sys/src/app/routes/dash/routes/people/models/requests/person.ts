@@ -10,11 +10,11 @@ export interface PersonRequest {
     isActive?: boolean;
     sacraments?: number[];
     parents?: ParentRequest[];
-    godparents?: ParentRequest[];
 }
 
 export interface ParentRequest {
     name: string;
     gender: boolean;
+    isParent: boolean;
     phone?: string;
 }

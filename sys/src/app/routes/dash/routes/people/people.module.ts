@@ -9,13 +9,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../../../shared/shared.module';
 import { PersonService } from './services/person.service';
 import { ParentsComponent } from './components/parents/parents.component';
+import { InParentComponent } from './components/in-parent/in-parent.component';
+import { ParentService } from './services/parent.service';
 
 @NgModule({
   declarations: [
     NewComponent,
     AllComponent,
     DetailsComponent,
-    ParentsComponent
+    ParentsComponent,
+    InParentComponent
   ],
   imports: [
     CommonModule,
@@ -24,7 +27,8 @@ import { ParentsComponent } from './components/parents/parents.component';
     SharedModule
   ],
   providers: [
-    PersonService
+    PersonService,
+    ParentService
   ]
 })
 export class PeopleModule { }

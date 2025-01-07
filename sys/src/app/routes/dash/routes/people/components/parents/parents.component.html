@@ -15,7 +15,7 @@
                     @if (parent.gender) {Masculino}@else {Femenino}
                 </td>
                 <td *ngIf="isParent">{{parent.phone}}</td>
-                <td *ngIf="parents.length > 1">
+                <td>
                     <button class="button is-danger" [disabled]="updating"
                         (click)="RemoveAsync(parent)">Remover</button>
                 </td>

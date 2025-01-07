@@ -1,0 +1,59 @@
+<div class="box">
+    <div class="table-container" *ngIf="parents.length > 0">
+        <table class="table is-fullwidth is-striped is-hoverable">
+            <thead>
+                <th>Nombre</th>
+                <th>Género</th>
+                <th>Teléfono</th>
+                <th>Acción</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let parent of parents">
+                    <td>{{parent.name}}</td>
+                    <td>
+                        @if (parent.gender) {Masculino} @else {Femenino}
+                    </td>
+                    <td>{{parent.phone}}</td>
+                    <td>
+                        <button class="button is-danger" (click)="Delete(parent)">Remover</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="Add()">
+        <div class="field">
+            <label class="title is-5">Agregar encargado</label>
+        </div>
+
+        <div class="field">
+            <label for="txtParent" class="subtitle">Nombre de encargado</label>
+            <div class="control">
+                <input name="txtParent" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
+                    formControlName="name" maxlength="50">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="subtitle">Género</label>
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox" formControlName="gender">
+                    @if (gender) { Masculino} @else { Femenino}
+                </label>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="subtitle">Teléfono</label>
+            <div class="control">
+                <input type="text" class="input" [class.is-danger]="IsInvalidField('phone')" formControlName="phone"
+                    (input)="FormatPhone()" placeholder="xxxx-xxxx">
+            </div>
+        </div>
+
+        <button *ngIf="parents.length < 2" class="button is-primary" [disabled]="form.invalid" (click)="Add()">Agregar
+            encargado</button>
+    </form>
+</div>

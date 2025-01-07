@@ -9,6 +9,7 @@ namespace api.Services;
 
 public interface IParentService
 {
+    Task<int> CreateAndAssignAsync(string userId, int id, ParentRequest request);
     Task<int> CreateAsync(string userId, ParentRequest request);
     Task UpdateAsync(string userId, int id, ParentRequest request);
     Task DeleteAsync(string userId, int id);
@@ -164,6 +165,52 @@ public class ParentService(
         {
             await _context.SaveChangesAsync();
             await tran.CommitAsync();
+        }
+        catch (Exception)
+        {
+            await tran.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task<int> CreateAndAssignAsync(
+        string userId,
+        int id,
+        ParentRequest request
+    )
+    {
+        var isValid = await (
+            from p in _context.People
+            join temp in _context.ParentsPeople on p.Id equals temp.PersonId into tempG
+            from pp in tempG.DefaultIfEmpty()
+            where p.Id == id
+            group new { pp } by new { p.IsActive } into r
+            select new
+            {
+                r.Key.IsActive,
+                Parents = r.Where(x => x.pp.IsParent == request.IsParent!.Value).Count()
+            }
+        ).FirstOrDefaultAsync() ?? throw new DoesNotExistsException("El confirmando no existe");
+
+        var max = request.IsParent!.Value ? 2 : 3;
+        if (!isValid.IsActive || isValid.Parents == max) throw new BadRequestException($"El confirmando ya tiene {max} padres/padrinos asignados");
+
+        using var tran = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            var parentId = await GetIdByNameAsync(request.Name!) ?? await CreateAsync(userId, request);
+            await _context.SaveChangesAsync();
+
+            var pp = new ParentPerson
+            {
+                PersonId = id,
+                ParentId = parentId,
+                IsParent = request.IsParent!.Value
+            };
+            _context.ParentsPeople.Add(pp);
+            await _context.SaveChangesAsync();
+            await tran.CommitAsync();
+            return parentId;
         }
         catch (Exception)
         {
