@@ -17,7 +17,7 @@ export class NewComponent {
     private _router: Router
   ) {
     this.form = this._form.group({
-      name: ['', [Validators.required, Validators.maxLength(10)]],
+      name: ['', [Validators.required, Validators.maxLength(11)]],
       total: [0, Validators.required]
     });
   }

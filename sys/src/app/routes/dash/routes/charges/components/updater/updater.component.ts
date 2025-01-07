@@ -16,7 +16,7 @@ export class UpdaterComponent {
     private _service: ChargeService
   ) {
     this.form = this._form.group({
-      name: ['', Validators.maxLength(10)],
+      name: ['', Validators.maxLength(11)],
       total: [0]
     });
   }
