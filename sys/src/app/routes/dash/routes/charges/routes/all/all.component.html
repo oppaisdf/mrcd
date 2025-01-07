@@ -1,0 +1,20 @@
+<charge-updater [(show)]="showUpdater" [record]="selectedCharge" />
+
+<div class="table-container">
+    <table class="table is-fullwidth is-striped">
+        <thead>
+            <th>Nombre</th>
+            <th>Total</th>
+            <th>Acción</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let charge of charges">
+                <td>{{charge.name}}</td>
+                <td>{{charge.total|currency:currencySymbol}}</td>
+                <td>
+                    <button class="button is-info" (click)="SelectCharge(charge)">Actualizar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

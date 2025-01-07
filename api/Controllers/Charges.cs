@@ -39,7 +39,7 @@ public class ChargeController(
     }
 
     [Authorize(Roles = "adm")]
-    [HttpPatch("id")]
+    [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateAsync(
         short id,
         [FromBody] ChargeRequest request
