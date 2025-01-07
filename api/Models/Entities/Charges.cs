@@ -10,6 +10,7 @@ public class Charge
     public short? Id { get; set; }
 
     [Required]
+    [MaxLength(10)]
     public required string Name { get; set; }
 
     [Required]
