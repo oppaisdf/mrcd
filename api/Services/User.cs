@@ -184,7 +184,12 @@ public partial class UserService(
         using var tran = await _context.Database.BeginTransactionAsync();
         try
         {
-            if (request.Password != null) await AssignPassAsync(user, request.Password);
+            if (request.Password != null)
+            {
+                var resultUnassign = await _userManager.RemovePasswordAsync(user);
+                if (resultUnassign.Succeeded) await AssignPassAsync(user, request.Password);
+                else throw new Exception($"Error al remover contraseña de usuario: {string.Join(",", resultUnassign.Errors.Select(e => e.Description))}");
+            }
             if (request.Roles != null && request.Roles.Count != 0)
             {
                 var removeRolesResult = await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));

@@ -97,6 +97,18 @@
             </div>
         </div>
     </div>
+
+    <div class="column is-half">
+        <div class="field box">
+            <label class="subtitle">Pagó inscripción</label>
+        </div>
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" formControlName="pay">
+                @if (GetValue('pay')) { Sí}@else { No} ({{100|currency:currencySymbol}})
+            </label>
+        </div>
+    </div>
 </form>
 
 <people-in-parent [(parents)]="parents" />

@@ -3,6 +3,7 @@ import { PersonService } from '../../services/person.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ParentRequest, PersonRequest } from '../../models/requests/person';
 import { DefaultEntityResponse } from '../../models/responses/person';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'person-new',
@@ -22,11 +23,13 @@ export class NewComponent implements OnInit {
       day: [true, Validators.required],
       degreeId: [undefined, Validators.required],
       address: ['', [Validators.required, Validators.maxLength(100)]],
-      phone: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]]
+      phone: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
+      pay: [false]
     });
   }
 
   degrees: DefaultEntityResponse[] = [];
+  currencySymbol = environment.currencySymbol;
   sacraments: DefaultEntityResponse[] = [];
   form: FormGroup;
   parents: ParentRequest[] = [];
@@ -119,7 +122,8 @@ export class NewComponent implements OnInit {
     this.form.reset();
     this.form.patchValue({
       day: true,
-      gender: true
+      gender: true,
+      pay: false
     });
     this.parents = [];
   }
