@@ -16,11 +16,10 @@ public class ParentRequest
     public string? Phone { get; set; }
 }
 
-public class AssignParentRequest
+public class ParentFilter
 {
-    [Required]
-    public required int Id { get; set; }
-
-    [Required]
-    public required bool IsParent { get; set; }
+    public required short Page { get; set; }
+    public bool? Gender { get; set; }
+    public bool? IsParent { get; set; }
+    public string? Name { get; set; }
 }

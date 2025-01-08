@@ -3,13 +3,14 @@ export interface ChargeResponse {
     name: string;
     total: number;
     isActive: boolean;
-    people?: PersonChargeResponse[];
+    people?: BasicPersonResponse[];
 }
 
-export interface PersonChargeResponse {
+export interface BasicPersonResponse {
     id: number;
     name: string;
     isActive: boolean;
     gender: boolean;
     day: boolean;
+    hasParent?: boolean;
 }

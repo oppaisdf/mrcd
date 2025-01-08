@@ -42,7 +42,7 @@ public class ParentController(
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var parentId = await _service.CreateAndAssignAsync(userId, id, request);
+            var parentId = await _service.GetFindOrCreateAndAssignAsync(userId, id, request);
             return this.DefaultOk(new { Id = parentId }, "Se agregó el padre/padrino correctamente");
         }
         catch (DoesNotExistsException e)
@@ -51,28 +51,6 @@ public class ParentController(
         { return this.DefaultBadRequest(e.Message); }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al crear padre/padrino: {e.Message}"); }
-    }
-
-    [HttpPost("Assign/{id}")]
-    public async Task<IActionResult> AssignAsync(
-        int id,
-        [FromBody] ICollection<AssignParentRequest> request
-    )
-    {
-        if (request == null || request.Count == 0)
-            return this.DefaultBadRequest("Los padres/padrinos son requerios");
-        else if (request.Count > 5)
-            return this.DefaultBadRequest("No puede asignar tantos padres/padrinos");
-        try
-        {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.AssignAsync(userId, id, request);
-            return this.DefaultOk(new { }, "Se han asignado los padres/padrinos correctamente");
-        }
-        catch (DoesNotExistsException e)
-        { return this.DefaultNotFound(e.Message); }
-        catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al consultar los padres: {e.Message}"); }
     }
 
     [HttpDelete("{id}/{parentId}")]
@@ -84,10 +62,74 @@ public class ParentController(
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
         try
         {
-            await _service.UnassignAsync(userId, id, parentId);
+            await _service.UnassignAsync(userId, parentId, id);
             return this.DefaultOk(new { }, "Se han desasignado los padres/padrinos correctamente");
         }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al desasingar padre/padrino de confirmando: {e.Message}"); }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] ParentRequest request
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var id = await _service.CreateAsync(userId, request);
+            return this.DefaultCreated(nameof(GetById), id);
+        }
+        catch (AlreadyExistsException e)
+        { return this.DefaultConflict(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al crear Parent: {e.Message}"); }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(
+        int id
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var parent = await _service.GetByIdAsync(userId, id);
+            return this.DefaultOk(parent);
+        }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al consultar Parent {id}: {e.Message}"); }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAsync(
+        short page = 1,
+        bool? gender = null,
+        bool? isParent = null,
+        string? name = null
+    )
+    {
+        if (string.IsNullOrWhiteSpace(name)) name = null;
+        else if (name.Length > 30) name = null;
+        if (page < 1) page = 1;
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var filters = new ParentFilter
+            {
+                Page = page,
+                Gender = gender,
+                IsParent = isParent,
+                Name = name
+            };
+            var (pages, parents) = await _service.GetAsync(userId, filters);
+            return this.DefaultOk(parents, pages);
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al obtener todos los Parents: {e.Message}"); }
     }
 }

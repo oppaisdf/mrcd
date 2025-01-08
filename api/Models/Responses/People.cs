@@ -19,6 +19,16 @@ public class PersonResponse
     public ICollection<ChargeResponse>? Charges { get; set; }
 }
 
+public class BasicPersonResponse
+{
+    public required int Id { get; set; }
+    public required string Name { get; set; }
+    public required bool Gender { get; set; }
+    public required bool Day { get; set; }
+    public required bool IsActive { get; set; }
+    public bool? HasParent { get; set; }
+}
+
 public class SacramentResponse
 {
     public required short Id { get; set; }

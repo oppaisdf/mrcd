@@ -1,4 +1,3 @@
-using System.Runtime.Intrinsics.X86;
 using api.Common;
 using api.Context;
 using api.Models.Entities;
@@ -158,7 +157,7 @@ public class ChargeService(
                 People = _context.People
                     .AsNoTracking()
                     .Where(x => x.IsActive)
-                    .Select(x => new PersonChargeResponse
+                    .Select(x => new BasicPersonResponse
                     {
                         Id = x.Id!.Value,
                         Name = x.Name,

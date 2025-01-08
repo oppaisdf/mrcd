@@ -71,21 +71,10 @@ public partial class PeopleService(
         ICollection<ParentRequest> parents
     )
     {
-        var ids = new List<int>();
         foreach (var parent in parents)
         {
-            var id = await _parents.GetIdByNameAsync(parent.Name!) ?? await _parents.CreateAsync(userId, parent);
-            ids.Add(id);
+            await _parents.FindOrCreateAndAssignAsync(userId, personId, parent);
         }
-        await _parents.AssignAsync(
-            userId,
-            personId,
-            ids.Select(i => new AssignParentRequest
-            {
-                Id = i,
-                IsParent = true
-            }).ToList()
-        );
     }
 
     private async Task RegisterCharge(
@@ -289,7 +278,7 @@ public partial class PeopleService(
             }).FirstOrDefaultAsync()
             ?? throw new DoesNotExistsException("El confirmando no existe");
 
-        var parents = await _parents.GetByPersonId(id);
+        var parents = await _parents.GetByPersonIdAsync(id);
         if (parents == null) return person;
         person.Parents = parents.Where(p => p.IsParent).ToList();
         person.Godparents = parents.Where(p => !p.IsParent).ToList();

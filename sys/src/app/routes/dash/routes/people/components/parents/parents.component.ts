@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ParentResponse } from '../../models/responses/person';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ParentRequest } from '../../models/requests/person';
 import { ParentService } from '../../services/parent.service';
+import { ParentResponse } from '../../../parents/models/response';
 
 @Component({
   selector: 'people-comp-parents',

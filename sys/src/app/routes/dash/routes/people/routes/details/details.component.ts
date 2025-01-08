@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PersonService } from '../../services/person.service';
-import { DefaultEntityResponse, ParentResponse, SacramentResponse } from '../../models/responses/person';
+import { DefaultEntityResponse, SacramentResponse } from '../../models/responses/person';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PersonRequest } from '../../models/requests/person';
 import { ChargeResponse } from '../../../charges/models/responses/charge';
+import { ParentResponse } from '../../../parents/models/response';
 
 @Component({
   selector: 'person-details',

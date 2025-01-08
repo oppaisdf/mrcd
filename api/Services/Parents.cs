@@ -9,66 +9,151 @@ namespace api.Services;
 
 public interface IParentService
 {
-    Task<int> CreateAndAssignAsync(string userId, int id, ParentRequest request);
+    Task FindOrCreateAndAssignAsync(string userId, int personId, ParentRequest request);
+    Task<int> GetFindOrCreateAndAssignAsync(string userId, int personId, ParentRequest request);
+    Task<ICollection<ParentResponse>> GetByPersonIdAsync(int personId);
+    Task UnassignAsync(string userId, int id, int personId);
     Task<int> CreateAsync(string userId, ParentRequest request);
-    Task UpdateAsync(string userId, int id, ParentRequest request);
-    Task DeleteAsync(string userId, int id);
-    Task AssignAsync(string userId, int id, ICollection<AssignParentRequest> parents);
-    Task UnassignAsync(string userId, int personId, int parentId);
-    Task<int?> GetIdByNameAsync(string name);
-    Task<ICollection<ParentResponse>> GetByPersonId(int id);
+    Task<(string page, ICollection<ParentResponse> parents)> GetAsync(string userId, ParentFilter filter);
+    Task<ParentResponse> GetByIdAsync(string userId, int id);
 }
 
 public class ParentService(
     MerContext context,
-    ICommonService service
+    ICommonService service,
+    ILogService logs
 ) : IParentService
 {
+    #region "Private"
     private readonly MerContext _context = context;
     private readonly ICommonService _service = service;
+    private readonly ILogService _logs = logs;
 
-    public async Task<int?> GetIdByNameAsync(
-        string name
-    )
+    internal class PParentResponse
     {
-        var normalized = _service.GetHashedString(name);
-        return await _context.Parents
-            .Where(p => p.NameHash == normalized)
-            .Select(p => p.Id)
-            .FirstOrDefaultAsync();
+        public required int Id { get; set; }
+        public required string Name { get; set; }
+        public required string Normalized { get; set; }
+        public required bool Gender { get; set; }
+        public required bool HasChild { get; set; }
+        public required bool HasGodchild { get; set; }
+
     }
 
-    public async Task DeleteAsync(
+    /// <summary>
+    /// Crea el Parent, pero debe estar validado que no exista otro con el mismo hash
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="hash"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    private async Task<Parent> PCreateAsync(
         string userId,
-        int id
+        string hash,
+        ParentRequest request
     )
     {
-        var parent = await (
-            from p in _context.Parents
-            join temp in _context.ParentsPeople on p.Id equals temp.ParentId into ppG
-            from pp in ppG.DefaultIfEmpty()
-            where p.Id == id
-            group new { pp } by new { p } into pR
-            select new
-            {
-                Parent = pR.Key.p,
-                People = pR.Where(x => x.pp != null).Count()
-            }
-        ).FirstOrDefaultAsync() ?? throw new DoesNotExistsException("No existe este padre/padrino");
-
-        if (parent.People > 0) throw new BadRequestException("No se puede eliminar este padre/padrino porque está asociado a confirmandos");
-        _context.Parents.Remove(parent.Parent);
+        var parent = new Parent
+        {
+            Name = request.Name!,
+            NameHash = hash,
+            Gender = request.Gender == null || request.Gender!.Value
+        };
+        _context.Parents.Add(parent);
         await _context.SaveChangesAsync();
+        await _logs.RegisterCreationAsync(userId, $"Parent {parent.Id}");
+        return parent;
     }
 
-    public async Task<ICollection<ParentResponse>> GetByPersonId(
-        int id
+    private async Task<int> PFindOrCeateAndAssignAsync(
+        string userId,
+        ParentRequest request,
+        int personId
+    )
+    {
+        var hash = _service.GetHashedString(request.Name!);
+        var parent =
+            await _context.Parents.Where(p => p.NameHash == hash).FirstOrDefaultAsync() ??
+            await PCreateAsync(userId, hash, request);
+
+        _context.ParentsPeople.Add(new ParentPerson
+        {
+            PersonId = personId,
+            ParentId = parent.Id!.Value,
+            IsParent = request.IsParent == null || request.IsParent!.Value
+        });
+
+        await _context.SaveChangesAsync();
+        await _logs.RegisterCreationAsync($"Person/Parent {personId}/{parent.Id}");
+        return parent.Id!.Value;
+    }
+    #endregion
+
+
+    /// <summary>
+    /// Busca un Parent por nombre, si no existe lo crea.
+    /// Luego asigna este Parent al Person.
+    /// No se ejecuta en una transacción
+    /// </summary>
+    /// <param name="userId">Usuario para registro de logs</param>
+    /// <param name="personId">Debe existir el Person, no se valida el ID</param>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    public async Task FindOrCreateAndAssignAsync(
+        string userId,
+        int personId,
+        ParentRequest request
+    )
+    {
+        await PFindOrCeateAndAssignAsync(userId, request, personId);
+    }
+
+    /// <summary>
+    /// Retorna el ID del parent.
+    /// Busca por nombre, si no existe el Parent lo crea.
+    /// Se ejecuta en una transacción.
+    /// </summary>
+    /// <param name="userId">Usuario para logs</param>
+    /// <param name="personId">Se valida que el Person exista</param>
+    /// <param name="request">El nombre no debe ser nulo</param>
+    /// <returns></returns>
+    public async Task<int> GetFindOrCreateAndAssignAsync(
+        string userId,
+        int personId,
+        ParentRequest request
+    )
+    {
+        var exists = await _context.People.AnyAsync(p => p.Id == personId && p.IsActive);
+        if (!exists) throw new DoesNotExistsException("El confirmando no existe o está inactivo");
+
+        using var tran = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            var id = await PFindOrCeateAndAssignAsync(userId, request, personId);
+            await tran.CommitAsync();
+            return id;
+        }
+        catch (Exception)
+        {
+            await tran.RollbackAsync();
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Obtiene todos los Parents asociados a un Person
+    /// </summary>
+    /// <param name="personId">El Person debe existir, no se valida</param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task<ICollection<ParentResponse>> GetByPersonIdAsync(
+        int personId
     )
     {
         return await (
             from p in _context.Parents
             join pp in _context.ParentsPeople on p.Id equals pp.ParentId
-            where pp.PersonId == id
+            where pp.PersonId == personId
             select new ParentResponse
             {
                 Id = p.Id!.Value,
@@ -82,42 +167,27 @@ public class ParentService(
 
     public async Task UnassignAsync(
         string userId,
-        int personId,
-        int parentId
-    )
-    {
-        var lst = await _context.ParentsPeople
-            .Where(p => p.PersonId == personId && p.ParentId == parentId)
-            .ToListAsync();
-        if (lst.Count == 0) throw new DoesNotExistsException("No hay datos para remover");
-        _context.ParentsPeople.RemoveRange(lst);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task AssignAsync(
-        string userId,
         int id,
-        ICollection<AssignParentRequest> parents
+        int personId
     )
     {
-        var ids = parents.Select(p => p.Id).Distinct().ToList();
-        var cleanIds = await _context.Parents
-            .AsNoTracking()
-            .Where(p => ids.Contains(p.Id!.Value))
-            .Select(p => p.Id)
-            .ToListAsync() ?? throw new DoesNotExistsException("Los padres/padrinos no existen");
+        var parentPerson = await _context.ParentsPeople
+            .Where(pp => pp.ParentId == id && pp.PersonId == personId)
+            .FirstOrDefaultAsync() ?? throw new DoesNotExistsException("El padre/padrino o el confirmando no existe");
+        _context.ParentsPeople.Remove(parentPerson);
 
-        foreach (var parent in parents)
+        using var tran = await _context.Database.BeginTransactionAsync();
+        try
         {
-            _context.ParentsPeople.Add(new ParentPerson
-            {
-                PersonId = id,
-                ParentId = parent.Id,
-                IsParent = parent.IsParent
-            });
+            await _context.SaveChangesAsync();
+            await _logs.RegisterUpdateAsync($"Parent/Person {id}/{personId}");
+            await tran.CommitAsync();
         }
-
-        await _context.SaveChangesAsync();
+        catch (Exception)
+        {
+            await tran.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<int> CreateAsync(
@@ -126,45 +196,15 @@ public class ParentService(
     )
     {
         var hash = _service.GetHashedString(request.Name!);
-        var alreadyExits = await _context.Parents.AnyAsync(p => p.NameHash == hash);
-        if (alreadyExits) throw new BadHttpRequestException("El padre/padrino ya existe");
-        var parent = new Parent
-        {
-            Name = request.Name!,
-            NameHash = hash,
-            Gender = request.Gender!.Value,
-            Phone = request.Phone
-        };
-
-        _context.Parents.Add(parent);
-        await _context.SaveChangesAsync();
-        return parent.Id!.Value;
-    }
-
-    public async Task UpdateAsync(
-        string userId,
-        int id,
-        ParentRequest request
-    )
-    {
-        var parent = await _context.Parents.FindAsync(id) ?? throw new DoesNotExistsException("El padre/padrino no existe");
-        if (request.Name != null && parent.Name != request.Name)
-        {
-            var hash = _service.GetHashedString(request.Name);
-            var alreadyExits = await _context.Parents.AnyAsync(p => p.NameHash == hash);
-            if (alreadyExits) throw new BadRequestException("El padre/padrino ya existe");
-            parent.NameHash = hash;
-            parent.Name = request.Name;
-        }
-
-        if (request.Gender != null && request.Gender != parent.Gender) parent.Gender = request.Gender!.Value;
-        if (request.Phone != null && request.Phone != parent.Phone) parent.Phone = request.Phone;
+        var alreadyExists = await _context.Parents.AnyAsync(p => p.NameHash == hash);
+        if (alreadyExists) throw new AlreadyExistsException("El padre/padrino ya existe");
 
         using var tran = await _context.Database.BeginTransactionAsync();
         try
         {
-            await _context.SaveChangesAsync();
+            var parent = await PCreateAsync(userId, hash, request);
             await tran.CommitAsync();
+            return parent.Id!.Value;
         }
         catch (Exception)
         {
@@ -173,49 +213,121 @@ public class ParentService(
         }
     }
 
-    public async Task<int> CreateAndAssignAsync(
+    public async Task<ParentResponse> GetByIdAsync(
         string userId,
-        int id,
-        ParentRequest request
+        int id
     )
     {
-        var isValid = await (
-            from p in _context.People
-            join temp in _context.ParentsPeople on p.Id equals temp.PersonId into tempG
+        //await _logs.RegisterReadingAsync(userId, $"Parent {id}");
+        return await _context.Parents
+            .Where(p => p.Id == id)
+            .Select(p => new ParentResponse
+            {
+                Id = p.Id!.Value,
+                Name = p.Name,
+                Gender = p.Gender,
+                Phone = p.Phone,
+                IsParent = false,
+                People = (
+                    from person in _context.People
+                    join temp in _context.ParentsPeople on person.Id equals temp.PersonId into tempG
+                    from pp in tempG.DefaultIfEmpty()
+                    where person.IsActive || pp != null
+                    group pp by new
+                    {
+                        Id = person.Id!.Value,
+                        person.Name,
+                        person.Day,
+                        person.Gender,
+                        person.IsActive
+                    } into r
+                    select new BasicPersonResponse
+                    {
+                        Id = r.Key.Id,
+                        Name = r.Key.Name,
+                        Gender = r.Key.Gender,
+                        Day = r.Key.Day,
+                        IsActive = r.Key.IsActive,
+                        HasParent = r
+                            .Where(x => x.ParentId == p.Id)
+                            .Select(x => x.IsParent)
+                            .FirstOrDefault()
+                    }
+                ).ToList()
+            })
+            .FirstOrDefaultAsync() ?? throw new DoesNotExistsException("El padre/padrino no existe");
+    }
+
+    public async Task<(string page, ICollection<ParentResponse> parents)> GetAsync(
+        string userId,
+        ParentFilter filter
+    )
+    {
+        //await _logs.RegisterReadingAsync("Todos los Parents");
+        var query =
+            from p in _context.Parents
+            join temp in _context.ParentsPeople on p.Id equals temp.ParentId into tempG
             from pp in tempG.DefaultIfEmpty()
-            where p.Id == id
-            group new { pp } by new { p.IsActive } into r
-            select new
+            group pp by new
             {
-                r.Key.IsActive,
-                Parents = r.Where(x => x.pp.IsParent == request.IsParent!.Value).Count()
-            }
-        ).FirstOrDefaultAsync() ?? throw new DoesNotExistsException("El confirmando no existe");
-
-        var max = request.IsParent!.Value ? 2 : 3;
-        if (!isValid.IsActive || isValid.Parents == max) throw new BadRequestException($"El confirmando ya tiene {max} padres/padrinos asignados");
-
-        using var tran = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            var parentId = await GetIdByNameAsync(request.Name!) ?? await CreateAsync(userId, request);
-            await _context.SaveChangesAsync();
-
-            var pp = new ParentPerson
+                Id = p.Id!.Value,
+                p.Name,
+                p.Gender
+            } into r
+            select new PParentResponse
             {
-                PersonId = id,
-                ParentId = parentId,
-                IsParent = request.IsParent!.Value
+                Id = r.Key.Id,
+                Gender = r.Key.Gender,
+                Name = r.Key.Name,
+                Normalized = "",
+                HasChild = r.Any(x => x.IsParent),
+                HasGodchild = r.Any(x => !x.IsParent)
             };
-            _context.ParentsPeople.Add(pp);
-            await _context.SaveChangesAsync();
-            await tran.CommitAsync();
-            return parentId;
-        }
-        catch (Exception)
+
+        if (filter.Gender != null) query = query.Where(p => p.Gender == filter.Gender);
+        if (filter.IsParent != null)
+            if (filter.IsParent!.Value) query = query.Where(p => p.HasChild);
+            else query = query.Where(p => p.HasGodchild);
+
+        short pages;
+        ICollection<ParentResponse> parents;
+        if (filter.Name == null)
         {
-            await tran.RollbackAsync();
-            throw;
+            pages = (short)Math.Ceiling(await query.CountAsync() / 15.00);
+            if (filter.Page > pages) filter.Page = pages;
+            if (pages == 0) parents = [];
+            else
+                parents = await query
+                    .Skip((filter.Page - 1) * 15)
+                    .Take(15)
+                    .Select(p => new ParentResponse
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Gender = p.Gender,
+                        IsParent = false
+                    })
+                    .ToListAsync();
         }
+        else
+        {
+            var pp = await query.AsNoTracking().ToListAsync();
+            pp.ForEach(p => p.Normalized = _service.GetNormalizedText(p.Name));
+            pages = (short)Math.Ceiling(pp.Count / 15.00);
+            if (filter.Page > pages) filter.Page = pages;
+            if (pages == 0) parents = [];
+            else parents = pp
+                .Where(p => p.Name.Contains(filter.Name))
+                .Select(p => new ParentResponse
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Gender = p.Gender,
+                    IsParent = false
+                })
+                .ToList();
+        }
+
+        return ($"{filter.Page}/{pages}", parents);
     }
 }

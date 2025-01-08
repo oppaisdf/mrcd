@@ -14,6 +14,7 @@ const routes: Routes = [
       { path: 'logs', loadChildren: () => import('./routes/logs/logs.module').then(m => m.LogsModule), canActivate: [admGuard] },
       { path: 'user', loadChildren: () => import('./routes/users/users.module').then(m => m.UsersModule) },
       { path: 'person', loadChildren: () => import('./routes/people/people.module').then(m => m.PeopleModule) },
+      { path: 'parent', loadChildren: () => import('./routes/parents/parents.module').then(m => m.ParentsModule) },
       { path: 'print', loadChildren: () => import('./routes/prints/prints.module').then(m => m.PrintsModule) },
       { path: 'charge', loadChildren: () => import('./routes/charges/charges.module').then(m => m.ChargesModule) }
     ]

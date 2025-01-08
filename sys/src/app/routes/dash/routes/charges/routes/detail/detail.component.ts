@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ChargeService } from '../../services/charge.service';
-import { PersonChargeResponse } from '../../models/responses/charge';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import { BasicPersonResponse } from '../../models/responses/charge';
 
 @Component({
   selector: 'charge-detail',
@@ -19,9 +19,9 @@ export class DetailComponent implements OnInit {
   private id = 0;
   name = '';
   total = 0;
-  saturday: PersonChargeResponse[] = [];
-  sunday: PersonChargeResponse[] = [];
-  private _people: PersonChargeResponse[] = [];
+  saturday: BasicPersonResponse[] = [];
+  sunday: BasicPersonResponse[] = [];
+  private _people: BasicPersonResponse[] = [];
   message = '';
   success = true;
   isUpdating = false;
@@ -46,7 +46,7 @@ export class DetailComponent implements OnInit {
   }
 
   async SelectPerson(
-    person: PersonChargeResponse
+    person: BasicPersonResponse
   ) {
     if (this.isUpdating) return;
     this.isUpdating = true;
@@ -67,11 +67,11 @@ export class DetailComponent implements OnInit {
     this.saturday = this._people.reduce((lst, p) => {
       if (!p.day) lst.push(p);
       return lst;
-    }, [] as PersonChargeResponse[]);
+    }, [] as BasicPersonResponse[]);
     this.sunday = this._people.reduce((lst, p) => {
       if (p.day) lst.push(p);
       return lst;
-    }, [] as PersonChargeResponse[]);
+    }, [] as BasicPersonResponse[]);
   }
 
   Filter() {
@@ -94,7 +94,7 @@ export class DetailComponent implements OnInit {
           break;
       }
       return lst;
-    }, [] as PersonChargeResponse[]);
+    }, [] as BasicPersonResponse[]);
     this.sunday = this._people.reduce((lst, p) => {
       switch (true) {
         case (this.gender === '1'):
@@ -108,6 +108,6 @@ export class DetailComponent implements OnInit {
           break;
       }
       return lst;
-    }, [] as PersonChargeResponse[]);
+    }, [] as BasicPersonResponse[]);
   }
 }
