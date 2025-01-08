@@ -4,6 +4,5 @@
 - La incripción solo aparece si hay un registro. Cuando se elimina la inscripción de un confirmando y se vuelve a marcar, el valor de la inscripción cambiará al valor de la inscripción actual, no a la anterior.
 
 - Trabajando creación de códigos QR. Falta lectura de estos. (sys)
-- Pendiente valida filtros en charge/detail (sys)
 - Verificar interface de Parents y agregar logs (api)
 - Agregar módulo para gestionar Parents(sys)

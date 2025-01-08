@@ -75,5 +75,39 @@ export class DetailComponent implements OnInit {
   }
 
   Filter() {
+    if (this.txt === '' && this.gender === '1') {
+      this.ClearFilters();
+      return;
+    }
+    const gender = this.gender === '2';
+
+    this.saturday = this._people.reduce((lst, p) => {
+      switch (true) {
+        case (this.gender === '1'):
+          if (!p.day && p.name.includes(this.txt)) lst.push(p);
+          break;
+        case (this.txt === ''):
+          if (!p.day && p.gender === gender) lst.push(p);
+          break;
+        default:
+          if (!p.day && p.name.includes(this.txt) && p.gender === gender) lst.push(p);
+          break;
+      }
+      return lst;
+    }, [] as PersonChargeResponse[]);
+    this.sunday = this._people.reduce((lst, p) => {
+      switch (true) {
+        case (this.gender === '1'):
+          if (p.day && p.name.includes(this.txt)) lst.push(p);
+          break;
+        case (this.txt === ''):
+          if (p.day && p.gender === gender) lst.push(p);
+          break;
+        default:
+          if (p.day && p.name.includes(this.txt) && p.gender === gender) lst.push(p);
+          break;
+      }
+      return lst;
+    }, [] as PersonChargeResponse[]);
   }
 }

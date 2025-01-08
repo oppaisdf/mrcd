@@ -44,7 +44,7 @@ export class InParentComponent {
       name: this._name,
       gender: this.gender,
       isParent: true,
-      phone: this._phone !== '' ? this._phone : undefined
+      phone: this._phone.length > 1 ? this._phone : undefined
     };
     this.parents.push(parent);
     this.parentsChange.emit(this.parents);

@@ -110,10 +110,6 @@ export class NewComponent implements OnInit {
       sacraments: this._sacraments,
       pay: this.GetValue('pay')
     };
-    if (request.parents) request.parents!.forEach(p => {
-      if (!p.phone || p.phone.length !== 9) p.phone = undefined;
-      else p.phone = p.phone.replace('-', '')
-    });
     const response = await this._service.AddAsync(request);
     this.message = response.message;
     this.success = response.success;

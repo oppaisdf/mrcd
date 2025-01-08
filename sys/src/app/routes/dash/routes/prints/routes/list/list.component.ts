@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PrinterService } from '../../services/printer.service';
 import { ListGeneralResponse } from '../../responses/list';
-import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'prints-list',
@@ -12,19 +11,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ListComponent implements OnInit {
   constructor(
-    private _service: PrinterService,
-    private _form: FormBuilder
-  ) {
-    this.form = this._form.group({
-      name: [''],
-      gender: [],
-      day: []
-    });
-  }
+    private _service: PrinterService
+  ) { }
 
-  private _list: ListGeneralResponse[] = [];
+  private _people: ListGeneralResponse[] = [];
   people: ListGeneralResponse[] = [];
-  form: FormGroup;
+  name = '';
+  gender = '1';
+  day = '1';
 
   GetDOB(
     date: Date
@@ -33,51 +27,53 @@ export class ListComponent implements OnInit {
     return `${dob.getDate()} de ${dob.toLocaleString('es-ES', { month: 'long' })} del ${dob.getFullYear()}`;
   }
 
-  GetValue(
-    control: string
-  ) {
-    return this.form.controls[control].value;
-  }
-
   async ngOnInit() {
     const response = await this._service.GetGeneralList();
     if (!response.success) return;
-    this._list = response.data!;
-    this._list.sort((a, b) => a.name.localeCompare(b.name));
+    this._people = response.data!;
+    this._people.sort((a, b) => a.name.localeCompare(b.name));
     this.people = response.data!;
   }
 
   ClearFilters() {
-    this.form.reset();
-    this.people = this._list;
+    this.people = this._people;
+    this.name = '';
+    this.day = '1';
+    this.gender = '1';
   }
 
-  FilterBy(
-    control: string
-  ) {
-    switch (control) {
-      case 'gender':
-        const gender = `${this.GetValue('gender')}` === 'true';
-        this.people = this._list.reduce((lst, p) => {
-          if (p.gender === gender) lst.push(p);
-          return lst;
-        }, [] as ListGeneralResponse[]);
-        break;
-      case 'day':
-        const day = `${this.GetValue('day')}` === 'true';
-        this.people = this._list.reduce((lst, p) => {
-          if (p.day === day) lst.push(p);
-          return lst;
-        }, [] as ListGeneralResponse[]);
-        break;
-      default:
-        const name = `${this.GetValue('name')}`;
-        if (!name) break;
-        this.people = this._list.reduce((lst, p) => {
-          if (p.name.includes(name)) lst.push(p);
-          return lst;
-        }, [] as ListGeneralResponse[]);
-        break;
+  Filter() {
+    const name = this.name;
+    const day = this.day === '1' ? undefined : this.day === '2';
+    const gender = this.gender === '1' ? undefined : this.gender === '2';
+
+    if (name === '' && day === undefined && gender === undefined) {
+      this.ClearFilters();
+      return;
     }
+
+    this.people = this._people.reduce((lst, q) => {
+      switch (true) {
+        case (day === undefined && gender === undefined):
+          if (q.name.includes(name)) lst.push(q);
+          break;
+        case (day === undefined && name === ''):
+          if (q.gender === gender) lst.push(q);
+          break;
+        case (gender === undefined && name === ''):
+          if (q.day === day) lst.push(q);
+          break;
+        case (day === undefined && gender !== undefined && name !== ''):
+          if (q.gender === gender && q.name.includes(name)) lst.push(q);
+          break;
+        case (gender === undefined && day !== undefined && name !== ''):
+          if (q.day === day && q.name.includes(name)) lst.push(q);
+          break;
+        case (name === '' && gender !== undefined && day !== undefined):
+          if (q.gender === gender && q.day === day) lst.push(q);
+          break;
+      }
+      return lst;
+    }, [] as ListGeneralResponse[]);
   }
 }

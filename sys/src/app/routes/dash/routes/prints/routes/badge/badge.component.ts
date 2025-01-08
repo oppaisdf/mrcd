@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PrinterService } from '../../services/printer.service';
 import { QRResponse } from '../../responses/qr';
-import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'prints-badge',
@@ -11,25 +10,16 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class BadgeComponent implements OnInit {
   constructor(
-    private _service: PrinterService,
-    private _form: FormBuilder
+    private _service: PrinterService
   ) {
-    this.form = this._form.group({
-      name: [''],
-      day: [],
-      gender: []
-    });
   }
+
+  name = '';
+  day = '1';
+  gender = '1';
 
   qrs: QRResponse[] = [];
-  form: FormGroup;
   private _qrs: QRResponse[] = [];
-
-  private GetValue(
-    control: string
-  ) {
-    return this.form.controls[control].value;
-  }
 
   async ngOnInit() {
     const response = await this._service.GetQRsAsync();
@@ -38,36 +28,45 @@ export class BadgeComponent implements OnInit {
     this._qrs = response.data!;
   }
 
-  FilterBy(
-    control: string
-  ) {
-    switch (control) {
-      case 'day':
-        const day = `${this.GetValue('day')}` === 'true';
-        this.qrs = this._qrs.reduce((lst, q) => {
-          if (q.day === day) lst.push(q);
-          return lst;
-        }, [] as QRResponse[]);
-        break;
-      case 'gender':
-        const gender = `${this.GetValue('gender')}` === 'true';
-        this.qrs = this._qrs.reduce((lst, q) => {
-          if (q.gender === gender) lst.push(q);
-          return lst;
-        }, [] as QRResponse[]);
-        break;
-      default:
-        const name = `${this.GetValue('name')}`;
-        this.qrs = this._qrs.reduce((lst, q) => {
-          if (q.name.includes(name)) lst.push(q);
-          return lst;
-        }, [] as QRResponse[]);
-        break;
+  Filter() {
+    const name = this.name;
+    const day = this.day === '1' ? undefined : this.day === '2';
+    const gender = this.gender === '1' ? undefined : this.gender === '2';
+
+    if (name === '' && day === undefined && gender === undefined) {
+      this.ClearFilters();
+      return;
     }
+
+    this.qrs = this._qrs.reduce((lst, q) => {
+      switch (true) {
+        case (day === undefined && gender === undefined):
+          if (q.name.includes(name)) lst.push(q);
+          break;
+        case (day === undefined && name === ''):
+          if (q.gender === gender) lst.push(q);
+          break;
+        case (gender === undefined && name === ''):
+          if (q.day === day) lst.push(q);
+          break;
+        case (day === undefined && gender !== undefined && name !== ''):
+          if (q.gender === gender && q.name.includes(name)) lst.push(q);
+          break;
+        case (gender === undefined && day !== undefined && name !== ''):
+          if (q.day === day && q.name.includes(name)) lst.push(q);
+          break;
+        case (name === '' && gender !== undefined && day !== undefined):
+          if (q.gender === gender && q.day === day) lst.push(q);
+          break;
+      }
+      return lst;
+    }, [] as QRResponse[]);
   }
 
   ClearFilters() {
-    this.form.reset();
+    this.name = '';
+    this.gender = '1';
+    this.day = '1';
     this.qrs = this._qrs;
   }
 }

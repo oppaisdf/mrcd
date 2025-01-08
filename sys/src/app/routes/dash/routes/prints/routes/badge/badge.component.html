@@ -3,19 +3,20 @@
         <button class="button" (click)="ClearFilters()">Limpiar filtros</button>
     </div>
 
-    <form [formGroup]="form" class="columns is-multiline">
+    <div class="columns is-multiline">
         <div class="column is-half">
             <shared-field [inBox]="false" field="Nombre">
-                <input type="text" class="input" formControlName="name" (input)="FilterBy('name')">
+                <input type="text" class="input" [(ngModel)]="name" (ngModelChange)="Filter()">
             </shared-field>
         </div>
 
         <div class="column is-half">
             <shared-field [inBox]="false" field="Día">
                 <div class="select">
-                    <select formControlName="day">
-                        <option value="true" (click)="FilterBy('day')">Domingo</option>
-                        <option value="false" (click)="FilterBy('day')">Sábado</option>
+                    <select [(ngModel)]="day" (ngModelChange)="Filter()">
+                        <option value="1">Todos</option>
+                        <option value="2">Domingo</option>
+                        <option value="3">Sábado</option>
                     </select>
                 </div>
             </shared-field>
@@ -24,14 +25,15 @@
         <div class="column is-half">
             <shared-field [inBox]="false" field="Género">
                 <div class="select">
-                    <select formControlName="gender">
-                        <option value="true" (click)="FilterBy('gender')">Masculino</option>
-                        <option value="false" (click)="FilterBy('gender')">Femenino</option>
+                    <select [(ngModel)]="gender" (ngModelChange)="Filter()">
+                        <option value="1">Todos</option>
+                        <option value="2">Masculino</option>
+                        <option value="3">Femenino</option>
                     </select>
                 </div>
             </shared-field>
         </div>
-    </form>
+    </div>
 </shared-pan-expand>
 
 <prints-printer fileName="Gafetes">

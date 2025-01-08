@@ -8,7 +8,7 @@ import { QRCodeComponent } from 'angularx-qrcode';
 import { ListComponent } from './routes/list/list.component';
 import { PrinterComponent } from './components/printer/printer.component'
 import { SharedModule } from "../../../../shared/shared.module";
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     PrintsRoutingModule,
     QRCodeComponent,
     SharedModule,
-    ReactiveFormsModule
+    FormsModule
   ],
   providers: [
     PrinterService
