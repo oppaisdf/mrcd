@@ -88,18 +88,18 @@ export class ApiService {
     const message = (() => {
       switch (true) {
         case (error instanceof HttpErrorResponse && !navigator.onLine):
-          return 'No internet connection :C';
-        case (error.status === 404 || error.status === 400):
+          return 'No hay conexión a internet :C';
+        case (error.status === 404 || error.status === 409 || error.status === 400):
           return `${error.error.message}`;
         case (error.status === 401):
           if (error.error && typeof error.error === 'object' && 'success' in error.error && 'message' in error.error) {
             return error.error.message;
           } else {
             this._router.navigateByUrl('/login');
-            return 'Session expired';
+            return 'La sesión expiró';
           }
         case (error instanceof HttpErrorResponse && navigator.onLine):
-          return `Connection error: (${error.status}) ${error.statusText}`;
+          return `Error de conexión: (${error.status}) ${error.statusText}`;
         default:
           return error.message ? error.message : error.ToString();
       }

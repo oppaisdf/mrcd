@@ -9,9 +9,36 @@ namespace api.Services;
 
 public interface IParentService
 {
+    /// <summary>
+    /// Busca un Parent por nombre, si no existe lo crea.
+    /// Luego asigna este Parent al Person.
+    /// No se ejecuta en una transacción
+    /// </summary>
+    /// <param name="userId">Usuario para registro de logs</param>
+    /// <param name="personId">Debe existir el Person, no se valida el ID</param>
+    /// <param name="request"></param>
+    /// <returns></returns>
     Task FindOrCreateAndAssignAsync(string userId, int personId, ParentRequest request);
+
+    /// <summary>
+    /// Retorna el ID del parent.
+    /// Busca por nombre, si no existe el Parent lo crea.
+    /// Se ejecuta en una transacción.
+    /// </summary>
+    /// <param name="userId">Usuario para logs</param>
+    /// <param name="personId">Se valida que el Person exista</param>
+    /// <param name="request">El nombre no debe ser nulo</param>
+    /// <returns></returns>
     Task<int> GetFindOrCreateAndAssignAsync(string userId, int personId, ParentRequest request);
+
+    /// <summary>
+    /// Obtiene todos los Parents asociados a un Person
+    /// </summary>
+    /// <param name="personId">El Person debe existir, no se valida</param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
     Task<ICollection<ParentResponse>> GetByPersonIdAsync(int personId);
+    Task AssignAsync(string userId, int id, int personId, bool isParent);
     Task UnassignAsync(string userId, int id, int personId);
     Task<int> CreateAsync(string userId, ParentRequest request);
     Task<(string page, ICollection<ParentResponse> parents)> GetAsync(string userId, ParentFilter filter);
@@ -57,7 +84,8 @@ public class ParentService(
         {
             Name = request.Name!,
             NameHash = hash,
-            Gender = request.Gender == null || request.Gender!.Value
+            Gender = request.Gender == null || request.Gender!.Value,
+            Phone = request.Phone
         };
         _context.Parents.Add(parent);
         await _context.SaveChangesAsync();
@@ -89,16 +117,6 @@ public class ParentService(
     }
     #endregion
 
-
-    /// <summary>
-    /// Busca un Parent por nombre, si no existe lo crea.
-    /// Luego asigna este Parent al Person.
-    /// No se ejecuta en una transacción
-    /// </summary>
-    /// <param name="userId">Usuario para registro de logs</param>
-    /// <param name="personId">Debe existir el Person, no se valida el ID</param>
-    /// <param name="request"></param>
-    /// <returns></returns>
     public async Task FindOrCreateAndAssignAsync(
         string userId,
         int personId,
@@ -108,15 +126,6 @@ public class ParentService(
         await PFindOrCeateAndAssignAsync(userId, request, personId);
     }
 
-    /// <summary>
-    /// Retorna el ID del parent.
-    /// Busca por nombre, si no existe el Parent lo crea.
-    /// Se ejecuta en una transacción.
-    /// </summary>
-    /// <param name="userId">Usuario para logs</param>
-    /// <param name="personId">Se valida que el Person exista</param>
-    /// <param name="request">El nombre no debe ser nulo</param>
-    /// <returns></returns>
     public async Task<int> GetFindOrCreateAndAssignAsync(
         string userId,
         int personId,
@@ -140,12 +149,6 @@ public class ParentService(
         }
     }
 
-    /// <summary>
-    /// Obtiene todos los Parents asociados a un Person
-    /// </summary>
-    /// <param name="personId">El Person debe existir, no se valida</param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<ICollection<ParentResponse>> GetByPersonIdAsync(
         int personId
     )
@@ -218,7 +221,7 @@ public class ParentService(
         int id
     )
     {
-        //await _logs.RegisterReadingAsync(userId, $"Parent {id}");
+        await _logs.RegisterReadingAsync(userId, $"Parent {id}");
         return await _context.Parents
             .Where(p => p.Id == id)
             .Select(p => new ParentResponse
@@ -263,7 +266,7 @@ public class ParentService(
         ParentFilter filter
     )
     {
-        //await _logs.RegisterReadingAsync("Todos los Parents");
+        await _logs.RegisterReadingAsync("Todos los Parents");
         var query =
             from p in _context.Parents
             join temp in _context.ParentsPeople on p.Id equals temp.ParentId into tempG
@@ -293,7 +296,7 @@ public class ParentService(
         ICollection<ParentResponse> parents;
         if (filter.Name == null)
         {
-            pages = (short)Math.Ceiling(await query.CountAsync() / 15.00);
+            pages = (short)Math.Ceiling(await query.CountAsync() / 15.0);
             if (filter.Page > pages) filter.Page = pages;
             if (pages == 0) parents = [];
             else
@@ -313,11 +316,14 @@ public class ParentService(
         {
             var pp = await query.AsNoTracking().ToListAsync();
             pp.ForEach(p => p.Normalized = _service.GetNormalizedText(p.Name));
-            pages = (short)Math.Ceiling(pp.Count / 15.00);
+            var normalized = _service.GetNormalizedText(filter.Name);
+            pp = pp.Where(p => p.Name.Contains(normalized)).ToList();
+            pages = (short)Math.Ceiling(pp.Count / 15.0);
             if (filter.Page > pages) filter.Page = pages;
             if (pages == 0) parents = [];
             else parents = pp
-                .Where(p => p.Name.Contains(filter.Name))
+                .Skip((filter.Page - 1) * 15)
+                .Take(15)
                 .Select(p => new ParentResponse
                 {
                     Id = p.Id,
@@ -329,5 +335,40 @@ public class ParentService(
         }
 
         return ($"{filter.Page}/{pages}", parents);
+    }
+
+    public async Task AssignAsync(
+        string userId,
+        int id,
+        int personId,
+        bool isParent
+    )
+    {
+        var exists = await _context.Parents.AnyAsync(p => p.Id == id);
+        if (!exists) throw new DoesNotExistsException("El padre/padrino no existe");
+        exists = await _context.People.AnyAsync(p => p.Id == personId);
+        if (!exists) throw new DoesNotExistsException("El confirmando no existe");
+        exists = await _context.ParentsPeople.AnyAsync(p => p.ParentId == id && p.PersonId == personId && p.IsParent == isParent);
+        if (exists) throw new AlreadyExistsException($"Ya se ha asignado el {(isParent ? "encargado" : "padrino")} al confirmando");
+
+        _context.ParentsPeople.Add(new ParentPerson
+        {
+            ParentId = id,
+            PersonId = personId,
+            IsParent = isParent
+        });
+
+        using var tran = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+            await _logs.RegisterCreationAsync(userId, $"Parent/Person {id}/{personId}");
+            await tran.CommitAsync();
+        }
+        catch (Exception)
+        {
+            await tran.RollbackAsync();
+            throw;
+        }
     }
 }

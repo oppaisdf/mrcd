@@ -71,7 +71,7 @@ export class AllComponent {
     this.parents = response.data!;
     const pages = response.message.split('/');
     this.page = +pages[0];
-    this.lastPage + pages[1];
+    this.lastPage = +pages[1];
     this.message = '';
   }
 }

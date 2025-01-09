@@ -53,6 +53,27 @@ public class ParentController(
         { return this.DefaultServerError($"[+] Error al crear padre/padrino: {e.Message}"); }
     }
 
+    [HttpPost("{id}/{personId}")]
+    public async Task<IActionResult> AssingAsync(
+        int id,
+        int personId,
+        [FromBody] bool isParent = true
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.AssignAsync(userId, id, personId, isParent);
+            return this.DefaultOk(new { }, $"Se ha asignado correctamente el {(isParent ? "encargado" : "padrino")} al confirmando");
+        }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
+        catch (AlreadyExistsException e)
+        { return this.DefaultConflict(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al asignar padre/padrino {id} a confirmando {personId}: {e.Message}"); }
+    }
+
     [HttpDelete("{id}/{parentId}")]
     public async Task<IActionResult> UnassignAsync(
         int id,

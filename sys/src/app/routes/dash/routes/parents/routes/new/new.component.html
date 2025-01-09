@@ -1,1 +1,32 @@
-<p>new works!</p>
+<shared-alert [(message)]="message" [success]="success" />'
+
+<div class="buttons are-medium">
+    <button class="button is-primary" [class.is-loading]="isCreating" [disabled]="isCreating || form.invalid"
+        (click)="AddAsync()">Agregar</button>
+    <a class="button" routerLink="/parent/all">Regresar</a>
+</div>
+
+<form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
+    <div class="column is-half">
+        <shared-field [loading]="isCreating" field="Nombre">
+            <input type="text" class="input" [class.is-danger]="IsInvalidField('name')" formControlName="name"
+                maxlength="30">
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field field="Género">
+            <label class="checkbox">
+                <input type="checkbox" formControlName="gender">
+                @if (GetValue('gender')) { Masculino}@else { Femenino}
+            </label>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isCreating" field="Número telefónico">
+            <input type="text" class="input" [class.is-danger]="IsInvalidField('phone')" (input)="FormatPhone()"
+                formControlName="phone" maxlength="9" placeholder="xxxx-xxxx">
+        </shared-field>
+    </div>
+</form>

@@ -190,7 +190,8 @@ public partial class PeopleService(
         {
             var people = await query.AsNoTracking().ToListAsync();
             people.ForEach(p => p.Hash = _service.GetNormalizedText(p.Name));
-            people = people.Where(p => p.Hash.Contains(_service.GetNormalizedText(filter.Name))).ToList();
+            var normalized = _service.GetNormalizedText(filter.Name);
+            people = people.Where(p => p.Hash.Contains(normalized)).ToList();
             counter = (short)Math.Ceiling(people.Count / 15.0);
             if (filter.Page < 1) filter.Page = 1;
             if (filter.Page > counter) filter.Page = counter;

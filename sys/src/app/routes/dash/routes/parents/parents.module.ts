@@ -5,21 +5,24 @@ import { ParentsRoutingModule } from './parents-routing.module';
 import { AllComponent } from './routes/all/all.component';
 import { NewComponent } from './routes/new/new.component';
 import { DetailComponent } from './routes/detail/detail.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../../../shared/shared.module';
 import { ParentService } from './services/parent.service';
+import { PeopleComponent } from './components/people/people.component';
 
 @NgModule({
   declarations: [
     AllComponent,
     NewComponent,
-    DetailComponent
+    DetailComponent,
+    PeopleComponent
   ],
   imports: [
     CommonModule,
     ParentsRoutingModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    FormsModule
   ],
   providers: [
     ParentService
