@@ -32,6 +32,7 @@ export class NewComponent implements OnInit {
   currencySymbol = environment.currencySymbol;
   sacraments: DefaultEntityResponse[] = [];
   form: FormGroup;
+  parentForm: FormGroup | undefined;
   parents: ParentRequest[] = [];
   private _sacraments: number[] = [];
   price = 0;
@@ -100,9 +101,9 @@ export class NewComponent implements OnInit {
 
     const request: PersonRequest = {
       name: this.GetValue('name'),
-      gender: this.GetValue('gender'),
+      gender: `${this.GetValue('gender')}` === 'true',
       dob: this.GetValue('dob'),
-      day: this.GetValue('day'),
+      day: `${this.GetValue('day')}` === 'true',
       degreeId: this.GetValue('degreeId'),
       address: this.GetValue('address'),
       phone: `${this.GetValue('phone')}`.replace(/\D/g, ''),
@@ -125,5 +126,12 @@ export class NewComponent implements OnInit {
       pay: false
     });
     this.parents = [];
+    if (!this.parentForm) return;
+    this.parentForm.reset();
+    this.parentForm.patchValue({
+      name: '',
+      gender: false,
+      phone: ''
+    });
   }
 }

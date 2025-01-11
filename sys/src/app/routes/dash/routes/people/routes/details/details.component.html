@@ -16,10 +16,12 @@
 
     <div class="column is-half">
         <shared-field [loading]="isUpdating" field="Género">
-            <label class="checkbox">
-                <input type="checkbox" formControlName="gender">
-                @if (GetValue('gender')) { Masculino} @else { Femenino}
-            </label>
+            <div class="select">
+                <select formControlName="gender">
+                    <option value="true">Masculino</option>
+                    <option value="false">Femenino</option>
+                </select>
+            </div>
         </shared-field>
     </div>
 
@@ -32,10 +34,12 @@
 
     <div class="column is-half">
         <shared-field [loading]="isUpdating" field="Día">
-            <label class="checkbox">
-                <input type="checkbox" formControlName="day">
-                @if (GetValue('day')) { Domingo} @else { Sábado}
-            </label>
+            <div class="select">
+                <select formControlName="day">
+                    <option value="true">Domingo</option>
+                    <option value="false">Sábado</option>
+                </select>
+            </div>
         </shared-field>
     </div>
 

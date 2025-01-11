@@ -141,9 +141,9 @@ export class DetailsComponent implements OnInit {
 
     const request: PersonRequest = {
       name: this.GetValue('name') !== this._old.name ? this.GetValue('name') : undefined,
-      gender: this.GetValue('gender') !== this._old.gender ? this.GetValue('gender') : undefined,
+      gender: this.GetValue('gender') !== this._old.gender ? this.GetValue('gender') === 'true' : undefined,
       dob: this.GetValue('dob') !== this._old.dob ? this.GetValue('dob') : undefined,
-      day: this.GetValue('day') !== this._old.day ? this.GetValue('day') : undefined,
+      day: this.GetValue('day') !== this._old.day ? this.GetValue('day') === 'true' : undefined,
       isActive: this.GetValue('isActive') !== this._old.isActive ? this.GetValue('isActive') : undefined,
       degreeId: this.GetValue('degreeId') !== this._old.degreeId ? this.GetValue('degreeId') : undefined,
       address: this.GetValue('address') !== this._old.address ? this.GetValue('address') : undefined,

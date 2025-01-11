@@ -16,10 +16,12 @@
 
     <div class="column is-half">
         <shared-field field="Género">
-            <label class="checkbox">
-                <input type="checkbox" formControlName="gender">
-                @if (GetValue('gender')) { Masculino}@else { Femenino}
-            </label>
+            <div class="select">
+                <select formControlName="gender">
+                    <option value="true">Masculino</option>
+                    <option value="false">Femenino</option>
+                </select>
+            </div>
         </shared-field>
     </div>
 

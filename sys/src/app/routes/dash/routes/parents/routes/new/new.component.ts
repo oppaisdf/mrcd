@@ -61,7 +61,7 @@ export class NewComponent {
 
     const request: ParentRequest = {
       name: `${this.GetValue('name')}`.trim(),
-      gender: this.GetValue('gender'),
+      gender: `${this.GetValue('gender')}` === 'true',
       isParent: true,
       phone: `${this.GetValue('phone')}`.replace('-', '')
     };

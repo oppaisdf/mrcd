@@ -22,35 +22,34 @@ export class InParentComponent {
 
   @Input() parents: ParentRequest[] = [];
   @Output() parentsChange = new EventEmitter<ParentRequest[]>();
+  @Output() formChange = new EventEmitter<FormGroup>();
   form: FormGroup;
 
   get gender() { return `${this.form.controls['gender'].value}` === 'true' }
   private get _name() { return `${this.form.controls['name'].value}`.trim(); }
   private get _phone() { return `${this.form.controls['phone'].value}`.replace('-', ''); }
 
-  Delete(
-    parent: ParentRequest
-  ) {
-    const index = this.parents.findIndex(p => p == parent);
-    this.parents.splice(index, 1);
-    this.parentsChange.emit(this.parents);
-  }
-
-  Add() {
+  Update() {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
-    if (this.parents.length == 2) return;
-    const parent: ParentRequest = {
-      name: this._name,
-      gender: this.gender,
-      isParent: true,
-      phone: this._phone.length > 1 ? this._phone : undefined
-    };
-    this.parents.push(parent);
+    if (this.parents.length === 0) {
+      const parent: ParentRequest = {
+        name: this._name,
+        gender: this.gender,
+        isParent: true,
+        phone: this._phone.length === 8 ? this._phone : undefined
+      };
+      this.parents.push(parent);
+    } else {
+      const parent = this.parents[0];
+      parent.name = this._name;
+      parent.gender = this.gender;
+      parent.isParent = true;
+      parent.phone = this._phone.length === 8 ? this._phone : undefined;
+    }
+
     this.parentsChange.emit(this.parents);
-    this.form.reset();
-    this.form.controls['gender'].setValue(false);
-    this.form.controls['phone'].setValue('');
+    this.formChange.emit(this.form);
   }
 
   FormatPhone() {
