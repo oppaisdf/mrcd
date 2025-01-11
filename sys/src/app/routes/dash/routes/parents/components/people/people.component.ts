@@ -73,9 +73,9 @@ export class PeopleComponent {
     this.updating = true;
     this.updatingChange.emit(true);
 
-    const response = person.hasParent === true ?
-      await this._service.UnassignAsync(person.id, this.id) :
-      await this._service.AssignAsync(this.id, person.id, isParent);
+    const response = person.hasParent === undefined ?
+      await this._service.AssignAsync(this.id, person.id, isParent) :
+      await this._service.UnassignAsync(person.id, this.id);
     this.message = response.message;
     this.success = response.success;
 

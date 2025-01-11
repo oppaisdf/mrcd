@@ -62,8 +62,7 @@ export class NewComponent {
     const request: ParentRequest = {
       name: `${this.GetValue('name')}`.trim(),
       gender: `${this.GetValue('gender')}` === 'true',
-      isParent: true,
-      phone: `${this.GetValue('phone')}`.replace('-', '')
+      phone: this.GetValue('phone') ? `${this.GetValue('phone')}`.replace('-', '') : undefined
     };
     const response = await this._service.CreateAsync(request);
     this.message = response.message;

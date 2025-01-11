@@ -4,6 +4,8 @@
     <button class="button is-warning" [class.is-loading]="isUpdating" [disabled]="isUpdating || form.invalid"
         (click)="UpdateAsync()">Actualizar</button>
     <a class="button" routerLink="/parent/all">Regresar</a>
+    <button class="button is-danger" [class.is-loading]="isUpdating" [disabled]="isUpdating"
+        (click)="DeleteAsync()">Remover</button>
 </div>
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="UpdateAsync()">

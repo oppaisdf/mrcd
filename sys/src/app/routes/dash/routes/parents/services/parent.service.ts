@@ -28,6 +28,13 @@ export class ParentService {
     return await this._api.Post<{ id: number }>('Parent', request);
   }
 
+  public async UpdateAsync(
+    id: number,
+    request: ParentRequest
+  ) {
+    return await this._api.Patch(`Parent/${id}`, request);
+  }
+
   public async UnassignAsync(
     personId: number,
     parentId: number
@@ -41,5 +48,11 @@ export class ParentService {
     isParent: boolean
   ) {
     return await this._api.Post(`Parent/${parentId}/${personId}`, isParent);
+  }
+
+  public async DeleteAsync(
+    id: number
+  ) {
+    return this._api.Delete(`Parent/${id}`);
   }
 }

@@ -36,7 +36,6 @@ export class InParentComponent {
       const parent: ParentRequest = {
         name: this._name,
         gender: this.gender,
-        isParent: true,
         phone: this._phone.length === 8 ? this._phone : undefined
       };
       this.parents.push(parent);
@@ -44,7 +43,6 @@ export class InParentComponent {
       const parent = this.parents[0];
       parent.name = this._name;
       parent.gender = this.gender;
-      parent.isParent = true;
       parent.phone = this._phone.length === 8 ? this._phone : undefined;
     }
 

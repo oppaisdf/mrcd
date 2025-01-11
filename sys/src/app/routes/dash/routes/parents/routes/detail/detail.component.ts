@@ -3,6 +3,7 @@ import { ParentService } from '../../services/parent.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BasicPersonResponse } from '../../../charges/models/responses/charge';
+import { ParentRequest } from '../../../people/models/requests/person';
 
 @Component({
   selector: 'parent-detail',
@@ -29,6 +30,7 @@ export class DetailComponent implements OnInit {
   success = true;
   isUpdating = false;
   people: BasicPersonResponse[] = [];
+  private _old: ParentRequest = {};
 
   async ngOnInit() {
     this.id = +this._me.snapshot.paramMap.get('id')!;
@@ -42,13 +44,14 @@ export class DetailComponent implements OnInit {
       phone: response.data!.phone
     });
     this.FormatPhone();
+    this._old = this.form.value;
     if (response.data!.people) this.people = response.data!.people;
   }
 
   GetValue(
     control: string
   ) {
-    return this.form.controls[control].value;
+    return `${this.form.controls[control].value}`;
   }
 
   IsInvalidField(
@@ -58,7 +61,7 @@ export class DetailComponent implements OnInit {
   }
 
   FormatPhone() {
-    const phone = `${this.GetValue('phone')}`.replace(/\D/g, '').substring(0, 8);
+    const phone = this.GetValue('phone').replace(/\D/g, '').substring(0, 8);
     if (!phone) {
       this.form.controls['phone'].setValue('', { emitEvent: false });
       return;
@@ -69,5 +72,38 @@ export class DetailComponent implements OnInit {
       this.form.controls['phone'].setValue(`${phone.substring(0, 4)}-${phone.substring(4, 8)}`, { emitEvent: false });
   }
 
-  UpdateAsync() { }
+  async DeleteAsync() {
+    if (this.isUpdating) return;
+    this.isUpdating = true;
+
+    const response = await this._service.DeleteAsync(this.id);
+    this.message = response.message;
+    this.success = response.success;
+
+    this.isUpdating = false;
+  }
+
+  async UpdateAsync() {
+    if (this.isUpdating) return;
+    this.form.markAllAsTouched();
+    if (this.form.invalid) return;
+    this.isUpdating = true;
+    this.form.disable();
+
+    const request: ParentRequest = {
+      name: this._old.name !== this.GetValue('name').trim() ? this.GetValue('name').trim() : undefined,
+      phone: this._old.phone !== this.GetValue('phone').replace('-', '') ? this.GetValue('phone').replace('-', '') : undefined,
+      gender: this._old.gender !== (this.GetValue('gender') === 'true') ? (this.GetValue('gender') === 'true') : undefined
+    };
+    const response = await this._service.UpdateAsync(this.id, request);
+    this.message = response.message;
+    this.success = response.success;
+
+    this.isUpdating = false;
+    this.form.enable();
+    if (!response.success) return;
+    if (this._old.name !== this.GetValue('name').trim()) this._old.name = this.GetValue('name').trim();
+    if (this._old.gender !== (this.GetValue('gender') === 'true')) this._old.gender = (this.GetValue('gender') === 'true');
+    if (this._old.phone !== this.GetValue('phone').replace('-', '')) this._old.phone = this.GetValue('phone').replace('-', '');
+  }
 }

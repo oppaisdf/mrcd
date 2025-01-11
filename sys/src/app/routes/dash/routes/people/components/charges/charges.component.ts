@@ -30,8 +30,7 @@ export class ChargesComponent {
     this.updating = true;
     this.updatingChange.emit(this.updating);
 
-    charge.isActive = !charge.isActive;
-    const response = charge.isActive ?
+    const response = !charge.isActive ?
       await this._service.AssignAsync(charge.id, this.id) :
       await this._service.UnassingAsync(charge.id, this.id);
     this.message = response.message;
@@ -39,5 +38,6 @@ export class ChargesComponent {
 
     this.updating = false;
     this.updatingChange.emit(this.updating);
+    if (response.success) charge.isActive = !charge.isActive;
   }
 }

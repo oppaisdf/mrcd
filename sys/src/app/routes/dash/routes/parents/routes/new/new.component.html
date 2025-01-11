@@ -1,4 +1,4 @@
-<shared-alert [(message)]="message" [success]="success" />'
+<shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
     <button class="button is-primary" [class.is-loading]="isCreating" [disabled]="isCreating || form.invalid"
@@ -15,7 +15,7 @@
     </div>
 
     <div class="column is-half">
-        <shared-field field="Género">
+        <shared-field [loading]="isCreating" field="Género">
             <div class="select">
                 <select formControlName="gender">
                     <option value="true">Masculino</option>
@@ -33,4 +33,4 @@
     </div>
 </form>
 
-<shared-alert [(message)]="message" [success]="success" />'
+<shared-alert [(message)]="message" [success]="success" />

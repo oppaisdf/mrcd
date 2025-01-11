@@ -90,7 +90,13 @@ export class ApiService {
         case (error instanceof HttpErrorResponse && !navigator.onLine):
           return 'No hay conexión a internet :C';
         case (error.status === 404 || error.status === 409 || error.status === 400):
-          return `${error.error.message}`;
+          switch (true) {
+            case !!error.error.message: return `${error.error.message}`;
+            case !!error.error.errors:
+              const firstKey = Object.keys(error.error.errors)[0];
+              return error.error.errors[firstKey];
+            default: return "Error desconocido :c";
+          }
         case (error.status === 401):
           if (error.error && typeof error.error === 'object' && 'success' in error.error && 'message' in error.error) {
             return error.error.message;

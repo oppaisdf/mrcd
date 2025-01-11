@@ -25,36 +25,8 @@ public class ParentController(
         return number > 9999999;
     }
 
-    [HttpPost("{id}")]
-    public async Task<IActionResult> CreateAsync(
-        int id,
-        [FromBody] ParentRequest request
-    )
-    {
-        if (string.IsNullOrEmpty(request.Name)) return this.DefaultBadRequest("El nombre es requerido");
-        if (request.Gender == null) return this.DefaultBadRequest("El género es requerido");
-        if (request.IsParent == null) return this.DefaultBadRequest("Debe especificar si es padre/padrino");
-        if (!string.IsNullOrEmpty(request.Phone))
-        {
-            if (!IsValidPhoneNumber(request.Phone)) request.Phone = null;
-        }
-
-        try
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var parentId = await _service.GetFindOrCreateAndAssignAsync(userId, id, request);
-            return this.DefaultOk(new { Id = parentId }, "Se agregó el padre/padrino correctamente");
-        }
-        catch (DoesNotExistsException e)
-        { return this.DefaultNotFound(e.Message); }
-        catch (BadRequestException e)
-        { return this.DefaultBadRequest(e.Message); }
-        catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al crear padre/padrino: {e.Message}"); }
-    }
-
     [HttpPost("{id}/{personId}")]
-    public async Task<IActionResult> AssingAsync(
+    public async Task<IActionResult> AssignAsync(
         int id,
         int personId,
         [FromBody] bool isParent = true
@@ -90,23 +62,6 @@ public class ParentController(
         { return this.DefaultNotFound(e.Message); }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al desasingar padre/padrino de confirmando: {e.Message}"); }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> CreateAsync(
-        [FromBody] ParentRequest request
-    )
-    {
-        try
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var id = await _service.CreateAsync(userId, request);
-            return this.DefaultCreated(nameof(GetById), id);
-        }
-        catch (AlreadyExistsException e)
-        { return this.DefaultConflict(e.Message); }
-        catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al crear Parent: {e.Message}"); }
     }
 
     [HttpGet("{id}")]
@@ -152,5 +107,92 @@ public class ParentController(
         }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al obtener todos los Parents: {e.Message}"); }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] ParentRequest request
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var id = await _service.CreateAsync(userId, request);
+            return this.DefaultCreated(nameof(GetById), id);
+        }
+        catch (AlreadyExistsException e)
+        { return this.DefaultConflict(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al crear Parent: {e.Message}"); }
+    }
+
+    [HttpPost("{id}")]
+    public async Task<IActionResult> CreateAndAssignAsync(
+        int id,
+        [FromBody] ParentRequest request
+    )
+    {
+        if (string.IsNullOrEmpty(request.Name)) return this.DefaultBadRequest("El nombre es requerido");
+        if (request.Gender == null) return this.DefaultBadRequest("El género es requerido");
+        if (request.IsParent == null) return this.DefaultBadRequest("Debe especificar si es padre/padrino");
+        if (string.IsNullOrEmpty(request.Phone) || !IsValidPhoneNumber(request.Phone))
+            request.Phone = null;
+
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var parentId = await _service.GetFindOrCreateAndAssignAsync(userId, id, request);
+            return this.DefaultOk(new { Id = parentId }, "Se agregó el padre/padrino correctamente");
+        }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
+        catch (BadRequestException e)
+        { return this.DefaultBadRequest(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al crear padre/padrino: {e.Message}"); }
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateAsync(
+        int id,
+        [FromBody] ParentRequest request
+    )
+    {
+        if (string.IsNullOrEmpty(request.Name)) request.Name = null;
+        else request.Name = request.Name.Trim();
+        if (string.IsNullOrEmpty(request.Phone) || !IsValidPhoneNumber(request.Phone)) request.Phone = null;
+        if (request.Name == null && request.Phone == null && request.Gender == null)
+            return this.DefaultBadRequest("No se encontró información para actualizar");
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.UpdateAsync(userId, id, request);
+            return this.DefaultOk(new { }, "Se ha actualizado el padre/padrino correctamente");
+        }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
+        catch (AlreadyExistsException e)
+        { return this.DefaultConflict(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al actualizar padre {id}: {e.Message}"); }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(
+        int id
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.DeleteAsync(userId, id);
+            return this.DefaultOk(new { }, "Se ha eliminado el padre/padrino correctamente");
+        }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
+        catch (BadRequestException e)
+        { return this.DefaultBadRequest(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al eliminar padre {id}: {e.Message}"); }
     }
 }
