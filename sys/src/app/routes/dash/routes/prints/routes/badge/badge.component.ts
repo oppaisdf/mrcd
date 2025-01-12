@@ -17,6 +17,8 @@ export class BadgeComponent implements OnInit {
   name = '';
   day = '1';
   gender = '1';
+  isVertical = true;
+  columns = '2';
 
   qrs: QRResponse[] = [];
   private _qrs: QRResponse[] = [];
@@ -68,5 +70,9 @@ export class BadgeComponent implements OnInit {
     this.gender = '1';
     this.day = '1';
     this.qrs = this._qrs;
+  }
+
+  ChangeOrientation() {
+    this.isVertical = `${this.isVertical}` === 'true';
   }
 }

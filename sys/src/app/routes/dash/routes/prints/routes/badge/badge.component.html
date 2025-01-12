@@ -36,9 +36,35 @@
     </div>
 </shared-pan-expand>
 
-<prints-printer fileName="Gafetes">
+<hr>
+
+<shared-pan-expand title="Página">
+    <shared-field field="Orientación">
+        <div class="select">
+            <select [(ngModel)]="isVertical" (ngModelChange)="ChangeOrientation()">
+                <option value="true">Vertical</option>
+                <option value="false">Horizontal</option>
+            </select>
+        </div>
+    </shared-field>
+
+    <shared-field field="Columnas">
+        <div class="select">
+            <select [(ngModel)]="columns">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+    </shared-field>
+</shared-pan-expand>
+
+<hr>
+
+<prints-printer [isVertical]="isVertical" fileName="Gafetes">
     <div class="columns is-multiline is-mobile is-5">
-        <div class="column is-one-third" *ngFor="let qr of qrs">
+        <div class="column" [class.is-half]="columns === '2'" [class.is-one-third]="columns === '3'"
+            [class.is-one-quarter]="columns === '4'" *ngFor="let qr of qrs">
             <div class="columns is-mobile is-vcentered is-gapless">
                 <div class="column is-half has-text-right">
                     <qrcode [qrdata]="qr.hash" [elementType]="'img'" [scale]="2" />

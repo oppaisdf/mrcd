@@ -43,7 +43,20 @@
 
 <hr>
 
-<prints-printer fileName="ListadoGeneral">
+<shared-pan-expand title="Página">
+    <shared-field field="Orientación">
+        <div class="select">
+            <select [(ngModel)]="isVertical" (ngModelChange)="ChangeOrientation()">
+                <option value="true">Vertical</option>
+                <option value="false">Horizontal</option>
+            </select>
+        </div>
+    </shared-field>
+</shared-pan-expand>
+
+<hr>
+
+<prints-printer fileName="ListadoGeneral" [isVertical]="isVertical">
     <table class="table is-fullwidth has-background-white">
         <thead>
             <th class="has-text-black">Nombre</th>

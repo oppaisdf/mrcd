@@ -19,6 +19,7 @@ export class ListComponent implements OnInit {
   name = '';
   gender = '1';
   day = '1';
+  isVertical = true;
 
   GetDOB(
     date: Date
@@ -75,5 +76,9 @@ export class ListComponent implements OnInit {
       }
       return lst;
     }, [] as ListGeneralResponse[]);
+  }
+
+  ChangeOrientation() {
+    this.isVertical = `${this.isVertical}` === 'true';
   }
 }
