@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,4 +15,8 @@ public class Attendance
 
     [Required]
     public required DateTime Date { get; set; }
+
+    [Required]
+    [DefaultValue(true)]
+    public required bool IsAttendance { get; set; }
 }

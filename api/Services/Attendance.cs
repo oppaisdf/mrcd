@@ -33,7 +33,6 @@ public class AttendanceService(
         DateTime? date = null
     )
     {
-        if (date == null) date = DateTime.UtcNow;
         var person = await _context.People
             .Where(p => p.Hash == hash)
             .Select(p => new
@@ -56,7 +55,8 @@ public class AttendanceService(
         {
             UserId = userID,
             PersonId = person.Id,
-            Date = date!.Value
+            IsAttendance = date != null,
+            Date = date ?? DateTime.UtcNow.AddHours(-6)
         });
         await _context.SaveChangesAsync();
     }

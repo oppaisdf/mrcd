@@ -186,6 +186,9 @@ public class MerContext(
                 .HasForeignKey(a => a.PersonId)
                 .HasConstraintName("FK_Attendance_PersonId")
                 .IsRequired();
+            attendance
+                .Property(a => a.IsAttendance)
+                .HasDefaultValue(true);
         });
 
         builder
