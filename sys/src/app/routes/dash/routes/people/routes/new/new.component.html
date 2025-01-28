@@ -90,9 +90,9 @@
 
 <people-in-parent [(parents)]="parents" (formChange)="parentForm = $event" />
 
+<shared-alert [(message)]="message" [success]="success" />
+
 <div class="buttons are-medium">
     <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
         (click)="AddAsync()">Inscribir</button>
 </div>
-
-<shared-alert [(message)]="message" [success]="success" />

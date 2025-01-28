@@ -34,24 +34,40 @@
 <div class="columns">
     <div class="column is-half">
         <shared-field field="Domingo">
-            <div class="checkboxes" *ngFor="let person of sunday">
-                <label class="checkbox">
-                    <input type="checkbox" [disabled]="isUpdating" [checked]="person.isActive"
-                        (click)="SelectPerson(person)">
-                    {{person.name}}
-                </label>
+            <div class="table-container">
+                <table class="table is-striped is-fullwidth is-overable">
+                    <tbody>
+                        <tr *ngFor="let person of sunday">
+                            <td>{{person.name}}</td>
+                            <td>
+                                <button class="button" [ngClass]="person.isActive === true?'is-danger':'is-info'"
+                                    (click)="SelectPerson(person)">
+                                    @if (person.isActive) {Remover cobro}@else {Registrar cobro}
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </shared-field>
     </div>
 
     <div class="column is-half">
         <shared-field field="Sábado">
-            <div class="checkboxes" *ngFor="let person of saturday">
-                <label class="checkbox">
-                    <input type="checkbox" [disabled]="isUpdating" [checked]="person.isActive"
-                        (click)="SelectPerson(person)">
-                    {{person.name}}
-                </label>
+            <div class="table-container">
+                <table class="table is-striped is-fullwidth is-overable">
+                    <tbody>
+                        <tr *ngFor="let person of saturday">
+                            <td>{{person.name}}</td>
+                            <td>
+                                <button class="button" [ngClass]="person.isActive === true?'is-danger':'is-info'"
+                                    (click)="SelectPerson(person)">
+                                    @if (person.isActive) {Remover cobro}@else {Registrar cobro}
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </shared-field>
     </div>
