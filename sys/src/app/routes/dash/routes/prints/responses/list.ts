@@ -3,5 +3,11 @@ export interface ListGeneralResponse {
     gender: boolean;
     day: boolean;
     dob: Date;
-    parents?: string[];
+    phone?: string;
+    parents?: GeneralParentListResponse[];
+}
+
+export interface GeneralParentListResponse {
+    name: string;
+    phone?: string;
 }

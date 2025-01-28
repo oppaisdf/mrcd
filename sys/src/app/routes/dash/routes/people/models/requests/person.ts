@@ -17,4 +17,5 @@ export interface ParentRequest {
     name?: string;
     gender?: boolean;
     phone?: string;
+    isParent?: boolean;
 }

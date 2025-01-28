@@ -112,11 +112,16 @@ public class AttendanceService(
                 Gender = p.Gender,
                 Day = p.Day,
                 DOB = p.DOB,
+                Phone = p.Phone,
                 Parents = (
                     from parent in _context.Parents
                     join pp in _context.ParentsPeople on parent.Id equals pp.ParentId
                     where pp.PersonId == p.Id && pp.IsParent
-                    select parent.Name
+                    select new GeneralParentListResponse
+                    {
+                        Name = parent.Name,
+                        Phone = parent.Phone
+                    }
                 ).ToList()
             })
             .ToListAsync();

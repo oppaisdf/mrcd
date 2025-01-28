@@ -44,14 +44,29 @@
 <hr>
 
 <shared-pan-expand title="Página">
-    <shared-field field="Orientación">
-        <div class="select">
-            <select [(ngModel)]="isVertical" (ngModelChange)="ChangeOrientation()">
-                <option value="true">Vertical</option>
-                <option value="false">Horizontal</option>
-            </select>
+    <div class="columns">
+        <div class="column is-half">
+            <shared-field field="Orientación" [inBox]="false">
+                <div class="select">
+                    <select [(ngModel)]="isVertical" (ngModelChange)="ChangeOrientation()">
+                        <option value="true">Vertical</option>
+                        <option value="false">Horizontal</option>
+                    </select>
+                </div>
+            </shared-field>
         </div>
-    </shared-field>
+
+        <div class="column is-half">
+            <shared-field field="Mostrar teléfonos" [inBox]="false">
+                <div class="select">
+                    <select [(ngModel)]="showPhones" (ngModelChange)="OnChangeShowPhones()">
+                        <option value="true">Mostrar teléfonos</option>
+                        <option value="false">No mostrar teléfonos</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+    </div>
 </shared-pan-expand>
 
 <hr>
@@ -63,6 +78,7 @@
             <th class="has-text-black">Género</th>
             <th class="has-text-black">Día</th>
             <th class="has-text-black">Fecha de nacimiento</th>
+            <th class="has-text-black" *ngIf="showPhones">Teléfono</th>
             <th class="has-text-black">Padres</th>
         </thead>
         <tbody>
@@ -75,7 +91,8 @@
                     @if (person.day) {Domingo} @else {Sábado}
                 </td>
                 <td class="has-text-black">{{GetDOB(person.dob)}}</td>
-                <td class="has-text-black">{{person.parents?.toString()}}</td>
+                <td class="has-text-black" *ngIf="showPhones">{{GetFormatedPhone(person.phone)}}</td>
+                <td class="has-text-black">{{GetFormatedParents(person.parents)}}</td>
             </tr>
         </tbody>
     </table>

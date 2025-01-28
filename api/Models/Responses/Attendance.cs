@@ -22,5 +22,12 @@ public class GeneralListResponse
     public required bool Gender { get; set; }
     public required bool Day { get; set; }
     public required DateTime DOB { get; set; }
-    public ICollection<string>? Parents { get; set; }
+    public string? Phone { get; set; }
+    public IEnumerable<GeneralParentListResponse>? Parents { get; set; }
+}
+
+public class GeneralParentListResponse
+{
+    public required string Name { get; set; }
+    public string? Phone { get; set; }
 }

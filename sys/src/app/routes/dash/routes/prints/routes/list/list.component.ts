@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PrinterService } from '../../services/printer.service';
-import { ListGeneralResponse } from '../../responses/list';
+import { GeneralParentListResponse, ListGeneralResponse } from '../../responses/list';
 
 @Component({
   selector: 'prints-list',
@@ -20,6 +20,7 @@ export class ListComponent implements OnInit {
   gender = '1';
   day = '1';
   isVertical = true;
+  showPhones = false;
 
   GetDOB(
     date: Date
@@ -78,7 +79,27 @@ export class ListComponent implements OnInit {
     }, [] as ListGeneralResponse[]);
   }
 
+  OnChangeShowPhones() {
+    this.showPhones = `${this.showPhones}` === 'true';
+  }
+
   ChangeOrientation() {
     this.isVertical = `${this.isVertical}` === 'true';
+  }
+
+  GetFormatedParents(
+    parent: GeneralParentListResponse[] | undefined
+  ) {
+    if (!parent) return '';
+    return parent.reduce((a, b) => {
+      return a += `${a.length > 0 ? ', ' : ''}${b.name}${b.phone && this.showPhones ? `(${this.GetFormatedPhone(b.phone)})` : ''}`;
+    }, '');
+  }
+
+  GetFormatedPhone(
+    phone: string | undefined
+  ) {
+    if (!phone) return '';
+    return `${phone.substring(0, 4)}-${phone.substring(4, 8)}`;
   }
 }

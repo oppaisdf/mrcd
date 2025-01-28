@@ -52,7 +52,8 @@ export class ParentsComponent {
     const request: ParentRequest = {
       name: this.name,
       gender: this.gender,
-      phone: this.phone.length > 0 ? this.phone : undefined
+      phone: this.phone.length > 0 ? this.phone : undefined,
+      isParent: this.isParent
     };
     const response = await this._service.CreateAsync(this.id, request);
     this.message = response.message;
