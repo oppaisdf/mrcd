@@ -15,7 +15,21 @@ services:
     environment:
       - DOMAIN=${DOMAIN}
     profiles:
-      - builder
+      - prod
+
+  sys:
+    build: ./sys
+    container_name: sys
+    ports:
+      - 8082:4300
+    networks:
+      - network
+    depends_on:
+      - api-dev
+    volumes:
+      - ./sys:/app
+    profiles:
+      - dev
 
   api:
     build:
@@ -26,44 +40,36 @@ services:
       - 8080
     networks:
       - network
+    depends_on:
+      - db
     env_file:
       - .env
     environment:
       - DEFAULT_CONNECTION=${SERVER}
       - ENCRYPT_KEY=${EKEY}
     profiles:
-      - builder
+      - prod
 
-  server_prod:
-    container_name: server
-    image: kradbyte/mrcd:server
+  api-dev:
+    build: ./api
+    container_name: api
     ports:
-      - 80:80
+      - 8080:8080
     networks:
       - network
     depends_on:
-      - api_prod
-    env_file:
-      - .env
-    environment:
-      - DOMAIN=${DOMAIN}
-    profiles:
-      - production
-
-  api_prod:
-    container_name: api
-    image: kradbyte/mrcd:api
-    expose:
-      - 8080
-    networks:
-      - network
+      - db
     env_file:
       - .env
     environment:
       - DEFAULT_CONNECTION=${SERVER}
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ENCRYPT_KEY=${EKEY}
+    volumes:
+      - ./api:/app
     profiles:
-      - production
+      - api
+      - dev
 
   db:
     build: ./db
@@ -78,8 +84,9 @@ services:
       - MYSQL_DATABASE=${DB}
       - MYSQL_ROOT_PASSWORD=${PASSWD}
     profiles:
-      - builder
-      - production
+      - prod
+      - dev
+      - api
 
 networks:
   network:
