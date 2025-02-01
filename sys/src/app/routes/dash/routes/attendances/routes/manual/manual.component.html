@@ -1,0 +1,59 @@
+<div class="buttons are-medium">
+    <a class="button is-primary" routerLink="/attendance">Regresar</a>
+</div>
+
+<shared-pan-expand title="Filtros">
+    <div class="buttons are-medium">
+        <button class="button" (click)="ClearFilters()">Limpiar filtros</button>
+    </div>
+
+    <div class="columns is-multiline">
+        <div class="column is-half">
+            <shared-field [inBox]="false" field="Nombre" [loading]="loading">
+                <input type="text" class="input" [disabled]="loading" [(ngModel)]="name" (ngModelChange)="Filter()">
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field [inBox]="false" field="Día" [loading]="loading">
+                <div class="select">
+                    <select [(ngModel)]="day" [disabled]="loading" (ngModelChange)="Filter()">
+                        <option value="1">Todos</option>
+                        <option value="2">Domingo</option>
+                        <option value="3">Sábado</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field [inBox]="false" field="Género" [loading]="loading">
+                <div class="select">
+                    <select [(ngModel)]="gender" [disabled]="loading" (ngModelChange)="Filter()">
+                        <option value="1">Todos</option>
+                        <option value="2">Masculino</option>
+                        <option value="3">Femenino</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+    </div>
+</shared-pan-expand>
+<hr>
+<div class="table-container">
+    <table class="table is-hoverable is-striped is-fullwidth">
+        <thead>
+            <th>Nombre</th>
+            <th>Acción</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let qr of qrs">
+                <td>{{qr.name}}</td>
+                <td>
+                    <button class="button is-primary" [disabled]="loading" [class.is-loading]="loading"
+                        (click)="AssistanceAsync(qr.hash)">Registrar asistencia</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

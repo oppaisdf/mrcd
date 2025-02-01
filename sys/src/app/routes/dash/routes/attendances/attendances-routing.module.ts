@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ScanComponent } from './routes/scan/scan.component';
 import { AllComponent } from './routes/all/all.component';
+import { ManualComponent } from './routes/manual/manual.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'all', pathMatch: 'full' },
-  { path: 'all', component: AllComponent },
-  { path: 'scan', component: ScanComponent },
-  { path: '**', redirectTo: 'all' }
+  { path: '', component: AllComponent, pathMatch: 'full' },
+  { path: 'manual', component: ManualComponent },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

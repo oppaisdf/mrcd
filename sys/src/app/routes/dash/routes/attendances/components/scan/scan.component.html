@@ -1,0 +1,8 @@
+<div class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <zxing-scanner [autostart]="true" [autofocusEnabled]="true" [formats]="formats"
+            (scanSuccess)="Scan($event)"></zxing-scanner>
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="CloseModal()"></button>
+</div>

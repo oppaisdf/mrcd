@@ -1,30 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { PrinterService } from '../../services/printer.service';
-import { QRResponse } from '../../responses/qr';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AttendanceService } from '../../services/attendance.service';
+import { QRResponse } from '../../../prints/responses/qr';
 
 @Component({
-  selector: 'prints-badge',
+  selector: 'attendance-manual',
   standalone: false,
-  templateUrl: './badge.component.html',
-  styleUrl: './badge.component.sass'
+  templateUrl: './manual.component.html',
+  styleUrl: './manual.component.sass'
 })
-export class BadgeComponent implements OnInit {
+export class ManualComponent implements OnInit {
   constructor(
-    private _service: PrinterService
+    private _service: AttendanceService
   ) { }
 
+  loading = false;
+  message = '';
+  success = true;
+  qrs: QRResponse[] = [];
+  _qrs: QRResponse[] = [];
   name = '';
   day = '1';
   gender = '1';
-  isVertical = true;
-  columns = '2';
-
-  qrs: QRResponse[] = [];
-  private _qrs: QRResponse[] = [];
 
   async ngOnInit() {
+    if (this.loading) return;
+    this.loading = true;
     const response = await this._service.GetQRsAsync();
-    if (!response.success) return;
+    this.message = response.message;
+    this.success = response.success;
+    this.loading = false;
+    if (!this.success) return;
     this.qrs = response.data!;
     this._qrs = response.data!;
   }
@@ -71,7 +76,14 @@ export class BadgeComponent implements OnInit {
     this.qrs = this._qrs;
   }
 
-  ChangeOrientation() {
-    this.isVertical = `${this.isVertical}` === 'true';
+  async AssistanceAsync(
+    qr: string
+  ) {
+    if (this.loading) return;
+    this.loading = true;
+    const response = await this._service.ScanAsync(qr);
+    this.message = response.message;
+    this.success = response.success;
+    this.loading = false;
   }
 }

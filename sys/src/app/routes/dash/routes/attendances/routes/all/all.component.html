@@ -1,3 +1,22 @@
+<shared-alert [(message)]="message" [success]="success" />
+
 <div class="buttons are-medium">
-    <a class="button is-primary" routerLink="/attendance/scan">Scanear</a>
+    <button class="button is-primary" [disabled]="loading" [class.is-loading]="loading"
+        (click)="SelectTypeAttendance(2)">Escanear</button>
+    <a class="button is-info" [class.is-loading]="loading" routerLink="/attendance/manual">Manual</a>
+    <button class="button is-warning" [disabled]="loading" [class.is-loading]="loading"
+        (click)="CheckAllAsync()">Asistencia a todo el día</button>
+    <button class="button is-danger" [disabled]="loading" [class.is-loading]="loading"
+        (click)="SelectTypeAttendance(3)">Remover última asistencia</button>
 </div>
+
+@switch (typeAttendance) {
+@case (2) {
+<attendances-comp-scan [(loading)]="loading" [(message)]="message" [(success)]="success"
+    [(typeAttendance)]="typeAttendance" />
+}
+@case (3) {
+<attendances-comp-scan [(loading)]="loading" [(message)]="message" [(success)]="success"
+    [(typeAttendance)]="typeAttendance" [isAttendance]="false" />
+}
+}
