@@ -55,6 +55,45 @@ public class AttendanceController(
 
     [HttpPost("{hash}")]
     public async Task<IActionResult> CheckAsync(
+        string hash,
+        bool isAttendance = true,
+        DateTime? date = null
+    )
+    {
+        if (string.IsNullOrWhiteSpace(hash))
+            return this.DefaultBadRequest("El hash es requerido");
+        hash = hash.Trim();
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.CheckAsync(userId, hash, isAttendance, date);
+            return this.DefaultOk(new { }, "Se ha registrado la asistencia");
+        }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
+        catch (BadRequestException e)
+        { return this.DefaultConflict(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al registar asistencia a {hash}: {e.Message}"); }
+    }
+
+    [HttpPost("All")]
+    public async Task<IActionResult> CheckAllAsync(
+        bool day = true
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.CheckAllAsync(userId, day);
+            return this.DefaultOk(new { }, "Se han registrado las asistencias correctamente");
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al registar asistencias al día {day}: {e.Message}"); }
+    }
+
+    [HttpDelete("{hash}")]
+    public async Task<IActionResult> UncheckAsync(
         string hash
     )
     {
@@ -64,33 +103,15 @@ public class AttendanceController(
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.CheckAsync(userId, hash);
-            return this.DefaultOk(new { }, "Se ha registrado la asistencia");
+            await _service.UnverifyAsync(userId, hash);
+            return this.DefaultOk(new { }, "Se ha removido la última asistencia");
         }
         catch (DoesNotExistsException e)
         { return this.DefaultNotFound(e.Message); }
         catch (BadRequestException e)
         { return this.DefaultConflict(e.Message); }
-        //catch (Exception e)
-        //{ return this.DefaultServerError($"[+] Error al registar asistencia a {hash}: {e.Message}"); }
-    }
-
-    [Authorize(Roles = "adm")]
-    [HttpDelete("{attendanceId}")]
-    public async Task<IActionResult> Delete(
-        int attendanceId
-    )
-    {
-        try
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.RemoveCheckAsync(userId, attendanceId);
-            return this.DefaultOk(new { }, "Se ha eliminado la asistecia correctamente");
-        }
-        catch (DoesNotExistsException e)
-        { return this.DefaultNotFound(e.Message); }
         catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al eliminar asistenncia {attendanceId}: {e.Message}"); }
+        { return this.DefaultServerError($"[+] Error al registar asistencia a {hash}: {e.Message}"); }
     }
 
     [Authorize(Roles = "adm")]
