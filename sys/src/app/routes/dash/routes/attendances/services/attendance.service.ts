@@ -24,7 +24,9 @@ export class AttendanceService {
     return await this._api.Get<QRResponse[]>('Attendance/QR');
   }
 
-  public async CheckAllAsync() {
-    return await this._api.Post('Attendance/All', undefined);
+  public async CheckAllAsync(
+    day: boolean
+  ) {
+    return await this._api.Post(`Attendance/All?day=${day}`, undefined);
   }
 }

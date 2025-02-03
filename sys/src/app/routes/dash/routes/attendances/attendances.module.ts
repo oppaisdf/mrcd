@@ -9,12 +9,14 @@ import { AllComponent } from './routes/all/all.component';
 import { FormsModule } from '@angular/forms';
 import { ScanComponent } from './components/scan/scan.component';
 import { ManualComponent } from './routes/manual/manual.component';
+import { ScanAllComponent } from './components/scan-all/scan-all.component';
 
 @NgModule({
   declarations: [
     ScanComponent,
     AllComponent,
-    ManualComponent
+    ManualComponent,
+    ScanAllComponent
   ], imports: [
     CommonModule,
     AttendancesRoutingModule,
