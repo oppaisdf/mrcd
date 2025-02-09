@@ -39,29 +39,11 @@ export class BadgeComponent implements OnInit {
       return;
     }
 
-    this.qrs = this._qrs.reduce((lst, q) => {
-      switch (true) {
-        case (day === undefined && gender === undefined):
-          if (q.name.includes(name)) lst.push(q);
-          break;
-        case (day === undefined && name === ''):
-          if (q.gender === gender) lst.push(q);
-          break;
-        case (gender === undefined && name === ''):
-          if (q.day === day) lst.push(q);
-          break;
-        case (day === undefined && gender !== undefined && name !== ''):
-          if (q.gender === gender && q.name.includes(name)) lst.push(q);
-          break;
-        case (gender === undefined && day !== undefined && name !== ''):
-          if (q.day === day && q.name.includes(name)) lst.push(q);
-          break;
-        case (name === '' && gender !== undefined && day !== undefined):
-          if (q.gender === gender && q.day === day) lst.push(q);
-          break;
-      }
-      return lst;
-    }, [] as QRResponse[]);
+    this.qrs = this._qrs.filter(q =>
+      (name === '' || q.name.includes(name)) &&
+      (day === undefined || q.day === day) &&
+      (gender === undefined || q.gender === gender)
+    );
   }
 
   ClearFilters() {

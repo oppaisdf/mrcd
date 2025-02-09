@@ -165,9 +165,9 @@ public class AttendanceService(
         await _logs.RegisterReadingAsync(userId, "Listado general");
         return await _context.People
             .Where(p => p.IsActive)
-            .OrderBy(p => p.Name)
             .Select(p => new GeneralListResponse
             {
+                Id = p.Id!.Value,
                 Name = p.Name,
                 Gender = p.Gender,
                 Day = p.Day,

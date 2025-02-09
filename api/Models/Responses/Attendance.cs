@@ -18,6 +18,7 @@ public class QRResponse
 
 public class GeneralListResponse
 {
+    public required int Id { get; set; }
     public required string Name { get; set; }
     public required bool Gender { get; set; }
     public required bool Day { get; set; }

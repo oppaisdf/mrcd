@@ -1,4 +1,5 @@
 export interface ListGeneralResponse {
+    id: number;
     name: string;
     gender: boolean;
     day: boolean;

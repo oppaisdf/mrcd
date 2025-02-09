@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PrinterService } from '../../services/printer.service';
 import { GeneralParentListResponse, ListGeneralResponse } from '../../responses/list';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'prints-list',
@@ -9,16 +11,23 @@ import { GeneralParentListResponse, ListGeneralResponse } from '../../responses/
   templateUrl: './list.component.html',
   styleUrl: './list.component.sass'
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
   constructor(
-    private _service: PrinterService
-  ) { }
+    private _service: PrinterService,
+    private _form: FormBuilder
+  ) {
+    this.form = this._form.group({
+      name: [''],
+      gender: [],
+      day: [],
+      orderBy: [true]
+    });
+  }
 
   private _people: ListGeneralResponse[] = [];
+  private _subscriptions = new Subscription();
+  form: FormGroup;
   people: ListGeneralResponse[] = [];
-  name = '';
-  gender = '1';
-  day = '1';
   isVertical = true;
   showPhones = false;
 
@@ -33,50 +42,52 @@ export class ListComponent implements OnInit {
     const response = await this._service.GetGeneralList();
     if (!response.success) return;
     this._people = response.data!;
-    this._people.sort((a, b) => a.name.localeCompare(b.name));
-    this.people = response.data!;
+    this.people = this._people;
+    this.OrderBy(true);
+    this._subscriptions.add(
+      this.form.valueChanges.subscribe(() => {
+        this.Filter();
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this._subscriptions.unsubscribe();
   }
 
   ClearFilters() {
+    this.form.reset();
+    this.form.patchValue({
+      orderBy: 'true'
+    });
     this.people = this._people;
-    this.name = '';
-    this.day = '1';
-    this.gender = '1';
   }
 
   Filter() {
-    const name = this.name;
-    const day = this.day === '1' ? undefined : this.day === '2';
-    const gender = this.gender === '1' ? undefined : this.gender === '2';
-
-    if (name === '' && day === undefined && gender === undefined) {
-      this.ClearFilters();
-      return;
-    }
-
-    this.people = this._people.reduce((lst, q) => {
-      switch (true) {
-        case (day === undefined && gender === undefined):
-          if (q.name.includes(name)) lst.push(q);
-          break;
-        case (day === undefined && name === ''):
-          if (q.gender === gender) lst.push(q);
-          break;
-        case (gender === undefined && name === ''):
-          if (q.day === day) lst.push(q);
-          break;
-        case (day === undefined && gender !== undefined && name !== ''):
-          if (q.gender === gender && q.name.includes(name)) lst.push(q);
-          break;
-        case (gender === undefined && day !== undefined && name !== ''):
-          if (q.day === day && q.name.includes(name)) lst.push(q);
-          break;
-        case (name === '' && gender !== undefined && day !== undefined):
-          if (q.gender === gender && q.day === day) lst.push(q);
-          break;
+    const name = this.GetValue('name');
+    const day = (() => {
+      switch (this.GetValue('day')) {
+        case 'true': return true;
+        case 'false': return false;
+        default: return undefined;
       }
-      return lst;
-    }, [] as ListGeneralResponse[]);
+    })();
+
+    const gender = (() => {
+      switch (this.GetValue('gender')) {
+        case 'true': return true;
+        case 'false': return false;
+        default: return undefined;
+      }
+    })();
+
+    this.people = this._people.filter(q =>
+      (name === '' || q.name.includes(name)) &&
+      (day === undefined || q.day === day) &&
+      (gender === undefined || q.gender === gender) ||
+      this.GetValue('orderBy')
+    );
+    this.OrderBy(this.GetValue('orderBy') === 'true');
   }
 
   OnChangeShowPhones() {
@@ -101,5 +112,18 @@ export class ListComponent implements OnInit {
   ) {
     if (!phone) return '';
     return `${phone.substring(0, 4)}-${phone.substring(4, 8)}`;
+  }
+
+  private GetValue(
+    control: string
+  ) {
+    return `${this.form.controls[control].value}`;
+  }
+
+  private OrderBy(
+    isAlpha: boolean
+  ) {
+    if (isAlpha) this.people.sort((a, b) => a.name.localeCompare(b.name));
+    else this.people.sort((a, b) => a.id - b.id);
   }
 }
