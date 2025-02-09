@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PrinterService } from '../../services/printer.service';
 import { QRResponse } from '../../responses/qr';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'prints-badge',
@@ -8,16 +10,27 @@ import { QRResponse } from '../../responses/qr';
   templateUrl: './badge.component.html',
   styleUrl: './badge.component.sass'
 })
-export class BadgeComponent implements OnInit {
+export class BadgeComponent implements OnInit, OnDestroy {
   constructor(
-    private _service: PrinterService
-  ) { }
+    private _service: PrinterService,
+    private _form: FormBuilder
+  ) {
+    this.filters = this._form.group({
+      name: [''],
+      day: [],
+      gender: []
+    });
+    this.page = this._form.group({
+      columns: ['2'],
+      isVertical: ['true'],
+      size: ['3'],
+      sqr: ['2']
+    });
+  }
 
-  name = '';
-  day = '1';
-  gender = '1';
-  isVertical = true;
-  columns = '2';
+  private _subscriptions = new Subscription();
+  filters: FormGroup;
+  page: FormGroup;
 
   qrs: QRResponse[] = [];
   private _qrs: QRResponse[] = [];
@@ -27,17 +40,35 @@ export class BadgeComponent implements OnInit {
     if (!response.success) return;
     this.qrs = response.data!;
     this._qrs = response.data!;
+
+    this._subscriptions.add(
+      this.filters.valueChanges.subscribe(() => {
+        this.Filter();
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this._subscriptions.unsubscribe();
   }
 
   Filter() {
-    const name = this.name;
-    const day = this.day === '1' ? undefined : this.day === '2';
-    const gender = this.gender === '1' ? undefined : this.gender === '2';
+    const name = this.GetValue(true, 'name');
+    const day = (() => {
+      switch (this.GetValue(true, 'day')) {
+        case 'true': return true;
+        case 'false': return false;
+        default: return undefined;
+      }
+    })();
 
-    if (name === '' && day === undefined && gender === undefined) {
-      this.ClearFilters();
-      return;
-    }
+    const gender = (() => {
+      switch (this.GetValue(true, 'gender')) {
+        case 'true': return true;
+        case 'false': return false;
+        default: return undefined;
+      }
+    })();
 
     this.qrs = this._qrs.filter(q =>
       (name === '' || q.name.includes(name)) &&
@@ -47,13 +78,15 @@ export class BadgeComponent implements OnInit {
   }
 
   ClearFilters() {
-    this.name = '';
-    this.gender = '1';
-    this.day = '1';
+    this.filters.reset();
     this.qrs = this._qrs;
   }
 
-  ChangeOrientation() {
-    this.isVertical = `${this.isVertical}` === 'true';
+  GetValue(
+    isFilter: boolean,
+    control: string
+  ) {
+    if (isFilter) return `${this.filters.controls[control].value}`;
+    else return `${this.page.controls[control].value}`;
   }
 }
