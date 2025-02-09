@@ -114,7 +114,7 @@ public class ParentService(
         });
 
         await _context.SaveChangesAsync();
-        await _logs.RegisterCreationAsync($"Person/Parent {personId}/{parent.Id}");
+        await _logs.RegisterCreationAsync(userId, $"Person/Parent {personId}/{parent.Id}");
         return parent.Id!.Value;
     }
     #endregion
@@ -123,10 +123,7 @@ public class ParentService(
         string userId,
         int personId,
         ParentRequest request
-    )
-    {
-        await PFindOrCeateAndAssignAsync(userId, request, personId);
-    }
+    ) => await PFindOrCeateAndAssignAsync(userId, request, personId);
 
     public async Task<int> GetFindOrCreateAndAssignAsync(
         string userId,
@@ -220,7 +217,7 @@ public class ParentService(
         ParentFilter filter
     )
     {
-        await _logs.RegisterReadingAsync("Todos los Parents");
+        await _logs.RegisterReadingAsync(userId, "Todos los Parents");
         var query =
             from p in _context.Parents
             join temp in _context.ParentsPeople on p.Id equals temp.ParentId into tempG
