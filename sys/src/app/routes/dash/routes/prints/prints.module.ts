@@ -9,12 +9,14 @@ import { ListComponent } from './routes/list/list.component';
 import { PrinterComponent } from './components/printer/printer.component'
 import { SharedModule } from "../../../../shared/shared.module";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AttendanceComponent } from './routes/attendance/attendance.component';
 
 @NgModule({
   declarations: [
     BadgeComponent,
     ListComponent,
-    PrinterComponent
+    PrinterComponent,
+    AttendanceComponent
   ],
   imports: [
     CommonModule,

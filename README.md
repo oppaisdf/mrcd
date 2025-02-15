@@ -6,5 +6,3 @@
 Fórmula para calcular bytes de varbinary:
 
 > [string-length/16] * 16 + 16
-
-- Listado general de asistencias

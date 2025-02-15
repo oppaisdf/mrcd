@@ -84,8 +84,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.people = this._people.filter(q =>
       (name === '' || q.name.includes(name)) &&
       (day === undefined || q.day === day) &&
-      (gender === undefined || q.gender === gender) ||
-      this.GetValue('orderBy')
+      (gender === undefined || q.gender === gender)
     );
     this.OrderBy(this.GetValue('orderBy') === 'true');
   }
@@ -117,7 +116,7 @@ export class ListComponent implements OnInit, OnDestroy {
   private GetValue(
     control: string
   ) {
-    return `${this.form.controls[control].value}`;
+    return `${this.form.controls[control].value}`.replaceAll('<empty string>', '').replaceAll('null', '');
   }
 
   private OrderBy(

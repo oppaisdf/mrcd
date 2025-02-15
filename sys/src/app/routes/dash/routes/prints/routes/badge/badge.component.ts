@@ -86,7 +86,7 @@ export class BadgeComponent implements OnInit, OnDestroy {
     isFilter: boolean,
     control: string
   ) {
-    if (isFilter) return `${this.filters.controls[control].value}`;
+    if (isFilter) return `${this.filters.controls[control].value}`.replaceAll('<empty string>', '').replaceAll('null', '');
     else return `${this.page.controls[control].value}`;
   }
 }

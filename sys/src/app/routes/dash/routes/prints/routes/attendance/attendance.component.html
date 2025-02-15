@@ -1,0 +1,77 @@
+<shared-pan-expand title="Filtros">
+    <div class="buttons are-medium">
+        <button class="button is-primary" (click)="ClearFilters()">Limpiar filtros</button>
+    </div>
+
+    <form [formGroup]="filters" class="columns is-multiline">
+        <div class="column is-half">
+            <shared-field field="Día" [inBox]="false">
+                <div class="select">
+                    <select formControlName="day">
+                        <option value="true">Domingo</option>
+                        <option value="false">Sábado</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field field="Género" [inBox]="false">
+                <div class="select">
+                    <select formControlName="gender">
+                        <option value="true">Masculino</option>
+                        <option value="false">Femenino</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field field="Nombre" [inBox]="false">
+                <input type="text" class="input" formControlName="name">
+            </shared-field>
+        </div>
+    </form>
+</shared-pan-expand>
+
+<hr>
+
+<shared-pan-expand title="Página">
+    <form [formGroup]="form" class="columns is-multiline">
+        <div class="column is-half">
+            <shared-field field="Orientación" [inBox]="false">
+                <div class="select">
+                    <select formControlName="isVertical">
+                        <option value="true">Vertical</option>
+                        <option value="false">Horizontal</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+    </form>
+</shared-pan-expand>
+
+<hr>
+
+<prints-printer [isVertical]="GetValue('isVertical', true) === 'true'" fileName="Gafetes">
+    <table class="table is-fullwidth has-background-white">
+        <thead>
+            <th class="has-text-black">Nombre</th>
+            <th class="has-text-black has-text-centered" *ngFor="let head of headers">{{head}}</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let person of attendances">
+                <td class="has-text-black">{{person.name}}</td>
+                <td class="has-text-black has-text-centered"
+                    [ngClass]="{'is-success': date.hasAttendance === true, 'is-warning': date.hasAttendance === false, 'is-danger': date.hasAttendance == null}"
+                    *ngFor="let date of person.dates">
+                    @switch (date.hasAttendance) {
+                    @case (true) {I}
+                    @case (false) {O}
+                    @default {X}
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</prints-printer>
