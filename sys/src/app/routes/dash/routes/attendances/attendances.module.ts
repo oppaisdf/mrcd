@@ -6,7 +6,7 @@ import { AttendanceService } from './services/attendance.service';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { SharedModule } from '../../../../shared/shared.module';
 import { AllComponent } from './routes/all/all.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ScanComponent } from './components/scan/scan.component';
 import { ManualComponent } from './routes/manual/manual.component';
 import { ScanAllComponent } from './components/scan-all/scan-all.component';
@@ -22,7 +22,8 @@ import { ScanAllComponent } from './components/scan-all/scan-all.component';
     AttendancesRoutingModule,
     SharedModule,
     ZXingScannerModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ], providers: [
     AttendanceService
   ]

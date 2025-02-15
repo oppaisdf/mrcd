@@ -11,5 +11,4 @@ Fórmula para calcular bytes de varbinary:
 
 - Alertas
 - Documentos
-- Registrar permiso (page)
 - Documentación

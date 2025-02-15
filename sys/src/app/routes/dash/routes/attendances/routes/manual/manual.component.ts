@@ -1,6 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AttendanceService } from '../../services/attendance.service';
 import { QRResponse } from '../../../prints/responses/qr';
+import { AttendanceRequest } from '../../models/attendance';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'attendance-manual',
@@ -8,19 +11,30 @@ import { QRResponse } from '../../../prints/responses/qr';
   templateUrl: './manual.component.html',
   styleUrl: './manual.component.sass'
 })
-export class ManualComponent implements OnInit {
+export class ManualComponent implements OnInit, OnDestroy {
   constructor(
-    private _service: AttendanceService
-  ) { }
+    private _service: AttendanceService,
+    private _form: FormBuilder
+  ) {
+    this.filters = this._form.group({
+      name: [''],
+      day: [],
+      gender: []
+    });
+    this.form = this._form.group({
+      isAttendance: [true],
+      date: ['']
+    });
+  }
 
   loading = false;
   message = '';
   success = true;
   qrs: QRResponse[] = [];
   _qrs: QRResponse[] = [];
-  name = '';
-  day = '1';
-  gender = '1';
+  filters: FormGroup;
+  form: FormGroup;
+  private _subscriptions = new Subscription();
 
   async ngOnInit() {
     if (this.loading) return;
@@ -32,58 +46,70 @@ export class ManualComponent implements OnInit {
     if (!this.success) return;
     this.qrs = response.data!;
     this._qrs = response.data!;
+    this._subscriptions.add(
+      this.filters.valueChanges.subscribe(() => { this.Filter() })
+    );
   }
 
-  Filter() {
-    const name = this.name;
-    const day = this.day === '1' ? undefined : this.day === '2';
-    const gender = this.gender === '1' ? undefined : this.gender === '2';
+  ngOnDestroy() {
+    this._subscriptions.unsubscribe();
+  }
 
-    if (name === '' && day === undefined && gender === undefined) {
-      this.ClearFilters();
-      return;
-    }
-
-    this.qrs = this._qrs.reduce((lst, q) => {
-      switch (true) {
-        case (day === undefined && gender === undefined):
-          if (q.name.includes(name)) lst.push(q);
-          break;
-        case (day === undefined && name === ''):
-          if (q.gender === gender) lst.push(q);
-          break;
-        case (gender === undefined && name === ''):
-          if (q.day === day) lst.push(q);
-          break;
-        case (day === undefined && gender !== undefined && name !== ''):
-          if (q.gender === gender && q.name.includes(name)) lst.push(q);
-          break;
-        case (gender === undefined && day !== undefined && name !== ''):
-          if (q.day === day && q.name.includes(name)) lst.push(q);
-          break;
-        case (name === '' && gender !== undefined && day !== undefined):
-          if (q.gender === gender && q.day === day) lst.push(q);
-          break;
+  private Filter() {
+    const name = this.GetValue('name');
+    const day = (() => {
+      switch (this.GetValue('day')) {
+        case 'true': return true;
+        case 'false': return false;
+        default: return undefined;
       }
-      return lst;
-    }, [] as QRResponse[]);
+    })();
+    const gender = (() => {
+      switch (this.GetValue('gender')) {
+        case 'true': return true;
+        case 'false': return false;
+        default: return undefined;
+      }
+    })();
+
+    this.qrs = this._qrs.filter(q =>
+    (
+      (name === '' || q.name.includes(name)) &&
+      (day === undefined || q.day === day) &&
+      (gender === undefined || q.gender === gender)
+    ));
   }
 
   ClearFilters() {
-    this.name = '';
-    this.gender = '1';
-    this.day = '1';
+    this.filters.reset();
     this.qrs = this._qrs;
   }
 
   async AssistanceAsync(
-    qr: string
+    qr: string,
+    isAttendance: boolean
   ) {
     if (this.loading) return;
     this.loading = true;
-    const response = await this._service.ScanAsync(qr);
+
+    const request: AttendanceRequest = {
+      hash: qr,
+      isAttendance: this.GetValue('isAttendance', true) === 'true',
+      date: this.GetValue('date', true) !== '' ? this.GetValue('date', true) + 'T00:00:00' : undefined
+    };
+    const response = isAttendance ?
+      await this._service.ScanAsync(request) :
+      await this._service.UnassignAsync(qr);
     this.message = response.message;
     this.success = response.success;
     this.loading = false;
+  }
+
+  GetValue(
+    control: string,
+    isForm: boolean = false
+  ) {
+    if (!isForm) return `${this.filters.controls[control].value}`.replaceAll('<empty string>', '').replaceAll('null', '');
+    else return `${this.form.controls[control].value}`.replaceAll('<empty string>', '').replaceAll('null', '');
   }
 }

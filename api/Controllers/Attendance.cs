@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using api.Common;
+using api.Models.Requests;
 using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,20 +42,27 @@ public class AttendanceController(
         { return this.DefaultServerError($"[+] Error al obtener listado general: {e.Message}"); }
     }
 
-    [HttpPost("{hash}")]
+    [HttpPost]
     public async Task<IActionResult> CheckAsync(
-        string hash,
-        bool isAttendance = true,
-        DateTime? date = null
+        [FromBody] AttendanceRequest request
     )
     {
-        if (string.IsNullOrWhiteSpace(hash))
+        if (string.IsNullOrWhiteSpace(request.Hash))
             return this.DefaultBadRequest("El hash es requerido");
-        hash = hash.Trim();
+        if (request.Date != null)
+        {
+            TimeSpan diff = DateTime.UtcNow.AddHours(-6) - request.Date!.Value;
+            if (diff.Days > 15 || diff.Days < 10) return this.DefaultBadRequest("La fecha no puede exceder los 15 días ni puede registrarse 10 días atrás a la fecha actual (hoy)");
+        }
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.CheckAsync(userId, hash, isAttendance, date);
+            var _request = request with
+            {
+                Hash = request.Hash,
+                IsAttendance = request.IsAttendance == null ? true : request.IsAttendance
+            };
+            await _service.CheckAsync(userId, _request);
             return this.DefaultOk(new { }, "Se ha registrado la asistencia");
         }
         catch (DoesNotExistsException e)
@@ -62,7 +70,7 @@ public class AttendanceController(
         catch (BadRequestException e)
         { return this.DefaultConflict(e.Message); }
         catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al registar asistencia a {hash}: {e.Message}"); }
+        { return this.DefaultServerError($"[+] Error al registar asistencia a {request.Hash}: {e.Message}"); }
     }
 
     [HttpPost("All")]

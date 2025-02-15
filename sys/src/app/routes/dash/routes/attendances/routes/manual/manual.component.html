@@ -7,20 +7,19 @@
         <button class="button" (click)="ClearFilters()">Limpiar filtros</button>
     </div>
 
-    <div class="columns is-multiline">
+    <form [formGroup]="filters" class="columns is-multiline">
         <div class="column is-half">
             <shared-field [inBox]="false" field="Nombre" [loading]="loading">
-                <input type="text" class="input" [disabled]="loading" [(ngModel)]="name" (ngModelChange)="Filter()">
+                <input type="text" class="input" formControlName="name">
             </shared-field>
         </div>
 
         <div class="column is-half">
             <shared-field [inBox]="false" field="Día" [loading]="loading">
                 <div class="select">
-                    <select [(ngModel)]="day" [disabled]="loading" (ngModelChange)="Filter()">
-                        <option value="1">Todos</option>
-                        <option value="2">Domingo</option>
-                        <option value="3">Sábado</option>
+                    <select formControlName="day">
+                        <option value="true">Domingo</option>
+                        <option value="false">Sábado</option>
                     </select>
                 </div>
             </shared-field>
@@ -29,18 +28,36 @@
         <div class="column is-half">
             <shared-field [inBox]="false" field="Género" [loading]="loading">
                 <div class="select">
-                    <select [(ngModel)]="gender" [disabled]="loading" (ngModelChange)="Filter()">
-                        <option value="1">Todos</option>
-                        <option value="2">Masculino</option>
-                        <option value="3">Femenino</option>
+                    <select formControlName="gender">
+                        <option value="true">Masculino</option>
+                        <option value="false">Femenino</option>
                     </select>
                 </div>
             </shared-field>
         </div>
-    </div>
+    </form>
 </shared-pan-expand>
 
 <hr>
+
+<form [formGroup]="form" class="columns is-multiline">
+    <div class="column is-half">
+        <shared-field field="Tipo de asistencia">
+            <div class="select">
+                <select formControlName="isAttendance">
+                    <option value="true">Asistencia</option>
+                    <option value="false">Permiso de inasistencia</option>
+                </select>
+            </div>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field field="Fecha de asistencia">
+            <input type="date" class="input" formControlName="date">
+        </shared-field>
+    </div>
+</form>
 
 <shared-alert [(message)]="message" [success]="success" />
 
@@ -48,14 +65,22 @@
     <table class="table is-hoverable is-striped is-fullwidth">
         <thead>
             <th>Nombre</th>
-            <th>Acción</th>
+            <th>Acciones</th>
         </thead>
         <tbody>
             <tr *ngFor="let qr of qrs">
                 <td>{{qr.name}}</td>
                 <td>
-                    <button class="button is-primary" [disabled]="loading" [class.is-loading]="loading"
-                        (click)="AssistanceAsync(qr.hash)">Registrar asistencia</button>
+                    <div class="buttons">
+                        <button class="button"
+                            [ngClass]="{'is-primary':GetValue('isAttendance', true) === 'true','is-warning':GetValue('isAttendance', true) === 'false'}"
+                            [disabled]="loading" [class.is-loading]="loading" (click)="AssistanceAsync(qr.hash, true)">
+                            @if (GetValue('isAttendance', true) === 'true') {Registrar asistencia}@else {Registrar
+                            permiso}
+                        </button>
+                        <button class="button is-danger" [disabled]="loading" [class.is-loading]="loading"
+                            (click)="AssistanceAsync(qr.hash, false)">Eliminar última asistencia</button>
+                    </div>
                 </td>
             </tr>
         </tbody>

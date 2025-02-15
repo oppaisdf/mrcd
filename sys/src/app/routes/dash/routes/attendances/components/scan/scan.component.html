@@ -1,6 +1,27 @@
 <div class="modal is-active">
     <div class="modal-background"></div>
     <div class="modal-content">
+        @if (isAttendance) {
+        <form [formGroup]="form" class="columns is-multiline">
+            <div class="column is-half">
+                <shared-field field="Tipo de asistencia">
+                    <div class="select">
+                        <select formControlName="isAttendance">
+                            <option value="true">Asistencia</option>
+                            <option value="false">Permiso de inasistencia</option>
+                        </select>
+                    </div>
+                </shared-field>
+            </div>
+
+            <div class="column is-half">
+                <shared-field field="Fecha de asistencia">
+                    <input type="date" class="input" formControlName="date">
+                </shared-field>
+            </div>
+        </form>
+        }
+
         <zxing-scanner [autostart]="true" [autofocusEnabled]="true" [formats]="formats"
             (scanSuccess)="Scan($event)"></zxing-scanner>
     </div>

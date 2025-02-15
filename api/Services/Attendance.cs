@@ -2,6 +2,7 @@ using api.Common;
 using api.Context;
 using api.Models.Entities;
 using api.Models.Repositories;
+using api.Models.Requests;
 using api.Models.Responses;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,7 @@ public interface IAttendanceService
     /// <param name="isAttendance"></param>
     /// <param name="date"></param>
     /// <returns></returns>
-    Task CheckAsync(string userID, string hash, bool isAttendance, DateTime? date = null);
+    Task CheckAsync(string userID, AttendanceRequest request);
 
     /// <summary>
     /// Elimina la última asistencia registrada
@@ -85,13 +86,11 @@ public class AttendanceService(
 
     public async Task CheckAsync(
         string userID,
-        string hash,
-        bool isAttendance,
-        DateTime? date = null
+        AttendanceRequest request
     )
     {
         var person = await _context.People
-            .Where(p => p.Hash == hash)
+            .Where(p => p.Hash == request.Hash)
             .Select(p => new
             {
                 Id = p.Id!.Value,
@@ -103,8 +102,8 @@ public class AttendanceService(
             })
             .FirstOrDefaultAsync() ?? throw new DoesNotExistsException("El confirmado no existe o está inactivo");
 
-        date ??= DateTime.UtcNow.AddHours(-6);
-        var dateS = $"{date!.Value.Year}{date!.Value.Month}{date!.Value.Day}";
+        var date = request.Date ?? DateTime.UtcNow.AddHours(-6);
+        var dateS = $"{date.Year}{date.Month}{date.Day}";
         var checks = person.Dates == null ? 0 : person.Dates.Where(d => $"{d.Date.Year}{d.Date.Month}{d.Date.Day}" == dateS).Count();
 
         if (!person.IsActive) throw new DoesNotExistsException("El confirmado no existe o está inactivo");
@@ -113,8 +112,8 @@ public class AttendanceService(
         {
             UserId = userID,
             PersonId = person.Id,
-            IsAttendance = isAttendance,
-            Date = date!.Value
+            IsAttendance = request.IsAttendance!.Value,
+            Date = date
         });
         await _context.SaveChangesAsync();
     }

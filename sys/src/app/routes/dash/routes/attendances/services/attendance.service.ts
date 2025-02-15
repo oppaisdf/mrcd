@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../../../../services/api.service';
 import { QRResponse } from '../../prints/responses/qr';
+import { AttendanceRequest } from '../models/attendance';
 
 @Injectable()
 export class AttendanceService {
@@ -9,9 +10,9 @@ export class AttendanceService {
   ) { }
 
   public async ScanAsync(
-    qr: string
+    request: AttendanceRequest
   ) {
-    return await this._api.Post(`Attendance/${qr}`, undefined);
+    return await this._api.Post('Attendance', request);
   }
 
   public async UnassignAsync(
