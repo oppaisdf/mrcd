@@ -1,9 +1,8 @@
 using api.Common;
 using api.Context;
 using api.Models.Entities;
-using api.Models.Filters;
+using api.Models.Repositories;
 using api.Models.Responses;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
@@ -36,17 +35,18 @@ public interface IAttendanceService
     /// <param name="userId"></param>
     /// <returns></returns>
     Task CheckAllAsync(string userId, bool day);
+    Task<IEnumerable<AttendanceResponse>> GetAsync(string userId);
 }
 
 public class AttendanceService(
     MerContext context,
     ILogService logs,
-    UserManager<IdentityUser> users
+    IAttendanceRepository repo
 ) : IAttendanceService
 {
     private readonly MerContext _context = context;
     private readonly ILogService _logs = logs;
-    private readonly UserManager<IdentityUser> _users = users;
+    private readonly IAttendanceRepository _repo = repo;
 
     public async Task CheckAllAsync(
         string userId,
@@ -117,6 +117,12 @@ public class AttendanceService(
             Date = date!.Value
         });
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<AttendanceResponse>> GetAsync(string userId)
+    {
+        await _logs.RegisterReadingAsync(userId, "Asistencias");
+        return await _repo.ToListAsync();
     }
 
     public async Task<ICollection<GeneralListResponse>> GetListAsync(

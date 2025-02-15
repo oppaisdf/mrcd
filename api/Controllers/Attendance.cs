@@ -15,6 +15,19 @@ public class AttendanceController(
 {
     private readonly IAttendanceService _service = service;
 
+    [HttpGet]
+    public async Task<IActionResult> GetAsync()
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var attendances = await _service.GetAsync(userId);
+            return this.DefaultOk(attendances);
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"Error al consultar las asistencias: {e.Message}"); }
+    }
+
     [HttpGet("List")]
     public async Task<IActionResult> GetListAync()
     {
