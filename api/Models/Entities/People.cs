@@ -14,7 +14,7 @@ public class Person
     public required string Hash { get; set; }
 
     [Required]
-    [MaxLength(50)]
+    [MaxLength(65)]
     public required string Name { get; set; }
 
     [Required]

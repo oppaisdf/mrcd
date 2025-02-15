@@ -10,7 +10,7 @@
     <div class="column is-half">
         <shared-field [loading]="isAdding" field="Nombre">
             <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
-                formControlName="name" maxdrshlength="50" placeholder="Nombre completo">
+                formControlName="name" maxlength="65" placeholder="Nombre completo">
         </shared-field>
     </div>
 

@@ -20,7 +20,7 @@ export class DetailsComponent implements OnInit {
     private _form: FormBuilder
   ) {
     this.form = this._form.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
+      name: ['', [Validators.required, Validators.maxLength(65)]],
       gender: [true, Validators.required],
       dob: ['', Validators.required],
       day: [true, Validators.required],

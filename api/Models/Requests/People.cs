@@ -5,7 +5,7 @@ namespace api.Models.Requests;
 
 public class PeopleRequest
 {
-    [MaxLength(50, ErrorMessage = "Nombre demasiado largo")]
+    [MaxLength(65, ErrorMessage = "Nombre demasiado largo")]
     public string? Name { get; set; }
 
     [DefaultValue(true)]

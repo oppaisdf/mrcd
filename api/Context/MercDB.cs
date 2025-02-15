@@ -45,7 +45,7 @@ public class MerContext(
             person
                 .Property(p => p.Name)
                 .HasConversion(encrypter!)
-                .HasColumnType("varbinary(128)");
+                .HasColumnType("varbinary(96)");
             person
                 .Property(p => p.Gender)
                 .HasDefaultValue(true);
@@ -55,7 +55,7 @@ public class MerContext(
             person
                 .Property(p => p.Parish)
                 .HasConversion(encrypter)
-                .HasColumnType("varbinary(80)");
+                .HasColumnType("varbinary(48)");
             person
                 .HasOne<Degree>()
                 .WithMany()
@@ -65,7 +65,7 @@ public class MerContext(
             person
                 .Property(p => p.Address)
                 .HasConversion(encrypter!)
-                .HasColumnType("varbinary(224)");
+                .HasColumnType("varbinary(128)");
             person
                 .Property(p => p.IsActive)
                 .HasDefaultValue(true);
@@ -102,7 +102,7 @@ public class MerContext(
             parent
                 .Property(p => p.Name)
                 .HasConversion(encrypter!)
-                .HasColumnType("varbinary(128)");
+                .HasColumnType("varbinary(80)");
             parent
                 .Property(p => p.Phone)
                 .HasConversion(encrypter)
