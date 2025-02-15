@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using api.Common;
 using api.Context;
 using api.Models.Entities;
@@ -28,7 +27,6 @@ public interface IAttendanceService
     /// <param name="hash">El confirmando debe estar activo</param>
     /// <returns></returns>
     Task UnverifyAsync(string userId, string hash);
-    Task<ICollection<AttendanceResponse>> GetAsync(string userId, AttendanceFilter filter);
     Task<ICollection<QRResponse>> GetQRsAsync(string userId);
     Task<ICollection<GeneralListResponse>> GetListAsync(string userId);
 
@@ -119,43 +117,6 @@ public class AttendanceService(
             Date = date!.Value
         });
         await _context.SaveChangesAsync();
-    }
-
-    public async Task<ICollection<AttendanceResponse>> GetAsync(
-        string userId,
-        AttendanceFilter filter
-    )
-    {
-        await _logs.RegisterReadingAsync(userId, "Asistencias");
-        var users = (await _users.Users.ToListAsync()).ToDictionary(u => u.Id, u => u.UserName);
-        var query =
-            from a in _context.Attendance
-            join p in _context.People on a.PersonId equals p.Id
-            orderby a.Date descending
-            select new
-            {
-                Id = a.Id!.Value,
-                User = users[a.UserId]!,
-                a.UserId,
-                Person = p.Name,
-                a.PersonId,
-                a.Date
-            };
-
-        if (!string.IsNullOrWhiteSpace(filter.UserId)) query = query.Where(a => a.UserId == filter.UserId);
-        if (filter.PersonId != null) query = query.Where(a => a.PersonId == filter.PersonId);
-
-        return await query
-            .Skip((filter.Page - 1) * 15)
-            .Take(15)
-            .Select(a => new AttendanceResponse
-            {
-                Id = a.Id,
-                User = a.User,
-                Person = a.Person,
-                Date = a.Date
-            })
-            .ToListAsync();
     }
 
     public async Task<ICollection<GeneralListResponse>> GetListAsync(
