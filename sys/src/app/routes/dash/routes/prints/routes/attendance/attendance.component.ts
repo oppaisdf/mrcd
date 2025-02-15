@@ -35,8 +35,9 @@ export class AttendanceComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     const response = await this._service.GetAsync();
     if (!response.success) return;
-    this.attendances = response.data!;
     this._attendances = response.data!;
+    this._attendances.sort((a, b) => a.name.localeCompare(b.name));
+    this.attendances = this._attendances;
     this._subscriptions.add(
       this.filters.valueChanges.subscribe(() => this.Filter())
     );
