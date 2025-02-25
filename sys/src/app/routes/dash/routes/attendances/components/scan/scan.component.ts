@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { BarcodeFormat } from '@zxing/browser';
 import { AttendanceService } from '../../services/attendance.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AttendanceRequest } from '../../models/attendance';
+import { ZXingScannerComponent } from '@zxing/ngx-scanner';
 
 @Component({
   selector: 'attendances-comp-scan',
@@ -17,7 +18,8 @@ export class ScanComponent {
   ) {
     this.form = this._form.group({
       isAttendance: [true],
-      date: ['']
+      date: [''],
+      alwaysShow: [false]
     });
   }
 
@@ -54,6 +56,7 @@ export class ScanComponent {
     this.successChange.emit(this.success);
     this.loading = false;
     this.loadingChange.emit(false);
+    if (this.GetValue('alwaysShow') === 'true') return;
     this.CloseModal();
   }
 
