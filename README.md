@@ -1,8 +1,20 @@
 # MRCD
 
-MRCD es un sistema, pretensiosamente como ERP, orientado al registro de información personal, bastante básico, y asistencias de estas personas. Se pueden llevar seguimmientos de documentos personales entregables, cobros, asistencias, grados académicos y logs.
+MRCD es un sistema, pretensiosamente como ERP, orientado al registro de información personal, bastante básico, y asistencias de estas personas. Se pueden llevar seguimientos de documentos personales entregables, cobros, asistencias, grados académicos y logs.
 
 > **Nota**: El presente repositorio está pensado para ser ejecutado y desarrollado en contenedores, por lo que los entornos, como Node, no serán necesarios a menos que el desarrollador prefiera instalar las dependencias manualmente en su sistema.
+
+- [1. Requisitos](#1-requisitos)
+- [2. Get started](#2-get-started)
+- [2.1. Desarrollo en contenedores](#21-desarrollo-en-contenedores)
+- [2.1.1. Página](#211-página)
+- [2.1.2. Puertos](#212-puertos)
+- [2.2. Orquestación de prueba](#22-orquestación-de-prueba)
+- [3. Configuración](#3-configuración)
+- [3.1. Base de datos](#31-base-de-datos)
+- [4. Arquitectura](#4-arquitectura)
+- [4.1. Casos de lógica de Workflow](#41-casos-de-lógica-de-workflow)
+- [5. ToDos](#5-todos)
 
 ## 1. Requisitos
 
@@ -21,9 +33,9 @@ docker-compose --profile [profile] up -d
 
 Los perfiles que podemos seleccionar serán los siguientes:
 
-- dev: Levanta la API y la GUI
+- dev: Levanta la API y el cliente.
 - api
-- prod: Compila el código de la GUI y la API, posteriormente lo sirve en Nginx por HTTP.
+- prod: Compila el código del cliente y la API, posteriormente lo sirve en Nginx por HTTP.
 
 Ejemplo para modificar la API:
 
@@ -64,14 +76,12 @@ clear && ng serve --host 0.0.0.0 --port 4300
 
 Note que en el contenedor ya se cuenta con Node y Angular, por lo que se puede usar _npm_ y _ng_ para gestionar paquetes, componentes, etc.
 
-> Esto no es necesario si usamos el perfil `prod`, ya que la página se compila y se sirve en Nginx.
-
 #### 2.1.2. Puertos
 
 - Por defecto el puerto para ingresar a la págia es `8082` en todos los perfiles, a excepción de `prod`, dado que para este perfil se genera un servidor Nginx en el puerto `80`.
 - Para ingresar a la API usamos el puerto `8080`, seguido de "swagger" para interactuar con sus endpoints gráficamente: `8080/swagger`. En caso de ser el perfil `prod`, no podremos usar swagger, dado que todo es gestionado por Nginx, así que deberemos usar la ruta del endpoint iniciando con `/api`: `localhost/api/[endpoint]`.
 
-> Es recomendable asegurarse que estos puertos no estén en uso antes de lanzar los contenedores, caso contrario deberemos cambiar los puertos de los contenedores o detener los servicios que ocupan dichos puertos.
+> Es recomendable asegurarse que estos puertos no estén en uso antes de lanzar los contenedores, en caso contrario deberemos cambiar los puertos de los contenedores o detener los servicios que ocupan dichos puertos.
 
 ### 2.2. Orquestación de prueba
 
@@ -84,6 +94,10 @@ docker-compose --profile prod up -d
 Esto compilará todos los proyectos y levantará los contenedores necesarios. Para validar que estén funcionando podremos ingresar a nuestro navegador y buscar `localhost`, nos debería mostrar la página:
 
 ![localhost](./imagine/localhost.png)
+
+Por defecto, las credenciales para ingresar son:
+- Usuario: Misha
+- Contraseña: Patit0!
 
 ## 3. Configuración
 
@@ -115,11 +129,7 @@ Si se require hacer una restauración de la base de datos para evitar las migrac
 ├─ db/
 └─ sys/
 
-### 4.1. Diseño de arquitectura
-
-Se separó la lógica en tres proyectos para que sea fácil implementar y separar las responsabilidades, en caso de querer administrar la API y el worker en hosts separados. Además, separar los proyectos facilita el escalamiento y mantenimiento del software.
-
-### 4.2. Casos de lógica de workflox
+### 4.1. Casos de lógica de workflow
 
 - Una vez que se agreguen padrinos/encargados al confirmando, dicho confirmando no puede actualizarse para eliminar todos los padrinos/encargados.
 - La inscripción solo aparece si hay un registro. Cuando se elimina la inscripción de un confirmando y se vuelve a marcar, el valor de la inscripción cambiará al valor de la inscripción actual, no a la anterior.
