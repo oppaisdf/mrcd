@@ -1,10 +1,8 @@
 using api.Common;
-using api.Context;
+using api.Data;
 using api.Models.Entities;
-using api.Models.Repositories;
 using api.Models.Requests;
 using api.Models.Responses;
-using Microsoft.EntityFrameworkCore;
 
 namespace api.Services;
 
@@ -27,8 +25,8 @@ public interface IAttendanceService
     /// <param name="hash">El confirmando debe estar activo</param>
     /// <returns></returns>
     Task UnverifyAsync(string userId, string hash);
-    Task<ICollection<QRResponse>> GetQRsAsync(string userId);
-    Task<ICollection<GeneralListResponse>> GetListAsync(string userId);
+    Task<IEnumerable<QRResponse>> GetQRsAsync(string userId);
+    Task<IEnumerable<GeneralListResponse>> GetListAsync(string userId);
 
     /// <summary>
     /// Pasa asistencia a todos los confirmandos de un día
@@ -40,48 +38,22 @@ public interface IAttendanceService
 }
 
 public class AttendanceService(
-    MerContext context,
     ILogService logs,
-    IAttendanceRepository repo
+    IAttendanceRepository repo,
+    IPeopleRepository people
 ) : IAttendanceService
 {
-    private readonly MerContext _context = context;
     private readonly ILogService _logs = logs;
     private readonly IAttendanceRepository _repo = repo;
+    private readonly IPeopleRepository _people = people;
 
     public async Task CheckAllAsync(
         string userId,
         bool day
     )
     {
-        var now = DateTime.UtcNow.AddHours(-6);
-        var ids = await (
-            from p in _context.People
-            join temp in _context.Attendance on p.Id equals temp.PersonId into tempG
-            from a in tempG.DefaultIfEmpty()
-            where
-                p.IsActive &&
-                p.Day == day &&
-                (
-                    (a.Date.Year != now.Year && a.Date.Month != now.Month && a.Date.Day != now.Day)
-                    || a == null
-                )
-            select
-                p.Id
-        )
-        .Distinct()
-        .ToListAsync();
-
-        _context.Attendance.AddRange(
-            ids.Select(id => new Attendance
-            {
-                UserId = userId,
-                PersonId = id!.Value,
-                IsAttendance = true,
-                Date = now
-            }).ToList()
-        );
-        await _context.SaveChangesAsync();
+        var ids = await _people.IdsByDayAsync(day);
+        await _repo.AddRangeUsingIdsAsync(ids, userId);
     }
 
     public async Task CheckAsync(
@@ -89,33 +61,16 @@ public class AttendanceService(
         AttendanceRequest request
     )
     {
-        var person = await _context.People
-            .Where(p => p.Hash == request.Hash)
-            .Select(p => new
-            {
-                Id = p.Id!.Value,
-                p.IsActive,
-                Dates = _context.Attendance
-                    .Where(a => a.PersonId == p.Id)
-                    .Select(a => a.Date)
-                    .ToList()
-            })
-            .FirstOrDefaultAsync() ?? throw new DoesNotExistsException("El confirmado no existe o está inactivo");
-
         var date = request.Date ?? DateTime.UtcNow.AddHours(-6);
-        var dateS = $"{date.Year}{date.Month}{date.Day}";
-        var checks = person.Dates == null ? 0 : person.Dates.Where(d => $"{d.Date.Year}{d.Date.Month}{d.Date.Day}" == dateS).Count();
-
-        if (!person.IsActive) throw new DoesNotExistsException("El confirmado no existe o está inactivo");
-        if (checks > 0) throw new BadRequestException("Ya se ha pasado asistencia/inasistencia de este cofirmando");
-        _context.Attendance.Add(new Attendance
+        var personId = await _repo.IdIfNotCheckedAsync(request.Hash, date) ?? throw new DoesNotExistsException("El confirmado no existe, está inactivo o ya se le pasó asistencia");
+        var attendance = new Attendance
         {
             UserId = userID,
-            PersonId = person.Id,
+            PersonId = personId,
             IsAttendance = request.IsAttendance!.Value,
             Date = date
-        });
-        await _context.SaveChangesAsync();
+        };
+        await _repo.AddAsync(attendance);
     }
 
     public async Task<IEnumerable<AttendanceResponse>> GetAsync(string userId)
@@ -124,50 +79,20 @@ public class AttendanceService(
         return await _repo.ToListAsync();
     }
 
-    public async Task<ICollection<GeneralListResponse>> GetListAsync(
+    public async Task<IEnumerable<GeneralListResponse>> GetListAsync(
         string userId
     )
     {
         await _logs.RegisterReadingAsync(userId, "Listado general");
-        return await _context.People
-            .Where(p => p.IsActive)
-            .Select(p => new GeneralListResponse
-            {
-                Id = p.Id!.Value,
-                Name = p.Name,
-                Gender = p.Gender,
-                Day = p.Day,
-                DOB = p.DOB,
-                Phone = p.Phone,
-                Parents = (
-                    from parent in _context.Parents
-                    join pp in _context.ParentsPeople on parent.Id equals pp.ParentId
-                    where pp.PersonId == p.Id && pp.IsParent
-                    select new GeneralParentListResponse
-                    {
-                        Name = parent.Name,
-                        Phone = parent.Phone
-                    }
-                ).ToList()
-            })
-            .ToListAsync();
+        return await _repo.GeneralListAsync();
     }
 
-    public async Task<ICollection<QRResponse>> GetQRsAsync(
+    public async Task<IEnumerable<QRResponse>> GetQRsAsync(
         string userId
     )
     {
         await _logs.RegisterReadingAsync(userId, "Todos los códigos QR");
-        return await _context.People
-            .Where(p => p.IsActive)
-            .Select(p => new QRResponse
-            {
-                Name = p.Name,
-                Day = p.Day,
-                Gender = p.Gender,
-                Hash = p.Hash
-            })
-            .ToListAsync();
+        return await _people.QRsListAsync();
     }
 
     public async Task UnverifyAsync(
@@ -175,30 +100,7 @@ public class AttendanceService(
         string hash
     )
     {
-        var id = await (
-            from p in _context.People
-            join a in _context.Attendance on p.Id equals a.PersonId
-            where
-                p.Hash == hash
-                && p.IsActive
-                && a.IsAttendance
-            select a
-        )
-        .OrderByDescending(p => p.Date)
-        .FirstOrDefaultAsync() ?? throw new DoesNotExistsException("El confirmando no existe o está inactivo");
-
-        using var tran = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            _context.Attendance.Remove(id);
-            await _context.SaveChangesAsync();
-            await _logs.RegisterUpdateAsync(userId, $"Removió asistencia a {id.PersonId}");
-            await tran.CommitAsync();
-        }
-        catch (Exception)
-        {
-            await tran.RollbackAsync();
-            throw;
-        }
+        var attendance = await _repo.FindActiveByHash(hash) ?? throw new DoesNotExistsException("El confirmando no existe o está inactivo");
+        await _repo.RemoveAsync(attendance, userId);
     }
 }

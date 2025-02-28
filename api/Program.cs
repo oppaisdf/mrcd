@@ -1,6 +1,5 @@
 using api.Common;
-using api.Context;
-using api.Models.Repositories;
+using api.Data;
 using api.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +16,7 @@ EncryptionConverter.InitializeKey(Environment.GetEnvironmentVariable("ENCRYPT_KE
 builder.Services.AddScoped<ICommonService, CommonService>();
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped(typeof(INameService<>), typeof(NameService<>));
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();

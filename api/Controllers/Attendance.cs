@@ -52,7 +52,7 @@ public class AttendanceController(
         if (request.Date != null)
         {
             TimeSpan diff = DateTime.UtcNow.AddHours(-6) - request.Date!.Value;
-            if (diff.Days > 15 || diff.Days < 10) return this.DefaultBadRequest("La fecha no puede exceder los 15 días ni puede registrarse 10 días atrás a la fecha actual (hoy)");
+            if (diff.Days > 15 || diff.Days < -10) return this.DefaultBadRequest("La fecha no puede exceder los 15 días ni puede registrarse 10 días atrás a la fecha actual (hoy)");
         }
         try
         {

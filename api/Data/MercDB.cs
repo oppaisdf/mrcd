@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace api.Context;
+namespace api.Data;
 
 public class MerContext(
     DbContextOptions<MerContext> options
