@@ -25,6 +25,8 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IPublicService, PublicService>();
 builder.Services.AddScoped<IParentService, ParentService>();
 builder.Services.AddScoped<IChargeService, ChargeService>();
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertService, AlertService>();
 
 builder.Services.AddDbContext<MerContext>((provider, options) =>
 {
