@@ -124,10 +124,12 @@ Si se require hacer una restauración de la base de datos para evitar las migrac
 
 ## 4. Arquitectura
 
+```
 /
 ├─ api/
 ├─ db/
 └─ sys/
+```
 
 ### 4.1. Casos de lógica de workflow
 
