@@ -22,6 +22,7 @@ public class AlertService(
         return alert switch
         {
             1 => await _repo.NoPaymentCountAsync(),
+            2 => await _repo.NoGodparentsCountAsync(),
             _ => 0,
         };
     }
@@ -33,6 +34,7 @@ public class AlertService(
         return alert switch
         {
             1 => await _repo.NoPaymentAsync(),
+            2 => await _repo.NoGodparentsAsync(),
             _ => []
         };
     }
