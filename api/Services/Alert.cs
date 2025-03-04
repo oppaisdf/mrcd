@@ -1,5 +1,4 @@
 using api.Data;
-using api.Models.Responses;
 
 namespace api.Services;
 

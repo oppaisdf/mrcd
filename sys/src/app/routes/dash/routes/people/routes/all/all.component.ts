@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PersonService } from '../../services/person.service';
 import { DefaultEntityResponse, PersonResponse } from '../../models/responses/person';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'person-all',
@@ -12,7 +13,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class AllComponent implements OnInit {
   constructor(
     private _service: PersonService,
-    private _form: FormBuilder
+    private _form: FormBuilder,
+    private _me: ActivatedRoute
   ) {
     this.form = this._form.group({
       page: [1],
@@ -42,6 +44,14 @@ export class AllComponent implements OnInit {
   async ngOnInit() {
     const response = await this._service.GetFiltersAsync();
     if (response.success) this.degrees = response.data!.degrees;
+
+    const alert = this._me.snapshot.queryParamMap.get('alert');
+    if (!alert) return;
+    if (isNaN(+alert)) return;
+    if (+alert > 2) return;
+    const rpns = await this._service.GetAlertAsync(+alert);
+    if (!rpns.success) return;
+    this.people = rpns.data!;
   }
 
   ClearFilters() {

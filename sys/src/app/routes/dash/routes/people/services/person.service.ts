@@ -37,4 +37,10 @@ export class PersonService {
   ) {
     return await this._api.Get<PersonResponse>(`People/${id}`);
   }
+
+  public async GetAlertAsync(
+    alert: number
+  ) {
+    return await this._api.Get<PersonResponse[]>(`Alert/${alert}/Full`);
+  }
 }

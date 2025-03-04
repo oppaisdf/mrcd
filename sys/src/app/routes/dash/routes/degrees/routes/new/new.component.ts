@@ -4,9 +4,8 @@ import { DegreeService } from '../../services/degree.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-new',
+  selector: 'degrees-new',
   standalone: false,
-
   templateUrl: './new.component.html',
   styleUrl: './new.component.sass'
 })

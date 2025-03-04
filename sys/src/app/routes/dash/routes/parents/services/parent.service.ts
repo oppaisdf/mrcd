@@ -55,4 +55,10 @@ export class ParentService {
   ) {
     return this._api.Delete(`Parent/${id}`);
   }
+
+  public async GetAlertAsync(
+    alert: number
+  ) {
+    return await this._api.Get<ParentResponse[]>(`Alert/${alert}/Full`);
+  }
 }

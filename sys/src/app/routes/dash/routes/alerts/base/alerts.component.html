@@ -1,0 +1,17 @@
+<div class="columns is-multiline">
+    <div class="column is-half" *ngFor="let alert of alerts">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">{{alert.counter}}</p>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    {{alert.description}}
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a class="card-footer-item" routerLink="{{alert.route}}" [queryParams]="{alert:alert.alert}">Ver</a>
+            </footer>
+        </div>
+    </div>
+</div>

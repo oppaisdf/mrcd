@@ -3,9 +3,8 @@ import { DegreeService } from '../../services/degree.service';
 import { DefaultResponse } from '../../../../models/Response';
 
 @Component({
-  selector: 'app-all',
+  selector: 'degrees-all',
   standalone: false,
-
   templateUrl: './all.component.html',
   styleUrl: './all.component.sass'
 })

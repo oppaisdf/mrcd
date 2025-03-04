@@ -69,7 +69,7 @@ public class AlertRepository(
                 (p, pp) => new
                 {
                     Person = p,
-                    HasGodparents = pp.Any(x => x.IsParent)
+                    HasGodparents = pp.Any(x => !x.IsParent)
                 }
             )
             .Where(x => x.Person.IsActive && !x.HasGodparents)
@@ -96,7 +96,7 @@ public class AlertRepository(
                 (p, pp) => new
                 {
                     Person = p,
-                    HasGodparents = pp.Any(x => x.IsParent)
+                    HasGodparents = pp.Any(x => !x.IsParent)
                 }
             )
             .Where(p => p.Person.IsActive && !p.HasGodparents)

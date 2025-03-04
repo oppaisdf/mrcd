@@ -17,7 +17,8 @@ const routes: Routes = [
       { path: 'parent', loadChildren: () => import('./routes/parents/parents.module').then(m => m.ParentsModule) },
       { path: 'print', loadChildren: () => import('./routes/prints/prints.module').then(m => m.PrintsModule) },
       { path: 'charge', loadChildren: () => import('./routes/charges/charges.module').then(m => m.ChargesModule) },
-      { path: 'attendance', loadChildren: () => import('./routes/attendances/attendances.module').then(m => m.AttendancesModule) }
+      { path: 'attendance', loadChildren: () => import('./routes/attendances/attendances.module').then(m => m.AttendancesModule) },
+      { path: 'alert', loadChildren: () => import('./routes/alerts/alerts.module').then(m => m.AlertsModule) }
     ]
   }
 ];

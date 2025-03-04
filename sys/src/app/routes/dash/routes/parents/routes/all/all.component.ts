@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ParentService } from '../../services/parent.service';
 import { ParentResponse } from '../../models/response';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ParentFilter } from '../../models/requests';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'parents-all',
@@ -10,10 +11,11 @@ import { ParentFilter } from '../../models/requests';
   templateUrl: './all.component.html',
   styleUrl: './all.component.sass'
 })
-export class AllComponent {
+export class AllComponent implements OnInit {
   constructor(
     private _service: ParentService,
-    private _form: FormBuilder
+    private _form: FormBuilder,
+    private _me: ActivatedRoute
   ) {
     this.form = this._form.group({
       name: ['', Validators.maxLength(30)],
@@ -29,6 +31,16 @@ export class AllComponent {
   isSearching = false;
   message = 'Buscar por nombre puede sobrecargar el servidor, úselo lo menos posible';
   success = true;
+
+  async ngOnInit() {
+    const alert = this._me.snapshot.queryParamMap.get('alert');
+    if (!alert) return;
+    if (isNaN(+alert)) return;
+    if (+alert !== 3) return;
+    const response = await this._service.GetAlertAsync(+alert);
+    if (!response.success) return;
+    this.parents = response.data!;
+  }
 
   private GetValue(
     control: string
