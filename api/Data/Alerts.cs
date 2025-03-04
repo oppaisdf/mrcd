@@ -9,6 +9,8 @@ public interface IAlertRepository
     Task<IEnumerable<PersonResponse>> NoPaymentAsync();
     Task<ushort> NoGodparentsCountAsync();
     Task<IEnumerable<PersonResponse>> NoGodparentsAsync();
+    Task<ushort> NoChildsCountAsync();
+    Task<IEnumerable<ParentResponse>> NoChildsAsync();
 }
 
 public class AlertRepository(
@@ -16,6 +18,46 @@ public class AlertRepository(
 ) : IAlertRepository
 {
     private readonly MerContext _context = context;
+
+    public async Task<IEnumerable<ParentResponse>> NoChildsAsync()
+    {
+        return await _context.Parents
+            .GroupJoin(
+                _context.ParentsPeople,
+                p => p.Id,
+                pp => pp.ParentId,
+                (p, pp) => new
+                {
+                    Parent = p,
+                    HasChilds = pp.Any()
+                }
+            )
+            .Where(x => !x.HasChilds)
+            .Select(x => new ParentResponse
+            {
+                Id = x.Parent.Id!.Value,
+                Name = x.Parent.Name,
+                Gender = x.Parent.Gender,
+                IsParent = true
+            })
+            .ToListAsync();
+    }
+
+    public async Task<ushort> NoChildsCountAsync()
+    {
+        return (ushort)await _context.Parents
+            .GroupJoin(
+                _context.ParentsPeople,
+                p => p.Id,
+                pp => pp.ParentId,
+                (p, pp) => new
+                {
+                    HasChilds = pp.Any()
+                }
+            )
+            .Where(x => !x.HasChilds)
+            .CountAsync();
+    }
 
     public async Task<IEnumerable<PersonResponse>> NoGodparentsAsync()
     {

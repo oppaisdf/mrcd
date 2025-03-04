@@ -6,7 +6,7 @@ namespace api.Services;
 public interface IAlertService
 {
     Task<ushort> CountAsync(ushort alert);
-    Task<IEnumerable<PersonResponse>> GetAsync(ushort alert);
+    Task<IEnumerable<object>> GetAsync(ushort alert);
 }
 
 public class AlertService(
@@ -23,11 +23,12 @@ public class AlertService(
         {
             1 => await _repo.NoPaymentCountAsync(),
             2 => await _repo.NoGodparentsCountAsync(),
+            3 => await _repo.NoChildsCountAsync(),
             _ => 0,
         };
     }
 
-    public async Task<IEnumerable<PersonResponse>> GetAsync(
+    public async Task<IEnumerable<object>> GetAsync(
         ushort alert
     )
     {
@@ -35,6 +36,7 @@ public class AlertService(
         {
             1 => await _repo.NoPaymentAsync(),
             2 => await _repo.NoGodparentsAsync(),
+            3 => await _repo.NoChildsAsync(),
             _ => []
         };
     }
