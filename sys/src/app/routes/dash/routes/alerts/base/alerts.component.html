@@ -9,7 +9,7 @@
                     {{alert.description}}
                 </div>
             </div>
-            <footer class="card-footer">
+            <footer class="card-footer" *ngIf="alert.counter > 0">
                 <a class="card-footer-item" routerLink="{{alert.route}}" [queryParams]="{alert:alert.alert}">Ver</a>
             </footer>
         </div>

@@ -48,6 +48,6 @@ export class LoginComponent {
     this.form.enable();
     this.form.reset();
 
-    if (response.success) this._router.navigateByUrl('/dash');
+    if (response.success) this._router.navigateByUrl('/alerts');
   }
 }
