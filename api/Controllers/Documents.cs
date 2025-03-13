@@ -12,10 +12,12 @@ namespace api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class DocumentController(
-    INameService<Document> service
+    INameService<Document> defaultService,
+    IDocumentService service
 ) : ControllerBase
 {
-    private readonly INameService<Document> _service = service;
+    private readonly INameService<Document> _defaultService = defaultService;
+    private readonly IDocumentService _service = service;
 
     [HttpGet]
     public async Task<IActionResult> GetAsync()
@@ -23,13 +25,14 @@ public class DocumentController(
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var sacraments = await _service.GetAsync(userId);
+            var sacraments = await _defaultService.GetAsync(userId);
             return this.DefaultOk(sacraments);
         }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al consultar documentos: {e.Message}"); }
     }
 
+    [Authorize(Roles = "adm")]
     [HttpPost]
     public async Task<IActionResult> CreateAsync(
         [FromBody] NameRequest request
@@ -41,7 +44,7 @@ public class DocumentController(
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.CreateAsync(userId, request.Name);
+            await _defaultService.CreateAsync(userId, request.Name);
             return this.DefaultOk(new { }, "Documento creado correctamente");
         }
         catch (AlreadyExistsException e)
@@ -50,6 +53,7 @@ public class DocumentController(
         { return this.DefaultServerError($"[+] Error al crear documento: {e.Message}"); }
     }
 
+    [Authorize(Roles = "adm")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAsync(
         short id,
@@ -63,7 +67,7 @@ public class DocumentController(
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.UpdateAsync(userId, id, request.Name);
+            await _defaultService.UpdateAsync(userId, id, request.Name);
             return this.DefaultOk(new { }, "El documento fue actualizado correctamente");
         }
         catch (DoesNotExistsException e)
@@ -72,5 +76,41 @@ public class DocumentController(
         { return this.DefaultConflict(e.Message); }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al actualizar documento {id}: {e.Message}"); }
+    }
+
+    [HttpPost("{documentId}")]
+    public async Task<IActionResult> AssingAsync(
+        short documentId,
+        int personId
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.AssignAsync(userId, documentId, personId);
+            return this.DefaultOk(new { }, "Se ha registrado la recepción del documento correctamente");
+        }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
+        catch (BadRequestException e)
+        { return this.DefaultBadRequest(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al asignar documento {documentId} a persona {personId}: {e.Message}"); }
+    }
+
+    [HttpDelete("{documentId}")]
+    public async Task<IActionResult> UnassingAsync(
+        short documentId,
+        int personId
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.UnassignAsync(userId, documentId, personId);
+            return this.DefaultOk(new { }, "Se ha eliminado entrega de documento correctamente");
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al desasignar documento {documentId} a persona {personId}: {e.Message}"); }
     }
 }

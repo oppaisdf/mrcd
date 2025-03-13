@@ -140,5 +140,5 @@ Si se require hacer una restauración de la base de datos para evitar las migrac
 ## 5. ToDos
 
 - Units tests
-- Documentos con su alerta
+- Documentos (page) y migraciones (API)
 - Alerta de inasistencias

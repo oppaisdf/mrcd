@@ -72,9 +72,7 @@ public partial class PeopleService(
     )
     {
         foreach (var parent in parents)
-        {
             await _parents.FindOrCreateAndAssignAsync(userId, personId, parent);
-        }
     }
 
     private async Task RegisterCharge(
