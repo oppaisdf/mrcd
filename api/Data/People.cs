@@ -41,6 +41,7 @@ public class PeopleRepository(
     public async Task<IEnumerable<QRResponse>> QRsListAsync()
     {
         return await _context.People
+            .AsNoTracking()
             .Where(p => p.IsActive)
             .Select(p => new QRResponse
             {

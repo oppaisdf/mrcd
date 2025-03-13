@@ -95,6 +95,7 @@ public class AlertRepository(
     public async Task<IEnumerable<ParentResponse>> NoChildsAsync()
     {
         return await _context.Parents
+            .AsNoTracking()
             .GroupJoin(
                 _context.ParentsPeople,
                 p => p.Id,
@@ -148,6 +149,7 @@ public class AlertRepository(
     public async Task<IEnumerable<PersonResponse>> NoGodparentsAsync()
     {
         return await _context.People
+            .AsNoTracking()
             .GroupJoin(
                 _context.ParentsPeople,
                 p => p.Id,
@@ -176,6 +178,7 @@ public class AlertRepository(
     {
         var totalCharges = await _context.Charges.CountAsync();
         return await _context.People
+            .AsNoTracking()
             .GroupJoin(
                 _context.PeopleCharges,
                 p => p.Id,

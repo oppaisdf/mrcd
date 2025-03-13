@@ -98,9 +98,5 @@ public class AttendanceService(
     public async Task UnverifyAsync(
         string userId,
         string hash
-    )
-    {
-        var attendance = await _repo.FindActiveByHash(hash) ?? throw new DoesNotExistsException("El confirmando no existe o está inactivo");
-        await _repo.RemoveAsync(attendance, userId);
-    }
+    ) => await _repo.RemoveByHashAsync(hash, userId);
 }

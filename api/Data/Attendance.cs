@@ -11,8 +11,7 @@ public interface IAttendanceRepository
     Task AddRangeUsingIdsAsync(IEnumerable<int> ids, string userId);
     Task AddAsync(Attendance attendance);
     Task<IEnumerable<GeneralListResponse>> GeneralListAsync();
-    Task<Attendance?> FindActiveByHash(string hash);
-    Task RemoveAsync(Attendance attendance, string userId);
+    Task RemoveByHashAsync(string hash, string userId);
     Task<int?> IdIfNotCheckedAsync(string hash, DateTime date);
 }
 
@@ -60,30 +59,13 @@ public class AttendanceRepository(
                 !_context.Attendance.Any(a => a.PersonId == p.Id && a.Date.Year == date.Year && a.Date.Month == date.Month && a.Date.Day == date.Day)
             )
             .Select(p => p.Id)
-            .OrderBy(id => id)
-            .FirstOrDefaultAsync();
-    }
-
-    public async Task<Attendance?> FindActiveByHash(
-        string hash
-    )
-    {
-        return await (
-            from p in _context.People
-            join a in _context.Attendance on p.Id equals a.PersonId
-            where
-                p.Hash == hash
-                && p.IsActive
-                && a.IsAttendance
-            select a
-        )
-        .OrderByDescending(p => p.Date)
-        .FirstOrDefaultAsync();
+            .SingleOrDefaultAsync();
     }
 
     public async Task<IEnumerable<GeneralListResponse>> GeneralListAsync()
     {
         return await _context.People
+            .AsNoTracking()
             .Where(p => p.IsActive)
             .Select(p => new GeneralListResponse
             {
@@ -107,17 +89,18 @@ public class AttendanceRepository(
             .ToListAsync();
     }
 
-    public async Task RemoveAsync(
-        Attendance attendance,
+    public async Task RemoveByHashAsync(
+        string hash,
         string userId
     )
     {
         using var tran = await _context.Database.BeginTransactionAsync();
         try
         {
-            _context.Attendance.Remove(attendance);
-            await _context.SaveChangesAsync();
-            await _logs.RegisterUpdateAsync(userId, $"Removió asistencia a {attendance.PersonId}");
+            await _context.Attendance
+                .Where(a => _context.People.Any(p => a.PersonId == p.Id && p.IsActive && p.Hash == hash))
+                .ExecuteDeleteAsync();
+            await _logs.RegisterUpdateAsync(userId, $"Removió asistencia a {hash}");
             await tran.CommitAsync();
         }
         catch (Exception)
@@ -131,24 +114,27 @@ public class AttendanceRepository(
     {
         var currentYear = DateTime.Now.Year;
         var distinctDates = await _context.Attendance
+            .AsNoTracking()
             .Where(a => a.Date.Year == currentYear)
             .Select(a => new { a.Date.Month, a.Date.Day })
             .Distinct()
             .ToListAsync();
 
         var people = await _context.People
+            .AsNoTracking()
             .Where(p => p.IsActive)
             .Select(p => new { p.Id, p.Name, p.Day, p.Gender })
             .ToListAsync();
 
         var attendances = await _context.Attendance
+            .AsNoTracking()
             .Where(a => a.Date.Year == currentYear)
             .ToListAsync();
 
         var query =
             from p in people
             from d in distinctDates
-            let att = attendances.FirstOrDefault(a =>
+            let att = attendances.SingleOrDefault(a =>
                 a.PersonId == p.Id &&
                 a.Date.Month == d.Month &&
                 a.Date.Day == d.Day)
@@ -163,15 +149,13 @@ public class AttendanceRepository(
                     att?.IsAttendance)
             };
 
-        var grouped = query
+        return [.. query
             .GroupBy(x => new { x.Name, x.Day, x.Gender })
             .Select(g => new AttendanceResponse(
                 g.Key.Name,
                 g.Key.Day,
                 g.Key.Gender,
-                g.Select(x => x.DateInfo).OrderBy(di => di.Month).ThenBy(di => di.Day).ToList()))
-            .ToList();
-
-        return grouped;
+                [.. g.Select(x => x.DateInfo).OrderBy(di => di.Month).ThenBy(di => di.Day)]))
+        ];
     }
 }
