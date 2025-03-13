@@ -23,6 +23,7 @@ public class AlertService(
             1 => await _repo.NoPaymentCountAsync(),
             2 => await _repo.NoGodparentsCountAsync(),
             3 => await _repo.NoChildsCountAsync(),
+            4 => await _repo.NoDocumentsCountAsync(),
             _ => 0,
         };
     }
@@ -36,6 +37,7 @@ public class AlertService(
             1 => await _repo.NoPaymentAsync(),
             2 => await _repo.NoGodparentsAsync(),
             3 => await _repo.NoChildsAsync(),
+            4 => await _repo.NoDocumentsAsync(),
             _ => []
         };
     }

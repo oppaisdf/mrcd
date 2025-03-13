@@ -20,6 +20,8 @@ public class MerContext(
     public required DbSet<Attendance> Attendance { get; set; }
     public required DbSet<Charge> Charges { get; set; }
     public required DbSet<PersonCharge> PeopleCharges { get; set; }
+    public required DbSet<Document> Documents { get; set; }
+    public required DbSet<PersonDocument> PeopleDocuments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -212,6 +214,29 @@ public class MerContext(
                 .WithMany()
                 .HasForeignKey(c => c.ChargeId)
                 .HasConstraintName("FK_PersonCharge_ChargeId")
+                .IsRequired();
+        });
+
+        builder.Entity<Document>()
+            .HasKey(d => d.Id)
+            .HasName("PK_Documents_Id");
+
+        builder.Entity<PersonDocument>(docpe =>
+        {
+            docpe
+                .HasKey(d => new { d.PersonId, d.DocumentId })
+                .HasName("PK_PersonDocument_PersonId_DocumentId");
+            docpe
+                .HasOne<Person>()
+                .WithMany()
+                .HasForeignKey(p => p.PersonId)
+                .HasConstraintName("FK_PeopleDocuments_PersonId")
+                .IsRequired();
+            docpe
+                .HasOne<Document>()
+                .WithMany()
+                .HasForeignKey(d => d.DocumentId)
+                .HasConstraintName("FK_PeopleDocuments_DocumentId")
                 .IsRequired();
         });
     }

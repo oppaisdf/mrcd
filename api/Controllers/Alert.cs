@@ -18,7 +18,7 @@ public class AlertController(
         ushort alert
     )
     {
-        if (alert > 3) return this.DefaultBadRequest("La alerta no existe");
+        if (alert > 4) return this.DefaultBadRequest("La alerta no existe");
         try
         {
             var count = await _service.CountAsync(alert);
@@ -33,7 +33,7 @@ public class AlertController(
         ushort alert
     )
     {
-        if (alert > 3) return this.DefaultBadRequest("La alerta no existe");
+        if (alert > 4) return this.DefaultBadRequest("La alerta no existe");
         try
         {
             var people = await _service.GetAsync(alert);
