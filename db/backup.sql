@@ -64,7 +64,7 @@ CREATE TABLE `actionslog` (
   `Id` smallint NOT NULL AUTO_INCREMENT,
   `Name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 4 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
 LOCK TABLES `actionslog` WRITE;
@@ -311,7 +311,7 @@ CREATE TABLE `attendance` (
   PRIMARY KEY (`Id`),
   KEY `IX_attendance_PersonId` (`PersonId`),
   CONSTRAINT `FK_Attendance_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `people` (`Id`) ON DELETE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 644 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
 --
@@ -328,7 +328,7 @@ CREATE TABLE `charges` (
   `Name` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Total` decimal(6, 2) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 2 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
 --
@@ -344,7 +344,7 @@ CREATE TABLE `degrees` (
   `Id` smallint NOT NULL AUTO_INCREMENT,
   `Name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 5 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
 --
@@ -381,7 +381,7 @@ CREATE TABLE `logs` (
   PRIMARY KEY (`Id`),
   KEY `IX_logs_ActionId` (`ActionId`),
   CONSTRAINT `FK_Log_ActionId` FOREIGN KEY (`ActionId`) REFERENCES `actionslog` (`Id`) ON DELETE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1407 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
 --
@@ -401,7 +401,7 @@ CREATE TABLE `parents` (
   `Phone` varbinary(32) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `UX_Parents_NameHash` (`NameHash`)
-) ENGINE = InnoDB AUTO_INCREMENT = 149 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
 --
@@ -448,7 +448,7 @@ CREATE TABLE `people` (
   PRIMARY KEY (`Id`),
   KEY `IX_people_DegreeId` (`DegreeId`),
   CONSTRAINT `FK_Person_DegreeId` FOREIGN KEY (`DegreeId`) REFERENCES `degrees` (`Id`) ON DELETE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 147 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
 --
@@ -522,7 +522,7 @@ CREATE TABLE `sacraments` (
   `Id` smallint NOT NULL AUTO_INCREMENT,
   `Name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 3 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */
 ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */

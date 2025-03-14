@@ -35,20 +35,20 @@ public class DocumentRepository(
         int personId
     )
     {
-        var result = await _context.Documents
-            .AsNoTracking()
-            .Where(d => d.Id == documentId)
-            .GroupJoin(
-                _context.PeopleDocuments,
-                d => d.Id,
-                pd => pd.DocumentId,
-                (p, pd) => new
-                {
-                    AlreadyRegistered = pd.Any(x => x.PersonId == personId)
-                }
-            )
-            .SingleOrDefaultAsync();
-
+        var result = await (
+            from d in _context.Documents.AsNoTracking()
+            where d.Id == documentId
+            from p in _context.People.AsNoTracking()
+                .Where(p => p.Id == personId)
+            from pd in _context.PeopleDocuments.AsNoTracking()
+                .Where(pd => pd.DocumentId == documentId && pd.PersonId == personId)
+                .DefaultIfEmpty()
+            select new
+            {
+                Exists = true,
+                AlreadyRegistered = pd != null
+            }
+        ).SingleOrDefaultAsync();
         if (result == null) return null;
         return result.AlreadyRegistered;
     }
