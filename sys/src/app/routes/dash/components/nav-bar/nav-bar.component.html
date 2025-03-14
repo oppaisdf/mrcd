@@ -28,12 +28,12 @@
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">Impresiones</a>
                 <div class="navbar-dropdown" (click)="ShowMenu()">
+                    <a class="navbar-item" routerLink="/print/attendance">Asistencia</a>
                     @if (isAdm) {
-                    <a class="navbar-item" routerLink="/print/badge">Gafetes</a>
                     <a class="navbar-item">Diplomas</a>
+                    <a class="navbar-item" routerLink="/print/badge">Gafetes</a>
                     }
                     <a class="navbar-item" routerLink="/print/list">Listado</a>
-                    <a class="navbar-item" routerLink="/print/attendance">Asistencia</a>
                 </div>
             </div>
 
@@ -41,9 +41,10 @@
                 <a class="navbar-link">Gestiones</a>
                 <div class="navbar-dropdown" (click)="ShowMenu()">
                     <a class="navbar-item" routerLink="/charge/all">Cobros</a>
+                    <a class="navbar-item" routerLink="/docs/all">Documentos</a>
                     @if (isAdm) {
-                    <a class="navbar-item" routerLink="/user/all">Usuarios</a>
                     <a class="navbar-item" routerLink="/degree/all">Grados académicos</a>
+                    <a class="navbar-item" routerLink="/user/all">Usuarios</a>
                     <a class="navbar-item" routerLink="/sacrament/all">Sacramentos</a>
                     <hr class="navbar-divider">
                     <a class="navbar-item" routerLink="/action/all">Acciones de logs</a>

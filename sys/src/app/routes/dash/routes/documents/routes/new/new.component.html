@@ -1,0 +1,13 @@
+<shared-alert [(message)]="message" [success]="success" />
+
+<div class="buttons are-medium">
+    <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="form.invalid || isAdding"
+        (click)="AddAsync()">Agregar</button>
+    <a class="button" routerLink="/docs/all">Regresar</a>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="AddAsync()">
+    <shared-field field="Nombre" [loading]="isAdding">
+        <input type="text" class="input" [class.is-danger]="InvalidName" formControlName="name" maxlength="10">
+    </shared-field>
+</form>

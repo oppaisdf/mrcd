@@ -48,7 +48,10 @@ export class AllComponent implements OnInit {
     const alert = this._me.snapshot.queryParamMap.get('alert');
     if (!alert) return;
     if (isNaN(+alert)) return;
-    if (+alert > 2) return;
+    switch (+alert) {
+      case 1: case 2: case 4: break;
+      default: return;
+    }
     const rpns = await this._service.GetAlertAsync(+alert);
     if (!rpns.success) return;
     this.people = rpns.data!;
