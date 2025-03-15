@@ -14,9 +14,10 @@ public class PersonResponse
     public required bool IsActive { get; set; }
     public ICollection<ParentResponse>? Parents { get; set; }
     public ICollection<ParentResponse>? Godparents { get; set; }
-    public ICollection<SacramentResponse>? Sacraments { get; set; }
+    public ICollection<DefaultEntityStatusResponse>? Sacraments { get; set; }
     public ICollection<DefaultEntityResponse>? Degrees { get; set; }
     public ICollection<ChargeResponse>? Charges { get; set; }
+    public ICollection<DefaultEntityStatusResponse>? Documents { get; set; }
 }
 
 public class BasicPersonResponse
@@ -29,12 +30,11 @@ public class BasicPersonResponse
     public bool? HasParent { get; set; }
 }
 
-public class SacramentResponse
-{
-    public required short Id { get; set; }
-    public required string Name { get; set; }
-    public required bool IsActive { get; set; }
-}
+public record DefaultEntityStatusResponse(
+    short Id,
+    string Name,
+    bool IsActive
+);
 
 public class PersonFilterResponse
 {

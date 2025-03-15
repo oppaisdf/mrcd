@@ -1,5 +1,6 @@
 using api.Common;
 using api.Data;
+using api.Models.Responses;
 
 namespace api.Services;
 
@@ -7,6 +8,7 @@ public interface IDocumentService
 {
     Task AssignAsync(string userId, short documentId, int personId);
     Task UnassignAsync(string userId, short documentId, int personId);
+    Task<DocumentResponse> FindBydIdAsync(string userId, short id);
 }
 
 public class DocumentService(
@@ -48,5 +50,14 @@ public class DocumentService(
     {
         await _logs.RegisterUpdateAsync(userId, $"Documento {documentId} a persona {personId}");
         await AssignUnssingAsync(documentId, personId, false);
+    }
+
+    public async Task<DocumentResponse> FindBydIdAsync(
+        string userId,
+        short id
+    )
+    {
+        await _logs.RegisterReadingAsync(userId, $"Documento {id}");
+        return await _repo.GetByIdAsync(id) ?? throw new DoesNotExistsException("El documennto que busca no existe");
     }
 }

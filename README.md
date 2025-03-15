@@ -140,5 +140,5 @@ Si se require hacer una restauración de la base de datos para evitar las migrac
 ## 5. ToDos
 
 - Units tests
-- DocumentosById (sys, api), Assign/Unassig (sys)
+- DocumentosById (sys), Assign/Unassig (sys)
 - Alerta de inasistencias

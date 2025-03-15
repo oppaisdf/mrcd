@@ -240,12 +240,11 @@ public partial class PeopleService(
                     join temp in _context.PeopleSacraments on s.Id equals temp.SacramentId into tempG
                     from ts in tempG.DefaultIfEmpty()
                     group ts by new { s.Id, s.Name } into gs
-                    select new SacramentResponse
-                    {
-                        Id = gs.Key.Id!.Value,
-                        Name = gs.Key.Name,
-                        IsActive = gs.Any(x => x != null && x.PersonId == p.Id)
-                    }
+                    select new DefaultEntityStatusResponse(
+                        gs.Key.Id!.Value,
+                        gs.Key.Name,
+                        gs.Any(x => x != null && x.PersonId == p.Id)
+                    )
                 ).ToList(),
                 Degrees = _context.Degrees
                     .Select(d => new DefaultEntityResponse
@@ -273,14 +272,32 @@ public partial class PeopleService(
                             r.Key.Total,
                         IsActive = r.Any(x => x.PersonId == p.Id)
                     }
-                ).ToList()
-            }).FirstOrDefaultAsync()
+                ).ToList(),
+                Documents = _context.Documents
+                    .GroupJoin(
+                        _context.PeopleDocuments,
+                        d => d.Id,
+                        pd => pd.DocumentId,
+                        (d, pd) => new
+                        {
+                            Id = d.Id!.Value,
+                            d.Name,
+                            AlreadyRegistered = pd.Any(x => x.PersonId == p.Id)
+                        }
+                    )
+                    .Select(g => new DefaultEntityStatusResponse(
+                        g.Id,
+                        g.Name,
+                        g.AlreadyRegistered
+                    ))
+                    .ToList()
+            }).SingleOrDefaultAsync()
             ?? throw new DoesNotExistsException("El confirmando no existe");
 
         var parents = await _parents.GetByPersonIdAsync(id);
         if (parents == null) return person;
-        person.Parents = parents.Where(p => p.IsParent).ToList();
-        person.Godparents = parents.Where(p => !p.IsParent).ToList();
+        person.Parents = [.. parents.Where(p => p.IsParent)];
+        person.Godparents = [.. parents.Where(p => !p.IsParent)];
         return person;
     }
 

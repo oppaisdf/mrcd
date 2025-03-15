@@ -78,16 +78,17 @@ public class DocumentController(
         { return this.DefaultServerError($"[+] Error al actualizar documento {id}: {e.Message}"); }
     }
 
-    [HttpPost("{documentId}")]
+    [HttpPost("{id}")]
     public async Task<IActionResult> AssingAsync(
-        short documentId,
+        short id,
         int personId
     )
     {
+        if (personId < 1) return this.DefaultBadRequest("El Id del confirmando es requerido");
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.AssignAsync(userId, documentId, personId);
+            await _service.AssignAsync(userId, id, personId);
             return this.DefaultOk(new { }, "Se ha registrado la recepción del documento correctamente");
         }
         catch (DoesNotExistsException e)
@@ -95,22 +96,40 @@ public class DocumentController(
         catch (BadRequestException e)
         { return this.DefaultBadRequest(e.Message); }
         catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al asignar documento {documentId} a persona {personId}: {e.Message}"); }
+        { return this.DefaultServerError($"[+] Error al asignar documento {id} a persona {personId}: {e.Message}"); }
     }
 
-    [HttpDelete("{documentId}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> UnassingAsync(
-        short documentId,
+        short id,
         int personId
+    )
+    {
+        if (personId < 1) return this.DefaultBadRequest("El Id del confirmando es requerido");
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.UnassignAsync(userId, id, personId);
+            return this.DefaultOk(new { }, "Se ha eliminado entrega de documento correctamente");
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al desasignar documento {id} a persona {personId}: {e.Message}"); }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetByIdAsync(
+        short id
     )
     {
         try
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.UnassignAsync(userId, documentId, personId);
-            return this.DefaultOk(new { }, "Se ha eliminado entrega de documento correctamente");
+            var document = await _service.FindBydIdAsync(userId, id);
+            return this.DefaultOk(document);
         }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
         catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al desasignar documento {documentId} a persona {personId}: {e.Message}"); }
+        { return this.DefaultServerError($"[+] Error al obtener documento {id}: {e.Message}"); }
     }
 }
