@@ -14,12 +14,13 @@ export interface PersonResponse {
     isActive: boolean;
     parents?: ParentResponse[];
     godparents?: ParentResponse[];
-    sacraments: SacramentResponse[];
+    sacraments: DefaultEntityStatusResponse[];
     degrees?: DefaultEntityResponse[];
     charges?: ChargeResponse[];
+    documents?: DefaultEntityStatusResponse[];
 }
 
-export interface SacramentResponse {
+export interface DefaultEntityStatusResponse {
     id: number;
     name: string;
     isActive: boolean;

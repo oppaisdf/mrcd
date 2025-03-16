@@ -1,6 +1,6 @@
 <shared-pan-expand title="Cobros">
-    <div class="checkboxes" *ngFor="let charge of charges">
-        <label class="checkbox">
+    <div class="checkboxes">
+        <label class="checkbox" *ngFor="let charge of charges">
             <input [disabled]="updating" type="checkbox" [checked]="charge.isActive" (click)="AssignAsync(charge)">
             {{charge.name}} ({{charge.total|currency:currencySymbol}})
         </label>

@@ -27,7 +27,7 @@ public class DocumentService(
     {
         var alreadyExists = await _repo.NotExistsOrAlreadyRegisterAsync(documentId, personId)
             ?? throw new DoesNotExistsException("El documento o el confirmando no existe");
-        if (alreadyExists) throw new BadRequestException("Ya se ha registrado el documento al confirmando");
+        if (alreadyExists && isAssing) throw new BadRequestException("Ya se ha registrado el documento al confirmando");
         if (isAssing) await _repo.AssignAsync(documentId, personId);
         else await _repo.UnassingAsync(documentId, personId);
     }

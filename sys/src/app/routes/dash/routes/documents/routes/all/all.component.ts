@@ -17,6 +17,11 @@ export class AllComponent implements OnInit {
 
   docs: DefaultResponse[] = [];
   isAdm = true;
+  showUpdater = false;
+  selectedDocument: DefaultResponse = {
+    id: 0,
+    name: ''
+  };
 
   async ngOnInit() {
     this.isAdm = this._roles.HasUserPermission('adm');
@@ -24,5 +29,12 @@ export class AllComponent implements OnInit {
     const response = await this._service.GetAsync();
     if (!response.success) return;
     this.docs = response.data!;
+  }
+
+  SelectDocument(
+    document: DefaultResponse
+  ) {
+    this.showUpdater = true;
+    this.selectedDocument = document;
   }
 }

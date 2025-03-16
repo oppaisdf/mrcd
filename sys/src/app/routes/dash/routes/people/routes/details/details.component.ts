@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PersonService } from '../../services/person.service';
-import { DefaultEntityResponse, SacramentResponse } from '../../models/responses/person';
+import { DefaultEntityResponse, DefaultEntityStatusResponse } from '../../models/responses/person';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PersonRequest } from '../../models/requests/person';
 import { ChargeResponse } from '../../../charges/models/responses/charge';
@@ -35,10 +35,11 @@ export class DetailsComponent implements OnInit {
   id = 0;
   form: FormGroup;
   degrees: DefaultEntityResponse[] = [];
-  sacraments: SacramentResponse[] = [];
+  sacraments: DefaultEntityStatusResponse[] = [];
   parents: ParentResponse[] = [];
   godparents: ParentResponse[] = [];
   charges: ChargeResponse[] = [];
+  documents: DefaultEntityStatusResponse[] = [];
   private _old: PersonRequest = {};
   message = '';
   success = true;
@@ -76,12 +77,13 @@ export class DetailsComponent implements OnInit {
     this.degrees = response.data!.degrees!;
     if (response.data!.parents) this.parents = response.data!.parents;
     if (response.data!.charges) this.charges = response.data!.charges;
+    if (response.data!.documents) this.documents = response.data!.documents;
     this.sacraments = response.data!.sacraments;
     if (response.data!.godparents) this.godparents = response.data!.godparents;
     this._sacraments = response.data!.sacraments.reduce((lst, s) => {
       if (s.isActive) lst.push(s);
       return lst;
-    }, [] as SacramentResponse[]).map(s => s.id);
+    }, [] as DefaultEntityStatusResponse[]).map(s => s.id);
 
     this.form.patchValue({
       name: response.data!.name,
@@ -111,7 +113,7 @@ export class DetailsComponent implements OnInit {
   }
 
   SelectSacrament(
-    sacrament: SacramentResponse
+    sacrament: DefaultEntityStatusResponse
   ) {
     const index = this._sacraments.findIndex(s => s === sacrament.id);
     sacrament.isActive = index > -1;

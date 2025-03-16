@@ -112,6 +112,10 @@ public class DocumentController(
             await _service.UnassignAsync(userId, id, personId);
             return this.DefaultOk(new { }, "Se ha eliminado entrega de documento correctamente");
         }
+        catch (DoesNotExistsException e)
+        { return this.DefaultNotFound(e.Message); }
+        catch (BadRequestException e)
+        { return this.DefaultBadRequest(e.Message); }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al desasignar documento {id} a persona {personId}: {e.Message}"); }
     }

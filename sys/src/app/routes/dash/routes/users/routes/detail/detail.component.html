@@ -33,8 +33,8 @@
 
     <div class="column is-half">
         <shared-field field="Roles">
-            <div class="checkboxes" *ngFor="let role of roles">
-                <label class="checkbox">
+            <div class="checkboxes">
+                <label class="checkbox" *ngFor="let role of roles">
                     <input type="checkbox" [checked]="role.active" [disabled]="!isActive || isUpdating"
                         (click)="OnSelectRole(role.name)">
                     {{role.name}}
