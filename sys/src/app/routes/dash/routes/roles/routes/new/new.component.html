@@ -9,6 +9,7 @@
 
 <form [formGroup]="form" (ngSubmit)="AddAsync()">
     <shared-field [loading]="isAdding" field="Nombre">
-        <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName" formControlName="name">
+        <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName" formControlName="name"
+            maxlength="10">
     </shared-field>
 </form>

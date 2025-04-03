@@ -4,9 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'role-new',
+  selector: 'roles-new',
   standalone: false,
-
   templateUrl: './new.component.html',
   styleUrl: './new.component.sass'
 })

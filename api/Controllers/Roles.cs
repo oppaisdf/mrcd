@@ -43,6 +43,8 @@ public class RoleController(
             await _service.CreateAsync(request.Name);
             return this.DefaultOk(new { }, "Role has been successfully created");
         }
+        catch (AlreadyExistsException e)
+        { return this.DefaultConflict(e.Message); }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al crear rol {request.Name}: {e.Message}"); }
     }
