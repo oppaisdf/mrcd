@@ -59,7 +59,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   private Filter() {
-    const name = this.GetValue('name');
+    const name = this.GetValue('name').replace('null', '');
     const day = (() => {
       switch (this.GetValue('day')) {
         case 'true': return true;

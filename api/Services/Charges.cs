@@ -37,8 +37,8 @@ public class ChargeService(
             .AsNoTracking()
             .Select(c => c.Name)
             .ToListAsync();
-        charges.ForEach(c => c = _service.GetNormalizedText(c));
-        return charges.Contains(normalized);
+        var chargesNormalized = charges.Select(_service.GetNormalizedText);
+        return chargesNormalized.Contains(normalized);
     }
     #endregion
 
