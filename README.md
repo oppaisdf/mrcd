@@ -141,3 +141,5 @@ Si se require hacer una restauración de la base de datos para evitar las migrac
 
 - Units tests
 - Alerta de inasistencias
+- Terminar de separar lógica de SQL.
+- Agenda (all)
