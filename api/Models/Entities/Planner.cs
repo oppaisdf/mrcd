@@ -38,4 +38,7 @@ public class StagesOfActivities
     [Required]
     [DefaultValue(false)]
     public required bool MainUser { get; set; }
+
+    [MaxLength(100)]
+    public string? Notes { get; set; }
 }
