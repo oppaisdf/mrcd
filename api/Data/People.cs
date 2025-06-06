@@ -20,22 +20,18 @@ public class PeopleRepository(
     )
     {
         var now = DateTime.UtcNow.AddHours(-6);
-        return await (
-            from p in _context.People
-            join temp in _context.Attendance on p.Id equals temp.PersonId into tempG
-            from a in tempG.DefaultIfEmpty()
-            where
-                p.IsActive &&
-                p.Day == day &&
-                (
-                    (a.Date.Year != now.Year && a.Date.Month != now.Month && a.Date.Day != now.Day)
-                    || a == null
-                )
-            select
-                p.Id!.Value
-        )
-        .Distinct()
-        .ToListAsync();
+        var start = now.Date;
+        var end = start.AddDays(1);
+
+        return (IEnumerable<int>)await _context.People
+            .AsNoTracking()
+            .Where(p => p.IsActive && p.Day == day)
+            .Where(p => !_context.Attendance.Any(a =>
+                a.PersonId == p.Id &&
+                a.Date >= start && a.Date < end))
+            .Select(p => p.Id)
+            .ToListAsync()
+            .ConfigureAwait(false);
     }
 
     public async Task<IEnumerable<QRResponse>> QRsListAsync()

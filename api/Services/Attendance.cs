@@ -52,7 +52,7 @@ public class AttendanceService(
         bool day
     )
     {
-        var ids = await _people.IdsByDayAsync(day);
+        var ids = await _people.IdsByDayAsync(day).ConfigureAwait(false);
         await _repo.AddRangeUsingIdsAsync(ids, userId);
     }
 

@@ -139,7 +139,8 @@ Si se require hacer una restauración de la base de datos para evitar las migrac
 
 ## 5. ToDos
 
-- Units tests
-- Alerta de inasistencias
+- Units tests.
+- Alerta de inasistencias.
 - Terminar de separar lógica de SQL.
-- Agenda (all)
+- Agenda (all).
+- Retirar la continuación del hilo explícito en funciones asíncronas.
