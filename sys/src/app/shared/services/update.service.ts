@@ -8,7 +8,7 @@ export class UpdateService {
     private _api: ApiService
   ) { }
 
-  public async UpdateAsyc(
+  public async UpdateAsync(
     id: number,
     request: DefaultRequest,
     endpoint: string

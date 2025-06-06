@@ -46,7 +46,7 @@ export class UpdaterComponent {
     this.isUpdating = true;
     this.form.disable();
 
-    const response = await this._service.UpdateAsyc(this.record.id, this.form.value, this.endpoint);
+    const response = await this._service.UpdateAsync(this.record.id, this.form.value, this.endpoint);
     this.message = response.message;
     this.success = response.success;
 

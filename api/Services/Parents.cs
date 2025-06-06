@@ -338,7 +338,7 @@ public class ParentService(
         try
         {
             await _context.SaveChangesAsync();
-            await _logs.RegisterUpdateAsync($"Parent/Person {id}/{personId}");
+            await _logs.RegisterUpdateAsync(userId, $"Parent/Person {id}/{personId}");
             await tran.CommitAsync();
         }
         catch (Exception)
@@ -396,7 +396,7 @@ public class ParentService(
         try
         {
             await _context.SaveChangesAsync();
-            await _logs.RegisterUpdateAsync($"Padre/padrino {id}");
+            await _logs.RegisterUpdateAsync(userId, $"Padre/padrino {id}");
             await tran.CommitAsync();
         }
         catch (Exception)
@@ -420,7 +420,7 @@ public class ParentService(
         {
             _context.Parents.Remove(parent);
             await _context.SaveChangesAsync();
-            await _logs.RegisterUpdateAsync($"Borró padre/padrino {id}");
+            await _logs.RegisterUpdateAsync(userId, $"Borró padre/padrino {id}");
             await tran.CommitAsync();
         }
         catch (Exception)
