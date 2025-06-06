@@ -22,6 +22,9 @@ public class MerContext(
     public required DbSet<PersonCharge> PeopleCharges { get; set; }
     public required DbSet<Document> Documents { get; set; }
     public required DbSet<PersonDocument> PeopleDocuments { get; set; }
+    public required DbSet<Activity> Activities { get; set; }
+    public required DbSet<ActivityStage> ActivityStages { get; set; }
+    public required DbSet<StagesOfActivities> StagesOfActivities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -237,6 +240,34 @@ public class MerContext(
                 .WithMany()
                 .HasForeignKey(d => d.DocumentId)
                 .HasConstraintName("FK_PeopleDocuments_DocumentId")
+                .IsRequired();
+        });
+
+
+        builder.Entity<Activity>()
+            .HasKey(a => a.Id)
+            .HasName("PK_Activity_Id");
+
+        builder.Entity<ActivityStage>()
+            .HasKey(acs => acs.Id)
+            .HasName("PK_ActivityStage_Id");
+
+        builder.Entity<StagesOfActivities>(stages =>
+        {
+            stages
+                .HasKey(sa => new { sa.ActivityId, sa.StageId })
+                .HasName("PK_StagesOfActivities_ActivityId_StageId");
+            stages
+                .HasOne<Activity>()
+                .WithMany()
+                .HasForeignKey(sa => sa.ActivityId)
+                .HasConstraintName("FK_StagesOfActivities_ActivityId")
+                .IsRequired();
+            stages
+                .HasOne<ActivityStage>()
+                .WithMany()
+                .HasForeignKey(sa => sa.StageId)
+                .HasConstraintName("FK_StagesOfActivities_StageId")
                 .IsRequired();
         });
     }
