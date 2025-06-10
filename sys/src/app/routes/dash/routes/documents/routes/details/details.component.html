@@ -1,60 +1,62 @@
 <shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
-    <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
-    <a class="button" routerLink="/docs/all">Regresar</a>
+  <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
+  <a class="button" routerLink="/docs/all">Regresar</a>
 </div>
 
 <shared-pan-expand title="Filtros">
-    <form [formGroup]="form" class="columns is-multiline">
-        <div class="column is-half">
-            <shared-field field="Nombre" [inBox]="false">
-                <input type="text" class="input" formControlName="name">
-            </shared-field>
-        </div>
+  <form [formGroup]="form" class="columns is-multiline">
+    <div class="column is-half">
+      <shared-field field="Nombre" [inBox]="false">
+        <input type="text" class="input" formControlName="name">
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field field="Día" [inBox]="false">
-                <div class="select">
-                    <select formControlName="day">
-                        <option value="true">Domingo</option>
-                        <option value="false">Sábado</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field field="Día" [inBox]="false">
+        <div class="select">
+          <select formControlName="day">
+            <option value="true">Domingo</option>
+            <option value="false">Sábado</option>
+          </select>
         </div>
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field field="Género" [inBox]="false">
-                <div class="select">
-                    <select formControlName="gender">
-                        <option value="true">Masculino</option>
-                        <option value="false">Femenino</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field field="Género" [inBox]="false">
+        <div class="select">
+          <select formControlName="gender">
+            <option value="true">Masculino</option>
+            <option value="false">Femenino</option>
+          </select>
         </div>
-    </form>
+      </shared-field>
+    </div>
+  </form>
 </shared-pan-expand>
 <hr>
-<h1 class="title">{{title}}</h1>
+  <h1 class="title">{{title}}</h1>
 
-<div class="table-container">
+  <div class="table-container">
     <table class="table is-hoverable is-striped is-fullwidth">
-        <thead>
-            <th>Nombre</th>
-            <th>Acción</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let person of people">
-                <td>{{person.name}}</td>
-                <td>
-                    <button class="button" [ngClass]="{'is-info':!person.isActive,'is-danger':person.isActive}"
-                        [class.is-loading]="isLoading" [disabled]="isLoading" (click)="AssingAsync(person)">
-                        @if (person.isActive) {Remover documento}@else {Registrar documento}
-                    </button>
-                </td>
+      <thead>
+        <th>Nombre</th>
+        <th>Acción</th>
+      </thead>
+      <tbody>
+        @for (person of people; track person) {
+          <tr>
+            <td>{{person.name}}</td>
+            <td>
+              <button class="button" [ngClass]="{'is-info':!person.isActive,'is-danger':person.isActive}"
+                [class.is-loading]="isLoading" [disabled]="isLoading" (click)="AssingAsync(person)">
+                @if (person.isActive) {Remover documento}@else {Registrar documento}
+                </button>
+              </td>
             </tr>
+          }
         </tbody>
-    </table>
-</div>
+      </table>
+    </div>

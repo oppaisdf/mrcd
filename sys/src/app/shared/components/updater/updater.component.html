@@ -1,27 +1,26 @@
-<div class="modal is-active" *ngIf="show">
+@if (show) {
+  <div class="modal is-active">
     <div class="modal-background"></div>
     <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">Actualiza registro {{record.name}}</p>
-            <button class="delete" aria-label="close" (click)="Hide()"></button>
-        </header>
-
-        <section class="modal-card-body">
-            <shared-alert [(message)]="message" [success]="success" />
-
-            <form [formGroup]="form" (ngSubmit)="UpdateAsync()">
-                <shared-field [loading]="isUpdating" field="Nombre" [inBox]="false">
-                    <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName"
-                        formControlName="name" maxlength="10">
-                </shared-field>
-            </form>
-        </section>
-
-        <footer class="modal-card-foot">
-            <div class="buttons">
-                <button class="button is-success" [class.is-loadig]="isUpdating" [disabled]="isUpdating || form.invalid"
-                    (click)="UpdateAsync()">Actualizar</button>
-            </div>
-        </footer>
+      <header class="modal-card-head">
+        <p class="modal-card-title">Actualiza registro {{record.name}}</p>
+        <button class="delete" aria-label="close" (click)="Hide()"></button>
+      </header>
+      <section class="modal-card-body">
+        <shared-alert [(message)]="message" [success]="success" />
+        <form [formGroup]="form" (ngSubmit)="UpdateAsync()">
+          <shared-field [loading]="isUpdating" field="Nombre" [inBox]="false">
+            <input name="txtName" type="text" class="input" [class.is-danger]="isInvalidName"
+              formControlName="name" maxlength="10">
+          </shared-field>
+        </form>
+      </section>
+      <footer class="modal-card-foot">
+        <div class="buttons">
+          <button class="button is-success" [class.is-loadig]="isUpdating" [disabled]="isUpdating || form.invalid"
+          (click)="UpdateAsync()">Actualizar</button>
+        </div>
+      </footer>
     </div>
-</div>
+  </div>
+}

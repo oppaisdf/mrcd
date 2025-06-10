@@ -1,98 +1,104 @@
 <shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
-    <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
-        (click)="AddAsync()">Inscribir</button>
-    <a class="button" routerLink="/person/all">Regresar</a>
+  <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
+  (click)="AddAsync()">Inscribir</button>
+  <a class="button" routerLink="/person/all">Regresar</a>
 </div>
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
+  <div class="column is-half">
+    <shared-field [loading]="isAdding" field="Nombre">
+      <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
+        formControlName="name" maxlength="65" placeholder="Nombre completo">
+    </shared-field>
+  </div>
+
+  <div class="column is-half">
+    <shared-field [loading]="isAdding" field="Género">
+      <div class="select">
+        <select formControlName="gender">
+          <option value="true">Masculino</option>
+          <option value="false">Femenino</option>
+        </select>
+      </div>
+    </shared-field>
+  </div>
+
+  <div class="column is-half">
+    <shared-field [loading]="isAdding" field="Fecha de nacimieto">
+      <input name="txtDOB" type="date" class="input" [class.is-danger]="IsInvalidField('dob')"
+        formControlName="dob" [max]="GetMDate(true)" [min]="GetMDate(false)">
+    </shared-field>
+  </div>
+
+  <div class="column is-half">
+    <shared-field [loading]="isAdding" field="Día">
+      <div class="select">
+        <select formControlName="day">
+          <option value="true">Domingo</option>
+          <option value="false">Sábado</option>
+        </select>
+      </div>
+    </shared-field>
+  </div>
+
+  <div class="column is-half">
+    <shared-field [loading]="isAdding" field="Grado académico">
+      <div class="select">
+        <select name="lstDegree" formControlName="degreeId">
+          @for (degree of degrees; track degree) {
+            <option [value]="degree.id">{{degree.name}}</option>
+          }
+        </select>
+      </div>
+    </shared-field>
+  </div>
+
+  <div class="column is-half">
+    <shared-field [loading]="isAdding" field="Número telefónico">
+      <input name="txtPhone" type="text" class="input" [class.is-danger]="IsInvalidField('phone')"
+        formControlName="phone" maxlength="9" (input)="FormatPhone()" placeholder="xxxx-xxxx">
+    </shared-field>
+  </div>
+
+  <div class="column is-half">
+    <shared-field [loading]="isAdding" field="Dirección">
+      <textarea name="txtAddress" class="textarea" [class.is-danger]="IsInvalidField('address')"
+      formControlName="address" maxlength="100"></textarea>
+    </shared-field>
+  </div>
+
+  <div class="column is-half">
+    <shared-field field="Sacramentos que tiene">
+      @for (sacrament of sacraments; track sacrament) {
+        <div class="checkboxes">
+          <label class="checkbox">
+            <input type="checkbox" [value]="sacrament.id" (click)="SelectSacrament(sacrament.id)">
+            {{sacrament.name}}
+          </label>
+        </div>
+      }
+    </shared-field>
+  </div>
+
+  @if (price > 0) {
     <div class="column is-half">
-        <shared-field [loading]="isAdding" field="Nombre">
-            <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
-                formControlName="name" maxlength="65" placeholder="Nombre completo">
+      <shared-field field="Paga inscripción">
+        <label class="checkbox">
+          <input type="checkbox" formControlName="pay">
+          @if (GetValue('pay')) { Sí}@else { No} ({{price|currency:currencySymbol}})
+          </label>
         </shared-field>
-    </div>
+      </div>
+    }
+  </form>
 
-    <div class="column is-half">
-        <shared-field [loading]="isAdding" field="Género">
-            <div class="select">
-                <select formControlName="gender">
-                    <option value="true">Masculino</option>
-                    <option value="false">Femenino</option>
-                </select>
-            </div>
-        </shared-field>
-    </div>
+  <people-in-parent [(parents)]="parents" (formChange)="parentForm = $event" />
 
-    <div class="column is-half">
-        <shared-field [loading]="isAdding" field="Fecha de nacimieto">
-            <input name="txtDOB" type="date" class="input" [class.is-danger]="IsInvalidField('dob')"
-                formControlName="dob" [max]="GetMDate(true)" [min]="GetMDate(false)">
-        </shared-field>
-    </div>
+  <shared-alert [(message)]="message" [success]="success" />
 
-    <div class="column is-half">
-        <shared-field [loading]="isAdding" field="Día">
-            <div class="select">
-                <select formControlName="day">
-                    <option value="true">Domingo</option>
-                    <option value="false">Sábado</option>
-                </select>
-            </div>
-        </shared-field>
-    </div>
-
-    <div class="column is-half">
-        <shared-field [loading]="isAdding" field="Grado académico">
-            <div class="select">
-                <select name="lstDegree" formControlName="degreeId">
-                    <option *ngFor="let degree of degrees" [value]="degree.id">{{degree.name}}</option>
-                </select>
-            </div>
-        </shared-field>
-    </div>
-
-    <div class="column is-half">
-        <shared-field [loading]="isAdding" field="Número telefónico">
-            <input name="txtPhone" type="text" class="input" [class.is-danger]="IsInvalidField('phone')"
-                formControlName="phone" maxlength="9" (input)="FormatPhone()" placeholder="xxxx-xxxx">
-        </shared-field>
-    </div>
-
-    <div class="column is-half">
-        <shared-field [loading]="isAdding" field="Dirección">
-            <textarea name="txtAddress" class="textarea" [class.is-danger]="IsInvalidField('address')"
-                formControlName="address" maxlength="100"></textarea>
-        </shared-field>
-    </div>
-
-    <div class="column is-half">
-        <shared-field field="Sacramentos que tiene">
-            <div class="checkboxes" *ngFor="let sacrament of sacraments">
-                <label class="checkbox">
-                    <input type="checkbox" [value]="sacrament.id" (click)="SelectSacrament(sacrament.id)">
-                    {{sacrament.name}}
-                </label>
-            </div>
-        </shared-field>
-    </div>
-
-    <div class="column is-half" *ngIf="price > 0">
-        <shared-field field="Paga inscripción">
-            <label class="checkbox">
-                <input type="checkbox" formControlName="pay">
-                @if (GetValue('pay')) { Sí}@else { No} ({{price|currency:currencySymbol}})
-            </label>
-        </shared-field>
-    </div>
-</form>
-
-<people-in-parent [(parents)]="parents" (formChange)="parentForm = $event" />
-
-<shared-alert [(message)]="message" [success]="success" />
-
-<div class="buttons are-medium">
+  <div class="buttons are-medium">
     <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
-        (click)="AddAsync()">Inscribir</button>
-</div>
+    (click)="AddAsync()">Inscribir</button>
+  </div>

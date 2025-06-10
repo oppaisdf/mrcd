@@ -1,108 +1,114 @@
 <div class="tags has-addons are-large">
-    <span class="tag">Total</span>
-    <span class="tag is-primary">{{people.length}}</span>
+  <span class="tag">Total</span>
+  <span class="tag is-primary">{{people.length}}</span>
 </div>
 
 <shared-pan-expand title="Filtros">
-    <div class="buttons are-medium">
-        <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
+  <div class="buttons are-medium">
+    <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
+  </div>
+
+  <form [formGroup]="form" class="columns is-multiline">
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Nombre">
+        <input type="text" class="input" formControlName="name">
+      </shared-field>
     </div>
 
-    <form [formGroup]="form" class="columns is-multiline">
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Nombre">
-                <input type="text" class="input" formControlName="name">
-            </shared-field>
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Género">
+        <div class="select">
+          <select formControlName="gender">
+            <option value="true">Masculino</option>
+            <option value="false">Femenino</option>
+          </select>
         </div>
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Género">
-                <div class="select">
-                    <select formControlName="gender">
-                        <option value="true">Masculino</option>
-                        <option value="false">Femenino</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Día">
+        <div class="select">
+          <select formControlName="day">
+            <option value="true">Domingo</option>
+            <option value="false">Sábado</option>
+          </select>
         </div>
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Día">
-                <div class="select">
-                    <select formControlName="day">
-                        <option value="true">Domingo</option>
-                        <option value="false">Sábado</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Ordenar por">
+        <div class="select">
+          <select formControlName="orderBy">
+            <option value="true">Nombre</option>
+            <option value="false">Fecha de inscripción</option>
+          </select>
         </div>
-
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Ordenar por">
-                <div class="select">
-                    <select formControlName="orderBy">
-                        <option value="true">Nombre</option>
-                        <option value="false">Fecha de inscripción</option>
-                    </select>
-                </div>
-            </shared-field>
-        </div>
-    </form>
+      </shared-field>
+    </div>
+  </form>
 </shared-pan-expand>
 
 <hr>
 
-<shared-pan-expand title="Página">
+  <shared-pan-expand title="Página">
     <div class="columns">
-        <div class="column is-half">
-            <shared-field field="Orientación" [inBox]="false">
-                <div class="select">
-                    <select [(ngModel)]="isVertical" (ngModelChange)="ChangeOrientation()">
-                        <option value="true">Vertical</option>
-                        <option value="false">Horizontal</option>
-                    </select>
-                </div>
-            </shared-field>
-        </div>
+      <div class="column is-half">
+        <shared-field field="Orientación" [inBox]="false">
+          <div class="select">
+            <select [(ngModel)]="isVertical" (ngModelChange)="ChangeOrientation()">
+              <option value="true">Vertical</option>
+              <option value="false">Horizontal</option>
+            </select>
+          </div>
+        </shared-field>
+      </div>
 
-        <div class="column is-half">
-            <shared-field field="Mostrar teléfonos" [inBox]="false">
-                <div class="select">
-                    <select [(ngModel)]="showPhones" (ngModelChange)="OnChangeShowPhones()">
-                        <option value="true">Mostrar teléfonos</option>
-                        <option value="false">No mostrar teléfonos</option>
-                    </select>
-                </div>
-            </shared-field>
-        </div>
+      <div class="column is-half">
+        <shared-field field="Mostrar teléfonos" [inBox]="false">
+          <div class="select">
+            <select [(ngModel)]="showPhones" (ngModelChange)="OnChangeShowPhones()">
+              <option value="true">Mostrar teléfonos</option>
+              <option value="false">No mostrar teléfonos</option>
+            </select>
+          </div>
+        </shared-field>
+      </div>
     </div>
-</shared-pan-expand>
+  </shared-pan-expand>
 
-<hr>
+  <hr>
 
-<prints-printer fileName="ListadoGeneral" [isVertical]="isVertical">
-    <table class="table is-fullwidth has-background-white">
+    <prints-printer fileName="ListadoGeneral" [isVertical]="isVertical">
+      <table class="table is-fullwidth has-background-white">
         <thead>
-            <th class="has-text-black">Nombre</th>
-            <th class="has-text-black">Género</th>
-            <th class="has-text-black">Día</th>
-            <th class="has-text-black">Fecha de nacimiento</th>
-            <th class="has-text-black" *ngIf="showPhones">Teléfono</th>
-            <th class="has-text-black">Padres</th>
+          <th class="has-text-black">Nombre</th>
+          <th class="has-text-black">Género</th>
+          <th class="has-text-black">Día</th>
+          <th class="has-text-black">Fecha de nacimiento</th>
+          @if (showPhones) {
+            <th class="has-text-black">Teléfono</th>
+          }
+          <th class="has-text-black">Padres</th>
         </thead>
         <tbody>
-            <tr class="has-text-black" *ngFor="let person of people">
-                <td class="has-text-black">{{person.name}}</td>
-                <td class="has-text-black">
-                    @if (person.gender) {Masculino}@else {Femenino}
+          @for (person of people; track person) {
+            <tr class="has-text-black">
+              <td class="has-text-black">{{person.name}}</td>
+              <td class="has-text-black">
+                @if (person.gender) {Masculino}@else {Femenino}
                 </td>
                 <td class="has-text-black">
-                    @if (person.day) {Domingo} @else {Sábado}
-                </td>
-                <td class="has-text-black">{{GetDOB(person.dob)}}</td>
-                <td class="has-text-black" *ngIf="showPhones">{{GetFormatedPhone(person.phone)}}</td>
-                <td class="has-text-black">{{GetFormatedParents(person.parents)}}</td>
-            </tr>
-        </tbody>
-    </table>
-</prints-printer>
+                  @if (person.day) {Domingo} @else {Sábado}
+                  </td>
+                  <td class="has-text-black">{{GetDOB(person.dob)}}</td>
+                  @if (showPhones) {
+                    <td class="has-text-black">{{GetFormatedPhone(person.phone)}}</td>
+                  }
+                  <td class="has-text-black">{{GetFormatedParents(person.parents)}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </prints-printer>

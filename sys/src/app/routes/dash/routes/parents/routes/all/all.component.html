@@ -1,69 +1,77 @@
 <shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
-    <a class="button is-primary" routerLink="/parent/new">Agregar</a>
-    <button class="button is-info" [class.is-loading]="isSearching" [disabled]="isSearching"
-        (click)="Search()">Buscar</button>
-    <button class="button" (click)="ClearFilters()">Limpiar filtros</button>
+  <a class="button is-primary" routerLink="/parent/new">Agregar</a>
+  <button class="button is-info" [class.is-loading]="isSearching" [disabled]="isSearching"
+  (click)="Search()">Buscar</button>
+  <button class="button" (click)="ClearFilters()">Limpiar filtros</button>
 </div>
 
 <shared-pan-expand title="Filtros">
-    <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="Search()">
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Nombre">
-                <input type="text" class="input" formControlName="name">
-            </shared-field>
-        </div>
+  <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="Search()">
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Nombre">
+        <input type="text" class="input" formControlName="name">
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Género">
-                <div class="select">
-                    <select formControlName="gender">
-                        <option value="true">Masculino</option>
-                        <option value="false">Femenino</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Género">
+        <div class="select">
+          <select formControlName="gender">
+            <option value="true">Masculino</option>
+            <option value="false">Femenino</option>
+          </select>
         </div>
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Es padre">
-                <div class="select">
-                    <select formControlName="parent">
-                        <option value="true">Solo padres</option>
-                        <option value="false">Solo padrinos</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Es padre">
+        <div class="select">
+          <select formControlName="parent">
+            <option value="true">Solo padres</option>
+            <option value="false">Solo padrinos</option>
+          </select>
         </div>
-    </form>
+      </shared-field>
+    </div>
+  </form>
 </shared-pan-expand>
 
 <div class="table-container">
-    <table class="table is-striped is-hoverable is-fullwidth">
-        <thead>
-            <th>Nombre</th>
-            <th>Género</th>
-            <th>Acción</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let parent of parents">
-                <td>{{parent.name}}</td>
-                <td>
-                    @if (parent.gender) {Masculino}@else {Femenino}
-                </td>
-                <td>
-                    <a class="button" routerLink="/parent/{{parent.id}}">Seleccionar</a>
-                </td>
-            </tr>
-        </tbody>
+  <table class="table is-striped is-hoverable is-fullwidth">
+    <thead>
+      <th>Nombre</th>
+      <th>Género</th>
+      <th>Acción</th>
+    </thead>
+    <tbody>
+      @for (parent of parents; track parent) {
+        <tr>
+          <td>{{parent.name}}</td>
+          <td>
+            @if (parent.gender) {Masculino}@else {Femenino}
+            </td>
+            <td>
+              <a class="button" routerLink="/parent/{{parent.id}}">Seleccionar</a>
+            </td>
+          </tr>
+        }
+      </tbody>
     </table>
-</div>
+  </div>
 
-<nav class="pagination is-centered" role="navigation" aria-label="pagination" *ngIf="parents.length > 0">
-    <button type="button" class="pagination-previous" [class.is-loading]="isSearching" [disabled]="isSearching"
-        (click)="ChangePage(false)" *ngIf="page > 1">Página anterior</button>
-    <button type="button" class="pagination-next" [class.is-loading]="isSearching" [disabled]="isSearching"
-        (click)="ChangePage(true)" *ngIf="page < lastPage">Siguiente página</button>
-    <p class="pagination-list">{{page}}/{{lastPage}}</p>
-</nav>
+  @if (parents.length > 0) {
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+      @if (page > 1) {
+        <button type="button" class="pagination-previous" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="ChangePage(false)">Página anterior</button>
+      }
+      @if (page < lastPage) {
+        <button type="button" class="pagination-next" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="ChangePage(true)">Siguiente página</button>
+      }
+      <p class="pagination-list">{{page}}/{{lastPage}}</p>
+    </nav>
+  }

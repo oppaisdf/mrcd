@@ -1,62 +1,72 @@
 <shared-pan-expand [title]="isParent ? 'Padres': 'Padrinos'">
-    <shared-alert [(message)]="message" [success]="success" />
+  <shared-alert [(message)]="message" [success]="success" />
 
-    <div class="table-container">
-        <table class="table is-hoverable is-striped is-fullwidth" *ngIf="parents.length > 0">
-            <thead>
-                <th>Nombre</th>
-                <th>Género</th>
-                <th *ngIf="isParent">Teléfono</th>
-                <th *ngIf="parents.length > 1">Acción</th>
-            </thead>
-            <tbody>
-                <tr *ngFor="let parent of parents">
-                    <td>{{parent.name}}</td>
-                    <td>
-                        @if (parent.gender) {Masculino}@else {Femenino}
-                    </td>
-                    <td *ngIf="isParent">{{parent.phone}}</td>
-                    <td>
-                        <button class="button is-danger" [disabled]="updating"
-                            (click)="RemoveAsync(parent)">Remover</button>
-                    </td>
-                </tr>
-            </tbody>
+  <div class="table-container">
+    @if (parents.length > 0) {
+      <table class="table is-hoverable is-striped is-fullwidth">
+        <thead>
+          <th>Nombre</th>
+          <th>Género</th>
+          @if (isParent) {
+            <th>Teléfono</th>
+          }
+          @if (parents.length > 1) {
+            <th>Acción</th>
+          }
+        </thead>
+        <tbody>
+          @for (parent of parents; track parent) {
+            <tr>
+              <td>{{parent.name}}</td>
+              <td>
+                @if (parent.gender) {Masculino}@else {Femenino}
+                </td>
+                @if (isParent) {
+                  <td>{{parent.phone}}</td>
+                }
+                <td>
+                  <button class="button is-danger" [disabled]="updating"
+                  (click)="RemoveAsync(parent)">Remover</button>
+                </td>
+              </tr>
+            }
+          </tbody>
         </table>
+      }
     </div>
 
     <hr>
 
-    <form [formGroup]="form" class="box" (ngSubmit)="AddAsync()">
+      <form [formGroup]="form" class="box" (ngSubmit)="AddAsync()">
         <div class="field">
-            <label for="txtName" class="subtitle">Nombre</label>
-            <div class="control">
-                <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
-                    formControlName="name">
-            </div>
+          <label for="txtName" class="subtitle">Nombre</label>
+          <div class="control">
+            <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
+              formControlName="name">
+          </div>
         </div>
 
         <div class="field">
-            <label class="subatitle">Género</label>
-            <div class="control">
-                <label class="checkbox">
-                    <input type="checkbox" formControlName="gender">
-                    @if (gender) { Masculino}@else { Femenino}
-                </label>
+          <label class="subatitle">Género</label>
+          <div class="control">
+            <label class="checkbox">
+              <input type="checkbox" formControlName="gender">
+              @if (gender) { Masculino}@else { Femenino}
+              </label>
             </div>
-        </div>
+          </div>
 
-        @if (isParent) {
-        <div class="field">
-            <label class="subtitle">Teléfono</label>
-            <div class="control">
+          @if (isParent) {
+            <div class="field">
+              <label class="subtitle">Teléfono</label>
+              <div class="control">
                 <input type="text" class="input" [class.is-danger]="IsInvalidField('phone')" formControlName="phone"
-                    (input)="FormatNumber()" maxlength="9" placeholder="xxxx-xxxx">
+                  (input)="FormatNumber()" maxlength="9" placeholder="xxxx-xxxx">
+              </div>
             </div>
-        </div>
-        }
+          }
 
-        <button class="button is-info" [class.is-loading]="updating" [disabled]="updating || form.invalid"
-            (click)="AddAsync()">Agregar</button>
-    </form>
-</shared-pan-expand>
+          <button class="button is-info" [class.is-loading]="updating" [disabled]="updating || form.invalid"
+          (click)="AddAsync()">Agregar</button>
+        </form>
+      </shared-pan-expand>

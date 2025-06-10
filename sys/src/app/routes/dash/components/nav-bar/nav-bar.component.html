@@ -1,82 +1,84 @@
 <nav class="navbar is-fixed-top is-transparent" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" routerLink="/">
-            <img width="30" src="https://pub-e47275a009714794bcff2eb4713b67bb.r2.dev/mrcd.png">
+  <div class="navbar-brand">
+    <a class="navbar-item" routerLink="/">
+      <img width="30" src="https://pub-e47275a009714794bcff2eb4713b67bb.r2.dev/mrcd.png">
+    </a>
+
+    <button (click)="ShowMenu()" [class.is-active]="burgerActive" class="navbar-burger" aria-label="menu"
+      aria-expanded="false" data-target="navbarBurger">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div id="navbarBurger" class="navbar-menu" [class.is-active]="burgerActive">
+    <div class="navbar-start">
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">Confirmandos</a>
+        <div class="navbar-dropdown" (click)="ShowMenu()">
+          <a class="navbar-item" routerLink="/person/new">Inscribir</a>
+          <a class="navbar-item" routerLink="/person/all">Actualizar</a>
+          <a class="navbar-item" routerLink="/attendance">Asistencia</a>
+          <a class="navbar-item" routerLink="/parent/all">Padres/Padrinos</a>
+        </div>
+      </div>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">Impresiones</a>
+        <div class="navbar-dropdown" (click)="ShowMenu()">
+          <a class="navbar-item" routerLink="/print/attendance">Asistencia</a>
+          @if (isAdm) {
+            <a class="navbar-item">Diplomas</a>
+            <a class="navbar-item" routerLink="/print/badge">Gafetes</a>
+          }
+          <a class="navbar-item" routerLink="/print/list">Listado</a>
+        </div>
+      </div>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">Gestiones</a>
+        <div class="navbar-dropdown" (click)="ShowMenu()">
+          <a class="navbar-item" routerLink="/charge/all">Cobros</a>
+          <a class="navbar-item" routerLink="/docs/all">Documentos</a>
+          @if (isAdm) {
+            <a class="navbar-item" routerLink="/degree/all">Grados académicos</a>
+            <a class="navbar-item" routerLink="/user/all">Usuarios</a>
+            <a class="navbar-item" routerLink="/sacrament/all">Sacramentos</a>
+            <hr class="navbar-divider">
+            <a class="navbar-item" routerLink="/action/all">Acciones de logs</a>
+            <a class="navbar-item" routerLink="/logs">Logs</a>
+          }
+        </div>
+      </div>
+
+      @if (isSys) {
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">System</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" routerLink="/role/all">Roles</a>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <a class="tag is-medium is-warning is-light is-rounded" routerLink="/alerts"
+        (click)="ShowMenu()">Alertas</a>
+      </div>
+      <div class="navbar-item" (click)="ShowMenu()">
+        <a class="is-flex" routerLink="/user/me">
+          <figure class="image">
+            <img src="https://pub-e47275a009714794bcff2eb4713b67bb.r2.dev/icons/user.png" />
+          </figure>
         </a>
-
-        <button (click)="ShowMenu()" [class.is-active]="burgerActive" class="navbar-burger" aria-label="menu"
-            aria-expanded="false" data-target="navbarBurger">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </button>
+      </div>
+      <div class="navbar-item">
+        <button class="button is-warning" [class.is-loading]="isLogouting" [disabled]="isLogouting"
+        (click)="Logout()">Cerrar sesión</button>
+      </div>
     </div>
-
-    <div id="navbarBurger" class="navbar-menu" [class.is-active]="burgerActive">
-        <div class="navbar-start">
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">Confirmandos</a>
-                <div class="navbar-dropdown" (click)="ShowMenu()">
-                    <a class="navbar-item" routerLink="/person/new">Inscribir</a>
-                    <a class="navbar-item" routerLink="/person/all">Actualizar</a>
-                    <a class="navbar-item" routerLink="/attendance">Asistencia</a>
-                    <a class="navbar-item" routerLink="/parent/all">Padres/Padrinos</a>
-                </div>
-            </div>
-
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">Impresiones</a>
-                <div class="navbar-dropdown" (click)="ShowMenu()">
-                    <a class="navbar-item" routerLink="/print/attendance">Asistencia</a>
-                    @if (isAdm) {
-                    <a class="navbar-item">Diplomas</a>
-                    <a class="navbar-item" routerLink="/print/badge">Gafetes</a>
-                    }
-                    <a class="navbar-item" routerLink="/print/list">Listado</a>
-                </div>
-            </div>
-
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">Gestiones</a>
-                <div class="navbar-dropdown" (click)="ShowMenu()">
-                    <a class="navbar-item" routerLink="/charge/all">Cobros</a>
-                    <a class="navbar-item" routerLink="/docs/all">Documentos</a>
-                    @if (isAdm) {
-                    <a class="navbar-item" routerLink="/degree/all">Grados académicos</a>
-                    <a class="navbar-item" routerLink="/user/all">Usuarios</a>
-                    <a class="navbar-item" routerLink="/sacrament/all">Sacramentos</a>
-                    <hr class="navbar-divider">
-                    <a class="navbar-item" routerLink="/action/all">Acciones de logs</a>
-                    <a class="navbar-item" routerLink="/logs">Logs</a>
-                    }
-                </div>
-            </div>
-
-            <div class="navbar-item has-dropdown is-hoverable" *ngIf="isSys">
-                <a class="navbar-link">System</a>
-                <div class="navbar-dropdown">
-                    <a class="navbar-item" routerLink="/role/all">Roles</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <a class="tag is-medium is-warning is-light is-rounded" routerLink="/alerts"
-                    (click)="ShowMenu()">Alertas</a>
-            </div>
-            <div class="navbar-item" (click)="ShowMenu()">
-                <a class="is-flex" routerLink="/user/me">
-                    <figure class="image">
-                        <img src="https://pub-e47275a009714794bcff2eb4713b67bb.r2.dev/icons/user.png" />
-                    </figure>
-                </a>
-            </div>
-            <div class="navbar-item">
-                <button class="button is-warning" [class.is-loading]="isLogouting" [disabled]="isLogouting"
-                    (click)="Logout()">Cerrar sesión</button>
-            </div>
-        </div>
-    </div>
+  </div>
 </nav>

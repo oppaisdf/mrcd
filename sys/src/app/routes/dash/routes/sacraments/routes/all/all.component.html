@@ -2,20 +2,22 @@
 <shared-updater [(show)]="showUpdater" [record]="selectedSacrament" endpoint="Sacrament" />
 
 <div class="buttons are-medium">
-    <a class="button is-primary" routerLink="/sacrament/new">Agregar</a>
+  <a class="button is-primary" routerLink="/sacrament/new">Agregar</a>
 </div>
 
 <table class="table is-fullwidth is-hoverable is-striped">
-    <thead>
-        <th>Nombre</th>
-        <th>Acción</th>
-    </thead>
-    <tbody>
-        <tr *ngFor="let sacrament of sacraments">
-            <td>{{sacrament.name}}</td>
-            <td>
-                <button class="button" (click)="Select(sacrament)">Actualizar</button>
-            </td>
-        </tr>
-    </tbody>
+  <thead>
+    <th>Nombre</th>
+    <th>Acción</th>
+  </thead>
+  <tbody>
+    @for (sacrament of sacraments; track sacrament) {
+      <tr>
+        <td>{{sacrament.name}}</td>
+        <td>
+          <button class="button" (click)="Select(sacrament)">Actualizar</button>
+        </td>
+      </tr>
+    }
+  </tbody>
 </table>

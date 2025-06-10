@@ -1,27 +1,33 @@
 <charge-updater [(show)]="showUpdater" [record]="selectedCharge" />
 
 <div class="buttons are-medium">
-    <a class="button is-primary" routerLink="/charge/new" *ngIf="isAdm">Nuevo</a>
+  @if (isAdm) {
+    <a class="button is-primary" routerLink="/charge/new">Nuevo</a>
+  }
 </div>
 
 <div class="table-container">
-    <table class="table is-fullwidth is-striped">
-        <thead>
-            <th>Nombre</th>
-            <th>Total</th>
-            <th>Acciones</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let charge of charges">
-                <td>{{charge.name}}</td>
-                <td>{{charge.total|currency:currencySymbol}}</td>
-                <td>
-                    <div class="buttons">
-                        <button *ngIf="isAdm" class="button is-info" (click)="SelectCharge(charge)">Actualizar</button>
-                        <a class="button" routerLink="/charge/{{charge.id}}">Seleccionar</a>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table is-fullwidth is-striped">
+    <thead>
+      <th>Nombre</th>
+      <th>Total</th>
+      <th>Acciones</th>
+    </thead>
+    <tbody>
+      @for (charge of charges; track charge) {
+        <tr>
+          <td>{{charge.name}}</td>
+          <td>{{charge.total|currency:currencySymbol}}</td>
+          <td>
+            <div class="buttons">
+              @if (isAdm) {
+                <button class="button is-info" (click)="SelectCharge(charge)">Actualizar</button>
+              }
+              <a class="button" routerLink="/charge/{{charge.id}}">Seleccionar</a>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>
