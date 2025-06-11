@@ -1,7 +1,8 @@
-ARG BASE_TAG=22-alpine
+ARG BASE_TAG=lts-alpine
 ARG BASE_CLI=19.0.6
 
 FROM node:${BASE_TAG}
+RUN npm install -g npm@latest
 RUN npm install -g @angular/cli@${BASE_CLI}
 WORKDIR /app
 COPY package*.json ./
