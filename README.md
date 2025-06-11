@@ -143,5 +143,5 @@ Si se require hacer una restauración de la base de datos para evitar las migrac
 - Alerta de inasistencias.
 - Terminar de separar lógica de SQL.
 - Agenda (all).
-- Retirar la continuación del hilo explícito en funciones asíncronas.
-- Revisar escanéos
+- Retirar la continuación del hilo explícito en funciones asíncronas (.ConfigureAwait(false)).
+- Revisar escanéos. No usar @zxing/ngx-scanner por incopatibilidad con Angular 20, ni ngx-scanner-qrcode porque recarga la página al iniciar el escáner.

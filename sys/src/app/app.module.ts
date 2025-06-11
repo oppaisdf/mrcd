@@ -8,7 +8,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './shared/shared.module';
 import { NavBarComponent } from './core/components/nav-bar/nav-bar.component';
 import { DashComponent } from './routes/base/dash.component';
-import { LOAD_WASM } from 'ngx-scanner-qrcode';
 
 @NgModule({
   declarations: [
@@ -28,10 +27,4 @@ import { LOAD_WASM } from 'ngx-scanner-qrcode';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor() {
-    LOAD_WASM('assets/wasm/ngx-scanner-qrcode.wasm').subscribe(
-      //() => { console.log('✅ WASM cargado en AppModule'); }
-    );
-  }
-}
+export class AppModule { }
