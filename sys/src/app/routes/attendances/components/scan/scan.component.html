@@ -4,39 +4,40 @@
         <shared-alert [(message)]="message" [success]="success" />
 
         @if (isAttendance) {
-        <form [formGroup]="form" class="columns is-multiline">
-            <div class="column is-half">
-                <shared-field field="Tipo de asistencia">
-                    <div class="select">
-                        <select formControlName="isAttendance">
-                            <option value="true">Asistencia</option>
-                            <option value="false">Permiso de inasistencia</option>
-                        </select>
-                    </div>
-                </shared-field>
-            </div>
+        <shared-pan-expand title="Opciones de escaneo">
+            <form [formGroup]="form" class="columns is-multiline">
+                <div class="column is-half">
+                    <shared-field field="Tipo de asistencia" [inBox]="false">
+                        <div class="select">
+                            <select formControlName="isAttendance">
+                                <option value="true">Asistencia</option>
+                                <option value="false">Permiso de inasistencia</option>
+                            </select>
+                        </div>
+                    </shared-field>
+                </div>
 
-            <div class="column is-half">
-                <shared-field field="¿Cerrar scaner al terminar?">
-                    <div class="select">
-                        <select formControlName="alwaysShow">
-                            <option value="true">No</option>
-                            <option value="false">Sí</option>
-                        </select>
-                    </div>
-                </shared-field>
-            </div>
+                <div class="column is-half">
+                    <shared-field field="¿Cerrar scaner al terminar?" [inBox]="false">
+                        <div class="select">
+                            <select formControlName="alwaysShow">
+                                <option value="true">No</option>
+                                <option value="false">Sí</option>
+                            </select>
+                        </div>
+                    </shared-field>
+                </div>
 
-            <div class="column is-half">
-                <shared-field field="Fecha de asistencia">
-                    <input type="date" class="input" formControlName="date">
-                </shared-field>
-            </div>
-        </form>
+                <div class="column is-half">
+                    <shared-field field="Fecha de asistencia" [inBox]="false">
+                        <input type="date" class="input" formControlName="date">
+                    </shared-field>
+                </div>
+            </form>
+        </shared-pan-expand>
         }
 
-        <zxing-scanner #scanner [autostart]="true" [autofocusEnabled]="true" [formats]="formats"
-            (scanSuccess)="Scan($event)" *ngIf="!loading"></zxing-scanner>
+        <ngx-scanner-qrcode #qr="scanner" [symbolType]="qrOnly" (data)="Scan($event)" />
     </div>
     <button class="modal-close is-large" aria-label="close" (click)="CloseModal()"></button>
 </div>

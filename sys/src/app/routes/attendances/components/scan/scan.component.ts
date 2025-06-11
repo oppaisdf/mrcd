@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { BarcodeFormat } from '@zxing/browser';
 import { AttendanceService } from '../../services/attendance.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AttendanceRequest } from '../../models/attendance';
-import { ZXingScannerComponent } from '@zxing/ngx-scanner';
+import { NgxScannerQrcodeComponent, ScannerQRCodeSymbolType } from 'ngx-scanner-qrcode';
 
 @Component({
   selector: 'attendances-comp-scan',
@@ -32,13 +31,17 @@ export class ScanComponent {
   @Output() messageChange = new EventEmitter<string>();
   @Output() successChange = new EventEmitter<boolean>();
   @Output() typeAttendanceChange = new EventEmitter<number>();
-  formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE];
+  qrOnly = [ScannerQRCodeSymbolType.ScannerQRCode_QRCODE];
   form: FormGroup;
+  @ViewChild('qr') qr?: NgxScannerQrcodeComponent;
 
   async Scan(
-    qr: string
+    qrs: any
   ) {
     if (this.loading) return;
+    const qr = qrs?.[0]?.value;
+    if (!qr) return;
+    this.qr?.pause();
     this.loading = true;
     this.loadingChange.emit(true);
 
@@ -56,6 +59,7 @@ export class ScanComponent {
     this.successChange.emit(this.success);
     this.loading = false;
     this.loadingChange.emit(false);
+    this.qr?.play();
     if (this.GetValue('alwaysShow') === 'true') return;
     this.CloseModal();
   }

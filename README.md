@@ -144,3 +144,4 @@ Si se require hacer una restauración de la base de datos para evitar las migrac
 - Terminar de separar lógica de SQL.
 - Agenda (all).
 - Retirar la continuación del hilo explícito en funciones asíncronas.
+- Revisar escanéos
