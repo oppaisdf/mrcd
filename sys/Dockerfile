@@ -1,5 +1,5 @@
-ARG BASE_TAG=lts-alpine
-ARG BASE_CLI=20.0.1
+ARG BASE_TAG=22-alpine
+ARG BASE_CLI=19.0.6
 
 FROM node:${BASE_TAG}
 RUN npm install -g @angular/cli@${BASE_CLI}

@@ -1,4 +1,4 @@
-ARG BASE_TAG=lts-alpine
+ARG BASE_TAG=22-alpine
 
 # Construcciones
 FROM node:${BASE_TAG} AS builder

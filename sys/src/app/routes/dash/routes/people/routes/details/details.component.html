@@ -1,108 +1,104 @@
 <shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
-  <button class="button is-warning" [class.is-loading]="isUpdating" [disabled]="isUpdating || form.invalid"
-  (click)="UpdateAsync()">Actualizar</button>
-  <a class="button is-info is-light" routerLink="/person/all">Regresar</a>
+    <button class="button is-warning" [class.is-loading]="isUpdating" [disabled]="isUpdating || form.invalid"
+        (click)="UpdateAsync()">Actualizar</button>
+    <a class="button is-info is-light" routerLink="/person/all">Regresar</a>
 </div>
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="UpdateAsync()">
-  <div class="column is-half">
-    <shared-field [loading]="isUpdating" field="Nombre">
-      <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
-        formControlName="name" maxlength="65">
-    </shared-field>
-  </div>
-
-  <div class="column is-half">
-    <shared-field [loading]="isUpdating" field="Género">
-      <div class="select">
-        <select formControlName="gender">
-          <option value="true">Masculino</option>
-          <option value="false">Femenino</option>
-        </select>
-      </div>
-    </shared-field>
-  </div>
-
-  <div class="column is-half">
-    <shared-field [loading]="isUpdating" field="Fecha de nacimiento">
-      <input name="txtDob" type="date" class="input" formControlName="dob" [max]="GetMDate(true)"
-        [min]="GetMDate(false)">
-    </shared-field>
-  </div>
-
-  <div class="column is-half">
-    <shared-field [loading]="isUpdating" field="Día">
-      <div class="select">
-        <select formControlName="day">
-          <option value="true">Domingo</option>
-          <option value="false">Sábado</option>
-        </select>
-      </div>
-    </shared-field>
-  </div>
-
-  <div class="column is-half">
-    <shared-field [loading]="isUpdating" field="Activo">
-      <label class="checkbox">
-        <input type="checkbox" formControlName="isActive">
-        @if (GetValue('isActive')) { Activo} @else { Inactivo}
-        </label>
-      </shared-field>
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Nombre">
+            <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
+                formControlName="name" maxlength="65">
+        </shared-field>
     </div>
 
     <div class="column is-half">
-      <shared-field [loading]="isUpdating" field="Grado académico">
-        <div class="select">
-          <select name="lstDegree" formControlName="degreeId">
-            @for (degree of degrees; track degree) {
-              <option value="{{degree.id}}">{{degree.name}}</option>
-            }
-          </select>
-        </div>
-      </shared-field>
+        <shared-field [loading]="isUpdating" field="Género">
+            <div class="select">
+                <select formControlName="gender">
+                    <option value="true">Masculino</option>
+                    <option value="false">Femenino</option>
+                </select>
+            </div>
+        </shared-field>
     </div>
 
     <div class="column is-half">
-      <shared-field [loading]="isUpdating" field="Dirección">
-        <textarea name="txtAddress" class="textarea" [class.is-danger]="IsInvalidField('address')"
-        formControlName="address" maxlength="100"></textarea>
-      </shared-field>
+        <shared-field [loading]="isUpdating" field="Fecha de nacimiento">
+            <input name="txtDob" type="date" class="input" formControlName="dob" [max]="GetMDate(true)"
+                [min]="GetMDate(false)">
+        </shared-field>
     </div>
 
     <div class="column is-half">
-      <shared-field [loading]="isUpdating" field="Sacramentos">
-        @for (sacrament of sacraments; track sacrament) {
-          <div class="checkboxes">
+        <shared-field [loading]="isUpdating" field="Día">
+            <div class="select">
+                <select formControlName="day">
+                    <option value="true">Domingo</option>
+                    <option value="false">Sábado</option>
+                </select>
+            </div>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Activo">
             <label class="checkbox">
-              <input type="checkbox" [checked]="sacrament.isActive" (click)="SelectSacrament(sacrament)">
-              {{sacrament.name}}
+                <input type="checkbox" formControlName="isActive">
+                @if (GetValue('isActive')) { Activo} @else { Inactivo}
             </label>
-          </div>
-        }
-      </shared-field>
+        </shared-field>
     </div>
 
     <div class="column is-half">
-      <shared-field [loading]="isUpdating" field="Parroquia de bautizo">
-        <input type="text" class="input" [class.is-danger]="IsInvalidField('parish')" formControlName="parish"
-          maxlength="30">
-      </shared-field>
+        <shared-field [loading]="isUpdating" field="Grado académico">
+            <div class="select">
+                <select name="lstDegree" formControlName="degreeId">
+                    <option *ngFor="let degree of degrees" value="{{degree.id}}">{{degree.name}}</option>
+                </select>
+            </div>
+        </shared-field>
     </div>
 
     <div class="column is-half">
-      <shared-field [loading]="isUpdating" field="Número telefónico">
-        <input name="txtPhone" type="text" class="input" [class.is-danger]="IsInvalidField('phone')"
-          formControlName="phone" maxlength="9" (input)="FormatPhone()">
-      </shared-field>
+        <shared-field [loading]="isUpdating" field="Dirección">
+            <textarea name="txtAddress" class="textarea" [class.is-danger]="IsInvalidField('address')"
+                formControlName="address" maxlength="100"></textarea>
+        </shared-field>
     </div>
-  </form>
 
-  <people-comp-parents [(updating)]="isUpdating" [id]="id" [isParent]="true" [parents]="parents" />
-  <hr>
-    <people-comp-parents [(updating)]="isUpdating" [id]="id" [isParent]="false" [parents]="godparents" />
-    <hr>
-      <people-comp-charges [id]="id" [charges]="charges" [(updating)]="isUpdating" />
-      <hr>
-        <people-comp-docs [(isLoading)]="isUpdating" [id]="id" [documents]="documents" />
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Sacramentos">
+            <div class="checkboxes" *ngFor="let sacrament of sacraments">
+                <label class="checkbox">
+                    <input type="checkbox" [checked]="sacrament.isActive" (click)="SelectSacrament(sacrament)">
+                    {{sacrament.name}}
+                </label>
+            </div>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Parroquia de bautizo">
+            <input type="text" class="input" [class.is-danger]="IsInvalidField('parish')" formControlName="parish"
+                maxlength="30">
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Número telefónico">
+            <input name="txtPhone" type="text" class="input" [class.is-danger]="IsInvalidField('phone')"
+                formControlName="phone" maxlength="9" (input)="FormatPhone()">
+        </shared-field>
+    </div>
+</form>
+
+<people-comp-parents [(updating)]="isUpdating" [id]="id" [isParent]="true" [parents]="parents" />
+<hr>
+<people-comp-parents [(updating)]="isUpdating" [id]="id" [isParent]="false" [parents]="godparents" />
+<hr>
+<people-comp-charges [id]="id" [charges]="charges" [(updating)]="isUpdating" />
+<hr>
+<people-comp-docs [(isLoading)]="isUpdating" [id]="id" [documents]="documents" />

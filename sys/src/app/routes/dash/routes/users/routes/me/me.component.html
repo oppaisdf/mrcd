@@ -1,36 +1,32 @@
 <shared-alert [(message)]="message" [success]="success" />
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="UpdateAsync()">
-  <div class="column is-half">
-    <shared-field [loading]="isUpdating" field="Nombre de usuario">
-      <input type="text" class="input" [class.is-danger]="IsInvalidField('username')" formControlName="username"
-        maxlength="15">
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Nombre de usuario">
+            <input type="text" class="input" [class.is-danger]="IsInvalidField('username')" formControlName="username"
+                maxlength="15">
+        </shared-field>
+    </div>
 
-  <div class="column is-half">
-    <shared-field [loading]="isUpdating" field="Nueva contraseña">
-      <input type="password" class="input" [class.is-danger]="IsInvalidField('password')"
-        formControlName="password" maxlength="30">
-      @if (IsInvalidField('password')) {
-        <p class="help is-danger">La contraseña debe tener, por lo menos: un
-        número, una letra mayúscula, un carácter especial y una longitud de 6</p>
-      }
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field [loading]="isUpdating" field="Nueva contraseña">
+            <input type="password" class="input" [class.is-danger]="IsInvalidField('password')"
+                formControlName="password" maxlength="30">
+            <p class="help is-danger" *ngIf="IsInvalidField('password')">La contraseña debe tener, por lo menos: un
+                número, una letra mayúscula, un carácter especial y una longitud de 6</p>
+        </shared-field>
+    </div>
 
-  <div class="column is-half">
-    <shared-field field="Roles">
-      <div class="tags are-medium">
-        @for (role of roles; track role) {
-          <span class="tag">{{role}}</span>
-        }
-      </div>
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field field="Roles">
+            <div class="tags are-medium">
+                <span class="tag" *ngFor="let role of roles">{{role}}</span>
+            </div>
+        </shared-field>
+    </div>
 </form>
 
 <div class="buttons are-medium">
-  <button class="button is-primary" [class.is-loading]="isUpdating" [disabled]="isUpdating"
-  (click)="UpdateAsync()">Actualizar</button>
+    <button class="button is-primary" [class.is-loading]="isUpdating" [disabled]="isUpdating"
+        (click)="UpdateAsync()">Actualizar</button>
 </div>

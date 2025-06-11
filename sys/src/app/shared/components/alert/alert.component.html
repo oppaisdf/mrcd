@@ -1,6 +1,4 @@
-@if (message) {
-  <div class="notification" [class.is-success]="success" [class.is-danger]="!success">
+<div *ngIf="message" class="notification" [class.is-success]="success" [class.is-danger]="!success">
     <button class="delete" (click)="Hide()"></button>
     {{message}}
-  </div>
-}
+</div>

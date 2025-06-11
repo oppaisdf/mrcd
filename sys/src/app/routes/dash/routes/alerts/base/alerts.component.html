@@ -1,21 +1,17 @@
 <div class="columns is-multiline">
-  @for (alert of alerts; track alert) {
-    <div class="column is-half">
-      <div class="card">
-        <header class="card-header">
-          <p class="card-header-title">{{alert.counter}}</p>
-        </header>
-        <div class="card-content">
-          <div class="content">
-            {{alert.description}}
-          </div>
+    <div class="column is-half" *ngFor="let alert of alerts">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">{{alert.counter}}</p>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    {{alert.description}}
+                </div>
+            </div>
+            <footer class="card-footer" *ngIf="alert.counter > 0">
+                <a class="card-footer-item" routerLink="{{alert.route}}" [queryParams]="{alert:alert.alert}">Ver</a>
+            </footer>
         </div>
-        @if (alert.counter > 0) {
-          <footer class="card-footer">
-            <a class="card-footer-item" routerLink="{{alert.route}}" [queryParams]="{alert:alert.alert}">Ver</a>
-          </footer>
-        }
-      </div>
     </div>
-  }
 </div>

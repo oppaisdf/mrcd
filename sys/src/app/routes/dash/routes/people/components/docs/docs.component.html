@@ -1,12 +1,10 @@
 <shared-pan-expand title="Documentos">
-  <shared-alert [(message)]="message" [success]="success" />
+    <shared-alert [(message)]="message" [success]="success" />
 
-  <div class="checkboxes">
-    @for (doc of documents; track doc) {
-      <label class="checkbox">
-        <input type="checkbox" [checked]="doc.isActive" (click)="AssignAsync(doc)">
-        {{doc.name}}
-      </label>
-    }
-  </div>
+    <div class="checkboxes">
+        <label class="checkbox" *ngFor="let doc of documents">
+            <input type="checkbox" [checked]="doc.isActive" (click)="AssignAsync(doc)">
+            {{doc.name}}
+        </label>
+    </div>
 </shared-pan-expand>

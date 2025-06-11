@@ -1,40 +1,36 @@
 <shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
-  <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
-  (click)="AddAsync()">Agregar</button>
-  <a class="button" routerLink="/user/all">Regresar</a>
+    <button class="button is-primary" [class.is-loading]="isAdding" [disabled]="isAdding || form.invalid"
+        (click)="AddAsync()">Agregar</button>
+    <a class="button" routerLink="/user/all">Regresar</a>
 </div>
 
 <form [formGroup]="form" class="columns is-multiline" (ngSubmit)="AddAsync()">
-  <div class="column is-half">
-    <shared-field [loading]="isAdding" field="Nombre de usuario">
-      <input name="txtUser" type="text" class="input" [class.is-danger]="IsInvalidField('username')"
-        formControlName="username" maxlength="15">
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field [loading]="isAdding" field="Nombre de usuario">
+            <input name="txtUser" type="text" class="input" [class.is-danger]="IsInvalidField('username')"
+                formControlName="username" maxlength="15">
+        </shared-field>
+    </div>
 
-  <div class="column is-half">
-    <shared-field [loading]="isAdding" field="Contraseña">
-      <input name="txtPass" type="password" class="input" [class.is-danger]="IsInvalidField('password')"
-        formControlName="password" maxlength="30" minlength="6">
-      @if (IsInvalidField('password')) {
-        <p class="help is-danger">La contraseña debe tener, por lo menos: un
-        número, una letra mayúscula, un carácter especial y una longitud de 6</p>
-      }
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field [loading]="isAdding" field="Contraseña">
+            <input name="txtPass" type="password" class="input" [class.is-danger]="IsInvalidField('password')"
+                formControlName="password" maxlength="30" minlength="6">
+            <p class="help is-danger" *ngIf="IsInvalidField('password')">La contraseña debe tener, por lo menos: un
+                número, una letra mayúscula, un carácter especial y una longitud de 6</p>
+        </shared-field>
+    </div>
 
-  <div class="column is-half">
-    <shared-field field="Roles">
-      <div class="checkboxes">
-        @for (role of roles; track role) {
-          <label class="checkbox">
-            <input type="checkbox" (click)="OnCheckRole(role.name)" value="{{role.name}}">
-            {{role.name}}
-          </label>
-        }
-      </div>
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field field="Roles">
+            <div class="checkboxes">
+                <label class="checkbox" *ngFor="let role of roles">
+                    <input type="checkbox" (click)="OnCheckRole(role.name)" value="{{role.name}}">
+                    {{role.name}}
+                </label>
+            </div>
+        </shared-field>
+    </div>
 </form>

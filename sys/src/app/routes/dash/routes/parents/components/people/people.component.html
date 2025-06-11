@@ -1,67 +1,63 @@
 <shared-pan-expand title="Filtros">
-  <div class="columns is-multiline">
-    <shared-field class="column is-half" [inBox]="false" field="Nombre">
-      <input type="text" class="input" [(ngModel)]="name" (input)="Filter()">
-    </shared-field>
+    <div class="columns is-multiline">
+        <shared-field class="column is-half" [inBox]="false" field="Nombre">
+            <input type="text" class="input" [(ngModel)]="name" (input)="Filter()">
+        </shared-field>
 
-    <div class="column is-half">
-      <shared-field [inBox]="false" field="Día">
-        <div class="select">
-          <select [(ngModel)]="day" (ngModelChange)="Filter()">
-            <option value="1">Todos</option>
-            <option value="2">Domingo</option>
-            <option value="3">Sábado</option>
-          </select>
+        <div class="column is-half">
+            <shared-field [inBox]="false" field="Día">
+                <div class="select">
+                    <select [(ngModel)]="day" (ngModelChange)="Filter()">
+                        <option value="1">Todos</option>
+                        <option value="2">Domingo</option>
+                        <option value="3">Sábado</option>
+                    </select>
+                </div>
+            </shared-field>
         </div>
-      </shared-field>
-    </div>
 
-    <div class="column is-half">
-      <shared-field [inBox]="false" field="Género">
-        <div class="select">
-          <select [(ngModel)]="gender" (ngModelChange)="Filter()">
-            <option value="1">Todos</option>
-            <option value="2">Masculino</option>
-            <option value="3">Femenino</option>
-          </select>
+        <div class="column is-half">
+            <shared-field [inBox]="false" field="Género">
+                <div class="select">
+                    <select [(ngModel)]="gender" (ngModelChange)="Filter()">
+                        <option value="1">Todos</option>
+                        <option value="2">Masculino</option>
+                        <option value="3">Femenino</option>
+                    </select>
+                </div>
+            </shared-field>
         </div>
-      </shared-field>
     </div>
-  </div>
 </shared-pan-expand>
 
 <shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
-  <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
+    <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
 </div>
 
 <div class="columns is-multiline">
-  <div class="column is-half">
-    <shared-field field="Padre de">
-      @for (person of people; track person) {
-        <div class="checkboxes">
-          <label class="checkbox">
-            <input type="checkbox" [disabled]="updating" [checked]="person.hasParent === true"
-              (click)="SelectAsync(person, true)">
-            {{person.name}}
-          </label>
-        </div>
-      }
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field field="Padre de">
+            <div class="checkboxes" *ngFor="let person of people">
+                <label class="checkbox">
+                    <input type="checkbox" [disabled]="updating" [checked]="person.hasParent === true"
+                        (click)="SelectAsync(person, true)">
+                    {{person.name}}
+                </label>
+            </div>
+        </shared-field>
+    </div>
 
-  <div class="column is-half">
-    <shared-field field="Padrino de">
-      @for (person of people; track person) {
-        <div class="checkboxes">
-          <label class="checkbox">
-            <input type="checkbox" [disabled]="updating" [checked]="person.hasParent === false"
-              (click)="SelectAsync(person, false)">
-            {{person.name}}
-          </label>
-        </div>
-      }
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field field="Padrino de">
+            <div class="checkboxes" *ngFor="let person of people">
+                <label class="checkbox">
+                    <input type="checkbox" [disabled]="updating" [checked]="person.hasParent === false"
+                        (click)="SelectAsync(person, false)">
+                    {{person.name}}
+                </label>
+            </div>
+        </shared-field>
+    </div>
 </div>

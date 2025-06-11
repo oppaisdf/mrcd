@@ -1,85 +1,71 @@
 <shared-alert [(message)]="messsage" [success]="success" />
 
 <div class="buttons are-medium">
-  <button class="button is-primary" [class.is-loading]="isSearching" [disabled]="isSearching"
-  (click)="FindAsync()">Buscar</button>
+    <button class="button is-primary" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="FindAsync()">Buscar</button>
 
-  <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
+    <button class="button is-info" (click)="ClearFilters()">Limpiar filtros</button>
 </div>
 
 <form [formGroup]="form" class="box columns is-multiline" (ngSubmit)="FindAsync()">
-  <div class="column is-half">
-    <shared-field [loading]="isSearching" [inBox]="false" field="Usuario">
-      <div class="select">
-        <select name="lstUser" formControlName="userId">
-          @for (user of users; track user) {
-            <option value="{{user.id}}">{{user.name}}</option>
-          }
-        </select>
-      </div>
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field [loading]="isSearching" [inBox]="false" field="Usuario">
+            <div class="select">
+                <select name="lstUser" formControlName="userId">
+                    <option *ngFor="let user of users" value="{{user.id}}">{{user.name}}</option>
+                </select>
+            </div>
+        </shared-field>
+    </div>
 
-  <div class="column is-half">
-    <shared-field [loading]="isSearching" [inBox]="false" field="Acción de log">
-      <div class="select">
-        <select name="lstAction" formControlName="action">
-          @for (action of actions; track action) {
-            <option value="{{action.id}}">{{action.name}}</option>
-          }
-        </select>
-      </div>
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field [loading]="isSearching" [inBox]="false" field="Acción de log">
+            <div class="select">
+                <select name="lstAction" formControlName="action">
+                    <option *ngFor="let action of actions" value="{{action.id}}">{{action.name}}</option>
+                </select>
+            </div>
+        </shared-field>
+    </div>
 
-  <div class="column is-half">
-    <shared-field [loading]="isSearching" [inBox]="false" field="Fecha de inicio">
-      <input name="txtStart" type="date" class="input" formControlName="start" [max]="maxDate">
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field [loading]="isSearching" [inBox]="false" field="Fecha de inicio">
+            <input name="txtStart" type="date" class="input" formControlName="start" [max]="maxDate">
+        </shared-field>
+    </div>
 
-  <div class="column is-half">
-    <shared-field [loading]="isSearching" [inBox]="false" field="Fecha final">
-      <input name="txtEnd" type="date" class="input" formControlName="end" [min]="minEndDate" [max]="maxDate">
-    </shared-field>
-  </div>
+    <div class="column is-half">
+        <shared-field [loading]="isSearching" [inBox]="false" field="Fecha final">
+            <input name="txtEnd" type="date" class="input" formControlName="end" [min]="minEndDate" [max]="maxDate">
+        </shared-field>
+    </div>
 </form>
 
-@if (logs.length > 0) {
-  <div class="table-container">
+<div class="table-container" *ngIf="logs.length > 0">
     <table class="table is-fullwidth is-striped">
-      <thead>
-        <th>Usuario</th>
-        <th>Accción</th>
-        <th>Detalles</th>
-        <th>Hora</th>
-        <th>Fecha</th>
-      </thead>
-      <tbody>
-        @for (log of logs; track log) {
-          <tr>
-            <td>{{log.user}}</td>
-            <td>{{log.action}}</td>
-            <td>{{log.details}}</td>
-            <td>{{GetHour(log.date)}}</td>
-            <td>{{GetDate(log.date)}}</td>
-          </tr>
-        }
-      </tbody>
+        <thead>
+            <th>Usuario</th>
+            <th>Accción</th>
+            <th>Detalles</th>
+            <th>Hora</th>
+            <th>Fecha</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let log of logs">
+                <td>{{log.user}}</td>
+                <td>{{log.action}}</td>
+                <td>{{log.details}}</td>
+                <td>{{GetHour(log.date)}}</td>
+                <td>{{GetDate(log.date)}}</td>
+            </tr>
+        </tbody>
     </table>
-  </div>
-}
+</div>
 
-@if (logs.length > 0) {
-  <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-    @if (page > 1) {
-      <button type="button" class="pagination-previous" [class.is-loading]="isSearching" [disabled]="isSearching"
-      (click)="ChangePage(false)">Página anterior</button>
-    }
-    @if (page < lastPage) {
-      <button type="button" class="pagination-next" [class.is-loading]="isSearching" [disabled]="isSearching"
-      (click)="ChangePage(true)">Siguiente página</button>
-    }
+<nav class="pagination is-centered" role="navigation" aria-label="pagination" *ngIf="logs.length > 0">
+    <button type="button" class="pagination-previous" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="ChangePage(false)" *ngIf="page > 1">Página anterior</button>
+    <button type="button" class="pagination-next" [class.is-loading]="isSearching" [disabled]="isSearching"
+        (click)="ChangePage(true)" *ngIf="page < lastPage">Siguiente página</button>
     <p class="pagination-list">{{page}}/{{lastPage}}</p>
-  </nav>
-}
+</nav>
