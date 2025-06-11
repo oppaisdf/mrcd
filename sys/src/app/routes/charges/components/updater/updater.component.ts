@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DefaultResponse } from '../../../core/models/responses/Response';
-import { UpdateService } from '../../services/update.service';
+import { ChargeService } from '../../services/charge.service';
+import { ChargeResponse } from '../../models/responses/charge';
+import { environment } from '../../../../core/environments/environment';
 
 @Component({
-  selector: 'shared-updater',
+  selector: 'charge-updater',
   standalone: false,
   templateUrl: './updater.component.html',
   styleUrl: './updater.component.sass'
@@ -12,27 +13,35 @@ import { UpdateService } from '../../services/update.service';
 export class UpdaterComponent {
   constructor(
     private _form: FormBuilder,
-    private _service: UpdateService
+    private _service: ChargeService
   ) {
     this.form = this._form.group({
-      name: ['', [Validators.required, Validators.maxLength(10)]]
+      name: ['', Validators.maxLength(11)],
+      total: [0]
     });
   }
 
   @Input() show = false;
   @Output() showChange = new EventEmitter<boolean>();
-  @Input() endpoint = '';
-  @Input() record: DefaultResponse = {
+  @Input() record: ChargeResponse = {
     id: 0,
-    name: ''
+    name: '',
+    total: 0,
+    isActive: true
   };
 
   form: FormGroup;
   isUpdating = false;
   message = '';
   success = true;
+  currencySymbol = environment.currencySymbol;
 
-  get isInvalidName() { return this.form.controls['name'].touched && this.form.controls['name'].invalid; }
+  IsInvalidField(
+    name: string
+  ) {
+    const control = this.form.controls[name];
+    return control.touched && control.invalid;
+  }
 
   Hide() {
     this.show = false;
@@ -46,7 +55,7 @@ export class UpdaterComponent {
     this.isUpdating = true;
     this.form.disable();
 
-    const response = await this._service.UpdateAsync(this.record.id, this.form.value, this.endpoint);
+    const response = await this._service.UpdateAsync(this.record.id, this.form.value);
     this.message = response.message;
     this.success = response.success;
 

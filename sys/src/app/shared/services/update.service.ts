@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { DefaultRequest } from '../../routes/dash/models/Request';
+import { DefaultRequest } from '../../core/models/requests/Request';
 
 @Injectable()
 export class UpdateService {
