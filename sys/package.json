@@ -18,6 +18,8 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@zxing/browser": "^0.1.5",
+    "@zxing/library": "^0.21.3",
     "angularx-qrcode": "^19.0.0",
     "bulma": "^1.0.3",
     "glob": "^11.0.0",

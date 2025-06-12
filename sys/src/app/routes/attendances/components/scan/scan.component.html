@@ -36,6 +36,8 @@
             </form>
         </shared-pan-expand>
         }
+
+        <attendance-comp-scanner #scaner (scanned)="Scan($event)" />
     </div>
     <button class="modal-close is-large" aria-label="close" (click)="CloseModal()"></button>
 </div>

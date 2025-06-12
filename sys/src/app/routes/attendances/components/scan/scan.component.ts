@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AttendanceService } from '../../services/attendance.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AttendanceRequest } from '../../models/attendance';
+import { ScannerComponent } from '../scanner/scanner.component';
 
 @Component({
   selector: 'attendances-comp-scan',
@@ -9,7 +10,7 @@ import { AttendanceRequest } from '../../models/attendance';
   templateUrl: './scan.component.html',
   styleUrl: './scan.component.sass'
 })
-export class ScanComponent {
+export class ScanComponent implements AfterViewInit {
   constructor(
     private _service: AttendanceService,
     private _form: FormBuilder
@@ -30,14 +31,19 @@ export class ScanComponent {
   @Output() messageChange = new EventEmitter<string>();
   @Output() successChange = new EventEmitter<boolean>();
   @Output() typeAttendanceChange = new EventEmitter<number>();
+  @ViewChild(ScannerComponent) scanner!: ScannerComponent;
   form: FormGroup;
 
+  async ngAfterViewInit() {
+    this.scanner.Start();
+  }
+
   async Scan(
-    qrs: any
+    qr: string
   ) {
     if (this.loading) return;
-    const qr = qrs?.[0]?.value;
     if (!qr) return;
+    this.scanner.Pause();
     this.loading = true;
     this.loadingChange.emit(true);
 
@@ -54,6 +60,7 @@ export class ScanComponent {
     this.messageChange.emit(this.message);
     this.successChange.emit(this.success);
     this.loading = false;
+    this.scanner.Start();
     this.loadingChange.emit(false);
     if (this.GetValue('alwaysShow') === 'true') return;
     this.CloseModal();

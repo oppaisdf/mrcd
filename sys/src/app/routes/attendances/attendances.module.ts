@@ -9,13 +9,15 @@ import { ScanComponent } from './components/scan/scan.component';
 import { ManualComponent } from './routes/manual/manual.component';
 import { ScanAllComponent } from './components/scan-all/scan-all.component';
 import { SharedModule } from '../../shared/shared.module';
+import { ScannerComponent } from './components/scanner/scanner.component';
 
 @NgModule({
   declarations: [
     ScanComponent,
     AllComponent,
     ManualComponent,
-    ScanAllComponent
+    ScanAllComponent,
+    ScannerComponent
   ], imports: [
     CommonModule,
     AttendancesRoutingModule,
