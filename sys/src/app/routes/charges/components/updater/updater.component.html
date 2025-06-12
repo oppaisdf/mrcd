@@ -1,38 +1,36 @@
-<div class="modal is-active" *ngIf="show">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">Actualiza registro {{record.name}}</p>
-            <button class="delete" aria-label="close" (click)="Hide()"></button>
-        </header>
-
-        <section class="modal-card-body">
-            <shared-alert [(message)]="message" [success]="success" />
-
-            <form [formGroup]="form" (ngSubmit)="UpdateAsync()">
-                <div class="field">
-                    <label for="txtName" class="subtitle">Nombre</label>
-                    <div class="control" [class.is-loading]="isUpdating">
-                        <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
-                            formControlName="name" maxlength="11">
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="subtitle">Total</label>
-                    <div class="control" [class.is-loading]="isUpdating">
-                        <input type="number" class="input" [class.is-danger]="IsInvalidField('total')"
-                            formControlName="total" placeholder="{{0|currency:currencySymbol}}">
-                    </div>
-                </div>
-            </form>
-        </section>
-
-        <footer class="modal-card-foot">
-            <div class="buttons">
-                <button class="button is-success" [class.is-loadig]="isUpdating" [disabled]="isUpdating || form.invalid"
-                    (click)="UpdateAsync()">Actualizar</button>
-            </div>
-        </footer>
-    </div>
+@if (show) {
+<div class="modal is-active">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Actualiza registro {{record.name}}</p>
+      <button class="delete" aria-label="close" (click)="Hide()"></button>
+    </header>
+    <section class="modal-card-body">
+      <shared-alert [(message)]="message" [success]="success" />
+      <form [formGroup]="form" (ngSubmit)="UpdateAsync()">
+        <div class="field">
+          <label for="txtName" class="subtitle">Nombre</label>
+          <div class="control" [class.is-loading]="isUpdating">
+            <input name="txtName" type="text" class="input" [class.is-danger]="IsInvalidField('name')"
+              formControlName="name" maxlength="11">
+          </div>
+        </div>
+        <div class="field">
+          <label class="subtitle">Total</label>
+          <div class="control" [class.is-loading]="isUpdating">
+            <input type="number" class="input" [class.is-danger]="IsInvalidField('total')" formControlName="total"
+              placeholder="{{0|currency:currencySymbol}}">
+          </div>
+        </div>
+      </form>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="buttons">
+        <button class="button is-success" [class.is-loadig]="isUpdating" [disabled]="isUpdating || form.invalid"
+          (click)="UpdateAsync()">Actualizar</button>
+      </div>
+    </footer>
+  </div>
 </div>
+}

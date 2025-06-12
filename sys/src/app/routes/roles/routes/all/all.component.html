@@ -1,18 +1,20 @@
 <div class="buttons are-medium">
-    <a class="button is-primary" routerLink="/role/new">+ Add</a>
+  <a class="button is-primary" routerLink="/role/new">+ Add</a>
 </div>
 
 <div class="table-container">
-    <table class="table is-hoverable is-stripted is-fullwidth">
-        <thead>
-            <th>Id</th>
-            <th>Name</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let role of roles">
-                <td>{{role.id}}</td>
-                <td>{{role.name}}</td>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table is-hoverable is-stripted is-fullwidth">
+    <thead>
+      <th>Id</th>
+      <th>Name</th>
+    </thead>
+    <tbody>
+      @for (role of roles; track role) {
+      <tr>
+        <td>{{role.id}}</td>
+        <td>{{role.name}}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>

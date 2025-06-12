@@ -1,74 +1,78 @@
 <shared-alert [(message)]="message" [success]="success" />
 
 <div class="buttons are-medium">
-    <a class="button" routerLink="/charge/all">Regresar</a>
+  <a class="button" routerLink="/charge/all">Regresar</a>
 </div>
 
 <p class="title">{{name}}</p>
 <p class="subtitle">{{total|currency:currencySymbol}}</p>
 
 <shared-pan-expand title="Filtros">
-    <div class="columns is-multiline">
-        <div class="column is-hafl">
-            <shared-field [inBox]="false" field="Nombre">
-                <input type="text" class="input" [(ngModel)]="txt" (ngModelChange)="Filter()">
-            </shared-field>
-        </div>
-
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Género">
-                <div class="select">
-                    <select [(ngModel)]="gender" (ngModelChange)="Filter()">
-                        <option value="1">Todos</option>
-                        <option value="2">Masculino</option>
-                        <option value="3">Femenino</option>
-                    </select>
-                </div>
-            </shared-field>
-        </div>
+  <div class="columns is-multiline">
+    <div class="column is-hafl">
+      <shared-field [inBox]="false" field="Nombre">
+        <input type="text" class="input" [(ngModel)]="txt" (ngModelChange)="Filter()">
+      </shared-field>
     </div>
+
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Género">
+        <div class="select">
+          <select [(ngModel)]="gender" (ngModelChange)="Filter()">
+            <option value="1">Todos</option>
+            <option value="2">Masculino</option>
+            <option value="3">Femenino</option>
+          </select>
+        </div>
+      </shared-field>
+    </div>
+  </div>
 </shared-pan-expand>
 
 <hr>
 
 <div class="columns">
-    <div class="column is-half">
-        <shared-field field="Domingo">
-            <div class="table-container">
-                <table class="table is-striped is-fullwidth is-overable">
-                    <tbody>
-                        <tr *ngFor="let person of sunday">
-                            <td>{{person.name}}</td>
-                            <td>
-                                <button class="button" [ngClass]="person.isActive === true?'is-danger':'is-info'"
-                                    (click)="SelectPerson(person)">
-                                    @if (person.isActive) {Remover cobro}@else {Registrar cobro}
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </shared-field>
-    </div>
+  <div class="column is-half">
+    <shared-field field="Domingo">
+      <div class="table-container">
+        <table class="table is-striped is-fullwidth is-overable">
+          <tbody>
+            @for (person of sunday; track person) {
+            <tr>
+              <td>{{person.name}}</td>
+              <td>
+                <button class="button" [ngClass]="person.isActive === true?'is-danger':'is-info'"
+                  (click)="SelectPerson(person)">
+                  @if (person.isActive) {Remover cobro}@else {Registrar cobro}
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </shared-field>
+  </div>
 
-    <div class="column is-half">
-        <shared-field field="Sábado">
-            <div class="table-container">
-                <table class="table is-striped is-fullwidth is-overable">
-                    <tbody>
-                        <tr *ngFor="let person of saturday">
-                            <td>{{person.name}}</td>
-                            <td>
-                                <button class="button" [ngClass]="person.isActive === true?'is-danger':'is-info'"
-                                    (click)="SelectPerson(person)">
-                                    @if (person.isActive) {Remover cobro}@else {Registrar cobro}
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </shared-field>
-    </div>
+  <div class="column is-half">
+    <shared-field field="Sábado">
+      <div class="table-container">
+        <table class="table is-striped is-fullwidth is-overable">
+          <tbody>
+            @for (person of saturday; track person) {
+            <tr>
+              <td>{{person.name}}</td>
+              <td>
+                <button class="button" [ngClass]="person.isActive === true?'is-danger':'is-info'"
+                  (click)="SelectPerson(person)">
+                  @if (person.isActive) {Remover cobro}@else {Registrar cobro}
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </shared-field>
+  </div>
 </div>

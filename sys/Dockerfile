@@ -1,5 +1,5 @@
 ARG BASE_TAG=lts-alpine
-ARG BASE_CLI=19.0.6
+ARG BASE_CLI=20.0.3
 
 FROM node:${BASE_TAG}
 RUN npm install -g npm@latest

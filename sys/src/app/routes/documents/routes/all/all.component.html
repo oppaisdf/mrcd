@@ -1,26 +1,33 @@
 <shared-updater [(show)]="showUpdater" [record]="selectedDocument" endpoint="Document" />
 
 <div class="buttons are-medium">
-    <a class="button is-primary" routerLink="/docs/new" *ngIf="isAdm">Agregar</a>
+  @if (isAdm) {
+  <a class="button is-primary" routerLink="/docs/new">Agregar</a>
+  }
 </div>
 
-<div class="table-container" *ngIf="docs.length > 0">
-    <table class="table is-striped is-hoverable is-fullwidth">
-        <thead>
-            <th>Nombre</th>
-            <th>Acciones</th>
-        </thead>
-        <tbody>
-            <tr *ngFor="let doc of docs">
-                <td>{{doc.name}}</td>
-                <td>
-                    <div class="buttons">
-                        <button class="button is-primary" *ngIf="isAdm"
-                            (click)="SelectDocument(doc)">Actualizar</button>
-                        <a class="button" routerLink="/docs/{{doc.id}}">Seleccionar</a>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+@if (docs.length > 0) {
+<div class="table-container">
+  <table class="table is-striped is-hoverable is-fullwidth">
+    <thead>
+      <th>Nombre</th>
+      <th>Acciones</th>
+    </thead>
+    <tbody>
+      @for (doc of docs; track doc) {
+      <tr>
+        <td>{{doc.name}}</td>
+        <td>
+          <div class="buttons">
+            @if (isAdm) {
+            <button class="button is-primary" (click)="SelectDocument(doc)">Actualizar</button>
+            }
+            <a class="button" routerLink="/docs/{{doc.id}}">Seleccionar</a>
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>
+}

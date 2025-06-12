@@ -1,109 +1,111 @@
 <shared-pan-expand title="Filtros">
-    <div class="buttons are-medium">
-        <button class="button" (click)="ClearFilters()">Limpiar filtros</button>
+  <div class="buttons are-medium">
+    <button class="button" (click)="ClearFilters()">Limpiar filtros</button>
+  </div>
+
+  <form [formGroup]="filters" class="columns is-multiline">
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Nombre">
+        <input type="text" class="input" formControlName="name">
+      </shared-field>
     </div>
 
-    <form [formGroup]="filters" class="columns is-multiline">
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Nombre">
-                <input type="text" class="input" formControlName="name">
-            </shared-field>
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Día">
+        <div class="select">
+          <select formControlName="day">
+            <option value="true">Domingo</option>
+            <option value="false">Sábado</option>
+          </select>
         </div>
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Día">
-                <div class="select">
-                    <select formControlName="day">
-                        <option value="true">Domingo</option>
-                        <option value="false">Sábado</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field [inBox]="false" field="Género">
+        <div class="select">
+          <select formControlName="gender">
+            <option value="true">Masculino</option>
+            <option value="false">Femenino</option>
+          </select>
         </div>
-
-        <div class="column is-half">
-            <shared-field [inBox]="false" field="Género">
-                <div class="select">
-                    <select formControlName="gender">
-                        <option value="true">Masculino</option>
-                        <option value="false">Femenino</option>
-                    </select>
-                </div>
-            </shared-field>
-        </div>
-    </form>
+      </shared-field>
+    </div>
+  </form>
 </shared-pan-expand>
 
 <hr>
 
 <shared-pan-expand title="Página">
-    <form [formGroup]="page" class="columns is-multiline">
-        <div class="column is-half">
-            <shared-field field="Orientación" [inBox]="false">
-                <div class="select">
-                    <select formControlName="isVertical">
-                        <option value="true">Vertical</option>
-                        <option value="false">Horizontal</option>
-                    </select>
-                </div>
-            </shared-field>
+  <form [formGroup]="page" class="columns is-multiline">
+    <div class="column is-half">
+      <shared-field field="Orientación" [inBox]="false">
+        <div class="select">
+          <select formControlName="isVertical">
+            <option value="true">Vertical</option>
+            <option value="false">Horizontal</option>
+          </select>
         </div>
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field field="Columnas" [inBox]="false">
-                <div class="select">
-                    <select formControlName="columns">
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field field="Columnas" [inBox]="false">
+        <div class="select">
+          <select formControlName="columns">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
         </div>
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field field="Tamaño de fuente" [inBox]="false">
-                <div class="select">
-                    <select formControlName="size">
-                        <option value="3">Pequeño</option>
-                        <option value="2">Mediano</option>
-                        <option value="1">Grande</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field field="Tamaño de fuente" [inBox]="false">
+        <div class="select">
+          <select formControlName="size">
+            <option value="3">Pequeño</option>
+            <option value="2">Mediano</option>
+            <option value="1">Grande</option>
+          </select>
         </div>
+      </shared-field>
+    </div>
 
-        <div class="column is-half">
-            <shared-field field="Tamaño de QR" [inBox]="false">
-                <div class="select">
-                    <select formControlName="sqr">
-                        <option value="2">Pequeño</option>
-                        <option value="3">Mediano</option>
-                        <option value="4">Grande</option>
-                    </select>
-                </div>
-            </shared-field>
+    <div class="column is-half">
+      <shared-field field="Tamaño de QR" [inBox]="false">
+        <div class="select">
+          <select formControlName="sqr">
+            <option value="2">Pequeño</option>
+            <option value="3">Mediano</option>
+            <option value="4">Grande</option>
+          </select>
         </div>
-    </form>
+      </shared-field>
+    </div>
+  </form>
 </shared-pan-expand>
 
 <hr>
 
 <prints-printer [isVertical]="GetValue(false, 'isVertical') === 'true'" fileName="Gafetes">
-    <div class="columns is-multiline is-mobile is-5">
-        <div class="column" [class.is-half]="GetValue(false, 'columns') === '2'"
-            [class.is-one-third]="GetValue(false, 'columns') === '3'"
-            [class.is-one-quarter]="GetValue(false, 'columns') === '4'" *ngFor="let qr of qrs">
-            <div class="columns is-mobile is-vcentered is-gapless">
-                <div class="column is-half has-text-right">
-                    <qrcode [qrdata]="qr.hash" [elementType]="'img'" [scale]="+GetValue(false, 'sqr')" />
-                </div>
-                <div class="column is-half has-text-centered">
-                    <p class="title is-{{GetValue(false, 'size')}} has-text-black-bis">{{qr.name}}</p>
-                    <p class="subtitle is-{{+GetValue(false, 'size')+2}} has-text-grey-dark">@if (qr.day) {Domingo}@else
-                        {Sábado} </p>
-                </div>
-            </div>
+  <div class="columns is-multiline is-mobile is-5">
+    @for (qr of qrs; track qr) {
+    <div class="column" [class.is-half]="GetValue(false, 'columns') === '2'"
+      [class.is-one-third]="GetValue(false, 'columns') === '3'"
+      [class.is-one-quarter]="GetValue(false, 'columns') === '4'">
+      <div class="columns is-mobile is-vcentered is-gapless">
+        <div class="column is-half has-text-right">
+          <qrcode [qrdata]="qr.hash" [elementType]="'img'" [scale]="+GetValue(false, 'sqr')" />
         </div>
+        <div class="column is-half has-text-centered">
+          <p class="title is-{{GetValue(false, 'size')}} has-text-black-bis">{{qr.name}}</p>
+          <p class="subtitle is-{{+GetValue(false, 'size')+2}} has-text-grey-dark">@if (qr.day) {Domingo}@else
+            {Sábado} </p>
+        </div>
+      </div>
     </div>
+    }
+  </div>
 </prints-printer>

@@ -1,24 +1,26 @@
 <div class="buttons are-medium">
-    <a class="button is-primary" routerLink="/user/new">Agregar</a>
+  <a class="button is-primary" routerLink="/user/new">Agregar</a>
 </div>
 
 <table class="table is-striped is-hoverable is-fullwidth">
-    <thead>
-        <th>Activo</th>
-        <th>Nombre</th>
-        <th>Acción</th>
-    </thead>
-    <tbody>
-        <tr *ngFor="let user of users">
-            <td>
-                <label for="chkActive" class="checkbox">
-                    <input name="chkActive" type="checkbox" [checked]="user.isActive">
-                </label>
-            </td>
-            <td>{{user.username}}</td>
-            <td>
-                <a class="button is-info" routerLink="/user/{{user.id}}">Seleccionar</a>
-            </td>
-        </tr>
-    </tbody>
+  <thead>
+    <th>Activo</th>
+    <th>Nombre</th>
+    <th>Acción</th>
+  </thead>
+  <tbody>
+    @for (user of users; track user) {
+    <tr>
+      <td>
+        <label for="chkActive" class="checkbox">
+          <input name="chkActive" type="checkbox" [checked]="user.isActive">
+        </label>
+      </td>
+      <td>{{user.username}}</td>
+      <td>
+        <a class="button is-info" routerLink="/user/{{user.id}}">Seleccionar</a>
+      </td>
+    </tr>
+    }
+  </tbody>
 </table>
