@@ -1,4 +1,6 @@
+using api.Models.Entities;
 using api.Models.Responses;
+using api.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Data;
@@ -13,14 +15,82 @@ public interface IPlannerRepository
     /// <returns></returns>
     Task<ICollection<SimplePlannerResponse>> GetAsync(ushort year, ushort month);
     Task<PlannerResponse?> GetByIdAsync(uint id);
+    Task<uint> CreateActivityAsync(string userId, Activity activity);
+    Task<List<string>> StagesToListAsync();
+    Task CreateStageAsync(string userId, ActivityStage stage);
+    Task<bool> ActivityAndStageExistsAsync(uint activityId, ushort stageId);
+    Task AddStageToActivityAsync(StagesOfActivities stage);
 }
 
 public class PlannerRepository
 (
-    MerContext context
+    MerContext context,
+    ILogService logs
 ) : IPlannerRepository
 {
     private readonly MerContext _context = context;
+    private readonly ILogService _logs = logs;
+
+    public async Task<bool> ActivityAndStageExistsAsync(
+        uint activityId,
+        ushort stageId
+    )
+    {
+        var results = await Task.WhenAll(
+            _context.Activities.AsNoTracking().AnyAsync(a => a.Id == activityId),
+            _context.ActivityStages.AsNoTracking().AnyAsync(s => s.Id == stageId)
+        ).ConfigureAwait(false);
+        return results[0] && results[1];
+    }
+
+    public async Task AddStageToActivityAsync(
+        StagesOfActivities stage
+    )
+    {
+        _context.StagesOfActivities.Add(stage);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<uint> CreateActivityAsync(
+        string userId,
+        Activity activity
+    )
+    {
+        var tran = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            _context.Activities.Add(activity);
+            await _context.SaveChangesAsync();
+            await _logs.RegisterCreationAsync(userId, $"Activity {activity.Id}");
+            await tran.CommitAsync();
+            return activity.Id!.Value;
+        }
+        catch
+        {
+            await tran.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task CreateStageAsync(
+        string userId,
+        ActivityStage stage
+    )
+    {
+        var tran = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            _context.ActivityStages.Add(stage);
+            await _context.SaveChangesAsync();
+            await _logs.RegisterCreationAsync(userId, $"Stage {stage.Id}");
+            await tran.CommitAsync();
+        }
+        catch
+        {
+            await tran.RollbackAsync();
+            throw;
+        }
+    }
 
     public async Task<ICollection<SimplePlannerResponse>> GetAsync(
         ushort year,
@@ -64,7 +134,15 @@ public class PlannerRepository
                     )
                    .ToList()
             ))
+        .AsNoTracking()
         .FirstOrDefaultAsync()
         .ConfigureAwait(false);
     }
+
+    public async Task<List<string>> StagesToListAsync()
+    => await _context.ActivityStages
+        .AsNoTracking()
+        .Select(s => s.Name)
+        .ToListAsync()
+        .ConfigureAwait(false);
 }

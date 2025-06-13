@@ -16,6 +16,7 @@ public interface IUserService
     Task UpdateAsync(string id, UserRequest request, string userIdRequest);
     Task<ICollection<string>> LoginAsync(LoginRequest request);
     Task LogoutAsync();
+    Task<bool> UserActiveExists(string id);
 }
 
 public partial class UserService(
@@ -207,5 +208,13 @@ public partial class UserService(
             await tran.RollbackAsync();
             throw;
         }
+    }
+
+    public async Task<bool> UserActiveExists(
+        string id
+    )
+    {
+        var user = await _userManager.FindByIdAsync(id).ConfigureAwait(false);
+        return user != null && user.EmailConfirmed;
     }
 }
