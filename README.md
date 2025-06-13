@@ -122,6 +122,23 @@ Por defecto se deben contar con los siguientes registros ya creados en la base d
 
 Si se require hacer una restauración de la base de datos para evitar las migraciones manuales, verificar el archivo [backup.sql](./db/backup.sql).
 
+### 3.2. Migraciones
+
+Para realizar migraciones en contenedores:
+
+```PowerShell
+docker run --rm `
+-v "$(pwd):/app" `
+-w /app `
+-e DEFAULT_CONNECTION='Server=db;port=3306;UserID=root;Password=_Passw0rd_;Database=mrcdb;' `
+-e ENCRYPT_KEY='_MySecr3tKey!-very-verySecret:3_' `
+--network mrcd_network `
+mcr.microsoft.com/dotnet/sdk:8.0 `
+bash -c 'dotnet tool install --global dotnet-ef && export PATH="$PATH:/root/.dotnet/tools" && dotnet ef migrations add InitialCreate && dotnet ef database update'
+```
+
+> Cambiar las variables de entorno por las de producción.
+
 ## 4. Arquitectura
 
 ```
