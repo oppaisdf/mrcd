@@ -134,10 +134,10 @@ docker run --rm `
 -e ENCRYPT_KEY='_MySecr3tKey!-very-verySecret:3_' `
 --network mrcd_network `
 mcr.microsoft.com/dotnet/sdk:8.0 `
-bash -c 'dotnet tool install --global dotnet-ef && export PATH="$PATH:/root/.dotnet/tools" && dotnet ef migrations add InitialCreate && dotnet ef database update'
+bash -c 'dotnet tool install --global dotnet-ef --version 8.0.17 && export PATH="$PATH:/root/.dotnet/tools" && dotnet ef migrations add [MigrationName] && dotnet ef database update'
 ```
 
-> Cambiar las variables de entorno por las de producción.
+> Cambiar las variables de entorno por las de producción y agregar nombre de la migración.
 
 ## 4. Arquitectura
 
