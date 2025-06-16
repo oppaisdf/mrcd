@@ -13,6 +13,9 @@ public interface IPlannerService
     Task<uint> CreateActivityAsync(string userId, ActivityRequest request);
     Task CreateStageAsync(string userId, StageRequest request);
     Task AddStageToActivityAsync(ActivityStageRequest request);
+    Task DeleteActivityAsync(string userId, uint id);
+    Task DeleteStageAsync(string userId, ushort id);
+    Task DelStageToActivityAsync(uint activityId, ushort stageId);
 }
 
 public class PlannerService(
@@ -29,9 +32,11 @@ public class PlannerService(
         ActivityStageRequest request
     )
     {
-        var exists = await _repo.ActivityAndStageExistsAsync(request.ActivityId, request.StageId);
+        var exists = await _repo
+            .ActivityAndStageExistsAsync(request.ActivityId, request.StageId)
+            .ConfigureAwait(false);
         if (!exists) throw new DoesNotExistsException("La actividad o la fase no existe");
-        if (request.UserId != null && !await _user.UserActiveExists(request.UserId))
+        if (request.UserId != null && !await _user.UserActiveExists(request.UserId).ConfigureAwait(false))
             throw new DoesNotExistsException("El usuario no existe");
         var stage = new StagesOfActivities
         {
@@ -41,7 +46,9 @@ public class PlannerService(
             UserId = request.UserId,
             Notes = request.Notes
         };
-        await _repo.AddStageToActivityAsync(stage);
+        await _repo
+            .AddStageToActivityAsync(stage)
+            .ConfigureAwait(false);
     }
 
     public async Task<uint> CreateActivityAsync(
@@ -54,7 +61,9 @@ public class PlannerService(
             Name = request.Name,
             Date = request.Date
         };
-        return await _repo.CreateActivityAsync(userId, activity);
+        return await _repo
+            .CreateActivityAsync(userId, activity)
+            .ConfigureAwait(false);
     }
 
     public async Task CreateStageAsync(
@@ -62,14 +71,51 @@ public class PlannerService(
         StageRequest request
     )
     {
-        var stages = await _repo.StagesToListAsync();
+        var stages = await _repo
+            .StageNamesToListAsync()
+            .ConfigureAwait(false);
         stages.ForEach(s => s = _service.GetNormalizedText(s));
         if (stages.Contains(request.Name)) throw new AlreadyExistsException("La etapa ya está registrada");
         var stage = new ActivityStage
         {
             Name = request.Name
         };
-        await _repo.CreateStageAsync(userId, stage);
+        await _repo
+            .CreateStageAsync(userId, stage)
+            .ConfigureAwait(false);
+    }
+
+    public async Task DeleteActivityAsync(
+        string userId,
+        uint id
+    ) => await _repo.DeleteActivityAsync(userId, id);
+
+    public async Task DeleteStageAsync(
+        string userId,
+        ushort id
+    )
+    {
+        var usingStage = await _repo
+            .UsingStageAsync(id)
+            .ConfigureAwait(false);
+        if (usingStage) throw new BadRequestException("No se puede eliminar porque la fase de actividad está en uso");
+        await _repo
+            .DeleteStageAsync(userId, id)
+            .ConfigureAwait(false);
+    }
+
+    public async Task DelStageToActivityAsync(
+        uint activityId,
+        ushort stageId
+    )
+    {
+        var exists = await _repo
+            .ActivityAndStageExistsAsync(activityId, stageId)
+            .ConfigureAwait(false);
+        if (!exists) throw new DoesNotExistsException("La actividad o la fase no existe");
+        await _repo
+            .DelStageToActivityAsync(activityId, stageId)
+            .ConfigureAwait(false);
     }
 
     public async Task<ICollection<DayResponse>> GetAsync(
@@ -80,7 +126,9 @@ public class PlannerService(
         var days = new List<DayResponse>();
         var lastDayInMonth = DateTime.DaysInMonth(year, month);
         var firstDayOfWeek = (short)new DateTime(year, month, 1).DayOfWeek;
-        var bussinesDays = await _repo.ActivitiesInDaysToListAsync(year, month);
+        var bussinesDays = await _repo
+            .ActivitiesInDaysToListAsync(year, month)
+            .ConfigureAwait(false);
         var dirDays = bussinesDays.ToDictionary(d => d.Day, d => d);
 
         //Días en blanco
@@ -104,5 +152,7 @@ public class PlannerService(
     }
 
     public async Task<PlannerResponse?> GetByIdAsync(uint id)
-        => await _repo.GetByIdAsync(id);
+        => await _repo
+            .GetByIdAsync(id)
+            .ConfigureAwait(false);
 }

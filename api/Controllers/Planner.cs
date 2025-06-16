@@ -112,4 +112,55 @@ public class PlannerController(
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al asignar stage {request.StageId} a actividad {request.ActivityId}: {e.Message}"); }
     }
+
+    [Authorize(Roles = "adm")]
+    [HttpDelete("Activity/{id}")]
+    public async Task<IActionResult> DeleteActivityAsync(
+        uint id
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.DeleteActivityAsync(userId, id);
+            return this.DefaultOk(new { }, "La actividad se liminó satisfactoriamente");
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al eliminar actividad {id}: {e.Message}"); }
+    }
+
+    [Authorize(Roles = "adm")]
+    [HttpDelete("Stage/{id}")]
+    public async Task<IActionResult> DeleteStageAsync(
+        ushort id
+    )
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _service.DeleteStageAsync(userId, id);
+            return this.DefaultOk(new { }, "Se eliminó la fase de actividad satisfactoriamente");
+        }
+        catch (BadRequestException e)
+        { return this.DefaultBadRequest(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al eliminar stage {id}: {e.Message}"); }
+    }
+
+    [HttpDelete("{activityId}/{stageId}")]
+    public async Task<IActionResult> DelStageToActivityAsync(
+        uint activityId,
+        ushort stageId
+    )
+    {
+        try
+        {
+            await _service.DelStageToActivityAsync(activityId, stageId);
+            return this.DefaultOk(new { }, "Se ha removido la fase a la actividad correctamente");
+        }
+        catch (DoesNotExistsException e)
+        { return this.DefaultBadRequest(e.Message); }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al eliminar stage {stageId} en actividad {activityId}: {e.Message}"); }
+    }
 }

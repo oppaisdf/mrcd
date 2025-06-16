@@ -7,19 +7,17 @@ namespace api.Data;
 
 public interface IPlannerRepository
 {
-    /// <summary>
-    /// Retorna las actividades de un mes en un año específico
-    /// </summary>
-    /// <param name="Year">El año debe venir limpio</param>
-    /// <param name="Month">El mes debe venir limpio</param>
-    /// <returns></returns>
     Task<ICollection<DayResponse>> ActivitiesInDaysToListAsync(ushort year, ushort month);
     Task<PlannerResponse?> GetByIdAsync(uint id);
     Task<uint> CreateActivityAsync(string userId, Activity activity);
-    Task<List<string>> StagesToListAsync();
+    Task<List<string>> StageNamesToListAsync();
     Task CreateStageAsync(string userId, ActivityStage stage);
     Task<bool> ActivityAndStageExistsAsync(uint activityId, ushort stageId);
     Task AddStageToActivityAsync(StagesOfActivities stage);
+    Task DeleteActivityAsync(string userId, uint id);
+    Task<bool> UsingStageAsync(ushort id);
+    Task DeleteStageAsync(string userId, ushort id);
+    Task DelStageToActivityAsync(uint activityId, ushort stageId);
 }
 
 public class PlannerRepository
@@ -52,7 +50,7 @@ public class PlannerRepository
     )
     {
         _context.StagesOfActivities.Add(stage);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task<uint> CreateActivityAsync(
@@ -64,14 +62,14 @@ public class PlannerRepository
         try
         {
             _context.Activities.Add(activity);
-            await _context.SaveChangesAsync();
-            await _logs.RegisterCreationAsync(userId, $"Activity {activity.Id}");
-            await tran.CommitAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await _logs.RegisterCreationAsync(userId, $"Activity {activity.Id}").ConfigureAwait(false);
+            await tran.CommitAsync().ConfigureAwait(false);
             return activity.Id!.Value;
         }
         catch
         {
-            await tran.RollbackAsync();
+            await tran.RollbackAsync().ConfigureAwait(false);
             throw;
         }
     }
@@ -85,13 +83,13 @@ public class PlannerRepository
         try
         {
             _context.ActivityStages.Add(stage);
-            await _context.SaveChangesAsync();
-            await _logs.RegisterCreationAsync(userId, $"Stage {stage.Id}");
-            await tran.CommitAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await _logs.RegisterCreationAsync(userId, $"Stage {stage.Id}").ConfigureAwait(false);
+            await tran.CommitAsync().ConfigureAwait(false);
         }
         catch
         {
-            await tran.RollbackAsync();
+            await tran.RollbackAsync().ConfigureAwait(false);
             throw;
         }
     }
@@ -99,9 +97,7 @@ public class PlannerRepository
     public async Task<ICollection<DayResponse>> ActivitiesInDaysToListAsync(
         ushort year,
         ushort month
-    )
-    {
-        return await _context.Activities
+    ) => await _context.Activities
             .AsNoTracking()
             .Where(a => a.Date.Year == year && a.Date.Month == month)
             .GroupBy(a => a.Date.Day)
@@ -114,13 +110,10 @@ public class PlannerRepository
             ))
             .ToListAsync()
             .ConfigureAwait(false);
-    }
 
     public async Task<PlannerResponse?> GetByIdAsync(
         uint id
-    )
-    {
-        return await (
+    ) => await (
             from a in _context.Activities.AsNoTracking()
             where a.Id == id
             join sa in _context.StagesOfActivities on a.Id equals sa.ActivityId into g
@@ -144,12 +137,77 @@ public class PlannerRepository
         .AsNoTracking()
         .FirstOrDefaultAsync()
         .ConfigureAwait(false);
-    }
 
-    public async Task<List<string>> StagesToListAsync()
+    public async Task<List<string>> StageNamesToListAsync()
     => await _context.ActivityStages
         .AsNoTracking()
         .Select(s => s.Name)
         .ToListAsync()
+        .ConfigureAwait(false);
+
+    public async Task DeleteActivityAsync(
+        string userId,
+        uint id
+    )
+    {
+        var tran = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            await _context.StagesOfActivities
+                .Where(sa => sa.ActivityId == id)
+                .ExecuteDeleteAsync()
+                .ConfigureAwait(false);
+            await _context.Activities
+                .Where(a => a.Id == id)
+                .ExecuteDeleteAsync()
+                .ConfigureAwait(false);
+            await _logs
+                .RegisterUpdateAsync(userId, $"Actividad removida {id}")
+                .ConfigureAwait(false);
+            await tran.CommitAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            await tran.RollbackAsync().ConfigureAwait(false);
+            throw;
+        }
+    }
+
+    public async Task DeleteStageAsync(
+        string userId,
+        ushort id
+    )
+    {
+        var tran = await _context.Database.BeginTransactionAsync().ConfigureAwait(false);
+        try
+        {
+            await _context.ActivityStages
+                .Where(a => a.Id == id)
+                .ExecuteDeleteAsync()
+                .ConfigureAwait(false);
+            await _logs
+                .RegisterUpdateAsync(userId, $"Eliminó fase de actividad {id}")
+                .ConfigureAwait(false);
+            await tran.CommitAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            await tran.RollbackAsync().ConfigureAwait(false);
+            throw;
+        }
+    }
+
+    public async Task DelStageToActivityAsync(
+        uint activityId,
+        ushort stageId
+    ) => await _context.StagesOfActivities
+        .Where(sa => sa.ActivityId == activityId && sa.StageId == stageId)
+        .ExecuteDeleteAsync()
+        .ConfigureAwait(false);
+
+    public async Task<bool> UsingStageAsync(ushort id)
+    => await _context.StagesOfActivities
+        .AsNoTracking()
+        .AnyAsync(sa => sa.StageId == id)
         .ConfigureAwait(false);
 }

@@ -163,3 +163,4 @@ bash -c 'dotnet tool install --global dotnet-ef --version 8.0.17 && export PATH=
 - Retirar la continuación del hilo explícito en funciones asíncronas (.ConfigureAwait(false)).
 - Revisar escanéos. Se enciende la cámara sin abrir el modal de escáner.
 - Revisar eliminación de la última asistencia.
+- Revisar logs _importantes_ y alerta de actividad fuera de horario.
