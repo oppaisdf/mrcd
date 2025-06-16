@@ -36,11 +36,15 @@ public class PlannerRepository
         ushort stageId
     )
     {
-        var results = await Task.WhenAll(
-            _context.Activities.AsNoTracking().AnyAsync(a => a.Id == activityId),
-            _context.ActivityStages.AsNoTracking().AnyAsync(s => s.Id == stageId)
-        ).ConfigureAwait(false);
-        return results[0] && results[1];
+        var activityExists = await _context.Activities
+            .AsNoTracking()
+            .AnyAsync(a => a.Id == activityId)
+            .ConfigureAwait(false);
+        var stageExists = await _context.ActivityStages
+            .AsNoTracking()
+            .AnyAsync(s => s.Id == stageId)
+            .ConfigureAwait(false);
+        return activityExists && stageExists;
     }
 
     public async Task AddStageToActivityAsync(
