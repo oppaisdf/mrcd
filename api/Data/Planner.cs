@@ -9,6 +9,7 @@ public interface IPlannerRepository
 {
     Task<ICollection<DayResponse>> ActivitiesInDaysToListAsync(ushort year, ushort month);
     Task<PlannerResponse?> GetByIdAsync(uint id);
+    Task<IEnumerable<StageResponse>> StagesToListAsync();
     Task<uint> CreateActivityAsync(string userId, Activity activity);
     Task<List<string>> StageNamesToListAsync();
     Task CreateStageAsync(string userId, ActivityStage stage);
@@ -210,4 +211,14 @@ public class PlannerRepository
         .AsNoTracking()
         .AnyAsync(sa => sa.StageId == id)
         .ConfigureAwait(false);
+
+    public async Task<IEnumerable<StageResponse>> StagesToListAsync()
+        => await _context.ActivityStages
+            .AsNoTracking()
+            .Select(sa => new StageResponse(
+                sa.Id!.Value,
+                sa.Name
+            ))
+            .ToListAsync()
+            .ConfigureAwait(false);
 }

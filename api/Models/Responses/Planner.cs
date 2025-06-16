@@ -34,3 +34,10 @@ public record PlannerResponse(
     DateTime Date,
     ICollection<ActivityStageResponse> Activities
 );
+
+public record StageResponse(
+    [Required]
+    ushort Id,
+    [Required]
+    string Name
+);
