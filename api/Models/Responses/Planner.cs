@@ -2,13 +2,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api.Models.Responses;
 
-public record SimplePlannerResponse(
+public record DayResponse(
+    [Required]
+    ushort Day,
+    [Required]
+    IEnumerable<SimpleActivityResponse> Activities
+);
+
+public record SimpleActivityResponse(
     [Required]
     uint Id,
     [Required]
-    string Name,
-    [Required]
-    DateTime Date
+    string Name
 );
 
 public record ActivityStageResponse(

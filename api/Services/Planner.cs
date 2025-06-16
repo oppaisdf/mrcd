@@ -8,7 +8,7 @@ namespace api.Services;
 
 public interface IPlannerService
 {
-    Task<ICollection<SimplePlannerResponse>> GetAsync(ushort year, ushort month);
+    Task<ICollection<DayResponse>> GetAsync(ushort year, ushort month);
     Task<PlannerResponse?> GetByIdAsync(uint id);
     Task<uint> CreateActivityAsync(string userId, ActivityRequest request);
     Task CreateStageAsync(string userId, StageRequest request);
@@ -72,8 +72,36 @@ public class PlannerService(
         await _repo.CreateStageAsync(userId, stage);
     }
 
-    public async Task<ICollection<SimplePlannerResponse>> GetAsync(ushort year, ushort month)
-        => await _repo.GetAsync(year, month);
+    public async Task<ICollection<DayResponse>> GetAsync(
+        ushort year,
+        ushort month
+    )
+    {
+        var days = new List<DayResponse>();
+        var lastDayInMonth = DateTime.DaysInMonth(year, month);
+        var firstDayOfWeek = (short)new DateTime(year, month, 1).DayOfWeek;
+        var bussinesDays = await _repo.ActivitiesInDaysToListAsync(year, month);
+        var dirDays = bussinesDays.ToDictionary(d => d.Day, d => d);
+
+        //Días en blanco
+        for (short day = 0; day < firstDayOfWeek; day++)
+            days.Add(new DayResponse(0, []));
+
+        //Días reales del mes
+        for (ushort day = 1; day <= lastDayInMonth; day++)
+            days.Add(
+                dirDays.TryGetValue(day, out DayResponse? value) ? value :
+                new DayResponse(day, [])
+            );
+
+        // Completar la última fila con días vacíos hasta el final de la semana
+        var remainingDaysInWeek = 7 - (days.Count % 7);
+        if (remainingDaysInWeek < 7)
+            for (short day = 0; day < remainingDaysInWeek; day++)
+                days.Add(new DayResponse(0, []));
+
+        return days;
+    }
 
     public async Task<PlannerResponse?> GetByIdAsync(uint id)
         => await _repo.GetByIdAsync(id);

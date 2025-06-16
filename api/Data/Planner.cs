@@ -13,7 +13,7 @@ public interface IPlannerRepository
     /// <param name="Year">El año debe venir limpio</param>
     /// <param name="Month">El mes debe venir limpio</param>
     /// <returns></returns>
-    Task<ICollection<SimplePlannerResponse>> GetAsync(ushort year, ushort month);
+    Task<ICollection<DayResponse>> ActivitiesInDaysToListAsync(ushort year, ushort month);
     Task<PlannerResponse?> GetByIdAsync(uint id);
     Task<uint> CreateActivityAsync(string userId, Activity activity);
     Task<List<string>> StagesToListAsync();
@@ -96,7 +96,7 @@ public class PlannerRepository
         }
     }
 
-    public async Task<ICollection<SimplePlannerResponse>> GetAsync(
+    public async Task<ICollection<DayResponse>> ActivitiesInDaysToListAsync(
         ushort year,
         ushort month
     )
@@ -104,10 +104,13 @@ public class PlannerRepository
         return await _context.Activities
             .AsNoTracking()
             .Where(a => a.Date.Year == year && a.Date.Month == month)
-            .Select(a => new SimplePlannerResponse(
-                a.Id!.Value,
-                a.Name,
-                a.Date
+            .GroupBy(a => a.Date.Day)
+            .Select(grp => new DayResponse(
+                (ushort)grp.Key,
+                grp.Select(g => new SimpleActivityResponse(
+                    g.Id!.Value,
+                    g.Name
+                ))
             ))
             .ToListAsync()
             .ConfigureAwait(false);
