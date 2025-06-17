@@ -1,0 +1,40 @@
+@if (day.day > 0) {
+<div class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Día {{day.day}}</p>
+            <button class="delete" aria-label="close" (click)="CloseModal()"></button>
+        </header>
+        @if (day.activities && day.activities.length > 0){
+        <section class="modal-card-body">
+            <div class="table-container">
+                <table class="table is-striped is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th class="title is-5">Nombre</th>
+                            <th class="title is-5">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (activity of day.activities; track $index) {
+                        <tr>
+                            <th>{{activity.name}}</th>
+                            <th>
+                                <a class="button" routerLink="/planner/{{activity.id}}">Ver</a>
+                            </th>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        }
+        <footer class="modal-card-foot">
+            <div class="buttons">
+                <button class="button is-primary">Agregar evento</button>
+            </div>
+        </footer>
+    </div>
+</div>
+}

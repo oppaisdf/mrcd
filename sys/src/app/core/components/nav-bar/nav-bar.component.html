@@ -40,6 +40,7 @@
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">Gestiones</a>
         <div class="navbar-dropdown" (click)="ShowMenu()">
+          <a class="navbar-item" routerLink="/planner">Agenda</a>
           <a class="navbar-item" routerLink="/charge/all">Cobros</a>
           <a class="navbar-item" routerLink="/docs/all">Documentos</a>
           @if (isAdm) {

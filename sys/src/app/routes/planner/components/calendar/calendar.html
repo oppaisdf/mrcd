@@ -1,0 +1,35 @@
+<div class="has-text-centered columns is-mobile is-multiline">
+    <div class="column">
+        <h1 class="title has-text-right has-text-primary">Agenda</h1>
+    </div>
+
+    <div class="column">
+        <div class="control select is-medium" [class.is-loading]="isSearching">
+            <select [(ngModel)]="selectedMonthIndex" (change)="OnMonthChange($event)" [disabled]="isSearching">
+                @for (m of months; track m; let i = $index) {
+                <option [value]="i">{{m.name}}</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="box">
+    <div class="columns is-centered is-mobile">
+        @for (day of ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb']; track day) {
+        <div class="column has-text-centered is-1">
+            <strong>{{day}}</strong>
+        </div>
+        }
+    </div>
+
+    <div class="columns is-multiline is-centered is-mobile">
+        @for (day of days; track $index) {
+        <div class="column has-text-centered is-2">
+            <span class="is-clickable" [ngClass]="GetDayClass(day)" (click)="SelectDay(day);">
+                @if (day.day > 0) { {{day.day}} }
+            </span>
+        </div>
+        }
+    </div>
+</div>
