@@ -46,6 +46,18 @@ public class PlannerController(
         { return this.DefaultServerError($"[+] Error al retornar actividad {id}: {e.Message}"); }
     }
 
+    [HttpGet("Stage")]
+    public async Task<IActionResult> GetStagesAsync()
+    {
+        try
+        {
+            var stages = await _service.StagesToListAsync();
+            return this.DefaultOk(stages);
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al obtener fases de actividades: {e.Message}"); }
+    }
+
     [HttpPost("Activity")]
     public async Task<IActionResult> CreateActivityAsync(
         [FromBody] ActivityRequest request

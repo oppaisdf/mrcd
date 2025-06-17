@@ -10,6 +10,7 @@ public interface IPlannerService
 {
     Task<ICollection<DayResponse>> GetAsync(ushort year, ushort month);
     Task<PlannerResponse?> GetByIdAsync(uint id);
+    Task<IEnumerable<StageResponse>> StagesToListAsync();
     Task<uint> CreateActivityAsync(string userId, ActivityRequest request);
     Task CreateStageAsync(string userId, StageRequest request);
     Task AddStageToActivityAsync(ActivityStageRequest request);
@@ -156,8 +157,7 @@ public class PlannerService(
         var activity = await _repo
             .GetByIdAsync(id)
             .ConfigureAwait(false);
-        var stages = await _repo
-            .StagesToListAsync()
+        var stages = await StagesToListAsync()
             .ConfigureAwait(false);
         var users = await _user
             .OnlyUserToListAsync()
@@ -168,4 +168,9 @@ public class PlannerService(
             users
         );
     }
+
+    public async Task<IEnumerable<StageResponse>> StagesToListAsync()
+    => await _repo
+        .StagesToListAsync()
+        .ConfigureAwait(false);
 }
