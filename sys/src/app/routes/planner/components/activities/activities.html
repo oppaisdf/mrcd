@@ -31,14 +31,12 @@
             }
 
             <form [formGroup]="form" (ngSubmit)="CreateActivityAsync()">
-                <shared-field field="Nuevo nombre de actividad" [inBox]="false">
-                    <div class="control" [class.is-loading]="isCreating">
-                        <input type="text" class="input" formControlName="name"
-                            [class.is-danger]="InvalidaField('name')" maxlength="50">
-                        @if (InvalidaField('name')) {
-                        <p class="help is-danger has-text-centered">Debe ingresar el nombre para la nueva actividad</p>
-                        }
-                    </div>
+                <shared-field field="Nuevo nombre de actividad" [inBox]="false" [loading]="isCreating">
+                    <input type="text" class="input" formControlName="name" [class.is-danger]="InvalidaField('name')"
+                        maxlength="50">
+                    @if (InvalidaField('name')) {
+                    <p class="help is-danger has-text-centered">Debe ingresar el nombre para la nueva actividad</p>
+                    }
                 </shared-field>
             </form>
             <shared-alert [success]="success" [message]="message" />

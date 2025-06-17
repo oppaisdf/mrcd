@@ -1,1 +1,104 @@
-<p>activity works!</p>
+<div class="buttons are-medium are-rounded">
+    <a class="button" routerLink="/planner">Regresar</a>
+    <button class="button is-primary">Agregar fase</button>
+    @if (isAdm) {
+    <button class="button is-danger">Eliminar actividad</button>
+    }
+</div>
+
+<form [formGroup]="form" class="columns is-multiline">
+    <div class="column is-half">
+        <shared-field field="Nombre de actividad" [inBox]="false">
+            <div class="control">
+                <input type="text" class="input" formControlName="name" maxlength="50">
+            </div>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field field="Fecha" [inBox]="false">
+            <div class="control">
+                <input type="text" class="input" formControlName="date">
+            </div>
+        </shared-field>
+    </div>
+</form>
+
+
+<h1 class="subtitle">Agregar fase</h1>
+<form [formGroup]="newStage" class="columns is-multiline">
+    <div class="column is-half">
+        <shared-field field="Usuario encargado" [loading]="updating">
+            <div class="select">
+                <select formControlName="userId">
+                    @for (user of users; track $index) {
+                    <option value="{{user.id}}">{{user.name}}</option>
+                    }
+                </select>
+            </div>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field field="¿Es usuario encargado?" [loading]="updating">
+            <div class="select">
+                <select formControlName="mainUser">
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+        </shared-field>
+    </div>
+
+    <div class="column is-half">
+        <shared-field field="Notas adicionales a la fase" [loading]="updating">
+            <textarea class="textarea" formControlName="notes" maxlength="100"></textarea>
+        </shared-field>
+    </div>
+</form>
+
+@if (activities && activities.length > 0) {
+<hr>
+<h1 class="subtitle">Fases de atividad</h1>
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="title is-5">Fase</th>
+                <th class="title is-5">Usuario encargado</th>
+                <th class="title is-5">Notas</th>
+                <th class="title is-5">Accción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (stage of activities; track $index) {
+            <tr>
+                <td>{{stage.name}}</td>
+                <td>
+                    <div class="control">
+                        <label class="checkbox">
+                            <input type="checkbox" checked="{{stage.mainUser}}">
+                        </label>
+                        <div class="select">
+                            <select>
+                                @for (user of users; track $index) {
+                                <option value="{{user.id}}">{{user.name}}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="control">
+                        <input type="text" class="input" value="{{stage.notes}}" disabled>
+                    </div>
+                </td>
+                <td>
+                    <button class="button is-danger">Remover</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

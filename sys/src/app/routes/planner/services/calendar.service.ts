@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
-import { DayResponse, MonthResponse } from '../models/responses';
+import { DayResponse, MonthResponse, PlannerResponse } from '../models/responses';
 import { ActivityRequest } from '../models/requests';
 
 @Injectable()
@@ -28,5 +28,11 @@ export class CalendarService {
     request: ActivityRequest
   ) {
     return await this._api.Post<{ id: number }>('Planner/Activity', request);
+  }
+
+  public async ActivityById(
+    id: number
+  ) {
+    return await this._api.Get<PlannerResponse>(`Planner/Activity/${id}`);
   }
 }

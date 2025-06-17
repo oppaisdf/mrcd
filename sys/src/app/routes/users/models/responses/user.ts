@@ -4,3 +4,8 @@ export interface UserResponse {
     isActive: boolean;
     roles: string[];
 }
+
+export interface SimpleUserResponse {
+    id: string;
+    name: string;
+}
