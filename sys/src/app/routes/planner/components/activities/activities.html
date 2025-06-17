@@ -3,11 +3,11 @@
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title">Día {{day.day}}</p>
+            <p class="modal-card-title">Día {{day.day}} del mes {{month + 1}}</p>
             <button class="delete" aria-label="close" (click)="CloseModal()"></button>
         </header>
-        @if (day.activities && day.activities.length > 0){
         <section class="modal-card-body">
+            @if (day.activities && day.activities.length > 0){
             <div class="table-container">
                 <table class="table is-striped is-fullwidth">
                     <thead>
@@ -28,11 +28,24 @@
                     </tbody>
                 </table>
             </div>
+            }
+
+            <form [formGroup]="form" (ngSubmit)="CreateActivityAsync()">
+                <shared-field field="Nuevo nombre de actividad" [inBox]="false">
+                    <div class="control" [class.is-loading]="isCreating">
+                        <input type="text" class="input" formControlName="name"
+                            [class.is-danger]="InvalidaField('name')" maxlength="50">
+                        @if (InvalidaField('name')) {
+                        <p class="help is-danger has-text-centered">Debe ingresar el nombre para la nueva actividad</p>
+                        }
+                    </div>
+                </shared-field>
+            </form>
+            <shared-alert [success]="success" [message]="message" />
         </section>
-        }
         <footer class="modal-card-foot">
             <div class="buttons">
-                <button class="button is-primary">Agregar evento</button>
+                <button class="button is-primary" (click)="CreateActivityAsync()">Agregar evento</button>
             </div>
         </footer>
     </div>

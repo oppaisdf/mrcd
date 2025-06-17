@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DayResponse } from '../../responses/planner';
+import { DayResponse } from '../../models/responses';
 
 @Component({
   selector: 'planner-core',
@@ -9,4 +9,5 @@ import { DayResponse } from '../../responses/planner';
 })
 export class Planner {
   day: DayResponse = { day: -1 };
+  month = 0;
 }

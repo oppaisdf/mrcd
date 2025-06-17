@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
-import { MonthResponse } from '../../responses/calendar';
-import { DayResponse } from '../../responses/planner';
+import { DayResponse, MonthResponse } from '../../models/responses';
 
 @Component({
   selector: 'planner-comp-calendar',
@@ -15,10 +14,6 @@ export class Calendar implements OnInit {
   ) { }
 
   isSearching = false;
-  selectedMonth: MonthResponse = {
-    name: '',
-    value: 0
-  };
   months: MonthResponse[] = [];
   selectedMonthIndex = 0;
   days: DayResponse[] = [];
@@ -26,13 +21,13 @@ export class Calendar implements OnInit {
     day: -1
   };
   @Output() selectedDay = new EventEmitter<DayResponse>();
+  @Output() selectedMonth = new EventEmitter<number>();
 
   async ngOnInit() {
     this.months = this._service.Months;
     const now = new Date();
     this.selectedMonthIndex = now.getMonth();
-    this.selectedMonth = this.months[this.selectedMonthIndex];
-    await this.FillMonth(this.selectedMonth);
+    await this.FillMonth(this.months[this.selectedMonthIndex]);
   }
 
   async OnMonthChange(
@@ -48,6 +43,7 @@ export class Calendar implements OnInit {
     if (this.isSearching) return;
     this.isSearching = true;
     this._selectedDay = { day: -1 };
+    this.selectedMonth.emit(month.value);
     const response = await this._service.GetAsync(month.value + 1);
     this.isSearching = false;
     if (!response.success) return;
