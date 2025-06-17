@@ -4,13 +4,13 @@ import { AllComponent } from './routes/all/all.component';
 import { NewComponent } from './routes/new/new.component';
 import { DetailsComponent } from './routes/details/details.component';
 import { admGuard } from '../../core/guards/adm.guard';
-import { detailGuard } from './guards/detail.guard';
+import { detailsGuard } from '../../core/guards/details-guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'all', pathMatch: 'full' },
   { path: 'all', component: AllComponent },
   { path: 'new', component: NewComponent, canActivate: [admGuard] },
-  { path: ':id', component: DetailsComponent, canActivate: [detailGuard] },
+  { path: ':id', component: DetailsComponent, canActivate: [detailsGuard] },
   { path: '**', redirectTo: 'all' }
 ];
 

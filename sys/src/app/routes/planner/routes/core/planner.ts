@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { DayResponse } from '../responses/planner';
+import { DayResponse } from '../../responses/planner';
 
 @Component({
-  selector: 'app-planner',
+  selector: 'planner-core',
   standalone: false,
   templateUrl: './planner.html',
   styleUrl: './planner.sass'
