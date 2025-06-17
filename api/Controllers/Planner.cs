@@ -16,28 +16,23 @@ public class PlannerController(
 {
     private readonly IPlannerService _service = service;
 
-    [HttpGet("{year}/{month}")]
+    [HttpGet("{month}")]
     public async Task<IActionResult> GetAsync(
-        ushort year,
         ushort month
     )
     {
-        if (year > DateTime.UtcNow.Year)
-            return this.DefaultBadRequest("No llegamos a ese año :c");
-        if (year < 2020)
-            return this.DefaultBadRequest("No hay registros de ese año :c");
         if (month > 12 || month < 1)
             return this.DefaultBadRequest("El mes no existe :c");
         try
         {
-            var activities = await _service.GetAsync(year, month);
+            var activities = await _service.GetAsync((ushort)DateTime.UtcNow.Year, month);
             return this.DefaultOk(activities);
         }
         catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al consultar actividades del mes {month} en año {year}: {e.Message}"); }
+        { return this.DefaultServerError($"[+] Error al consultar actividades del mes {month}: {e.Message}"); }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("Activity/{id}")]
     public async Task<IActionResult> GetByIdAsync(
         uint id
     )
