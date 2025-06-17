@@ -27,7 +27,7 @@ public record ActivityStageResponse(
     string? Notes
 );
 
-public record PlannerResponse(
+public record ActivityResponse(
     [Required]
     string Name,
     [Required]
@@ -40,4 +40,10 @@ public record StageResponse(
     ushort Id,
     [Required]
     string Name
+);
+
+public record PlannerResponse(
+    ActivityResponse? Activity,
+    IEnumerable<StageResponse> Stages,
+    IEnumerable<OnlyUserResponse> Users
 );

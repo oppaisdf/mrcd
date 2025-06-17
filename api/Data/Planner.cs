@@ -8,7 +8,7 @@ namespace api.Data;
 public interface IPlannerRepository
 {
     Task<ICollection<DayResponse>> ActivitiesInDaysToListAsync(ushort year, ushort month);
-    Task<PlannerResponse?> GetByIdAsync(uint id);
+    Task<ActivityResponse?> GetByIdAsync(uint id);
     Task<IEnumerable<StageResponse>> StagesToListAsync();
     Task<uint> CreateActivityAsync(string userId, Activity activity);
     Task<List<string>> StageNamesToListAsync();
@@ -112,7 +112,7 @@ public class PlannerRepository
             .ToListAsync()
             .ConfigureAwait(false);
 
-    public async Task<PlannerResponse?> GetByIdAsync(
+    public async Task<ActivityResponse?> GetByIdAsync(
         uint id
     ) => await (
             from a in _context.Activities.AsNoTracking()
@@ -122,7 +122,7 @@ public class PlannerRepository
             join st in _context.ActivityStages on sa.StageId equals st.Id into h
             from st in h.DefaultIfEmpty()
             group new { sa, st } by new { a.Id, a.Name, a.Date } into grp
-            select new PlannerResponse(
+            select new ActivityResponse(
                 grp.Key.Name,
                 grp.Key.Date,
                 grp.Where(x => x.sa != null)
@@ -136,7 +136,7 @@ public class PlannerRepository
                    .ToList()
             ))
         .AsNoTracking()
-        .FirstOrDefaultAsync()
+        .SingleOrDefaultAsync()
         .ConfigureAwait(false);
 
     public async Task<List<string>> StageNamesToListAsync()

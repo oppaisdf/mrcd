@@ -11,7 +11,16 @@ namespace api.Services;
 public interface IUserService
 {
     Task<IdentityUser> CreateAsync(UserRequest request);
+    /// <summary>
+    /// Retorna los usuarios con sus respectivos roles
+    /// </summary>
+    /// <returns></returns>
     Task<ICollection<UserResponse>> GetAsync();
+    /// <summary>
+    /// Retorna una lista de Ids y usuarios activos
+    /// </summary>
+    /// <returns></returns>
+    Task<IEnumerable<OnlyUserResponse>> OnlyUserToListAsync();
     Task<UserResponse> GetByIdAsync(string id);
     Task UpdateAsync(string id, UserRequest request, string userIdRequest);
     Task<ICollection<string>> LoginAsync(LoginRequest request);
@@ -217,4 +226,15 @@ public partial class UserService(
         var user = await _userManager.FindByIdAsync(id).ConfigureAwait(false);
         return user != null && user.EmailConfirmed;
     }
+
+    public async Task<IEnumerable<OnlyUserResponse>> OnlyUserToListAsync()
+    => await _userManager.Users
+        .AsNoTracking()
+        .Where(u => u.EmailConfirmed)
+        .Select(u => new OnlyUserResponse(
+            u.Id,
+            u.UserName
+        ))
+        .ToListAsync()
+        .ConfigureAwait(false);
 }

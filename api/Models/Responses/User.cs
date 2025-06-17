@@ -8,3 +8,8 @@ public class UserResponse
     public bool? IsActive { get; set; }
     public required List<string> Roles { get; set; }
 }
+
+public record OnlyUserResponse(
+    string Id,
+    string? Name
+);
