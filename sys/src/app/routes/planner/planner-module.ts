@@ -9,14 +9,18 @@ import { CalendarService } from './services/calendar.service';
 import { Activities } from './components/activities/activities';
 import { Activity } from './routes/activity/activity';
 import { SharedModule } from "../../shared/shared.module";
-
+import { Stage } from './routes/stage/stage';
+import { NewStage } from './components/new-stage/new-stage';
+import { StageService } from './services/stage';
 
 @NgModule({
   declarations: [
     Planner,
     Calendar,
     Activities,
-    Activity
+    Activity,
+    Stage,
+    NewStage
   ],
   imports: [
     CommonModule,
@@ -26,7 +30,8 @@ import { SharedModule } from "../../shared/shared.module";
     SharedModule
   ],
   providers: [
-    CalendarService
+    CalendarService,
+    StageService
   ]
 })
 export class PlannerModule { }

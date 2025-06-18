@@ -1,0 +1,36 @@
+<shared-alert [(message)]="message" [success]="success" />
+
+<div class="buttons are-medium are-rounded">
+    <button class="button is-primary" (click)="NewStage()" [class.is-loading]="loading"
+        [disabled]="loading">Agregar</button>
+</div>
+
+<planner-comp-new-stage [showModal]="showModal" />
+
+@if (stages && stages.length> 0) {
+<div class="table-container">
+    <table class="table is-fullwidth is-striped">
+        <thead>
+            <tr>
+                <th class="title is-5">Fase</th>
+                @if(isAdm){
+                <th class="title is-5">Acción</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (stage of stages; track $index) {
+            <tr>
+                <th>{{stage.name}}</th>
+                @if (isAdm) {
+                <th>
+                    <button class="button is-danger" [class.is-loading]="loading" [disabled]="loading"
+                        (click)="DeleteAsync(stage.id)">Eliminar</button>
+                </th>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

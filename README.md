@@ -159,7 +159,6 @@ bash -c 'dotnet tool install --global dotnet-ef --version 8.0.17 && export PATH=
 - Units tests.
 - Alerta de inasistencias.
 - Terminar de separar lógica de SQL.
-- Agenda (all).
 - Retirar la continuación del hilo explícito en funciones asíncronas (.ConfigureAwait(false)).
 - Revisar escanéos. Se enciende la cámara sin abrir el modal de escáner.
 - Revisar eliminación de la última asistencia.

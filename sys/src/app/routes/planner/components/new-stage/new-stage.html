@@ -1,0 +1,26 @@
+@if (showModal) {
+<div class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Agregar fase de actividad</p>
+            <button class="delete" aria-label="close" (click)="HideModal()"></button>
+        </header>
+        <section class="modal-card-body">
+            <shared-alert [(message)]="message" [success]="success" />
+            <form [formGroup]="form" (ngSubmit)="AddStageAsync()">
+                <shared-field [loading]="loading" field="Nombre" [inBox]="false">
+                    <input name="txtName" type="text" class="input" [class.is-danger]="InvalidField('name')"
+                        formControlName="name" maxlength="10">
+                </shared-field>
+            </form>
+        </section>
+        <footer class="modal-card-foot">
+            <div class="buttons">
+                <button class="button is-success" [class.is-loadig]="loading" [disabled]="loading || form.invalid"
+                    (click)="AddStageAsync()">Actualizar</button>
+            </div>
+        </footer>
+    </div>
+</div>
+}

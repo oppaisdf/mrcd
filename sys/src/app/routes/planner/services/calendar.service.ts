@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 import { DayResponse, MonthResponse, PlannerResponse } from '../models/responses';
-import { ActivityRequest } from '../models/requests';
+import { ActivityRequest, ActivityStageRequest } from '../models/requests';
 
 @Injectable()
 export class CalendarService {
@@ -34,5 +34,24 @@ export class CalendarService {
     id: number
   ) {
     return await this._api.Get<PlannerResponse>(`Planner/Activity/${id}`);
+  }
+
+  public async DeleteActivityAsync(
+    id: number
+  ) {
+    return await this._api.Delete(`Planner/Activity/${id}`);
+  }
+
+  public async AddActivityToStageAsync(
+    request: ActivityStageRequest
+  ) {
+    return await this._api.Post('Planner/ActivityStage', request);
+  }
+
+  public async DelStageToActivityAsync(
+    activityId: number,
+    stageId: number
+  ) {
+    return await this._api.Delete(`Planner/${activityId}/${stageId}`);
   }
 }

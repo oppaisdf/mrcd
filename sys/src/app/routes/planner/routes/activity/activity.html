@@ -1,8 +1,10 @@
+<shared-alert [(message)]="message" [success]="success" />
+
 <div class="buttons are-medium are-rounded">
-    <a class="button" routerLink="/planner">Regresar</a>
-    <button class="button is-primary">Agregar fase</button>
+    <a class="button" routerLink="/planner" [class.is-loading]="updating">Regresar</a>
     @if (isAdm) {
-    <button class="button is-danger">Eliminar actividad</button>
+    <button class="button is-danger" [class.is-loading]="updating" [disabled]="updating"
+        (click)="DeleteAsync()">Eliminar actividad</button>
     }
 </div>
 
@@ -24,50 +26,69 @@
     </div>
 </form>
 
+<hr>
 
-<h1 class="subtitle">Agregar fase</h1>
-<form [formGroup]="newStage" class="columns is-multiline">
-    <div class="column is-half">
-        <shared-field field="Usuario encargado" [loading]="updating">
-            <div class="select">
-                <select formControlName="userId">
-                    @for (user of users; track $index) {
-                    <option value="{{user.id}}">{{user.name}}</option>
-                    }
-                </select>
-            </div>
-        </shared-field>
+<shared-pan-expand title="Agregar fase">
+    <div class="buttons are-rounded">
+        <button class="button is-primary" [class.is-loading]="updating" [disabled]="updating"
+            (click)="AddStageToActivityAsync()">Agregar fase</button>
     </div>
 
-    <div class="column is-half">
-        <shared-field field="¿Es usuario encargado?" [loading]="updating">
-            <div class="select">
-                <select formControlName="mainUser">
-                    <option value="true">Sí</option>
-                    <option value="false">No</option>
-                </select>
-            </div>
-        </shared-field>
-    </div>
+    <form [formGroup]="newStage" class="columns is-multiline">
+        <div class="column is-half">
+            <shared-field field="Usuario encargado" [loading]="updating" [inBox]="false">
+                <div class="select">
+                    <select formControlName="userId">
+                        @for (user of users; track $index) {
+                        <option value="{{user.id}}">{{user.name}}</option>
+                        }
+                    </select>
+                </div>
+            </shared-field>
+        </div>
 
-    <div class="column is-half">
-        <shared-field field="Notas adicionales a la fase" [loading]="updating">
-            <textarea class="textarea" formControlName="notes" maxlength="100"></textarea>
-        </shared-field>
-    </div>
-</form>
+        <div class="column is-half">
+            <shared-field field="¿Es usuario encargado?" [loading]="updating" [inBox]="false">
+                <div class="select">
+                    <select formControlName="mainUser">
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field field="Fase de actividad" [loading]="updating" [inBox]="false">
+                <div class="select">
+                    <select formControlName="stageId">
+                        @for (stage of stages; track $index) {
+                        <option value="{{stage.id}}">{{stage.name}}</option>
+                        }
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field field="Notas adicionales a la fase" [loading]="updating" [inBox]="false">
+                <textarea class="textarea" formControlName="notes" maxlength="100"></textarea>
+            </shared-field>
+        </div>
+    </form>
+</shared-pan-expand>
 
 @if (activities && activities.length > 0) {
 <hr>
-<h1 class="subtitle">Fases de atividad</h1>
+<h1 class="title">Fases de atividad</h1>
 <div class="table-container">
-    <table class="table">
+    <table class="table is-fullwidth is-striped">
         <thead>
             <tr>
-                <th class="title is-5">Fase</th>
-                <th class="title is-5">Usuario encargado</th>
-                <th class="title is-5">Notas</th>
-                <th class="title is-5">Accción</th>
+                <th>Fase</th>
+                <th>Usuario</th>
+                <th>Notas</th>
+                <th>Accción</th>
             </tr>
         </thead>
         <tbody>
@@ -76,25 +97,26 @@
                 <td>{{stage.name}}</td>
                 <td>
                     <div class="control">
-                        <label class="checkbox">
-                            <input type="checkbox" checked="{{stage.mainUser}}">
-                        </label>
-                        <div class="select">
-                            <select>
+                        <div class="select" [class.is-success]="stage.mainUser">
+                            <select disabled>
                                 @for (user of users; track $index) {
                                 <option value="{{user.id}}">{{user.name}}</option>
                                 }
                             </select>
                         </div>
+                        @if (stage.mainUser) {
+                        <p class="help is-info">Es el usuario encargado</p>
+                        }
                     </div>
                 </td>
                 <td>
                     <div class="control">
-                        <input type="text" class="input" value="{{stage.notes}}" disabled>
+                        <textarea class="textarea is-small" readonly value="{{stage.notes}}" rows="2"></textarea>
                     </div>
                 </td>
                 <td>
-                    <button class="button is-danger">Remover</button>
+                    <button class="button is-danger" [disabled]="updating" [class.is-loading]="updating"
+                        (click)="DeleteStageAsync(stage.stageId)">Remover</button>
                 </td>
             </tr>
             }
