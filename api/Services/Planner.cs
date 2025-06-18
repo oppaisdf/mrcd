@@ -39,6 +39,8 @@ public class PlannerService(
         if (!exists) throw new DoesNotExistsException("La actividad o la fase no existe");
         if (request.UserId != null && !await _user.UserActiveExists(request.UserId).ConfigureAwait(false))
             throw new DoesNotExistsException("El usuario no existe");
+        if (await _repo.StageAlreadyAddedToActivity(request.ActivityId, request.StageId))
+            throw new AlreadyExistsException("La fase ya fue agregada a la actividad :0");
         var stage = new StagesOfActivities
         {
             ActivityId = request.ActivityId,
@@ -157,6 +159,7 @@ public class PlannerService(
         var activity = await _repo
             .GetByIdAsync(id)
             .ConfigureAwait(false);
+        if (activity == null) return null;
         var stages = await StagesToListAsync()
             .ConfigureAwait(false);
         var users = await _user

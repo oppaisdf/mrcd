@@ -40,6 +40,8 @@ public class PlannerController(
         try
         {
             var activity = await _service.GetByIdAsync(id);
+            if (activity == null)
+                return this.DefaultNotFound("La actividad que busca no existe");
             return this.DefaultOk(activity);
         }
         catch (Exception e)
@@ -114,6 +116,8 @@ public class PlannerController(
             await _service.AddStageToActivityAsync(request);
             return this.DefaultOk(new { }, "Se ha asignado la etapa correctamente a la actividad :3");
         }
+        catch (AlreadyExistsException e)
+        { return this.DefaultConflict(e.Message); }
         catch (DoesNotExistsException e)
         { return this.DefaultNotFound(e.Message); }
         catch (Exception e)

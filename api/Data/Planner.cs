@@ -19,6 +19,7 @@ public interface IPlannerRepository
     Task<bool> UsingStageAsync(ushort id);
     Task DeleteStageAsync(string userId, ushort id);
     Task DelStageToActivityAsync(uint activityId, ushort stageId);
+    Task<bool> StageAlreadyAddedToActivity(uint activityId, ushort stageId);
 }
 
 public class PlannerRepository
@@ -221,4 +222,12 @@ public class PlannerRepository
             ))
             .ToListAsync()
             .ConfigureAwait(false);
+
+    public async Task<bool> StageAlreadyAddedToActivity(
+        uint activityId,
+        ushort stageId
+    ) => await _context.StagesOfActivities
+        .AsNoTracking()
+        .AnyAsync(sa => sa.ActivityId == activityId && sa.StageId == stageId)
+        .ConfigureAwait(false);
 }
