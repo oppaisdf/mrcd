@@ -12,6 +12,7 @@ MRCD es un sistema, pretensiosamente como ERP, orientado al registro de informac
 - [2.2. Orquestación de prueba](#22-orquestación-de-prueba)
 - [3. Configuración](#3-configuración)
 - [3.1. Base de datos](#31-base-de-datos)
+- [3.2. Migraciones](#32-migraciones)
 - [4. Arquitectura](#4-arquitectura)
 - [4.1. Casos de lógica de Workflow](#41-casos-de-lógica-de-workflow)
 - [5. ToDos](#5-todos)
@@ -107,6 +108,7 @@ Deberás quedarte con los servicios que tengan el perfil _prod_, salvo por la ba
 - **DB**: Nombre de la base de datos.
 - **PASSWD**: Contraseña para la base de datos.
 - **SERVER**: Cadena de conexión para la base de datos.
+- **API**: URL de la API a la que hará las peticiones el server.
 - **ENVIRONMENT**
 - **DOMAIN**
 - **EKEY**: Llave para encriptar datos sensibles en la base de datos.
