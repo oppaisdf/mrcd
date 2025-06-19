@@ -12,6 +12,7 @@ RUN npx ng build --configuration production
 
 # Configuración del servidor
 FROM nginx:alpine
+RUN apk update && apk upgrade
 RUN mkdir -p /sites/sys
 COPY default.conf /etc/nginx/conf.d/default.conf
 
@@ -19,7 +20,8 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 RUN \
 	echo "#!/bin/sh" > /usr/local/bin/entrypoint.sh && \
 	echo 'sed -i "s|_domain_|${DOMAIN}|g" /etc/nginx/conf.d/default.conf' >> /usr/local/bin/entrypoint.sh && \
-	echo 'sed -i "s|_api_|${URL_API}|g" /etc/nginx/conf.d/default.conf' >> /usr/local/bin/entrypoint.sh && \
+	echo 'sed -i "s|_apiurl_|${API_URL}|g" /etc/nginx/conf.d/default.conf' >> /usr/local/bin/entrypoint.sh && \
+	echo 'sed -i "s|_apihost_|${API_HOST}|g" /etc/nginx/conf.d/default.conf' >> /usr/local/bin/entrypoint.sh && \
 	echo "nginx -g 'daemon off;'" >> /usr/local/bin/entrypoint.sh && \
 	chmod +x /usr/local/bin/entrypoint.sh
 
