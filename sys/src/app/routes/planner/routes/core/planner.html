@@ -1,2 +1,19 @@
 <planner-comp-calendar (selectedDay)="day = $event" (selectedMonth)="month = $event" />
 <planner-com-activities [day]="day" [month]="month" />
+
+@if (nextActivity.id > 0) {
+<hr>
+<h1 class="title">¡Próxima actividad programada!</h1>
+<div class="box">
+    <article class="media">
+        <div class="media-left">
+            <a class="button is-primary are-rounded" routerLink="/planner/{{nextActivity.id}}">Ver</a>
+        </div>
+        <div class="media-content">
+            <div class="content">
+                <p class="subtitle">{{nextActivity.name}}</p>
+            </div>
+        </div>
+    </article>
+</div>
+}
