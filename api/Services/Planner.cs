@@ -55,7 +55,33 @@ public class PlannerService(
 
     public async Task<IEnumerable<ActivityResponse>> AllInYearAsync(
         ushort year
-    ) => await _repo.AllInYearToListAsync(year);
+    )
+    {
+        var usersDir = (
+            await _user
+                .OnlyUserToListAsync()
+                .ConfigureAwait(false)
+        )
+        .ToDictionary(u => u.Id, u => u.Name);
+
+        return (
+            await _repo
+                .AllInYearToListAsync(year)
+                .ConfigureAwait(false)
+        )
+        .Select(activity =>
+            activity.Activities.Count == 0 ?
+            activity :
+            activity with
+            {
+                Activities = [.. activity.Activities.Select(stage =>
+                    stage.UserId is null
+                    ? stage
+                    : stage with { UserId = usersDir.GetValueOrDefault(stage.UserId, stage.UserId) }
+                )]
+            }
+        );
+    }
 
     public async Task<uint> CreateActivityAsync(
         string userId,
