@@ -48,18 +48,6 @@ public class PlannerController(
         { return this.DefaultServerError($"[+] Error al retornar actividad {id}: {e.Message}"); }
     }
 
-    [HttpGet("Stage")]
-    public async Task<IActionResult> GetStagesAsync()
-    {
-        try
-        {
-            var stages = await _service.StagesToListAsync();
-            return this.DefaultOk(stages);
-        }
-        catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al obtener fases de actividades: {e.Message}"); }
-    }
-
     [HttpPost("Activity")]
     public async Task<IActionResult> CreateActivityAsync(
         [FromBody] ActivityRequest request
@@ -78,27 +66,6 @@ public class PlannerController(
         }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al crear actividad: {e.Message}"); }
-    }
-
-    [HttpPost("Stage")]
-    public async Task<IActionResult> CreateStageAsync(
-        [FromBody] StageRequest request
-    )
-    {
-        if (string.IsNullOrWhiteSpace(request.Name))
-            return this.DefaultBadRequest("El nombre de la etapa es requerida");
-        else request.Name = request.Name.Trim();
-
-        try
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.CreateStageAsync(userId, request);
-            return this.DefaultOk(new { }, "Se ha creado la etapa satisfactoriamente :3");
-        }
-        catch (AlreadyExistsException e)
-        { return this.DefaultConflict(e.Message); }
-        catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al crear etapa {request.Name}: {e.Message}"); }
     }
 
     [HttpPost("ActivityStage")]
@@ -138,24 +105,6 @@ public class PlannerController(
         }
         catch (Exception e)
         { return this.DefaultServerError($"[+] Error al eliminar actividad {id}: {e.Message}"); }
-    }
-
-    [Authorize(Roles = "adm")]
-    [HttpDelete("Stage/{id}")]
-    public async Task<IActionResult> DeleteStageAsync(
-        ushort id
-    )
-    {
-        try
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            await _service.DeleteStageAsync(userId, id);
-            return this.DefaultOk(new { }, "Se eliminó la fase de actividad satisfactoriamente");
-        }
-        catch (BadRequestException e)
-        { return this.DefaultBadRequest(e.Message); }
-        catch (Exception e)
-        { return this.DefaultServerError($"[+] Error al eliminar stage {id}: {e.Message}"); }
     }
 
     [HttpDelete("{activityId}/{stageId}")]

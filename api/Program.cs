@@ -31,6 +31,8 @@ builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IPlannerRepository, PlannerRepository>();
 builder.Services.AddScoped<IPlannerService, PlannerService>();
+builder.Services.AddScoped<IStageRepository, StageRepository>();
+builder.Services.AddScoped<IStageService, StageService>();
 
 builder.Services.AddDbContext<MerContext>((provider, options) =>
 {

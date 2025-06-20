@@ -10,24 +10,21 @@ public interface IPlannerService
 {
     Task<ICollection<DayResponse>> GetAsync(ushort year, ushort month);
     Task<PlannerResponse?> GetByIdAsync(uint id);
-    Task<IEnumerable<StageResponse>> StagesToListAsync();
     Task<uint> CreateActivityAsync(string userId, ActivityRequest request);
-    Task CreateStageAsync(string userId, StageRequest request);
     Task AddStageToActivityAsync(ActivityStageRequest request);
     Task DeleteActivityAsync(string userId, uint id);
-    Task DeleteStageAsync(string userId, ushort id);
     Task DelStageToActivityAsync(uint activityId, ushort stageId);
 }
 
 public class PlannerService(
     IPlannerRepository repo,
-    ICommonService service,
-    IUserService user
+    IUserService user,
+    IStageService stage
 ) : IPlannerService
 {
     private readonly IPlannerRepository _repo = repo;
-    private readonly ICommonService _service = service;
     private readonly IUserService _user = user;
+    private readonly IStageService _stage = stage;
 
     public async Task AddStageToActivityAsync(
         ActivityStageRequest request
@@ -69,43 +66,10 @@ public class PlannerService(
             .ConfigureAwait(false);
     }
 
-    public async Task CreateStageAsync(
-        string userId,
-        StageRequest request
-    )
-    {
-        var stages = await _repo
-            .StageNamesToListAsync()
-            .ConfigureAwait(false);
-        stages.ForEach(s => s = _service.GetNormalizedText(s));
-        if (stages.Contains(request.Name)) throw new AlreadyExistsException("La etapa ya está registrada");
-        var stage = new ActivityStage
-        {
-            Name = request.Name
-        };
-        await _repo
-            .CreateStageAsync(userId, stage)
-            .ConfigureAwait(false);
-    }
-
     public async Task DeleteActivityAsync(
         string userId,
         uint id
     ) => await _repo.DeleteActivityAsync(userId, id);
-
-    public async Task DeleteStageAsync(
-        string userId,
-        ushort id
-    )
-    {
-        var usingStage = await _repo
-            .UsingStageAsync(id)
-            .ConfigureAwait(false);
-        if (usingStage) throw new BadRequestException("No se puede eliminar porque la fase de actividad está en uso");
-        await _repo
-            .DeleteStageAsync(userId, id)
-            .ConfigureAwait(false);
-    }
 
     public async Task DelStageToActivityAsync(
         uint activityId,
@@ -160,7 +124,7 @@ public class PlannerService(
             .GetByIdAsync(id)
             .ConfigureAwait(false);
         if (activity == null) return null;
-        var stages = await StagesToListAsync()
+        var stages = await _stage.ToListAsync()
             .ConfigureAwait(false);
         var users = await _user
             .OnlyUserToListAsync()
@@ -171,9 +135,4 @@ public class PlannerService(
             users
         );
     }
-
-    public async Task<IEnumerable<StageResponse>> StagesToListAsync()
-    => await _repo
-        .StagesToListAsync()
-        .ConfigureAwait(false);
 }

@@ -9,15 +9,10 @@ public interface IPlannerRepository
 {
     Task<ICollection<DayResponse>> ActivitiesInDaysToListAsync(ushort year, ushort month);
     Task<ActivityResponse?> GetByIdAsync(uint id);
-    Task<IEnumerable<StageResponse>> StagesToListAsync();
     Task<uint> CreateActivityAsync(string userId, Activity activity);
-    Task<List<string>> StageNamesToListAsync();
-    Task CreateStageAsync(string userId, ActivityStage stage);
     Task<bool> ActivityAndStageExistsAsync(uint activityId, ushort stageId);
     Task AddStageToActivityAsync(StagesOfActivities stage);
     Task DeleteActivityAsync(string userId, uint id);
-    Task<bool> UsingStageAsync(ushort id);
-    Task DeleteStageAsync(string userId, ushort id);
     Task DelStageToActivityAsync(uint activityId, ushort stageId);
     Task<bool> StageAlreadyAddedToActivity(uint activityId, ushort stageId);
 }
@@ -76,26 +71,6 @@ public class PlannerRepository
         }
     }
 
-    public async Task CreateStageAsync(
-        string userId,
-        ActivityStage stage
-    )
-    {
-        var tran = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            _context.ActivityStages.Add(stage);
-            await _context.SaveChangesAsync().ConfigureAwait(false);
-            await _logs.RegisterCreationAsync(userId, $"Stage {stage.Id}").ConfigureAwait(false);
-            await tran.CommitAsync().ConfigureAwait(false);
-        }
-        catch
-        {
-            await tran.RollbackAsync().ConfigureAwait(false);
-            throw;
-        }
-    }
-
     public async Task<ICollection<DayResponse>> ActivitiesInDaysToListAsync(
         ushort year,
         ushort month
@@ -140,13 +115,6 @@ public class PlannerRepository
         .SingleOrDefaultAsync()
         .ConfigureAwait(false);
 
-    public async Task<List<string>> StageNamesToListAsync()
-    => await _context.ActivityStages
-        .AsNoTracking()
-        .Select(s => s.Name)
-        .ToListAsync()
-        .ConfigureAwait(false);
-
     public async Task DeleteActivityAsync(
         string userId,
         uint id
@@ -175,30 +143,6 @@ public class PlannerRepository
         }
     }
 
-    public async Task DeleteStageAsync(
-        string userId,
-        ushort id
-    )
-    {
-        var tran = await _context.Database.BeginTransactionAsync().ConfigureAwait(false);
-        try
-        {
-            await _context.ActivityStages
-                .Where(a => a.Id == id)
-                .ExecuteDeleteAsync()
-                .ConfigureAwait(false);
-            await _logs
-                .RegisterUpdateAsync(userId, $"Eliminó fase de actividad {id}")
-                .ConfigureAwait(false);
-            await tran.CommitAsync().ConfigureAwait(false);
-        }
-        catch
-        {
-            await tran.RollbackAsync().ConfigureAwait(false);
-            throw;
-        }
-    }
-
     public async Task DelStageToActivityAsync(
         uint activityId,
         ushort stageId
@@ -206,22 +150,6 @@ public class PlannerRepository
         .Where(sa => sa.ActivityId == activityId && sa.StageId == stageId)
         .ExecuteDeleteAsync()
         .ConfigureAwait(false);
-
-    public async Task<bool> UsingStageAsync(ushort id)
-    => await _context.StagesOfActivities
-        .AsNoTracking()
-        .AnyAsync(sa => sa.StageId == id)
-        .ConfigureAwait(false);
-
-    public async Task<IEnumerable<StageResponse>> StagesToListAsync()
-        => await _context.ActivityStages
-            .AsNoTracking()
-            .Select(sa => new StageResponse(
-                sa.Id!.Value,
-                sa.Name
-            ))
-            .ToListAsync()
-            .ConfigureAwait(false);
 
     public async Task<bool> StageAlreadyAddedToActivity(
         uint activityId,
