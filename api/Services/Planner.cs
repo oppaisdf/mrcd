@@ -10,6 +10,7 @@ public interface IPlannerService
 {
     Task<ICollection<DayResponse>> GetAsync(ushort year, ushort month);
     Task<PlannerResponse?> GetByIdAsync(uint id);
+    Task<SimpleActivityResponse?> NextActivityAsync();
     Task<uint> CreateActivityAsync(string userId, ActivityRequest request);
     Task AddStageToActivityAsync(ActivityStageRequest request);
     Task DeleteActivityAsync(string userId, uint id);
@@ -135,4 +136,9 @@ public class PlannerService(
             users
         );
     }
+
+    public async Task<SimpleActivityResponse?> NextActivityAsync()
+    => await _repo
+        .NextActivityAsync()
+        .ConfigureAwait(false);
 }

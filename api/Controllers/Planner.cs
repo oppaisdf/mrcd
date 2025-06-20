@@ -48,6 +48,18 @@ public class PlannerController(
         { return this.DefaultServerError($"[+] Error al retornar actividad {id}: {e.Message}"); }
     }
 
+    [HttpGet("Activity/Next")]
+    public async Task<IActionResult> GetNextAcitivyAsync()
+    {
+        try
+        {
+            var activity = await _service.NextActivityAsync();
+            return this.DefaultOk(activity);
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al obtener la siguiente actividad: {e.Message}"); }
+    }
+
     [HttpPost("Activity")]
     public async Task<IActionResult> CreateActivityAsync(
         [FromBody] ActivityRequest request
