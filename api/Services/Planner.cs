@@ -10,6 +10,7 @@ public interface IPlannerService
 {
     Task<ICollection<DayResponse>> GetAsync(ushort year, ushort month);
     Task<PlannerResponse?> GetByIdAsync(uint id);
+    Task<IEnumerable<ActivityResponse>> AllInYearAsync(ushort year);
     Task<SimpleActivityResponse?> NextActivityAsync();
     Task<uint> CreateActivityAsync(string userId, ActivityRequest request);
     Task AddStageToActivityAsync(ActivityStageRequest request);
@@ -51,6 +52,10 @@ public class PlannerService(
             .AddStageToActivityAsync(stage)
             .ConfigureAwait(false);
     }
+
+    public async Task<IEnumerable<ActivityResponse>> AllInYearAsync(
+        ushort year
+    ) => await _repo.AllInYearToListAsync(year);
 
     public async Task<uint> CreateActivityAsync(
         string userId,

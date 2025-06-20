@@ -60,6 +60,19 @@ public class PlannerController(
         { return this.DefaultServerError($"[+] Error al obtener la siguiente actividad: {e.Message}"); }
     }
 
+
+    [HttpGet("Activity/All")]
+    public async Task<IActionResult> GetAllInYearAsync()
+    {
+        try
+        {
+            var activities = await _service.AllInYearAsync((ushort)DateTime.UtcNow.Year);
+            return this.DefaultOk(activities);
+        }
+        catch (Exception e)
+        { return this.DefaultServerError($"[+] Error al obtener actividades del año: {e.Message}"); }
+    }
+
     [HttpPost("Activity")]
     public async Task<IActionResult> CreateActivityAsync(
         [FromBody] ActivityRequest request

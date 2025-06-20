@@ -9,6 +9,7 @@ public interface IPlannerRepository
 {
     Task<ICollection<DayResponse>> ActivitiesInDaysToListAsync(ushort year, ushort month);
     Task<ActivityResponse?> GetByIdAsync(uint id);
+    Task<IEnumerable<ActivityResponse>> AllInYearToListAsync(ushort year);
     Task<SimpleActivityResponse?> NextActivityAsync();
     Task<uint> CreateActivityAsync(string userId, Activity activity);
     Task<bool> ActivityAndStageExistsAsync(uint activityId, ushort stageId);
@@ -171,4 +172,40 @@ public class PlannerRepository
         ))
         .FirstOrDefaultAsync()
         .ConfigureAwait(false);
+
+    public async Task<IEnumerable<ActivityResponse>> AllInYearToListAsync(
+        ushort year
+    )
+    {
+        var start = new DateTime(year, 1, 1);
+        var end = start.AddYears(1);
+        return await (
+            from a in _context.Activities
+            where a.Date >= start && a.Date < end
+            join sa in _context.StagesOfActivities
+                on a.Id equals sa.ActivityId into gsa
+            from sa in gsa.DefaultIfEmpty()
+            join s in _context.ActivityStages
+                on sa.StageId equals s.Id into gs
+            from s in gs.DefaultIfEmpty()
+            group new { sa, s } by new { a.Id, a.Name, a.Date } into g
+            orderby g.Key.Date
+            select new ActivityResponse(
+                g.Key.Name,
+                g.Key.Date,
+                g.Where(x => x.sa != null)
+                .Select(x => new ActivityStageResponse(
+                    x.s.Id!.Value,
+                    x.s.Name,
+                    x.sa.MainUser,
+                    x.sa.UserId,
+                    x.sa.Notes
+                ))
+                .ToList()
+            )
+        )
+        .AsNoTracking()
+        .ToListAsync()
+        .ConfigureAwait(false);
+    }
 }
