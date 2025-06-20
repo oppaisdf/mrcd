@@ -14,7 +14,8 @@ services:
       - .env
     environment:
       - DOMAIN=${DOMAIN}
-      - URL_API=${API}
+      - API_URL=${APIURL}
+      - API_HOST=${APIHOST}
     profiles:
       - prod
 
