@@ -28,6 +28,7 @@
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">Impresiones</a>
         <div class="navbar-dropdown" (click)="ShowMenu()">
+          <a class="navbar-item" routerLink="/print/planner">Agenda</a>
           <a class="navbar-item" routerLink="/print/attendance">Asistencia</a>
           @if (isAdm) {
           <a class="navbar-item">Diplomas</a>

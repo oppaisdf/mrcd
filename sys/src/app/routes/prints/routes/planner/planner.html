@@ -1,0 +1,107 @@
+<shared-pan-expand title="Configurar página">
+    <form [formGroup]="form" class="columns is-multiline">
+        <div class="column is-half">
+            <shared-field field="Orientación" [inBox]="false">
+                <div class="select">
+                    <select formControlName="isVertical">
+                        <option value="true">Vertical</option>
+                        <option value="false">Horizontal</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field field="Columnas" [inBox]="false">
+                <div class="select">
+                    <select formControlName="columns">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field field="Contenido en línea" [inBox]="false">
+                <div class="select">
+                    <select formControlName="inLine">
+                        <option value="true">Una sola línea</option>
+                        <option value="false">Varias líneas</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+    </form>
+</shared-pan-expand>
+
+<hr>
+
+<prints-printer [isVertical]="GetValue('isVertical') === 'true'" fileName="Agenda">
+    <h1 class="title has-text-centered has-text-black">Agenda</h1>
+
+    <div class="columns is-multiline is-mobile">
+        @for (activity of activities; track $index) {
+        <div class="column" [ngClass]="ColumnsClass" style="border: 1px solid black; border-radius: 15px;">
+            <div class="columns is-multiline is-mobile is-gapless">
+                <div class="column is-half">
+                    <div class="columns is-multiline is-gapless is-mobile">
+                        <div class="column" [ngClass]="ColumnFieldClass(true)">
+                            <label class="label has-text-black">Nombre</label>
+                        </div>
+                        <div class="column" [ngClass]="ColumnFieldClass(false)">
+                            <div class="control">
+                                <input type="text" class="input is-static has-text-black" [value]="activity.name"
+                                    readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column is-half">
+                    <div class="columns is-multiline is-gapless is-mobile">
+                        <div class="column" [ngClass]="ColumnFieldClass(true)">
+                            <label class="label has-text-black">Fecha</label>
+                        </div>
+                        <div class="column" [ngClass]="ColumnFieldClass(false)">
+                            <div class="control">
+                                <input type="text" class="input is-static has-text-black"
+                                    [value]="GetDate(activity.date)" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (activity.activities && activity.activities.length > 0) {
+                <div class="column is-full">
+                    <table class="table is-fullwidth has-background-white">
+                        <thead>
+                            <tr>
+                                <th class="has-text-black">Fase</th>
+                                <th class="has-text-black">Usuario</th>
+                                <th class="has-text-black">Notas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (stage of activity.activities; track $index) {
+                            <tr>
+                                <th class="has-text-black">{{stage.name}}</th>
+                                <th class="has-text-black">{{stage.userId}}</th>
+                                <th class="has-text-black">
+                                    <div class="control">
+                                        <textarea class="textarea has-background-white has-text-black"
+                                            rows="2">{{stage.notes}}</textarea>
+                                    </div>
+                                </th>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+</prints-printer>

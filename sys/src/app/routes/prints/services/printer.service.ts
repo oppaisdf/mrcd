@@ -3,6 +3,7 @@ import { ApiService } from '../../../services/api.service';
 import { QRResponse } from '../responses/qr';
 import { ListGeneralResponse } from '../responses/list';
 import { AttendanceResponse } from '../responses/attandence';
+import { ActivityResponse } from '../../planner/models/responses';
 
 @Injectable()
 export class PrinterService {
@@ -20,5 +21,9 @@ export class PrinterService {
 
   public async GetAsync() {
     return await this._api.Get<AttendanceResponse[]>('Attendance');
+  }
+
+  public async GetAllActivitiesAsync() {
+    return await this._api.Get<ActivityResponse[]>('Planner/Activity/All');
   }
 }
