@@ -54,9 +54,8 @@ export class Activities {
     this.isCreating = true;
     this.form.disable();
 
-    const date = new Date();
-    date.setMonth(this.month);
-    date.setDate(this.day.day);
+    const now = new Date();
+    const date = new Date(Date.UTC(now.getUTCFullYear(), this.month, this.day.day));
     const request: ActivityRequest = {
       name: name,
       date: date
