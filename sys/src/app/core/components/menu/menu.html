@@ -8,7 +8,10 @@
     <ul class="menu-list" [class.is-hidden]="!category.expanded">
         @for (route of category.children; track $index) {
         @if (route.show) {
-        <li><a [routerLink]="route.route">{{route.label}}</a></li>
+        <li>
+            <a routerLinkActive="is-active" [routerLinkActiveOptions]="{exact: true}"
+                [routerLink]="route.route">{{route.label}}</a>
+        </li>
         }
         }
     </ul>
