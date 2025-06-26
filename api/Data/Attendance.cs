@@ -11,7 +11,8 @@ public interface IAttendanceRepository
     Task AddRangeUsingIdsAsync(IEnumerable<int> ids, string userId);
     Task AddAsync(Attendance attendance);
     Task<IEnumerable<GeneralListResponse>> GeneralListAsync();
-    Task RemoveByHashAsync(string hash, string userId);
+    Task RemoveAsync(Attendance attendance, string userId);
+    Task<Attendance?> LastAttendanceAsync(string qr);
     Task<int?> IdIfNotCheckedAsync(string hash, DateTime date);
 }
 
@@ -63,49 +64,47 @@ public class AttendanceRepository(
     }
 
     public async Task<IEnumerable<GeneralListResponse>> GeneralListAsync()
-    {
-        return await _context.People
-            .AsNoTracking()
-            .Where(p => p.IsActive)
-            .Select(p => new GeneralListResponse
-            {
-                Id = p.Id!.Value,
-                Name = p.Name,
-                Gender = p.Gender,
-                Day = p.Day,
-                DOB = p.DOB,
-                Phone = p.Phone,
-                Parents = (
-                    from parent in _context.Parents
-                    join pp in _context.ParentsPeople on parent.Id equals pp.ParentId
-                    where pp.PersonId == p.Id && pp.IsParent
-                    select new GeneralParentListResponse
-                    {
-                        Name = parent.Name,
-                        Phone = parent.Phone
-                    }
-                ).ToList()
-            })
-            .ToListAsync();
-    }
+    => await _context.People
+        .AsNoTracking()
+        .Where(p => p.IsActive)
+        .Select(p => new GeneralListResponse
+        {
+            Id = p.Id!.Value,
+            Name = p.Name,
+            Gender = p.Gender,
+            Day = p.Day,
+            DOB = p.DOB,
+            Phone = p.Phone,
+            Parents = (
+                from parent in _context.Parents
+                join pp in _context.ParentsPeople on parent.Id equals pp.ParentId
+                where pp.PersonId == p.Id && pp.IsParent
+                select new GeneralParentListResponse
+                {
+                    Name = parent.Name,
+                    Phone = parent.Phone
+                }
+            ).ToList()
+        })
+        .ToListAsync()
+        .ConfigureAwait(false);
 
-    public async Task RemoveByHashAsync(
-        string hash,
+    public async Task RemoveAsync(
+        Attendance attendance,
         string userId
     )
     {
-        using var tran = await _context.Database.BeginTransactionAsync();
+        using var tran = await _context.Database.BeginTransactionAsync().ConfigureAwait(false);
         try
         {
-            await _context.Attendance
-                .Where(a => _context.People.Any(p => a.PersonId == p.Id && p.IsActive && p.Hash == hash))
-                .ExecuteDeleteAsync();
-            await _logs.RegisterUpdateAsync(userId, $"Removió asistencia a {hash}");
-            await tran.CommitAsync();
+            _context.Attendance.Remove(attendance);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await _logs.RegisterUpdateAsync(userId, $"Removió asistencia a {attendance.PersonId}").ConfigureAwait(false);
+            await tran.CommitAsync().ConfigureAwait(false);
         }
         catch (Exception)
         {
-            await tran.RollbackAsync();
+            await tran.RollbackAsync().ConfigureAwait(false);
             throw;
         }
     }
@@ -158,4 +157,12 @@ public class AttendanceRepository(
                 [.. g.Select(x => x.DateInfo).OrderBy(di => di.Month).ThenBy(di => di.Day)]))
         ];
     }
+
+    public async Task<Attendance?> LastAttendanceAsync(string qr)
+    => await _context.Attendance
+        .AsNoTracking()
+        .Where(a => _context.People.Any(p => p.IsActive && p.Hash == qr && a.PersonId == p.Id))
+        .OrderByDescending(a => a.Date)
+        .FirstOrDefaultAsync()
+        .ConfigureAwait(false);
 }

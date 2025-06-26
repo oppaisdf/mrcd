@@ -23,13 +23,13 @@ public class PeopleRepository(
         var start = now.Date;
         var end = start.AddDays(1);
 
-        return (IEnumerable<int>)await _context.People
+        return await _context.People
             .AsNoTracking()
             .Where(p => p.IsActive && p.Day == day)
             .Where(p => !_context.Attendance.Any(a =>
                 a.PersonId == p.Id &&
                 a.Date >= start && a.Date < end))
-            .Select(p => p.Id)
+            .Select(p => p.Id!.Value)
             .ToListAsync()
             .ConfigureAwait(false);
     }

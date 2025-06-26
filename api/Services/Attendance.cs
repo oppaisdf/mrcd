@@ -53,6 +53,7 @@ public class AttendanceService(
     )
     {
         var ids = await _people.IdsByDayAsync(day).ConfigureAwait(false);
+        if (!ids.Any()) return;
         await _repo.AddRangeUsingIdsAsync(ids, userId);
     }
 
@@ -98,5 +99,10 @@ public class AttendanceService(
     public async Task UnverifyAsync(
         string userId,
         string hash
-    ) => await _repo.RemoveByHashAsync(hash, userId);
+    )
+    {
+        var attendance = await _repo.LastAttendanceAsync(hash).ConfigureAwait(false);
+        if (attendance == null) return;
+        await _repo.RemoveAsync(attendance, userId).ConfigureAwait(false);
+    }
 }
