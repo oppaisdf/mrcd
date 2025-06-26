@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ScanAllComponent } from './scan-all.component';
+import { AllDay } from './all-day';
 
-describe('ScanAllComponent', () => {
-  let component: ScanAllComponent;
-  let fixture: ComponentFixture<ScanAllComponent>;
+describe('AllDay', () => {
+  let component: AllDay;
+  let fixture: ComponentFixture<AllDay>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ScanAllComponent]
+      declarations: [AllDay]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ScanAllComponent);
+    fixture = TestBed.createComponent(AllDay);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

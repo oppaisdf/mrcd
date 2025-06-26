@@ -36,7 +36,31 @@ export class Menu {
             label: 'Asistencia',
             expanded: false,
             show: true,
-            route: '/attendance'
+            route: '',
+            children: [
+              {
+                label: 'Escáner',
+                expanded: false,
+                route: '/attendance',
+                show: true
+              },
+              {
+                label: 'Manual',
+                expanded: false,
+                route: '/attendance/manual',
+                show: true
+              }, {
+                label: 'Todo el día',
+                expanded: false,
+                route: '/attendance/all',
+                show: true
+              }, {
+                label: 'Eliminar asistencias',
+                expanded: false,
+                route: '/attendance/delete',
+                show: true
+              }
+            ]
           }, {
             label: 'Padres/Padrinos',
             expanded: false,

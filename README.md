@@ -162,7 +162,7 @@ bash -c 'dotnet tool install --global dotnet-ef --version 8.0.17 && export PATH=
 - Alerta de inasistencias.
 - Terminar de separar lógica de SQL.
 - Retirar la continuación del hilo explícito en funciones asíncronas (.ConfigureAwait(false)).
-- Revisar escanéos. Se enciende la cámara sin abrir el modal de escáner.
+- Revisar si se enciende la cámara antes de escanear y si no se cierra en flujo continuo.
 - Revisar eliminación de la última asistencia.
 - Revisar logs _importantes_ y alerta de actividad fuera de horario.
 - El menú queda _raro_ en páginas con un ancho entre 700 px y 770 px.

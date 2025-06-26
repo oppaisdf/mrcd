@@ -1,4 +1,8 @@
-<div class="box has-text-centered">
-    <video #video autoplay muted [playsInline]="true" id="qr-video" class="is-fullwidth"></video>
-    <!-- <p *ngIf="result" class="subtitle">{{ result }}</p> -->
+<div class="modal" [class.is-active]="show">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <video #video autoplay muted [playsInline]="true" id="qr-video" class="is-fullwidth"></video>
+        <!-- <p *ngIf="result" class="subtitle">{{ result }}</p> -->
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="Stop()"></button>
 </div>

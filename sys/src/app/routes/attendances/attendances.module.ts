@@ -3,21 +3,21 @@ import { CommonModule } from '@angular/common';
 
 import { AttendancesRoutingModule } from './attendances-routing.module';
 import { AttendanceService } from './services/attendance.service';
-import { AllComponent } from './routes/all/all.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ScanComponent } from './components/scan/scan.component';
 import { ManualComponent } from './routes/manual/manual.component';
-import { ScanAllComponent } from './components/scan-all/scan-all.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ScannerComponent } from './components/scanner/scanner.component';
+import { Attendance } from './routes/attendance/attendance';
+import { AllDay } from './routes/all-day/all-day';
+import { Del } from './routes/del/del';
 
 @NgModule({
   declarations: [
-    ScanComponent,
-    AllComponent,
     ManualComponent,
-    ScanAllComponent,
-    ScannerComponent
+    ScannerComponent,
+    Attendance,
+    AllDay,
+    Del
   ], imports: [
     CommonModule,
     AttendancesRoutingModule,

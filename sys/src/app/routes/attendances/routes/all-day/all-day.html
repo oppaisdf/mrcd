@@ -1,0 +1,18 @@
+<shared-alert [(message)]="message" [success]="success" />
+
+<div class="buttons are-medium are-rounded">
+    <button class="button is-success" (click)="CheckAllAsync()">Asistir todo el día</button>
+</div>
+
+<h2 class="subtitle">
+    Se registrará la asistencia de "hoy", para todos los confirmandos del día:
+</h2>
+
+<div class="control">
+    <div class="select">
+        <select [(ngModel)]="day" (ngModelChange)="ChangeDay()">
+            <option value="true">Domingo</option>
+            <option value="false">Sábado</option>
+        </select>
+    </div>
+</div>

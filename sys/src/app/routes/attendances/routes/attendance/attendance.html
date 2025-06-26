@@ -1,0 +1,39 @@
+<shared-alert [(message)]="message" [success]="success" />
+
+<div class="buttons are-medium are-rounded">
+    <button class="button is-primary" (click)="StartScanAsync()">Escanear</button>
+</div>
+
+<shared-pan-expand title="Opciones de escaneo">
+    <form [formGroup]="form" class="columns is-multiline">
+        <div class="column is-half">
+            <shared-field field="Tipo de asistencia" [inBox]="false">
+                <div class="select">
+                    <select formControlName="isAttendance">
+                        <option value="true">Asistencia</option>
+                        <option value="false">Permiso de inasistencia</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field field="¿Cerrar scaner al terminar?" [inBox]="false">
+                <div class="select">
+                    <select formControlName="alwaysShow">
+                        <option value="true">No</option>
+                        <option value="false">Sí</option>
+                    </select>
+                </div>
+            </shared-field>
+        </div>
+
+        <div class="column is-half">
+            <shared-field field="Fecha de asistencia" [inBox]="false">
+                <input type="date" class="input" formControlName="date">
+            </shared-field>
+        </div>
+    </form>
+</shared-pan-expand>
+
+<attendance-comp-scanner #scaner (scanned)="ScanAsync($event)" />

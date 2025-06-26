@@ -15,6 +15,7 @@ export class ScannerComponent implements OnDestroy {
 
   private _reader: BrowserMultiFormatReader;
   private controls: IScannerControls | null = null;
+  show = false;
 
   //result: string | null = null;
 
@@ -28,11 +29,9 @@ export class ScannerComponent implements OnDestroy {
     this.Stop();
   }
 
-  public Pause() {
-    this.controls?.stop();
-  }
+  async StartAsync() {
+    this.show = true;
 
-  async Start() {
     this.controls = await this._reader.decodeFromVideoDevice(
       undefined,
       this.video.nativeElement,
@@ -48,8 +47,13 @@ export class ScannerComponent implements OnDestroy {
     );
   }
 
-  private Stop() {
+  Stop() {
+    this.show = false;
     this.controls?.stop();
     this.controls = null;
+  }
+
+  Pause() {
+    this.controls?.stop();
   }
 }

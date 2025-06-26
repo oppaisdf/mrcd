@@ -9,7 +9,7 @@ import { Component, Input } from '@angular/core';
 export class PanExpandComponent {
   @Input() title: string = '';
   isExpanded = false;
-  icon = 'v';
+  icon = '▼';
 
   Expand() {
     this.isExpanded = !this.isExpanded;

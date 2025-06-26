@@ -1,0 +1,9 @@
+<shared-alert [(message)]="message" [success]="success" />
+
+<div class="buttons are-medium are-rounded">
+    <button class="button is-danger" [disabled]="loading" [class.is-loading]="loading"
+        (click)="StartScanAsync()">Iniciar
+        escáner</button>
+</div>
+
+<attendance-comp-scanner #scaner (scanned)="ScanAsync($event)" />
