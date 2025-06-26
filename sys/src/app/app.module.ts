@@ -8,13 +8,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './shared/shared.module';
 import { NavBarComponent } from './core/components/nav-bar/nav-bar.component';
 import { DashComponent } from './routes/base/dash.component';
+import { Menu } from './core/components/menu/menu';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     NavBarComponent,
-    DashComponent
+    DashComponent,
+    Menu
   ],
   imports: [
     BrowserModule,

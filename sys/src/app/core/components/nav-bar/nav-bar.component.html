@@ -14,56 +14,10 @@
   </div>
 
   <div id="navbarBurger" class="navbar-menu" [class.is-active]="burgerActive">
-    <div class="navbar-start">
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">Confirmandos</a>
-        <div class="navbar-dropdown" (click)="ShowMenu()">
-          <a class="navbar-item" routerLink="/person/new">Inscribir</a>
-          <a class="navbar-item" routerLink="/person/all">Actualizar</a>
-          <a class="navbar-item" routerLink="/attendance">Asistencia</a>
-          <a class="navbar-item" routerLink="/parent/all">Padres/Padrinos</a>
-        </div>
+    <div class="navbar-start is-hidden-desktop is-hidden-tablet">
+      <div class="navbar-item">
+        <app-menu />
       </div>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">Impresiones</a>
-        <div class="navbar-dropdown" (click)="ShowMenu()">
-          <a class="navbar-item" routerLink="/print/planner">Agenda</a>
-          <a class="navbar-item" routerLink="/print/attendance">Asistencia</a>
-          @if (isAdm) {
-          <a class="navbar-item">Diplomas</a>
-          <a class="navbar-item" routerLink="/print/badge">Gafetes</a>
-          }
-          <a class="navbar-item" routerLink="/print/list">Listado</a>
-        </div>
-      </div>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">Gestiones</a>
-        <div class="navbar-dropdown" (click)="ShowMenu()">
-          <a class="navbar-item" routerLink="/planner">Agenda</a>
-          <a class="navbar-item" routerLink="/charge/all">Cobros</a>
-          <a class="navbar-item" routerLink="/docs/all">Documentos</a>
-          <a class="navbar-item" routerLink="/planner/stage">Fases de actividad</a>
-          @if (isAdm) {
-          <a class="navbar-item" routerLink="/degree/all">Grados académicos</a>
-          <a class="navbar-item" routerLink="/user/all">Usuarios</a>
-          <a class="navbar-item" routerLink="/sacrament/all">Sacramentos</a>
-          <hr class="navbar-divider">
-          <a class="navbar-item" routerLink="/action/all">Acciones de logs</a>
-          <a class="navbar-item" routerLink="/logs">Logs</a>
-          }
-        </div>
-      </div>
-
-      @if (isSys) {
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">System</a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" routerLink="/role/all">Roles</a>
-        </div>
-      </div>
-      }
     </div>
 
     <div class="navbar-end">

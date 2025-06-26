@@ -1,0 +1,17 @@
+<aside class="menu">
+    @for (category of routes; track $index) {
+    @if (category.show) {
+    <p class="menu-label is-flex is-justify-content-space-between" (click)="Toggle(category)">
+        {{ category.label}}
+        <span>{{category.expanded ? '▼' : '▶'}}</span>
+    </p>
+    <ul class="menu-list" [class.is-hidden]="!category.expanded">
+        @for (route of category.children; track $index) {
+        @if (route.show) {
+        <li><a [routerLink]="route.route">{{route.label}}</a></li>
+        }
+        }
+    </ul>
+    }
+    }
+</aside>

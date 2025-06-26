@@ -13,6 +13,6 @@ export class PanExpandComponent {
 
   Expand() {
     this.isExpanded = !this.isExpanded;
-    this.icon = this.isExpanded ? '^' : 'v';
+    this.icon = this.isExpanded ? '▶' : '▼';
   }
 }

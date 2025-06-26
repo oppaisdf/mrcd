@@ -165,3 +165,4 @@ bash -c 'dotnet tool install --global dotnet-ef --version 8.0.17 && export PATH=
 - Revisar escanéos. Se enciende la cámara sin abrir el modal de escáner.
 - Revisar eliminación de la última asistencia.
 - Revisar logs _importantes_ y alerta de actividad fuera de horario.
+- El menú queda _raro_ en páginas con un ancho entre 700 px y 770 px.

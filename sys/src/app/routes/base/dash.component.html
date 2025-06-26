@@ -1,9 +1,14 @@
-<div class="block">
-    <dash-nav-bar />
-</div>
+<app-nav-bar />
 
 <section class="section">
     <div class="container">
-        <router-outlet />
+        <div class="columns">
+            <div class="column is-one-fifth is-hidden-mobile">
+                <app-menu />
+            </div>
+            <div class="column">
+                <router-outlet />
+            </div>
+        </div>
     </div>
 </section>
