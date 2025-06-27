@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { LoginService } from '../../../services/login.service';
 import { NavItem } from '../../models/responses/Response';
 
@@ -180,10 +180,15 @@ export class Menu {
   }
 
   routes: NavItem[];
+  @Output() closeMenu = new EventEmitter<boolean>();
 
   Toggle(
     route: NavItem
   ) {
     route.expanded = !route.expanded;
+  }
+
+  CloseMenu() {
+    this.closeMenu.emit(false);
   }
 }

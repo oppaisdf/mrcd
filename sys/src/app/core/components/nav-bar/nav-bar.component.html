@@ -16,7 +16,7 @@
   <div id="navbarBurger" class="navbar-menu" [class.is-active]="burgerActive">
     <div class="navbar-start is-hidden-desktop is-hidden-tablet">
       <div class="navbar-item">
-        <app-menu />
+        <app-menu (closeMenu)="burgerActive = $event" />
       </div>
     </div>
 

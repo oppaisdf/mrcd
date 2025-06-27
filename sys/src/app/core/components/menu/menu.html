@@ -10,8 +10,8 @@
         @if (route.show) {
         <li>
             @if (route.route !== '') {
-            <a routerLinkActive="is-active" [routerLinkActiveOptions]="{exact: true}"
-                [routerLink]="route.route">{{route.label}}</a>
+            <a routerLinkActive="is-active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="route.route"
+                (click)="CloseMenu()">{{route.label}}</a>
             } @else {
             <a>{{route.label}}</a>
             }
@@ -19,8 +19,8 @@
             <ul>
                 @for (sub of route.children; track $index) {
                 @if (sub.show) {
-                <li><a routerLinkActive="is-active" [routerLinkActiveOptions]="{exact: true}"
-                        [routerLink]="sub.route">{{sub.label}}</a></li>
+                <li><a routerLinkActive="is-active" [routerLinkActiveOptions]="{exact: true}" [routerLink]="sub.route"
+                        (click)="CloseMenu()">{{sub.label}}</a></li>
                 }
                 }
             </ul>

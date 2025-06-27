@@ -23,12 +23,12 @@ export class Del {
   ) {
     if (this.loading) return;
     if (!qr) return;
+    this._scanner.Stop();
     this.loading = true;
     const response = await this._service.UnassignAsync(qr);
     this.message = response.message;
     this.success = response.success;
     this.loading = false;
-    this._scanner.Stop();
   }
 
   async StartScanAsync() {
