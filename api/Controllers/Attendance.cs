@@ -110,7 +110,6 @@ public class AttendanceController(
         { return this.DefaultServerError($"[+] Error al registar asistencia a {hash}: {e.Message}"); }
     }
 
-    [Authorize(Roles = "adm")]
     [HttpGet("QR")]
     public async Task<IActionResult> GetQRsAsync()
     {

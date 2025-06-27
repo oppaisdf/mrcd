@@ -61,7 +61,7 @@ export class Activity implements OnInit {
     if (!response.success) return;
     this.form.patchValue({
       name: response.data!.activity.name,
-      date: response.data!.activity.date
+      date: response.data!.activity.date.toString().split('T')[0]
     });
     this.activities = response.data!.activity.activities;
     this.stages = response.data!.stages;

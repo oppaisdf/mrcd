@@ -6,4 +6,7 @@
         escáner</button>
 </div>
 
-<attendance-comp-scanner #scaner (scanned)="ScanAsync($event)" />
+<h1 class="subtitle">Se eliminará la última asistencia o inasistencia registrada, según la fecha más reciente, del
+    confirmando que se escanée.</h1>
+
+<attendance-comp-scanner #scaner (scanned)="ScanAsync($event)" [message]="message" [success]="success" />

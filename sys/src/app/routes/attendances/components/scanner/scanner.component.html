@@ -1,6 +1,7 @@
 <div class="modal" [class.is-active]="show">
     <div class="modal-background"></div>
     <div class="modal-content">
+        <shared-alert [(message)]="message" [success]="success" />
         <video #video autoplay muted [playsInline]="true" id="qr-video" class="is-fullwidth"></video>
         <!-- <p *ngIf="result" class="subtitle">{{ result }}</p> -->
     </div>

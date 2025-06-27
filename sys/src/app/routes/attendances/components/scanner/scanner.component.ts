@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { BrowserMultiFormatReader, IScannerControls } from '@zxing/browser';
 import { BarcodeFormat, DecodeHintType } from '@zxing/library';
 
@@ -12,6 +12,8 @@ import { BarcodeFormat, DecodeHintType } from '@zxing/library';
 export class ScannerComponent implements OnDestroy {
   @ViewChild('video', { static: true }) private video!: ElementRef<HTMLVideoElement>;
   @Output() scanned = new EventEmitter<string>();
+  @Input() message = '';
+  @Input() success = false;
 
   private _reader: BrowserMultiFormatReader;
   private controls: IScannerControls | null = null;

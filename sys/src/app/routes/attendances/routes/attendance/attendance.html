@@ -36,4 +36,4 @@
     </form>
 </shared-pan-expand>
 
-<attendance-comp-scanner #scaner (scanned)="ScanAsync($event)" />
+<attendance-comp-scanner #scaner (scanned)="ScanAsync($event)" [message]="message" [success]="success" />

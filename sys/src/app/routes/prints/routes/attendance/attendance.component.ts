@@ -41,7 +41,8 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     this._subscriptions.add(
       this.filters.valueChanges.subscribe(() => this.Filter())
     );
-    this.headers = this._attendances[0].dates.map(d => `${d.day}-${d.month}`);
+    if (this._attendances.length > 0)
+      this.headers = this._attendances[0].dates.map(d => `${d.day}-${d.month}`);
   }
 
   ngOnDestroy() {
