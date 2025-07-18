@@ -13,6 +13,7 @@ MRCD es un sistema, pretensiosamente como ERP, orientado al registro de informac
 - [3. Configuración](#3-configuración)
 - [3.1. Base de datos](#31-base-de-datos)
 - [3.2. Migraciones](#32-migraciones)
+- [3.3. Certificados CA](#33-certificados-ca)
 - [4. Arquitectura](#4-arquitectura)
 - [4.1. Casos de lógica de Workflow](#41-casos-de-lógica-de-workflow)
 - [5. ToDos](#5-todos)
@@ -140,6 +141,15 @@ bash -c 'dotnet tool install --global dotnet-ef --version 8.0.17 && export PATH=
 ```
 
 > Cambiar las variables de entorno por las de producción y agregar nombre de la migración.
+
+### 3.3. Certificados CA
+
+Para las cadenas de conexión a la BD de producción, se recomienda usar `sslmode=verify-ca` (o equivalente en contector) para evitar ataques _man-in-the-middle_. [La api](./Dockerfile.api) servida en este repositorio descarga e instala los certificados: DigiCert Global Root G2 y Microsoft RSA Root CA 2017 para conexiones a bases de datos alojadas en Azure. Se deberá cambiar Microsoft RSA ROOT CA 2017 por el certificado del proveedor de BD, como Amazon (Amazon RDS Root 2019 o Amazon Root CA 1), un certificado autofirmado, etc.
+Se puede ejecutar el siguiente comando para verificar qué certificado se tiene que instalar:
+
+```bash
+openssl s_client -connect <host>:3306 -starttls mysql | openssl x509 -noout -issuer -subject -text
+```
 
 ## 4. Arquitectura
 
