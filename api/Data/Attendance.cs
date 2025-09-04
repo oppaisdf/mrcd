@@ -75,6 +75,8 @@ public class AttendanceRepository(
             Day = p.Day,
             DOB = p.DOB,
             Phone = p.Phone,
+            Parish = p.Parish,
+            Address = p.Address,
             Parents = (
                 from parent in _context.Parents
                 join pp in _context.ParentsPeople on parent.Id equals pp.ParentId
@@ -83,6 +85,16 @@ public class AttendanceRepository(
                 {
                     Name = parent.Name,
                     Phone = parent.Phone
+                }
+            ).ToList(),
+            Godparents = (
+                from godparent in _context.Parents
+                join pp in _context.ParentsPeople on godparent.Id equals pp.ParentId
+                where pp.PersonId == p.Id && !pp.IsParent
+                select new GeneralParentListResponse
+                {
+                    Name = godparent.Name,
+                    Phone = godparent.Phone
                 }
             ).ToList()
         })

@@ -5,7 +5,10 @@ export interface ListGeneralResponse {
     day: boolean;
     dob: Date;
     phone?: string;
+    parish?: string;
+    address?: string;
     parents?: GeneralParentListResponse[];
+    godparents?: GeneralParentListResponse[];
 }
 
 export interface GeneralParentListResponse {

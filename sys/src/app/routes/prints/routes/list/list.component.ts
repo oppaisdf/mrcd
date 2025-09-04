@@ -22,14 +22,22 @@ export class ListComponent implements OnInit, OnDestroy {
       day: [],
       orderBy: [true]
     });
+    this.showers = this._form.group({
+      isVertical: ['true'],
+      showPhones: ['false'],
+      showDOB: ['false'],
+      showParish: ['false'],
+      showAddress: ['false'],
+      showParents: ['false'],
+      showGodparents: ['false']
+    });
   }
 
   private _people: ListGeneralResponse[] = [];
   private _subscriptions = new Subscription();
   form: FormGroup;
+  showers: FormGroup;
   people: ListGeneralResponse[] = [];
-  isVertical = true;
-  showPhones = false;
 
   GetDOB(
     date: Date
@@ -89,20 +97,12 @@ export class ListComponent implements OnInit, OnDestroy {
     this.OrderBy(this.GetValue('orderBy') === 'true');
   }
 
-  OnChangeShowPhones() {
-    this.showPhones = `${this.showPhones}` === 'true';
-  }
-
-  ChangeOrientation() {
-    this.isVertical = `${this.isVertical}` === 'true';
-  }
-
   GetFormatedParents(
     parent: GeneralParentListResponse[] | undefined
   ) {
     if (!parent) return '';
     return parent.reduce((a, b) => {
-      return a += `${a.length > 0 ? ', ' : ''}${b.name}${b.phone && this.showPhones ? `(${this.GetFormatedPhone(b.phone)})` : ''}`;
+      return a += `${a.length > 0 ? ', ' : ''}${b.name}${b.phone && this.GetShowValue('showPhones') ? `(${this.GetFormatedPhone(b.phone)})` : ''}`;
     }, '');
   }
 
@@ -117,6 +117,12 @@ export class ListComponent implements OnInit, OnDestroy {
     control: string
   ) {
     return `${this.form.controls[control].value}`.replaceAll('<empty string>', '').replaceAll('null', '');
+  }
+
+  GetShowValue(
+    control: string
+  ) {
+    return `${this.showers.controls[control].value}` === 'true';
   }
 
   private OrderBy(

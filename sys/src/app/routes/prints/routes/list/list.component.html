@@ -53,11 +53,11 @@
 <hr>
 
 <shared-pan-expand title="Página">
-  <div class="columns">
+  <form [formGroup]="showers" class="columns is-multiline">
     <div class="column is-half">
       <shared-field field="Orientación" [inBox]="false">
         <div class="select">
-          <select [(ngModel)]="isVertical" (ngModelChange)="ChangeOrientation()">
+          <select formControlName="isVertical">
             <option value="true">Vertical</option>
             <option value="false">Horizontal</option>
           </select>
@@ -68,30 +68,98 @@
     <div class="column is-half">
       <shared-field field="Mostrar teléfonos" [inBox]="false">
         <div class="select">
-          <select [(ngModel)]="showPhones" (ngModelChange)="OnChangeShowPhones()">
+          <select formControlName="showPhones">
             <option value="true">Mostrar teléfonos</option>
             <option value="false">No mostrar teléfonos</option>
           </select>
         </div>
       </shared-field>
     </div>
-  </div>
+
+    <div class="column is-half">
+      <shared-field field="Mostrar nacimiento" [inBox]="false">
+        <div class="select">
+          <select formControlName="showDOB">
+            <option value="true">Mostrar nacimiento</option>
+            <option value="false">No mostrar nacimiento</option>
+          </select>
+        </div>
+      </shared-field>
+    </div>
+
+    <div class="column is-half">
+      <shared-field field="Mostrar parroquia" [inBox]="false">
+        <div class="select">
+          <select formControlName="showParish">
+            <option value="true">Mostrar parroquia</option>
+            <option value="false">No mostrar parroquia</option>
+          </select>
+        </div>
+      </shared-field>
+    </div>
+
+    <div class="column is-half">
+      <shared-field field="Mostrar dirección" [inBox]="false">
+        <div class="select">
+          <select formControlName="showAddress">
+            <option value="true">Mostrar dirección</option>
+            <option value="false">No mostrar dirección</option>
+          </select>
+        </div>
+      </shared-field>
+    </div>
+
+    <div class="column is-half">
+      <shared-field field="Mostrar padres" [inBox]="false">
+        <div class="select">
+          <select formControlName="showParents">
+            <option value="true">Mostrar padres</option>
+            <option value="false">No mostrar padres</option>
+          </select>
+        </div>
+      </shared-field>
+    </div>
+
+    <div class="column is-half">
+      <shared-field field="Mostrar padrinos" [inBox]="false">
+        <div class="select">
+          <select formControlName="showGodparents">
+            <option value="true">Mostrar padrinos</option>
+            <option value="false">No mostrar padrinos</option>
+          </select>
+        </div>
+      </shared-field>
+    </div>
+  </form>
 </shared-pan-expand>
 
 <hr>
 
-<prints-printer fileName="ListadoGeneral" [isVertical]="isVertical">
+<prints-printer fileName="ListadoGeneral" [isVertical]="GetShowValue('isVertical')">
   <h1 class="title has-text-centered has-text-black">Listado general</h1>
   <table class="table is-fullwidth has-background-white">
     <thead>
       <th class="has-text-black">Nombre</th>
       <th class="has-text-black">Género</th>
       <th class="has-text-black">Día</th>
+      @if (GetShowValue('showDOB')) {
       <th class="has-text-black">Fecha de nacimiento</th>
-      @if (showPhones) {
+      }
+      @if (GetShowValue('showPhones')) {
       <th class="has-text-black">Teléfono</th>
       }
+      @if (GetShowValue('showParish')) {
+      <th class="has-text-black">Parroquia bautizo</th>
+      }
+      @if (GetShowValue('showAddress')) {
+      <th class="has-text-black">Dirección</th>
+      }
+      @if (GetShowValue('showParents')) {
       <th class="has-text-black">Padres</th>
+      }
+      @if (GetShowValue('showGodparents')) {
+      <th class="has-text-black">Padrinos</th>
+      }
     </thead>
     <tbody>
       @for (person of people; track person) {
@@ -103,11 +171,24 @@
         <td class="has-text-black">
           @if (person.day) {Domingo} @else {Sábado}
         </td>
+        @if (GetShowValue('showDOB')) {
         <td class="has-text-black">{{GetDOB(person.dob)}}</td>
-        @if (showPhones) {
+        }
+        @if (GetShowValue('showPhones')) {
         <td class="has-text-black">{{GetFormatedPhone(person.phone)}}</td>
         }
+        @if (GetShowValue('showParish')) {
+        <td class="has-text-black">{{person.parish}}</td>
+        }
+        @if (GetShowValue('showAddress')) {
+        <td class="has-text-black">{{person.address}}</td>
+        }
+        @if (GetShowValue('showParents')) {
         <td class="has-text-black">{{GetFormatedParents(person.parents)}}</td>
+        }
+        @if (GetShowValue('showGodparents')) {
+        <td class="has-text-black">{{GetFormatedParents(person.godparents)}}</td>
+        }
       </tr>
       }
     </tbody>

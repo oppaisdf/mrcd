@@ -29,7 +29,10 @@ public class GeneralListResponse
     public required bool Day { get; set; }
     public required DateTime DOB { get; set; }
     public string? Phone { get; set; }
+    public string? Parish { get; set; }
+    public string? Address { get; set; }
     public IEnumerable<GeneralParentListResponse>? Parents { get; set; }
+    public IEnumerable<GeneralParentListResponse>? Godparents { get; set; }
 }
 
 public class GeneralParentListResponse
