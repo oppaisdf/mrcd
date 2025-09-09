@@ -11,6 +11,7 @@ import { SharedModule } from "../../shared/shared.module";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AttendanceComponent } from './routes/attendance/attendance.component';
 import { Planner } from './routes/planner/planner';
+import { Certificates } from './routes/certificates/certificates';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { Planner } from './routes/planner/planner';
     ListComponent,
     PrinterComponent,
     AttendanceComponent,
-    Planner
+    Planner,
+    Certificates
   ],
   imports: [
     CommonModule,

@@ -88,7 +88,7 @@ export class Menu {
             label: 'Diplomas',
             expanded: false,
             show: isAdm,
-            route: ''
+            route: '/print/certificate'
           }, {
             label: 'Gafetes',
             expanded: false,
