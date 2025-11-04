@@ -1,0 +1,17 @@
+{
+    "name": "Angular project",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "Angular.ng-template"
+            ]
+        }
+    },
+    "forwardPorts": [
+        4200
+    ],
+    "remoteUser": "node"
+}
