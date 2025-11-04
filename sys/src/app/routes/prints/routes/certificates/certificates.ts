@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ListGeneralResponse } from '../../responses/list';
+import { GeneralParentListResponse, ListGeneralResponse } from '../../responses/list';
 import { PrinterService } from '../../services/printer.service';
 
 @Component({
@@ -16,7 +16,11 @@ export class Certificates implements OnInit {
   ) {
     this.form = this._form.group({
       isVertical: ['true'],
-      date: ['']
+      date: [''],
+      church: [''],
+      signature: [''],
+      cite: [''],
+      officiant: ['']
     });
   }
 
@@ -25,6 +29,22 @@ export class Certificates implements OnInit {
 
   GetValue(key: string) {
     return `${this.form.controls[key].value}`;
+  }
+
+  GetParents(
+    parents: GeneralParentListResponse[] | undefined
+  ) {
+    if (!parents) return '';
+    return parents.reduce((a, b) => {
+      return a += `${a.length > 0 ? ' y ' : ''}${b.name}`;
+    }, '');
+  }
+
+  GetDOB(
+    date: Date
+  ) {
+    const dob = new Date(date);
+    return `${dob.getDate()} de ${dob.toLocaleString('es-ES', { month: 'long' })} del ${dob.getFullYear()}`;
   }
 
   async ngOnInit() {
