@@ -1,0 +1,22 @@
+.print-page
+  position: relative
+  overflow: hidden // seguimos limitando al tamaño A4
+  // opcional, si quieres asegurar caja "normal"
+  box-sizing: border-box
+
+.print-bg
+  position: absolute
+  inset: 0
+  background-position: center top
+  pointer-events: none
+  z-index: 0
+
+.print-content
+  position: relative
+  z-index: 1
+  height: 100%
+  box-sizing: border-box
+
+  // truco para que no se "coma" la primera línea
+  > *:first-child
+    margin-top: 0

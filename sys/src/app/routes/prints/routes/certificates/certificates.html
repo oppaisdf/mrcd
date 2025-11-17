@@ -40,6 +40,34 @@
             </shared-field>
         </div>
 
+        <div class="column is-half">
+            <shared-field [inBox]="false" field="Fondo">
+                <div class="file">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="resume" accept="image/*"
+                            (change)="onBackgroundSelected($event)" />
+                        <span class="file-cta">
+                            <span class="file-icon">
+                                <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="file-label"> Subir archivo… </span>
+                        </span>
+                    </label>
+                </div>
+            </shared-field>
+        </div>
+
+        @if (backgroundImage){
+        <div class="column is-half">
+            <shared-field [inBox]="false" field="Transparencia">
+                <input type="range" min="0" max="1" step="0.05" formControlName="opacity">
+                <p class="help">
+                    Opacidad: {{ GetValue('opacity') | number:'1.2-2' }}
+                </p>
+            </shared-field>
+        </div>
+        }
+
         <div class="column is-full">
             <shared-field [inBox]="false" field="Cita bíblica">
                 <textarea class="textarea" formControlName="cite"
@@ -51,48 +79,49 @@
 
 <hr>
 
-<prints-printer fileName="Diplomas" [isVertical]="GetValue('isVertical') === 'true'">
+<prints-printer fileName="Diplomas" [isVertical]="GetValue('isVertical') === 'true'"
+    [backgroundOpacity]="+GetValue('opacity')" [backgroundImage]="backgroundImage">
     <div class="columns is-multiline is-mobile">
         @for (person of people; track $index) {
         <div class="column is-full has-text-centered has-text-weight-bold">
-            <label class="title is-4 has-text-black">{{GetValue('church')}}</label>
+            <label class="title is-2 has-text-black">{{GetValue('church')}}</label>
         </div>
         <div class="column is-one-third has-text-right">
-            <label class="h2 has-text-black">Certifica que:</label>
+            <label class="subtitle is-3 has-text-black">Certifica que:</label>
         </div>
         <div class="column is-two-thirds has-text-left">
-            <p class="h3 has-text-black">{{person.name}}</p>
+            <p class="subtitle is-3 has-text-black">{{person.name}}</p>
         </div>
         <div class="column is-one-third has-text-right">
-            <label class="h2 has-text-black">Nacido el:</label>
+            <label class="subtitle is-3 has-text-black">Nacido el:</label>
         </div>
         <div class="column is-two-thirds has-text-left">
-            <p class="h3 has-text-black">{{GetDOB(person.dob)}}</p>
+            <p class="subtitle is-3 has-text-black">{{GetDOB(person.dob)}}</p>
         </div>
         <div class="column is-one-third has-text-right">
-            <label class="h2 has-text-black">Hijo de:</label>
+            <label class="subtitle is-3 has-text-black">Hijo de:</label>
         </div>
         <div class="column is-two-thirds has-text-left">
-            <p class="h3 has-text-black">{{GetParents(person.parents)}}</p>
+            <p class="subtitle is-3 has-text-black">{{GetParents(person.parents)}}</p>
         </div>
         <div class="column is-one-third has-text-right">
-            <label class="h2 has-text-black">Bautizado en:</label>
+            <label class="subtitle is-3 has-text-black">Bautizado en:</label>
         </div>
         <div class="column is-two-thirds has-text-left">
-            <p class="h3 has-text-black">{{person.parish}}</p>
+            <p class="subtitle is-3 has-text-black">{{person.parish}}</p>
         </div>
         <div class="column is-one-third has-text-right">
-            <label class="h2 has-text-black">Siendo sus padrinos:</label>
+            <label class="subtitle is-3 has-text-black">Siendo sus padrinos:</label>
         </div>
         <div class="column is-two-thirds has-text-left">
-            <p class="h3 has-text-black">{{GetParents(person.godparents)}}</p>
+            <p class="subtitle is-3 has-text-black">{{GetParents(person.godparents)}}</p>
         </div>
 
         <div class="column is-full has-text-centered">
-            <p class="subtitle is-6 has-text-black">Recibió el sacramento de la Confirmación el {{GetValue('date')}}</p>
+            <p class="subtitle is-3 has-text-black">Recibió el sacramento de la Confirmación el {{GetValue('date')}}</p>
         </div>
         <div class="column is-full has-text-centered">
-            <p class="subtitle is-6 has-text-black">Impartió el sacramento {{GetValue('officiant')}}</p>
+            <p class="subtitle is-4 has-text-black">Impartió el sacramento {{GetValue('officiant')}}</p>
         </div>
         <div class="column is-full"></div>
         <div class="column is-full"></div>
@@ -103,7 +132,7 @@
                 {{GetValue('signature')}}</p>
         </div>
         <div class="column is-full has-text-centered">
-            <p class="subtitle is-6 has-text-black is-italic">{{GetValue('cite')}}</p>
+            <p class="subtitle is-4 has-text-black is-italic">{{GetValue('cite')}}</p>
         </div>
         }
     </div>

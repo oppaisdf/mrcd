@@ -20,12 +20,14 @@ export class Certificates implements OnInit {
       church: [''],
       signature: [''],
       cite: [''],
-      officiant: ['']
+      officiant: [''],
+      opacity: [0.2]
     });
   }
 
   form: FormGroup;
   people: ListGeneralResponse[] = [];
+  backgroundImage?: string | null;
 
   GetValue(key: string) {
     return `${this.form.controls[key].value}`;
@@ -51,5 +53,17 @@ export class Certificates implements OnInit {
     const response = await this._service.GetGeneralList();
     if (!response.success) return;
     this.people = response.data!;
+  }
+
+  onBackgroundSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.backgroundImage = reader.result as string; // dataURL
+    };
+    reader.readAsDataURL(file);
   }
 }

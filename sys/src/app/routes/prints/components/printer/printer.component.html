@@ -4,7 +4,13 @@
 </div>
 
 <div class="box table-container has-background-dark">
-    <div #pageA4 class="table has-background-white p-6" [style.width]="isVertical ? '794px' : '1123px'">
-        <ng-content />
+    <div #pageA4 class="table has-background-white p-6 print-page" [style.width]="isVertical ? '794px' : '1123px'">
+        @if(backgroundImage){
+        <div class="print-bg" [style.background-image]="'url(' + backgroundImage + ')'"
+            [style.opacity]="backgroundOpacity">
+        </div>
+        }
+        <div class="print-content">
+            <ng-content></ng-content>
+        </div>
     </div>
-</div>
