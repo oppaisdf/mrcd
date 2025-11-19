@@ -31,6 +31,7 @@ export class PrinterComponent {
 
   private async CreatePDF() {
     const root = this.page.nativeElement;
+    console.log('Iniciando creación de PDF...');
 
     const pdf = new jsPDF({
       unit: 'mm',
@@ -41,12 +42,13 @@ export class PrinterComponent {
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    const MAX_PAGE_HEIGHT_PX = 1122; // ajusta según tu layout real
+    const MAX_PAGE_HEIGHT_PX = this.isVertical ? 1122 : 794; // ajusta según tu layout real
 
     let hiddenContainer: HTMLElement | null = null;
 
     try {
       const pages = this.buildVirtualPages(root, MAX_PAGE_HEIGHT_PX);
+      console.log('Páginas calculadas: ', pages.length);
       hiddenContainer = pages[0].parentElement as HTMLElement;
 
       for (let i = 0; i < pages.length; i++) {
@@ -70,6 +72,7 @@ export class PrinterComponent {
 
         // dejar respirar al navegador
         await new Promise<void>(resolve => setTimeout(resolve, 0));
+        console.log('Página ', i, ' agregada');
       }
 
       pdf.save(`${this.fileName}.pdf`);
@@ -84,6 +87,7 @@ export class PrinterComponent {
         this.isCreating = false;
       });
     }
+    console.log('Creación finalizada :3');
   }
 
   private buildVirtualPages(root: HTMLElement, maxHeight: number): HTMLElement[] {
