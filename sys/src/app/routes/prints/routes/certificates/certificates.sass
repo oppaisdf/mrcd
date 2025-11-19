@@ -1,0 +1,16 @@
+.page
+  position: relative;
+  overflow: hidden;
+
+/* Overlay encima de la imagen de fondo */
+.page::before
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, var(--overlay-opacity, 0));
+  pointer-events: none;
+  z-index: 1;
+
+.content-wrapper
+  position: relative;
+  z-index: 2; /* por encima del overlay */

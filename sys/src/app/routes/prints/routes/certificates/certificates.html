@@ -81,8 +81,8 @@
 
 <prints-printer fileName="Diplomas" [isVertical]="GetValue('isVertical') === 'true'">
     @for (person of people; track $index) {
-    <div [ngStyle]="GetStyle()" class="is-flex is-flex-direction-column is-justify-content-center">
-        <div class="columns is-multiline is-mobile is-vcentered">
+    <div [ngStyle]="pageStyle" class="page is-flex is-flex-direction-column is-justify-content-center">
+        <div class="content-wrapper columns is-multiline is-mobile">
             <div class="column is-full has-text-centered has-text-weight-bold">
                 <label class="title is-2 has-text-black">{{GetValue('church')}}</label>
             </div>

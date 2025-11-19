@@ -67,11 +67,17 @@ export class Certificates implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  GetStyle() {
+  get pageStyle() {
     const vertical = this.GetValue('isVertical') == 'true';
+    const opacity = 1 - +this.GetValue('opacity');
     return {
-      width: vertical ? '794px' : '1123px',
-      height: vertical ? '1123px' : '794px'
+      width: vertical ? '698px' : '1027px',
+      height: vertical ? '1027px' : '698px',
+      'background-image': this.backgroundImage ? `url(${this.backgroundImage})` : 'none',
+      'background-size': 'cover',
+      'background-position': 'center center',
+      'background-repeat': 'no-repeat',
+      '--overlay-opacity': String(opacity)
     };
   }
 }
