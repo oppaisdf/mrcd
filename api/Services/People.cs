@@ -62,7 +62,7 @@ public partial class PeopleService(
         var diff = DateTime.UtcNow.Year - birth.Year;
         if (diff < 0) throw new BadRequestException("Ni ha nacido");
         if (diff < 14) throw new BadRequestException("Muy jóven para el sacramento");
-        if (diff > 43) throw new BadRequestException("Muy grande para este grupo");
+        if (diff > 44) throw new BadRequestException("Muy grande para este grupo");
     }
 
     private async Task AssignParents(
