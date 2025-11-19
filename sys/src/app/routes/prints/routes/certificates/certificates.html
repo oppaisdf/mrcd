@@ -79,8 +79,7 @@
 
 <hr>
 
-<prints-printer fileName="Diplomas" [isVertical]="GetValue('isVertical') === 'true'"
-    [backgroundOpacity]="+GetValue('opacity')" [backgroundImage]="backgroundImage">
+<prints-printer fileName="Diplomas" [isVertical]="GetValue('isVertical') === 'true'">
     <div class="columns is-multiline is-mobile">
         @for (person of people; track $index) {
         <div class="column is-full has-text-centered has-text-weight-bold">

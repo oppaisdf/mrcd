@@ -11,8 +11,6 @@ export class PrinterComponent {
   @ViewChild('pageA4') page!: ElementRef;
   @Input() fileName = 'defaultName';
   @Input() isVertical = true;
-  @Input() backgroundImage?: string | null;
-  @Input() backgroundOpacity: number = 0.2;
 
   isCreating = false;
 
