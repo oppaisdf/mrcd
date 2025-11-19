@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, NgZone, ViewChild } from '@angular/core';
 import html2pdf from 'html2pdf.js';
 
 @Component({
@@ -13,25 +13,49 @@ export class PrinterComponent {
   @Input() isVertical = true;
   @Input() usePadding = true;
 
+  constructor(
+    private readonly _ngZone: NgZone
+  ) { }
+
   isCreating = false;
 
   SaveToPDF() {
     if (this.isCreating) return;
     this.isCreating = true;
+    setTimeout(() => {
+      this.CreatePDF();
+    }, 0);
+  }
+
+  private CreatePDF() {
     const pageElement = this.page.nativeElement;
 
     const opt = {
       margin: 0,
       filename: `${this.fileName}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: (this.isVertical ? 'portrait' : 'landscape') }
+      image: { type: 'jpeg', quality: 0.8 },
+      html2canvas: { scale: 1 },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: (this.isVertical ? 'portrait' : 'landscape')
+      }
     };
 
     html2pdf()
       .from(pageElement)
       .set(opt)
-      .save();
-    this.isCreating = false;
+      .save()
+      .thenExternal(() => {
+        this._ngZone.run(() => {
+          this.isCreating = false;
+        });
+      })
+      .catchExternal((err: any) => {
+        console.error('Error generando PDF', err);
+        this._ngZone.run(() => {
+          this.isCreating = false;
+        });
+      });
   }
 }
