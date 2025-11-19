@@ -1,1 +1,48 @@
 @use "bulma/sass" with ($navbar-breakpoint: 700px);
+
+@media print {
+
+    // PORTRAIT
+    body.print-portrait {
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
+        }
+
+        #pageA4 {
+            width: 210mm;
+            min-height: 297mm;
+        }
+    }
+
+    // LANDSCAPE
+    body.print-landscape {
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+
+        #pageA4 {
+            width: 297mm;
+            min-height: 210mm;
+        }
+    }
+
+    // Ocultar todo menos el contenido a imprimir (igual que antes)
+    body * {
+        visibility: hidden;
+    }
+
+    #pageA4,
+    #pageA4 * {
+        visibility: visible;
+    }
+
+    #pageA4 {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        padding: 0;
+    }
+}
