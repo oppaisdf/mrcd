@@ -51,7 +51,7 @@ export class NewComponent implements OnInit {
   ) {
     const now = new Date();
     if (isMax) return now.toISOString().split('T')[0];
-    now.setFullYear(now.getFullYear() - 30);
+    now.setFullYear(now.getFullYear() - 43);
     return now.toISOString().split('T')[0];
   }
 
