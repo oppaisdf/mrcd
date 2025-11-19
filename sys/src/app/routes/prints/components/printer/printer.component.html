@@ -4,7 +4,8 @@
 </div>
 
 <div class="box table-container has-background-dark">
-    <div #pageA4 class="table has-background-white p-6" [style.width]="isVertical ? '794px' : '1123px'">
+    <div #pageA4 class="table has-background-white" [ngClass]="usePadding ? 'p-6' : ''"
+        [style.width]="isVertical ? '794px' : '1123px'">
         <ng-content />
     </div>
 </div>

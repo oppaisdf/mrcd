@@ -11,6 +11,7 @@ export class PrinterComponent {
   @ViewChild('pageA4') page!: ElementRef;
   @Input() fileName = 'defaultName';
   @Input() isVertical = true;
+  @Input() usePadding = true;
 
   isCreating = false;
 
