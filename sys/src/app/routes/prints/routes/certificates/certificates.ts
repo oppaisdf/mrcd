@@ -66,4 +66,12 @@ export class Certificates implements OnInit {
     };
     reader.readAsDataURL(file);
   }
+
+  GetStyle() {
+    const vertical = this.GetValue('isVertical') == 'true';
+    return {
+      width: vertical ? '794px' : '1123px',
+      height: vertical ? '1123px' : '794px'
+    };
+  }
 }
