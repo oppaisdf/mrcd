@@ -1,0 +1,23 @@
+# Dotnet-specific files
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+./src
+
+# Rider and JetBrains IDEs
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+.vscode/*
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
