@@ -1,7 +1,0 @@
-@if (message) {
-<div class="notification" [ngClass]="GetClass()">
-  <button class="delete" (click)="Hide()"></button>
-  {{message}}
-  <progress class="progress is-small" [ngClass]="GetClass()" [value]="progress" max="100">{{progress}}%</progress>
-</div>
-}
