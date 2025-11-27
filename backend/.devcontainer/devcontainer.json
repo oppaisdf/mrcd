@@ -1,0 +1,24 @@
+{
+    "name": "C# .NET 8 Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csdevkit"
+            ]
+        }
+    },
+    "forwardPorts": [
+        5000,
+        5001
+    ],
+    "containerEnv": {
+        "ASPNETCORE_URLS": "http://+:5000;https://+:5001",
+        "DOTNET_ENVIRONMENT": "Development"
+    },
+    "postCreateCommand": [
+        "bash",
+        "-lc",
+        "set -euo pipefail; bash .devcontainer/scripts/setup.sh"
+    ]
+}
