@@ -40,4 +40,14 @@ public sealed class User
         Password = pass;
         return Result.Success();
     }
+
+    public Result SetActive(
+        bool newActive
+    )
+    {
+        if (newActive == IsActive)
+            return Result.Failure("Se intenta cambiar al mismo estado");
+        IsActive = newActive;
+        return Result.Success();
+    }
 }
