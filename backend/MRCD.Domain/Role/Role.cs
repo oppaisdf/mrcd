@@ -1,11 +1,11 @@
 using MRCD.Domain.Common;
 
-namespace MRCD.Domain.User;
+namespace MRCD.Domain.Role;
 
 public sealed record Role
 {
     private Role() { }
-    public Guid Id { get; private set; }
+    public Guid ID { get; private set; }
     public string Name { get; private set; } = default!;
 
     public static Result<Role> Create(
@@ -16,7 +16,7 @@ public sealed record Role
             return Result<Role>.Failure("El nombre del rol no puede venir vacío");
         return Result<Role>.Success(new()
         {
-            Id = Guid.NewGuid(),
+            ID = Guid.NewGuid(),
             Name = name.Trim()
         });
     }

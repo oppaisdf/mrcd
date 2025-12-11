@@ -6,7 +6,7 @@ public sealed class User
 {
     private User() { }
 
-    public Guid Id { get; private set; }
+    public Guid ID { get; private set; }
     public string Username { get; private set; } = default!;
     public bool IsActive { get; private set; }
     public string Password { get; private set; } = default!;
@@ -22,7 +22,7 @@ public sealed class User
             return Result<User>.Failure("La contraseña del usuario es requerida");
         return Result<User>.Success(new()
         {
-            Id = Guid.NewGuid(),
+            ID = Guid.NewGuid(),
             Username = user.Trim(),
             IsActive = true,
             Password = pass
