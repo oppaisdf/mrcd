@@ -9,8 +9,8 @@
         }
     },
     "forwardPorts": [
-        5000,
-        5001
+        8080,
+        8081
     ],
     "containerEnv": {
         "ASPNETCORE_URLS": "http://+:5000;https://+:5001",
