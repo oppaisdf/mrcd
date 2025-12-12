@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRCD.Domain", "MRCD.Domain\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRCD.Application", "MRCD.Application\MRCD.Application.csproj", "{8EDBAD43-F245-43CE-9712-EE9DD907DFC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRCD.Infrastructure", "MRCD.Infrastructure\MRCD.Infrastructure.csproj", "{EC973618-6C7B-4222-A5AC-DD69C98C0679}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{8EDBAD43-F245-43CE-9712-EE9DD907DFC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EDBAD43-F245-43CE-9712-EE9DD907DFC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EDBAD43-F245-43CE-9712-EE9DD907DFC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC973618-6C7B-4222-A5AC-DD69C98C0679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC973618-6C7B-4222-A5AC-DD69C98C0679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC973618-6C7B-4222-A5AC-DD69C98C0679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC973618-6C7B-4222-A5AC-DD69C98C0679}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
