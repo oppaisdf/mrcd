@@ -15,6 +15,7 @@ public sealed class Person
     public string? Parish { get; private set; }
     public string? Address { get; private set; }
     public string? Phone { get; private set; }
+    public Guid LastDegreeId { get; private set; }
 
     private static Result ValidDOB(
         DateOnly dob
@@ -33,6 +34,7 @@ public sealed class Person
         bool isMasculine,
         bool isSunday,
         DateOnly dob,
+        Guid degree,
         string? phone,
         string? address
     )
@@ -52,7 +54,8 @@ public sealed class Person
             Phone = phone,
             Address = address,
             RegistrationDate = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6)),
-            IsActive = true
+            IsActive = true,
+            LastDegreeId = degree
         });
     }
 
@@ -136,4 +139,6 @@ public sealed class Person
         Address = null;
         Phone = null;
     }
+
+    public void SetDegree(Guid degree) => LastDegreeId = degree;
 }
