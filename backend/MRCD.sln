@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRCD.Domain", "MRCD.Domain\MRCD.Domain.csproj", "{EFBCE3D5-FB07-4D5B-AB2B-BF83DC827D37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRCD.Application", "MRCD.Application\MRCD.Application.csproj", "{8EDBAD43-F245-43CE-9712-EE9DD907DFC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{EFBCE3D5-FB07-4D5B-AB2B-BF83DC827D37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFBCE3D5-FB07-4D5B-AB2B-BF83DC827D37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFBCE3D5-FB07-4D5B-AB2B-BF83DC827D37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EDBAD43-F245-43CE-9712-EE9DD907DFC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EDBAD43-F245-43CE-9712-EE9DD907DFC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EDBAD43-F245-43CE-9712-EE9DD907DFC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EDBAD43-F245-43CE-9712-EE9DD907DFC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
