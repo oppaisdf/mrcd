@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MRCD.Application.Abstracts;
 using MRCD.Domain.Attendance;
 using MRCD.Domain.Charge;
 using MRCD.Domain.Degree;
@@ -14,7 +15,7 @@ namespace MRCD.Infrastructure.Persistence;
 
 internal sealed class AppContext(
     DbContextOptions<AppContext> options
-) : DbContext(options)
+) : DbContext(options), IPersistenceContext
 {
     public DbSet<Attendance> Attendances => Set<Attendance>();
     public DbSet<Charge> Charges => Set<Charge>();
@@ -39,4 +40,8 @@ internal sealed class AppContext(
     protected override void OnModelCreating(
         ModelBuilder builder
     ) => builder.ApplyConfigurationsFromAssembly(typeof(AppContext).Assembly);
+
+    public override Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken
+    ) => base.SaveChangesAsync(cancellationToken);
 }

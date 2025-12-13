@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MRCD.Application.Abstracts;
 
 namespace MRCD.Infrastructure;
 
@@ -10,7 +11,7 @@ public static class DependencyInjection
         string dbConnection
     )
     {
-        services.AddDbContext<Persistence.AppContext>(options =>
+        services.AddDbContext<IPersistenceContext, Persistence.AppContext>(options =>
         {
             options.UseMySql(
                 dbConnection,
