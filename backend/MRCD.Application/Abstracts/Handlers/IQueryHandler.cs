@@ -1,0 +1,8 @@
+using MRCD.Domain.Common;
+
+namespace MRCD.Application.Abstracts.Handlers;
+
+public interface IQueryHandler<in TQuery, TResponse> where TResponse : IQuery<TResponse>
+{
+    Task<Result<TResponse>> HandleAsync(TQuery query, CancellationToken cancellationToken);
+}
