@@ -14,6 +14,16 @@ internal sealed class PermissionRepository(
         Permission permission
     ) => _app.Permissions.Add(permission);
 
+    public Task<bool> AlreadyExistsAsync(
+        string name,
+        CancellationToken cancellationToken
+    ) => _app
+        .Permissions
+        .AnyAsync(p =>
+            p.Name == name,
+            cancellationToken
+        );
+
     public Task DeleteAsync(
         Guid id,
         CancellationToken cancellationToken
