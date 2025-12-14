@@ -1,0 +1,37 @@
+using Microsoft.EntityFrameworkCore;
+using MRCD.Application.Role.Contracts;
+using MRCD.Domain.Role;
+
+namespace MRCD.Infrastructure.Repositories;
+
+internal sealed class RoleRepository(
+    Persistence.AppContext app
+) : IRoleRepository
+{
+    private readonly Persistence.AppContext _app = app;
+
+    public void Add(
+        Role role
+    ) => _app.Roles.Add(role);
+
+    public Task<bool> AlreadyExistsAsync(
+        string name,
+        CancellationToken cancellationToken
+    ) => _app
+        .Roles
+        .AnyAsync(r => r.Name == name, cancellationToken);
+
+    public Task<List<RolePermission>> RolePermissionToListAsync(
+        CancellationToken cancellationToken
+    ) => _app
+        .RolesPermissions
+        .AsNoTracking()
+        .ToListAsync(cancellationToken);
+
+    public Task<List<Role>> ToListAsync(
+        CancellationToken cancellationToken
+    ) => _app
+        .Roles
+        .AsNoTracking()
+        .ToListAsync(cancellationToken);
+}
