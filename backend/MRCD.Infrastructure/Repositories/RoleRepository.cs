@@ -27,13 +27,6 @@ internal sealed class RoleRepository(
     ) => _app.Roles
         .AnyAsync(r => r.ID == id, cancellationToken);
 
-    public Task<List<RolePermission>> RolePermissionToListAsync(
-        CancellationToken cancellationToken
-    ) => _app
-        .RolesPermissions
-        .AsNoTracking()
-        .ToListAsync(cancellationToken);
-
     public Task<List<Role>> ToListAsync(
         CancellationToken cancellationToken
     ) => _app
