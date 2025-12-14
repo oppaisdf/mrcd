@@ -32,7 +32,7 @@ internal sealed class PermissionRepository(
         .Where(p => p.ID == id)
         .ExecuteDeleteAsync(cancellationToken);
 
-    public Task<bool> ExistsAsync(
+    public Task<bool> IdExistsAsync(
         Guid id,
         CancellationToken cancellationToken
     ) => _app
