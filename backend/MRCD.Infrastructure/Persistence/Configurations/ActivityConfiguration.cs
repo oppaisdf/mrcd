@@ -10,10 +10,13 @@ internal sealed class ActivityConfigurarion : IEntityTypeConfiguration<Activity>
         EntityTypeBuilder<Activity> builder
     )
     {
-        builder.ToTable("ativity");
+        builder.ToTable("activity");
         builder
             .HasKey(e => e.ID)
             .HasName("PK_Activity_ID");
+        builder
+            .Property(e => e.ID)
+            .ValueGeneratedNever();
         builder
             .Property(e => e.Name)
             .HasMaxLength(50);

@@ -15,6 +15,9 @@ internal sealed class AccountingMovementConfiguration : IEntityTypeConfiguration
             .HasKey(e => e.ID)
             .HasName("PK_AccountingMovement_ID");
         builder
+            .Property(e => e.ID)
+            .ValueGeneratedNever();
+        builder
             .Property(e => e.Amount)
             .HasPrecision(5, 2);
         builder
