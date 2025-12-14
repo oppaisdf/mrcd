@@ -16,6 +16,8 @@ public sealed class Activity
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result<Activity>.Failure("El nombre de la actividad no puede estar vacío");
+        if (name.Trim().Length > 50)
+            return Result<Activity>.Failure("El nombre de la actividad no puede exceder los 50 caracteres");
         var now = DateTime.UtcNow.AddHours(-6);
         if (date.Year != now.Year)
             return Result<Activity>.Failure($"La actividad debe estar dentro del año{now.Year}");
