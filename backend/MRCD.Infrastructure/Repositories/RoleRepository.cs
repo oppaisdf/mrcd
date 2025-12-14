@@ -21,6 +21,12 @@ internal sealed class RoleRepository(
         .Roles
         .AnyAsync(r => r.Name == name, cancellationToken);
 
+    public Task<bool> IdExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    ) => _app.Roles
+        .AnyAsync(r => r.ID == id, cancellationToken);
+
     public Task<List<RolePermission>> RolePermissionToListAsync(
         CancellationToken cancellationToken
     ) => _app
