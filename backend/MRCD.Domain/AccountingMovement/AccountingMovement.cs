@@ -17,6 +17,8 @@ public sealed class AccountingMovement
     {
         if (string.IsNullOrWhiteSpace(description))
             return Result<AccountingMovement>.Failure("La descripción no puede estar vacía");
+        if (description.Trim().Length > 50)
+            return Result<AccountingMovement>.Failure("La descripción no puede exceder los 50 caractéres");
         if (amount == 0)
             return Result<AccountingMovement>.Failure("El monto debe ser distinto de cero");
         if (amount < 5000 || amount > 5000)
