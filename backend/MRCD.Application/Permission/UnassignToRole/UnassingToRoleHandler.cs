@@ -18,7 +18,7 @@ internal sealed class UnassignToRoleHandler(
         CancellationToken cancellationToken
     )
     {
-        var exists = await _rolePermission.AlreadyExists(command.RoleId, command.PermissionId, cancellationToken);
+        var exists = await _rolePermission.ExistsAsync(command.RoleId, command.PermissionId, cancellationToken);
         if (!exists)
             return Result.Failure("El permiso asignado al rol no existe");
         await _rolePermission.DeleteAsync(command.RoleId, command.PermissionId, cancellationToken);

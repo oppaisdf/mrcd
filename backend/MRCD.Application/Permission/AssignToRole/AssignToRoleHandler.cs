@@ -32,7 +32,7 @@ internal sealed class AssignToRoleHandler(
             && await _permission.IdExistsAsync(command.PermissionId, cancellationToken);
         if (!exists)
             return Result.Failure("El rol o el permiso no existe :c");
-        var alreadyExists = await _rolePermission.AlreadyExists(command.RoleId, command.PermissionId, cancellationToken);
+        var alreadyExists = await _rolePermission.ExistsAsync(command.RoleId, command.PermissionId, cancellationToken);
         if (alreadyExists)
             return Result.Failure("El permiso no se puede asignar al rol porque ya ha sido asignado :0");
         var rolePermission = new RolePermission(command.RoleId, command.PermissionId);

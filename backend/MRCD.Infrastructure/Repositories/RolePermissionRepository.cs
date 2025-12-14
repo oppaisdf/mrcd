@@ -16,7 +16,7 @@ internal sealed class RolePermissionRepository(
         .RolesPermissions
         .Add(rolePermission);
 
-    public Task<bool> AlreadyExists(
+    public Task<bool> ExistsAsync(
         Guid roleId,
         Guid permissionId,
         CancellationToken cancellationToken
