@@ -23,7 +23,7 @@ public static class DependencyInjection
             if (!type.IsClass || type.IsAbstract) continue;
             foreach (var iface in type.GetInterfaces())
             {
-                if (iface.IsGenericType) continue;
+                if (!iface.IsGenericType) continue;
                 var def = iface.GetGenericTypeDefinition();
                 if (handlers.Contains(def))
                     services.AddScoped(iface, type);
