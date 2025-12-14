@@ -6,3 +6,8 @@ public interface IQueryHandler<in TQuery, TResponse> where TResponse : IQuery<TR
 {
     Task<Result<TResponse>> HandleAsync(TQuery query, CancellationToken cancellationToken);
 }
+
+public interface IQueryHandler<TResponse>
+{
+    Task<Result<TResponse>> HandleAsync(CancellationToken cancellationToken);
+}
