@@ -22,6 +22,13 @@ internal sealed class PermissionRepository(
         .Where(p => p.ID == id)
         .ExecuteDeleteAsync(cancellationToken);
 
+    public Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    ) => _app
+        .Permissions
+        .AnyAsync(p => p.ID == id, cancellationToken);
+
     public Task<List<Permission>> ToListAsync(
         CancellationToken cancellationToken
     ) => _app
