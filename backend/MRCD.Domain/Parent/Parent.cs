@@ -18,6 +18,8 @@ public sealed class Parent
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result<Parent>.Failure("El nombre del padre/padrino no puede estar vacío");
+        if (name.Trim().Length > 80)
+            return Result<Parent>.Failure("El nombre del padre/padrino no puede exceder los 80 caracteres");
         if (string.IsNullOrWhiteSpace(phone)) phone = null;
         return Result<Parent>.Success(new()
         {
