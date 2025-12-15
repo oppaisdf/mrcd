@@ -14,6 +14,8 @@ public sealed record Role
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result<Role>.Failure("El nombre del rol no puede venir vacío");
+        if (name.Trim().Length > 3)
+            return Result<Role>.Failure("El nombre del rol no puede exceder los tres caracteres");
         return Result<Role>.Success(new()
         {
             ID = Guid.NewGuid(),
