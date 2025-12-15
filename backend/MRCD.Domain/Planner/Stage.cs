@@ -14,6 +14,8 @@ public sealed class Stage
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result<Stage>.Failure("El nombre de la fase de actividad no puede estar vacío");
+        if (name.Trim().Length > 50)
+            return Result<Stage>.Failure("El nombre de la fase de actividad no puede exceder los 50 caracteres");
         return Result<Stage>.Success(new()
         {
             ID = Guid.NewGuid(),
@@ -27,6 +29,8 @@ public sealed class Stage
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result.Failure("El nombre de la fase de actividad no puede estar vacío");
+        if (name.Trim().Length > 50)
+            return Result.Failure("El nombre de la fase de actividad no puede exceder los 50 caracteres");
         if (name.Trim().Equals(Name))
             return Result.Failure("El nombre ya está en uso");
         Name = name.Trim();
