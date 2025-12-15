@@ -13,7 +13,9 @@ public sealed class Sacrament
     )
     {
         if (string.IsNullOrWhiteSpace(name))
-            return Result<Sacrament>.Failure("El nombre del grado académico no puede estar vacío");
+            return Result<Sacrament>.Failure("El nombre del sacramento no puede estar vacío");
+        if (name.Trim().Length > 16)
+            return Result<Sacrament>.Failure("El nombre del sacramento no puede esxceder los 16 caracteres");
         return Result<Sacrament>.Success(new()
         {
             ID = Guid.NewGuid(),
@@ -26,7 +28,9 @@ public sealed class Sacrament
     )
     {
         if (string.IsNullOrWhiteSpace(name))
-            return Result.Failure("El nombre del grado académico no puede estar vacío");
+            return Result.Failure("El nombre del sacramento no puede estar vacío");
+        if (name.Trim().Length > 16)
+            return Result.Failure("El nombre del sacramento no puede esxceder los 16 caracteres");
         if (name.Trim().Equals(Name))
             return Result.Failure("El nombre ya está en uso");
         Name = name.Trim();
