@@ -13,9 +13,9 @@ public sealed class Document
     )
     {
         if (string.IsNullOrWhiteSpace(name))
-            return Result<Document>.Failure("El nombre del grado académico no puede estar vacío");
+            return Result<Document>.Failure("El nombre del documento no puede estar vacío");
         if (name.Trim().Length > 30)
-            return Result<Document>.Failure("El nombre del grado académico no puede exceder los 30 caracteres");
+            return Result<Document>.Failure("El nombre del documento no puede exceder los 30 caracteres");
         return Result<Document>.Success(new()
         {
             ID = Guid.NewGuid(),
@@ -28,9 +28,9 @@ public sealed class Document
     )
     {
         if (string.IsNullOrWhiteSpace(name))
-            return Result.Failure("El nombre del grado académico no puede estar vacío");
+            return Result.Failure("El nombre del documento no puede estar vacío");
         if (name.Trim().Length > 30)
-            return Result.Failure("El nombre del grado académico no puede exceder los 30 caracteres");
+            return Result.Failure("El nombre del documento no puede exceder los 30 caracteres");
         if (name.Trim().Equals(Name))
             return Result.Failure("El nombre ya está en uso");
         Name = name.Trim();
