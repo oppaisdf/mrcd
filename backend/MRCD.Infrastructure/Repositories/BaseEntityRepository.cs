@@ -6,7 +6,8 @@ namespace MRCD.Infrastructure.Repositories;
 
 internal sealed class BaseEntityRepository<TEntity>(
     Persistence.AppContext app
-) : IBaseEntityRepository<TEntity> where TEntity : BaseEntity
+) : IBaseEntityRepository<TEntity>
+    where TEntity : BaseEntity
 {
     private Persistence.AppContext _app = app;
 
@@ -21,6 +22,13 @@ internal sealed class BaseEntityRepository<TEntity>(
         .Set<TEntity>()
         .Where(e => e.ID == id)
         .ExecuteDeleteAsync(cancellationToken);
+
+    public Task<bool> ExistsIdAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    ) => _app
+        .Set<TEntity>()
+        .AnyAsync(e => e.ID == id, cancellationToken);
 
     public Task<List<TEntity>> ToListAsync(
         CancellationToken cancellationToken
