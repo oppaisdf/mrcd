@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.Abstracts.Handlers;
 
 namespace MRCD.Application;
@@ -7,7 +8,7 @@ namespace MRCD.Application;
 public static class DependencyInjection
 {
     private static IServiceCollection RegisterHandlers(
-        IServiceCollection services,
+        this IServiceCollection services,
         Assembly assembly
     )
     {
@@ -32,11 +33,35 @@ public static class DependencyInjection
         return services;
     }
 
+    private static IServiceCollection RegisterFactories(
+        this IServiceCollection services,
+        Assembly assembly
+    )
+    {
+        var factories = new[]
+        {
+            typeof(IBaseEntityFactory<>)
+        };
+        foreach (var type in assembly.GetTypes())
+        {
+            if (!type.IsClass || type.IsAbstract) continue;
+            foreach (var iface in type.GetInterfaces())
+            {
+                if (!iface.IsGenericType) continue;
+                var def = iface.GetGenericTypeDefinition();
+                if (!factories.Contains(def)) continue;
+                services.AddSingleton(iface, type);
+            }
+        }
+        return services;
+    }
+
     public static IServiceCollection AddApplication(
         this IServiceCollection services
     )
     {
-        RegisterHandlers(services, typeof(DependencyInjection).Assembly);
+        services.RegisterFactories(typeof(DependencyInjection).Assembly);
+        services.RegisterHandlers(typeof(DependencyInjection).Assembly);
         return services;
     }
 }
