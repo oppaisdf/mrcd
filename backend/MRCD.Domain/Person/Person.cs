@@ -7,6 +7,7 @@ public sealed class Person
     private Person() { }
     public Guid ID { get; private set; }
     public string Name { get; private set; } = default!;
+    public string NormalizedName { get; private set; } = default!;
     public bool IsActive { get; private set; }
     public bool IsMasculine { get; private set; }
     public bool IsSunday { get; private set; }
@@ -31,6 +32,7 @@ public sealed class Person
 
     public static Result<Person> Create(
         string name,
+        string normalizedName,
         bool isMasculine,
         bool isSunday,
         DateOnly dob,
@@ -41,6 +43,10 @@ public sealed class Person
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result<Person>.Failure("El nombre del confirmando es obligaatorio");
+        if (string.IsNullOrWhiteSpace(normalizedName))
+            return Result<Person>.Failure("El nombre normalizado del confirmando es requerido");
+        if (name.Trim().Length > 65 || normalizedName.Trim().Length > 65)
+            return Result<Person>.Failure("El nombre del confirmando no puede exceder los 65 caracteres");
         var validDOB = ValidDOB(dob);
         if (!validDOB.IsSuccess && validDOB.Error is not null)
             return Result<Person>.Failure(validDOB.Error);
@@ -48,6 +54,7 @@ public sealed class Person
         {
             ID = Guid.NewGuid(),
             Name = name.Trim(),
+            NormalizedName = normalizedName.Trim(),
             IsMasculine = isMasculine,
             IsSunday = isSunday,
             DOB = dob,
@@ -60,11 +67,16 @@ public sealed class Person
     }
 
     public Result SetName(
-        string name
+        string name,
+        string normalized
     )
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result.Failure("El nombre no puede estar vacío");
+        if (string.IsNullOrWhiteSpace(normalized))
+            return Result.Failure("El nombre normalizado no puede estar vacío");
+        if (name.Trim().Length > 65 || normalized.Trim().Length > 65)
+            return Result.Failure("El nombre del confirmando no puede exceder los 65 caracteres");
         Name = name.Trim();
         return Result.Success();
     }
