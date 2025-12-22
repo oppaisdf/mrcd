@@ -11,3 +11,8 @@ public interface IQueryHandler<TResponse>
 {
     Task<Result<TResponse>> HandleAsync(CancellationToken cancellationToken);
 }
+
+public interface IBaseQueryHandler<TEntity, TResponse> where TEntity : Domain.Common.BaseEntity
+{
+    Task<Result<TResponse>> HandleAsync(CancellationToken cancellationToken);
+}
