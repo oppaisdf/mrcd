@@ -2,12 +2,9 @@ using MRCD.Domain.Common;
 
 namespace MRCD.Domain.Document;
 
-public sealed class Document
+public sealed class Document : BaseEntity
 {
     private Document() { }
-    public Guid ID { get; private set; }
-    public string Name { get; private set; } = default!;
-
     public static Result<Document> Create(
         string name
     )

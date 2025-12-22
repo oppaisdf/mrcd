@@ -2,12 +2,9 @@ using MRCD.Domain.Common;
 
 namespace MRCD.Domain.Role;
 
-public sealed class Permission
+public sealed class Permission : BaseEntity
 {
     private Permission() { }
-    public Guid ID { get; private set; }
-    public string Name { get; private set; } = default!;
-
     public static Result<Permission> Create(
         string name
     )

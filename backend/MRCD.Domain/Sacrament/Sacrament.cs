@@ -2,12 +2,9 @@ using MRCD.Domain.Common;
 
 namespace MRCD.Domain.Sacrament;
 
-public sealed class Sacrament
+public sealed class Sacrament : BaseEntity
 {
     private Sacrament() { }
-    public Guid ID { get; private set; }
-    public string Name { get; private set; } = default!;
-
     public static Result<Sacrament> Create(
         string name
     )

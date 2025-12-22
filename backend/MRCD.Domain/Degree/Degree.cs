@@ -2,12 +2,9 @@ using MRCD.Domain.Common;
 
 namespace MRCD.Domain.Degree;
 
-public sealed class Degree
+public sealed class Degree : BaseEntity
 {
     private Degree() { }
-    public Guid ID { get; private set; }
-    public string Name { get; private set; } = default!;
-
     public static Result<Degree> Create(
         string name
     )
