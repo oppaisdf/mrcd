@@ -1,7 +1,10 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MRCD.Application.Abstracts;
+using MRCD.Application.Abstracts.Security;
+using MRCD.Infrastructure.Security;
 
 namespace MRCD.Infrastructure;
 
@@ -38,9 +41,12 @@ public static class DependencyInjection
 
     public static IServiceCollection AddInfrasctructure(
         this IServiceCollection services,
-        string dbConnection
+        string dbConnection,
+        EncryptionOptions encryptionOptions
     )
     {
+        services.AddSingleton(Options.Create(encryptionOptions));
+        services.AddSingleton<IEncryptionService, AesGcmEnryptionService>();
         services.AddDbContext<IPersistenceContext, Persistence.AppContext>(options =>
         {
             options.UseMySql(
