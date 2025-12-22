@@ -2,7 +2,7 @@ using MRCD.Domain.Common;
 
 namespace MRCD.Domain.Role;
 
-public sealed record Role
+public sealed class Role
 {
     private Role() { }
     public Guid ID { get; private set; }
