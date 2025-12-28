@@ -32,4 +32,11 @@ internal sealed class AccountingMovementRepository(
         .AccountingMovements
         .Where(m => m.ID == id)
         .ExecuteDeleteAsync(cancellationToken);
+
+    public Task<bool> ExistsIdAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    ) => _app
+        .AccountingMovements
+        .AnyAsync(m => m.ID == id, cancellationToken);
 }

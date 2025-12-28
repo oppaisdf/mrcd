@@ -12,4 +12,5 @@ public interface IAccountingMovementRepository
     /// <returns>Listado de movimientos contables</returns>
     Task<List<Domain.AccountingMovement.AccountingMovement>> ByDateToListAsync(DateOnly date, CancellationToken cancellationToken);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
+    Task<bool> ExistsIdAsync(Guid id, CancellationToken cancellationToken);
 }
