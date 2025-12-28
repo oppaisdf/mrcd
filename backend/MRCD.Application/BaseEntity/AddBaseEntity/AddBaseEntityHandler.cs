@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.Abstracts.Handlers;
@@ -11,7 +12,8 @@ internal sealed class AddBaseEntityHandler<TEntity>(
     IBaseEntityRepository<TEntity> repo,
     IBaseEntityFactory<TEntity> fact,
     IPersistenceContext save,
-    ICommonService service
+    ICommonService service,
+    ILogger<AddBaseEntityHandler<TEntity>> logs
 ) : ICommandHandler<AddBaseEntityCommand, Guid>
     where TEntity : Domain.Common.BaseEntity
 {
@@ -19,6 +21,7 @@ internal sealed class AddBaseEntityHandler<TEntity>(
     private readonly IBaseEntityFactory<TEntity> _fact = fact;
     private readonly IPersistenceContext _save = save;
     private readonly ICommonService _service = service;
+    private readonly ILogger<AddBaseEntityHandler<TEntity>> _logs = logs;
 
     public async Task<Result<Guid>> HandleAsync(
         AddBaseEntityCommand command,
@@ -38,6 +41,7 @@ internal sealed class AddBaseEntityHandler<TEntity>(
             return Result<Guid>.Failure(newRecord.Error!);
         _repo.Add(newRecord.Value!);
         await _save.SaveChangesAsync(cancellationToken);
+        _logs.LogInformation("Record {record} has been created by user {user}", newRecord.Value!.ID, command.UserId);
         return Result<Guid>.Success(newRecord.Value!.ID);
     }
 }
