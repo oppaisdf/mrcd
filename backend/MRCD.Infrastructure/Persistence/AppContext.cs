@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MRCD.Application.Abstracts;
+using MRCD.Domain.AccountingMovement;
 using MRCD.Domain.Attendance;
 using MRCD.Domain.Charge;
 using MRCD.Domain.Degree;
@@ -36,6 +37,7 @@ internal sealed class AppContext(
     public DbSet<Sacrament> Sacraments => Set<Sacrament>();
     public DbSet<User> Users => Set<User>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<AccountingMovement> AccountingMovements => Set<AccountingMovement>();
 
     protected override void OnModelCreating(
         ModelBuilder builder
