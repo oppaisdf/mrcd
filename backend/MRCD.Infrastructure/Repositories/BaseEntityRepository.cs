@@ -13,7 +13,9 @@ internal sealed class BaseEntityRepository<TEntity>(
 
     public void Add(
         TEntity newRecord
-    ) => _app.Set<TEntity>().Add(newRecord);
+    ) => _app
+        .Set<TEntity>()
+        .Add(newRecord);
 
     public Task DeleteAsync(
         Guid id,
@@ -34,5 +36,6 @@ internal sealed class BaseEntityRepository<TEntity>(
         CancellationToken cancellationToken
     ) => _app
         .Set<TEntity>()
+        .AsNoTracking()
         .ToListAsync(cancellationToken);
 }
