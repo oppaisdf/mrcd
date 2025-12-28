@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.Abstracts.Handlers;
+using MRCD.Application.Services.CommonService;
 
 namespace MRCD.Application;
 
@@ -62,6 +63,8 @@ public static class DependencyInjection
     {
         services.RegisterFactories(typeof(DependencyInjection).Assembly);
         services.RegisterHandlers(typeof(DependencyInjection).Assembly);
+        // Services
+        services.AddSingleton<ICommonService, CommonService>();
         return services;
     }
 }
