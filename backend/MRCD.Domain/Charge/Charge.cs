@@ -27,28 +27,4 @@ public sealed class Charge
             Amount = amount
         });
     }
-
-    public Result SetName(
-        string name
-    )
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            return Result.Failure("El nombre del cobro no puede estar vacío");
-        if (name.Trim().Length > 30)
-            return Result.Failure("El nombre del cobro no puede exceder los 30 caracteres");
-        if (name.Trim().Equals(Name))
-            return Result.Failure("El nombre ya está en uso");
-        Name = name.Trim();
-        return Result.Success();
-    }
-
-    public Result SetAmount(
-        decimal amount
-    )
-    {
-        if (amount < 1 || amount > 500)
-            return Result.Failure("El monto del cobro debe estar entre 1-500");
-        Amount = amount;
-        return Result.Success();
-    }
 }
