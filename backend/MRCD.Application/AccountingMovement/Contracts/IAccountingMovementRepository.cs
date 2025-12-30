@@ -13,4 +13,5 @@ public interface IAccountingMovementRepository
     Task<List<Domain.AccountingMovement.AccountingMovement>> ByDateToListAsync(DateOnly date, CancellationToken cancellationToken);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     Task<bool> ExistsIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<List<Domain.AccountingMovement.AccountingMovement>> OnlyByYearToListAsync(int year, CancellationToken cancellationToken);
 }

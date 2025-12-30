@@ -39,4 +39,12 @@ internal sealed class AccountingMovementRepository(
     ) => _app
         .AccountingMovements
         .AnyAsync(m => m.ID == id, cancellationToken);
+
+    public Task<List<AccountingMovement>> OnlyByYearToListAsync(
+        int year,
+        CancellationToken cancellationToken
+    ) => _app
+        .AccountingMovements
+        .Where(m => m.Date.Year == year)
+        .ToListAsync(cancellationToken);
 }
