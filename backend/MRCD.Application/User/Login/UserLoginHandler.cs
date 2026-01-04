@@ -30,7 +30,7 @@ internal sealed class UserLoginHandler(
         if (user is null || !user.IsActive || !user.Password.Equals(command.Password))
             return Result<IEnumerable<RoleWithPermissionDTO>>.Failure("Credenciales inválidas");
 
-        var rolesTask = _role.ByUserIdAsync(user.ID, cancellationToken);
+        var rolesTask = _role.ByUserIdToListAsync(user.ID, cancellationToken);
         var rolePermissionTask = _rolePermission.ToListAsync(cancellationToken);
         var permissionTask = _permission.ToListAsync(cancellationToken);
         await Task.WhenAll(rolesTask, rolePermissionTask);
