@@ -9,4 +9,5 @@ public interface ICommonService
     /// <returns>string</returns>
     string NormalizeString(string text);
     bool HasOnlyLetters(string text);
+    bool HasOnlyNumbers(string text);
 }

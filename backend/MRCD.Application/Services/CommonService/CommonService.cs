@@ -7,10 +7,17 @@ internal sealed partial class CommonService : ICommonService
 {
     [GeneratedRegex("^[A-Za-z]+$")]
     private static partial Regex OnlyLettersRegex();
+    [GeneratedRegex("^[0-9]+$")]
+    private static partial Regex OnlyNumbersRegex();
 
     public bool HasOnlyLetters(
         string text
     ) => OnlyLettersRegex()
+        .IsMatch(text);
+
+    public bool HasOnlyNumbers(
+        string text
+    ) => OnlyNumbersRegex()
         .IsMatch(text);
 
     public string NormalizeString(
