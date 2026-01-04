@@ -30,6 +30,17 @@ internal sealed class UserRepository(
         .Users
         .SingleOrDefaultAsync(u => u.Username == username, cancellationToken);
 
+    public Task<bool> IsActiveAsync(
+        Guid userId,
+        CancellationToken cancellationToken
+    ) => _app
+        .Users
+        .AnyAsync(u =>
+            u.ID == userId
+            && u.IsActive,
+            cancellationToken
+        );
+
     public Task<List<User>> ToListAsync(
         CancellationToken cancellationToken
     ) => _app
