@@ -21,6 +21,17 @@ internal sealed class RoleRepository(
         .Roles
         .AnyAsync(r => r.Name == name, cancellationToken);
 
+    public Task<List<Role>> ByUserIdAsync(
+        Guid userId,
+        CancellationToken cancellationToken
+    ) => (
+        from r in _app.Roles
+        join ur in _app.UserRoles on r.ID equals ur.RoleID
+        where
+            ur.UserID == userId
+        select r
+    ).ToListAsync(cancellationToken);
+
     public Task<bool> IdExistsAsync(
         Guid id,
         CancellationToken cancellationToken
