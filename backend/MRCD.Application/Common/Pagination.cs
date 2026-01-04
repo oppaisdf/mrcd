@@ -11,7 +11,11 @@ public sealed record Pagination<T>(
     public bool HasPrevious => Page > 1;
     public bool HasNext => Page < TotalPages;
 
-    public static Pagination<T> Create(IReadOnlyList<T> items, int total, int page, int size)
-        => new(items, total, page, size);
+    public static Pagination<T> Create(
+        IEnumerable<T> items,
+        int total,
+        int page,
+        int size
+    ) => new(items, total, page, size);
 
 };

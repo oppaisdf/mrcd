@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using MRCD.Application.Common;
 using MRCD.Application.Parent.Contracts;
+using MRCD.Application.Parent.DTOs;
 using MRCD.Domain.Parent;
 
 namespace MRCD.Infrastructure.Repositories;
@@ -37,4 +39,38 @@ internal sealed class ParentRepository(
     ) => _app
         .Parents
         .AnyAsync(p => p.ID == parentId, cancellationToken);
+
+    public async Task<Pagination<ParentDTO>> ToListAsync(
+        int page,
+        int size,
+        string? normalizedParentName,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = _app
+            .Parents
+            .AsNoTracking()
+            .Where(p =>
+                normalizedParentName == null || p.NormalizedName.Contains(normalizedParentName)
+            )
+            .AsQueryable();
+        var totalCount = await query.CountAsync(cancellationToken);
+        var skip = (page - 1) * size;
+        var parents = await query
+            .Skip(skip)
+            .Take(size)
+            .ToListAsync(cancellationToken);
+        return Pagination<ParentDTO>.Create(
+            parents
+                .Select(p => new ParentDTO(
+                    p.ID,
+                    p.Name,
+                    p.IsMasculine,
+                    p.Phone
+                )),
+            totalCount,
+            page,
+            size
+        );
+    }
 }

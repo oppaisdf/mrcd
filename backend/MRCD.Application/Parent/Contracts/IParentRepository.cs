@@ -1,3 +1,6 @@
+using MRCD.Application.Common;
+using MRCD.Application.Parent.DTOs;
+
 namespace MRCD.Application.Parent.Contracts;
 
 public interface IParentRepository
@@ -6,4 +9,5 @@ public interface IParentRepository
     Task<bool> AlreadyExists(string normalizedParentName, CancellationToken cancellationToken);
     Task<bool> ExistsAsync(Guid parentId, CancellationToken cancellationToken);
     Task DeleteAsync(Guid parentId, CancellationToken cancellationToken);
+    Task<Pagination<ParentDTO>> ToListAsync(int page, int size, string? normalizedParentName, CancellationToken cancellationToken);
 }
