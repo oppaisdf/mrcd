@@ -10,11 +10,29 @@ internal sealed class UserRoleRepository(
 {
     private readonly Persistence.AppContext _app = app;
 
+    public void Add(
+        UserRole userRole
+    ) => _app
+        .UserRoles
+        .Add(userRole);
+
     public void AddRange(
         IEnumerable<UserRole> userRoles
     ) => _app
         .UserRoles
         .AddRange(userRoles);
+
+    public Task DeleteAsync(
+        Guid userId,
+        Guid roleId,
+        CancellationToken cancellationToken
+    ) => _app
+        .UserRoles
+        .Where(ur =>
+            ur.UserID == userId
+            && ur.RoleID == roleId
+        )
+        .ExecuteDeleteAsync(cancellationToken);
 
     public Task<List<UserRole>> RolesByUserIdToListAsync(
         Guid id,
