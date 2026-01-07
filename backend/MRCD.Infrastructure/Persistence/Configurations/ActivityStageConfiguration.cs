@@ -30,5 +30,8 @@ internal sealed class ActivityStageConfiguration : IEntityTypeConfiguration<Acti
             .WithMany()
             .HasForeignKey(e => e.UserId)
             .HasConstraintName("FK_ActivityStage_UserId_User_ID");
+        builder
+            .Property(e => e.Notes)
+            .HasMaxLength(50);
     }
 }
