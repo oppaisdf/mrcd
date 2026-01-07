@@ -10,6 +10,22 @@ internal sealed class PersonRepository(
 {
     private readonly Persistence.AppContext _app = app;
 
+    public void Add(
+        Person person
+    ) => _app
+        .People
+        .Add(person);
+
+    public Task<bool> AlreadyExistsNameAsync(
+        string normalizedName,
+        CancellationToken cancellationToken
+    ) => _app
+        .People
+        .AnyAsync(p =>
+            p.NormalizedName.Equals(normalizedName),
+            cancellationToken
+        );
+
     public Task<bool> ExistsActiveAsync(
         Guid personId,
         CancellationToken cancellationToken
