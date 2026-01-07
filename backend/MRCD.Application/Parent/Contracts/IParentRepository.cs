@@ -9,5 +9,6 @@ public interface IParentRepository
     Task<bool> AlreadyExists(string normalizedParentName, CancellationToken cancellationToken);
     Task<bool> ExistsAsync(Guid parentId, CancellationToken cancellationToken);
     Task DeleteAsync(Guid parentId, CancellationToken cancellationToken);
+    Task<Domain.Parent.Parent?> GetByNameAsync(string normalizedName, CancellationToken cancellationToken);
     Task<Pagination<ParentDTO>> ToListAsync(int page, int size, string? normalizedParentName, CancellationToken cancellationToken);
 }

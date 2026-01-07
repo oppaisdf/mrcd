@@ -40,6 +40,16 @@ internal sealed class ParentRepository(
         .Parents
         .AnyAsync(p => p.ID == parentId, cancellationToken);
 
+    public Task<Parent?> GetByNameAsync(
+        string normalizedName,
+        CancellationToken cancellationToken
+    ) => _app
+        .Parents
+        .SingleOrDefaultAsync(p =>
+            p.NormalizedName.Equals(normalizedName),
+            cancellationToken
+        );
+
     public async Task<Pagination<ParentDTO>> ToListAsync(
         int page,
         int size,
