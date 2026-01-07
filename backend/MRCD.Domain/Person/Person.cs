@@ -38,7 +38,7 @@ public sealed class Person
         DateOnly dob,
         Guid degree,
         string? phone,
-        string? address
+        string address
     )
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -47,6 +47,10 @@ public sealed class Person
             return Result<Person>.Failure("El nombre normalizado del confirmando es requerido");
         if (name.Trim().Length > 65 || normalizedName.Trim().Length > 65)
             return Result<Person>.Failure("El nombre del confirmando no puede exceder los 65 caracteres");
+        if (string.IsNullOrWhiteSpace(address))
+            return Result<Person>.Failure("La dirección no puede ser nula");
+        if (address.Trim().Length > 100)
+            return Result<Person>.Failure("La dirección no puede exceder los 100 caracteres");
         var validDOB = ValidDOB(dob);
         if (!validDOB.IsSuccess && validDOB.Error is not null)
             return Result<Person>.Failure(validDOB.Error);
@@ -59,7 +63,7 @@ public sealed class Person
             IsSunday = isSunday,
             DOB = dob,
             Phone = phone,
-            Address = address,
+            Address = address.Trim(),
             RegistrationDate = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6)),
             IsActive = true,
             LastDegreeId = degree
@@ -71,6 +75,8 @@ public sealed class Person
         string normalized
     )
     {
+        if (name.Trim().Equals(Name))
+            return Result.Failure("No se puede asignar el mismo nombre");
         if (string.IsNullOrWhiteSpace(name))
             return Result.Failure("El nombre no puede estar vacío");
         if (string.IsNullOrWhiteSpace(normalized))
@@ -85,6 +91,8 @@ public sealed class Person
         DateOnly dob
     )
     {
+        if (dob == DOB)
+            return Result.Failure("No se puede asignar la misma fecha de nacimiento");
         var validDOB = ValidDOB(dob);
         if (validDOB.IsSuccess) DOB = dob;
         return validDOB;
@@ -94,13 +102,10 @@ public sealed class Person
         string phone
     )
     {
-        if (phone.Equals(""))
-        {
-            Phone = null;
-            return Result.Success();
-        }
         if (string.IsNullOrWhiteSpace(phone))
             return Result.Failure("El número telefónico no puede estar vacío");
+        if (phone.Trim().Equals(Phone))
+            return Result.Failure("No se puede asignar el mismo número telefónico");
         Phone = phone.Trim();
         return Result.Success();
     }
@@ -109,13 +114,10 @@ public sealed class Person
         string address
     )
     {
-        if (address.Equals(""))
-        {
-            Address = null;
-            return Result.Success();
-        }
         if (string.IsNullOrWhiteSpace(address))
             return Result.Failure("La dirección no puede estar vacía");
+        if (address.Trim().Equals(Address))
+            return Result.Failure("No se puede asignar la misma dirección");
         Address = address.Trim();
         return Result.Success();
     }
@@ -124,13 +126,10 @@ public sealed class Person
         string parish
     )
     {
-        if (parish.Equals(""))
-        {
-            Parish = null;
-            return Result.Success();
-        }
         if (string.IsNullOrWhiteSpace(parish))
             return Result.Failure("La parroquia de bautizo no puede estar vacía");
+        if (parish.Trim().Equals(Parish))
+            return Result.Failure("No se puede asignar la misma parroquia de bautizo");
         Parish = parish.Trim();
         return Result.Success();
     }
