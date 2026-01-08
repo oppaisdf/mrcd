@@ -16,6 +16,18 @@ internal sealed class PersonRepository(
         .People
         .Add(person);
 
+    public Task<bool> AlreadyExistExceptIdAsync(
+        string normalizedName,
+        Guid personId,
+        CancellationToken cancellationToken
+    ) => _app
+        .People
+        .AnyAsync(p =>
+            p.NormalizedName.Equals(normalizedName)
+            && p.ID != personId,
+            cancellationToken
+        );
+
     public Task<bool> AlreadyExistsNameAsync(
         string normalizedName,
         CancellationToken cancellationToken
@@ -34,6 +46,16 @@ internal sealed class PersonRepository(
         .AnyAsync(p =>
             p.ID == personId
             && p.IsActive,
+            cancellationToken
+        );
+
+    public Task<Person?> GetByIdAsync(
+        Guid personId,
+        CancellationToken cancellationToken
+    ) => _app
+        .People
+        .SingleOrDefaultAsync(p =>
+            p.ID == personId,
             cancellationToken
         );
 
