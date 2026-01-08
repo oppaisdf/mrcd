@@ -2,11 +2,9 @@ using MRCD.Domain.Common;
 
 namespace MRCD.Domain.Charge;
 
-public sealed class Charge
+public sealed class Charge : BaseEntity
 {
     private Charge() { }
-    public Guid ID { get; private set; }
-    public string Name { get; private set; } = default!;
     public decimal Amount { get; private set; }
 
     public static Result<Charge> Create(
