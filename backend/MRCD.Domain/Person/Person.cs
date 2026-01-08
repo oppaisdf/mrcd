@@ -83,7 +83,11 @@ public sealed class Person
             return Result.Failure("El nombre normalizado no puede estar vacío");
         if (name.Trim().Length > 65 || normalized.Trim().Length > 65)
             return Result.Failure("El nombre del confirmando no puede exceder los 65 caracteres");
-        Name = name.Trim();
+        if (IsActive)
+        {
+            Name = name.Trim();
+            NormalizedName = normalized.Trim();
+        }
         return Result.Success();
     }
 
@@ -94,7 +98,7 @@ public sealed class Person
         if (dob == DOB)
             return Result.Failure("No se puede asignar la misma fecha de nacimiento");
         var validDOB = ValidDOB(dob);
-        if (validDOB.IsSuccess) DOB = dob;
+        if (validDOB.IsSuccess && IsActive) DOB = dob;
         return validDOB;
     }
 
@@ -106,7 +110,9 @@ public sealed class Person
             return Result.Failure("El número telefónico no puede estar vacío");
         if (phone.Trim().Equals(Phone))
             return Result.Failure("No se puede asignar el mismo número telefónico");
-        Phone = phone.Trim();
+        if (phone.Trim().Length > 10)
+            return Result.Failure("El número telefónico no puede exceder los 10 dígitos");
+        if (IsActive) Phone = phone.Trim();
         return Result.Success();
     }
 
@@ -118,7 +124,9 @@ public sealed class Person
             return Result.Failure("La dirección no puede estar vacía");
         if (address.Trim().Equals(Address))
             return Result.Failure("No se puede asignar la misma dirección");
-        Address = address.Trim();
+        if (address.Trim().Length > 100)
+            return Result.Failure("La dirección no puede exceder los 100 caracteres");
+        if (IsActive) Address = address.Trim();
         return Result.Success();
     }
 
@@ -130,7 +138,9 @@ public sealed class Person
             return Result.Failure("La parroquia de bautizo no puede estar vacía");
         if (parish.Trim().Equals(Parish))
             return Result.Failure("No se puede asignar la misma parroquia de bautizo");
-        Parish = parish.Trim();
+        if (parish.Trim().Length > 30)
+            return Result.Failure("La parroquia de bautizo no puede exceder los 30 caracteres");
+        if (IsActive) Parish = parish.Trim();
         return Result.Success();
     }
 
@@ -140,16 +150,32 @@ public sealed class Person
     {
         if (IsSunday == isSunday)
             return Result.Failure("El día es el mismo");
-        IsSunday = isSunday;
+        if (IsActive) IsSunday = isSunday;
         return Result.Success();
     }
 
-    public void Inactivate()
+    public Result SetActive(
+        bool isActive
+    )
     {
-        IsActive = false;
-        Address = null;
-        Phone = null;
+        if (isActive == IsActive)
+            return Result.Failure("El confirmando ya se encuentra en este estado");
+        if (!isActive)
+        {
+            Address = null;
+            Phone = null;
+        }
+        IsActive = isActive;
+        return Result.Success();
     }
 
-    public void SetDegree(Guid degree) => LastDegreeId = degree;
+    public Result SetDegree(
+        Guid degree
+    )
+    {
+        if (degree == LastDegreeId)
+            return Result.Failure("El grado académico ya ha sido asignado");
+        if (IsActive) LastDegreeId = degree;
+        return Result.Success();
+    }
 }
