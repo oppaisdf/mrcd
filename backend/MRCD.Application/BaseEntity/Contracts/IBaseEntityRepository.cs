@@ -5,5 +5,7 @@ public interface IBaseEntityRepository<TEntity> where TEntity : Domain.Common.Ba
     void Add(TEntity newRecord);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     Task<bool> ExistsIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    void Remove(TEntity record);
     Task<List<TEntity>> ToListAsync(CancellationToken cancellationToken);
 }

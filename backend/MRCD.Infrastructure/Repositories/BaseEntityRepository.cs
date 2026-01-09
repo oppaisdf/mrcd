@@ -32,6 +32,22 @@ internal sealed class BaseEntityRepository<TEntity>(
         .Set<TEntity>()
         .AnyAsync(e => e.ID == id, cancellationToken);
 
+    public Task<TEntity?> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken
+    ) => _app
+        .Set<TEntity>()
+        .SingleOrDefaultAsync(e =>
+            e.ID == id,
+            cancellationToken
+        );
+
+    public void Remove(
+        TEntity record
+    ) => _app
+        .Set<TEntity>()
+        .Remove(record);
+
     public Task<List<TEntity>> ToListAsync(
         CancellationToken cancellationToken
     ) => _app
