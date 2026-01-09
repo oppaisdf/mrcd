@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MRCD.Application.BaseEntity.DTOs;
 using MRCD.Application.Person.Contracts;
 using MRCD.Domain.Person;
 
@@ -15,6 +16,22 @@ internal sealed class PersonSacramentRepository(
     ) => _app
         .PersonSacraments
         .Add(personSacrament);
+
+    public Task<List<AssociationBaseEntityDTO>> AssignationByPersonToListAsync(
+        Guid personId,
+        CancellationToken cancellationToken
+    ) => (
+        from s in _app.Sacraments
+        join ps in _app
+            .PersonSacraments
+            .Where(p => p.PersonId == personId)
+            on s.ID equals ps.SacramentId into pss
+        select new AssociationBaseEntityDTO(
+            s.ID,
+            s.Name,
+            pss.Any()
+        )
+    ).ToListAsync(cancellationToken);
 
     public Task<PersonSacrament?> GetAsync(
         Guid personId,
