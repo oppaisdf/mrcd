@@ -40,7 +40,7 @@ internal sealed class ParentRepository(
         .Parents
         .AnyAsync(p => p.ID == parentId, cancellationToken);
 
-    public Task<List<ParentByPersonDTO>> GetByActivePersonToListAsync(
+    public Task<List<ParentByPersonDTO>> FilteredByActivePersonToListAsync(
         CancellationToken cancellationToken
     ) => (
         from person in _app.People

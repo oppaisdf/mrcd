@@ -23,7 +23,7 @@ internal sealed class GetGeneralListHandler(
     )
     {
         var people = await _person.OnlyActiveToListAsync(cancellationToken);
-        var parents = await _parent.GetByActivePersonToListAsync(cancellationToken);
+        var parents = await _parent.FilteredByActivePersonToListAsync(cancellationToken);
         var parentsDir = parents
             .GroupBy(p => (p.PersonId, p.IsParent))
             .ToDictionary(
