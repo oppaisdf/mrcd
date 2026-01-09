@@ -17,13 +17,6 @@ internal sealed class BaseEntityRepository<TEntity>(
         .Set<TEntity>()
         .Add(newRecord);
 
-    public Task<bool> ExistsIdAsync(
-        Guid id,
-        CancellationToken cancellationToken
-    ) => _app
-        .Set<TEntity>()
-        .AnyAsync(e => e.ID == id, cancellationToken);
-
     public Task<TEntity?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken

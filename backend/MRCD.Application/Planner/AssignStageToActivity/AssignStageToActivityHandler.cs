@@ -57,12 +57,12 @@ internal sealed class AssignStageToActivityHandler(
         if (notes is not null && notes.Length > 50)
             return Result.Failure("Las nota no puede exceder los 50 caracteres");
 
-        var stageTask = _stage.ExistsIdAsync(command.StageId, ct);
+        var stageTask = _stage.GetByIdAsync(command.StageId, ct);
         var activityTask = _activity.ExistsIdAsync(command.ActivityId, ct);
         await Task.WhenAll(stageTask, activityTask);
         if (!activityTask.Result)
             return Result.Failure("La actividad no existe");
-        if (!stageTask.Result)
+        if (stageTask.Result is null)
             return Result.Failure("La fase de actividad no existe");
         if (command.UserId is not null)
         {

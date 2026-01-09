@@ -28,7 +28,7 @@ internal sealed class AssignPersonEntityHandler<TEntity>(
         CancellationToken ct
     )
     {
-        var existsId = await _entity.ExistsIdAsync(command.EntityId, ct);
+        var existsId = await _entity.GetByIdAsync(command.EntityId, ct) is not null;
         var entityName = command.Entity switch
         {
             DTOs.PersonTypeEntity.Charge => "cobro",

@@ -112,7 +112,7 @@ internal sealed class UpdatePersonHandler(
     {
         if (degreeId is null)
             return Result<bool>.Success(false);
-        var exists = await _degree.ExistsIdAsync(degreeId.Value, ct);
+        var exists = await _degree.GetByIdAsync(degreeId.Value, ct) is not null;
         if (!exists)
             return Result<bool>.Failure("El grado académico no existe");
         var result = person.SetDegree(degreeId.Value);

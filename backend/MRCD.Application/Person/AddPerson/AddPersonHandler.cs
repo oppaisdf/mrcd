@@ -95,7 +95,7 @@ internal sealed class AddPersonHandler(
         var alreadyExists = await _person.AlreadyExistsNameAsync(normalizedName, cancellationToken);
         if (alreadyExists)
             return Result<Guid>.Failure("El confirmando ya se ha registrado");
-        var degreeExists = await _degree.ExistsIdAsync(command.DegreeId, cancellationToken);
+        var degreeExists = await _degree.GetByIdAsync(command.DegreeId, cancellationToken) is not null;
         if (!degreeExists)
             return Result<Guid>.Failure("El grado académico no existe");
 
