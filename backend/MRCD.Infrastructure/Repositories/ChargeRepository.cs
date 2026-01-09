@@ -16,21 +16,6 @@ internal sealed class ChargeRepository(
         .Charges
         .Add(charge);
 
-    public Task DeleteAsync(
-        Guid id,
-        CancellationToken cancellationToken
-    ) => _app
-        .Charges
-        .Where(c => c.ID == id)
-        .ExecuteDeleteAsync(cancellationToken);
-
-    public Task<bool> ExistsIdAsync(
-        Guid id,
-        CancellationToken cancellationToken
-    ) => _app
-        .Charges
-        .AnyAsync(c => c.ID == id, cancellationToken);
-
     public Task<List<Charge>> ToListAsync(
         CancellationToken cancellationToken
     ) => _app
