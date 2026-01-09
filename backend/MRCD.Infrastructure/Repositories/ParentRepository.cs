@@ -25,6 +25,22 @@ internal sealed class ParentRepository(
         .Parents
         .AnyAsync(p => p.NormalizedName.Equals(normalizedParentName), cancellationToken);
 
+    public Task<List<ParentByPersonDTO>> ByPersonToListAsync(
+        Guid personId,
+        CancellationToken cancellationToken
+    ) => (
+        from p in _app.Parents
+        join pp in _app.ParentsPersons on p.ID equals pp.PersonId
+        where
+            p.ID == personId
+        select new ParentByPersonDTO(
+            pp.PersonId,
+            p.Name,
+            pp.IsParent,
+            p.Phone
+        )
+    ).ToListAsync(cancellationToken);
+
     public Task DeleteAsync(
         Guid parentId,
         CancellationToken cancellationToken
