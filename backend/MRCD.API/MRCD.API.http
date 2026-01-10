@@ -1,0 +1,6 @@
+@MRCD.API_HostAddress = http://localhost:5093
+
+GET {{MRCD.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
