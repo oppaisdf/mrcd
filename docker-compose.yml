@@ -1,0 +1,22 @@
+services:
+  db:
+    build: ./db
+    container_name: db
+    networks: [network]
+    env_file:
+      - .env
+    expose:
+      - 3306
+    environment:
+      - MYSQL_DATABASE=${DB}
+      - MYSQL_ROOT_PASSWORD=${PASSWD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  network:
+    driver: bridge
