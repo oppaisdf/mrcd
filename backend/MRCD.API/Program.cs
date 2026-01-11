@@ -1,3 +1,4 @@
+using MRCD.API.Endpoints;
 using MRCD.Application;
 using MRCD.Application.Abstracts.Security;
 using MRCD.Infrastructure;
@@ -55,4 +56,5 @@ app.MapGet("/api/health", () =>
 .WithTags("Public");
 
 app.UseExceptionHandler();
+app.MapUserEndpoints();
 app.Run();
