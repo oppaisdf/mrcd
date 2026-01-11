@@ -18,6 +18,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrasctructure(connection, encryptionOptions);
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = ctx =>
+    {
+        ctx.ProblemDetails.Instance ??= ctx.HttpContext.TraceIdentifier;
+        if (ctx.ProblemDetails.Status is StatusCodes.Status500InternalServerError)
+        {
+            ctx.ProblemDetails.Title ??= "Internal server error :c";
+            ctx.ProblemDetails.Detail ??= "Error inesperado del servidor. Intenta de nuevo o consulta a soporte.";
+        }
+    };
+});
 
 var app = builder.Build();
 
@@ -42,4 +54,5 @@ app.MapGet("/api/health", () =>
 .WithOpenApi()
 .WithTags("Public");
 
+app.UseExceptionHandler();
 app.Run();
