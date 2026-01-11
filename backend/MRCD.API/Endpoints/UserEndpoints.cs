@@ -18,7 +18,7 @@ internal static class UserEndpoints
     )
     {
         var app = builder
-            .MapGroup("api/v2/user")
+            .MapGroup("/api/v2/user")
             .WithTags("User")
             .RequireAuthorization();
 

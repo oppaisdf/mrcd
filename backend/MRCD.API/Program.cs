@@ -57,4 +57,5 @@ app.MapGet("/api/health", () =>
 
 app.UseExceptionHandler();
 app.MapUserEndpoints();
+app.MapRoleEndpoints();
 app.Run();
