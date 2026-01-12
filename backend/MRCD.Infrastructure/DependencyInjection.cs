@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Security;
+using MRCD.Application.BaseEntity.Contracts;
+using MRCD.Infrastructure.Repositories;
 using MRCD.Infrastructure.Security;
 
 namespace MRCD.Infrastructure;
@@ -36,6 +38,7 @@ public static class DependencyInjection
             foreach (var iface in serviceIfaces)
                 services.AddScoped(iface, repo);
         }
+        services.AddScoped(typeof(IBaseEntityRepository<>), typeof(BaseEntityRepository<>));
         return services;
     }
 
