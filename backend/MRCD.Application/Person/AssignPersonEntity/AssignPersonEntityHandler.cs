@@ -1,5 +1,6 @@
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
+using MRCD.Application.BaseEntity.Common;
 using MRCD.Application.BaseEntity.Contracts;
 using MRCD.Application.Person.Contracts;
 using MRCD.Domain.Common;
@@ -31,9 +32,9 @@ internal sealed class AssignPersonEntityHandler<TEntity>(
         var existsId = await _entity.GetByIdAsync(command.EntityId, ct) is not null;
         var entityName = command.Entity switch
         {
-            DTOs.PersonTypeEntity.Charge => "cobro",
-            DTOs.PersonTypeEntity.Document => "documento",
-            DTOs.PersonTypeEntity.Sacrament => "sacramento",
+            BaseEntityType.Charge => "cobro",
+            BaseEntityType.Document => "documento",
+            BaseEntityType.Sacrament => "sacramento",
             _ => ""
         };
         if (!existsId)
@@ -42,17 +43,17 @@ internal sealed class AssignPersonEntityHandler<TEntity>(
 
         switch (command.Entity)
         {
-            case DTOs.PersonTypeEntity.Charge:
+            case BaseEntityType.Charge:
                 if (await _charge.GetAsync(command.PersonId, command.EntityId, ct) is not null)
                     return Result.Failure(assignedError);
                 _charge.Add(new(command.PersonId, command.EntityId));
                 break;
-            case DTOs.PersonTypeEntity.Document:
+            case BaseEntityType.Document:
                 if (await _document.GetAsync(command.PersonId, command.EntityId, ct) is not null)
                     return Result.Failure(assignedError);
                 _document.Add(new(command.PersonId, command.EntityId));
                 break;
-            case DTOs.PersonTypeEntity.Sacrament:
+            case BaseEntityType.Sacrament:
                 if (await _document.GetAsync(command.PersonId, command.EntityId, ct) is not null)
                     return Result.Failure(assignedError);
                 _sacrament.Add(new(command.PersonId, command.EntityId));
@@ -68,26 +69,26 @@ internal sealed class AssignPersonEntityHandler<TEntity>(
     {
         var entityName = command.Entity switch
         {
-            DTOs.PersonTypeEntity.Charge => "cobro",
-            DTOs.PersonTypeEntity.Document => "documento",
-            DTOs.PersonTypeEntity.Sacrament => "sacramento",
+            BaseEntityType.Charge => "cobro",
+            BaseEntityType.Document => "documento",
+            BaseEntityType.Sacrament => "sacramento",
             _ => ""
         };
         var existsError = $"No se ha registrado el {entityName} al confirmando";
 
         switch (command.Entity)
         {
-            case DTOs.PersonTypeEntity.Charge:
+            case BaseEntityType.Charge:
                 var charge = await _charge.GetAsync(command.PersonId, command.EntityId, ct);
                 if (charge is null) return Result.Failure(existsError);
                 _charge.Remove(charge);
                 break;
-            case DTOs.PersonTypeEntity.Document:
+            case BaseEntityType.Document:
                 var document = await _document.GetAsync(command.PersonId, command.EntityId, ct);
                 if (document is null) return Result.Failure(existsError);
                 _document.Remove(document);
                 break;
-            case DTOs.PersonTypeEntity.Sacrament:
+            case BaseEntityType.Sacrament:
                 var sacrament = await _sacrament.GetAsync(command.PersonId, command.EntityId, ct);
                 if (sacrament is null) return Result.Failure(existsError);
                 _sacrament.Remove(sacrament);
