@@ -13,7 +13,7 @@ internal sealed class GetPersonByIdHandler(
     IPersonChargeRepository charge,
     IPersonDocumentRepository document,
     ILogger<GetPersonByIdHandler> logs
-) : IQueryHandler<PersonDTO, GetPersonByIdCommand>
+) : IQueryHandler<PersonDTO, GetPersonByIdQuery>
 {
     private readonly IPersonRepository _person = person;
     private readonly IParentRepository _parent = parent;
@@ -22,7 +22,7 @@ internal sealed class GetPersonByIdHandler(
     private readonly ILogger<GetPersonByIdHandler> _logs = logs;
 
     public async Task<Result<PersonDTO>> HandleAsync(
-        GetPersonByIdCommand query,
+        GetPersonByIdQuery query,
         CancellationToken cancellationToken
     )
     {
