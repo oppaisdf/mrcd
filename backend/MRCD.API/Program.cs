@@ -59,4 +59,5 @@ app.UseExceptionHandler();
 app.MapUserEndpoints();
 app.MapRoleEndpoints();
 app.MapPlannerEndpoints();
+app.MapPersonEndpoints();
 app.Run();
