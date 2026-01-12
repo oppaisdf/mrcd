@@ -21,8 +21,8 @@ internal static class RoleEndpoints
 
         app.MapPost("", async (
             [FromBody] AddRoleRequest request,
-            ClaimsPrincipal user,
             ICommandHandler<AddRoleCommand, Guid> handler,
+            ClaimsPrincipal user,
             CancellationToken ct
         ) =>
         {
@@ -51,7 +51,7 @@ internal static class RoleEndpoints
         .ProducesProblem(StatusCodes.Status400BadRequest);
 
         app.MapGet("", async (
-            IQueryHandler<List<Domain.Role.Role>> handler,
+            [FromServices] IQueryHandler<List<Domain.Role.Role>> handler,
             CancellationToken ct
         ) =>
         {
@@ -69,7 +69,7 @@ internal static class RoleEndpoints
         .Produces<IEnumerable<Domain.Role.Role>>(StatusCodes.Status200OK);
 
         app.MapGet("/permission", async (
-            IQueryHandler<IEnumerable<RoleWithPermissionDTO>> handler,
+            [FromServices] IQueryHandler<IEnumerable<RoleWithPermissionDTO>> handler,
             CancellationToken ct
         ) =>
         {
