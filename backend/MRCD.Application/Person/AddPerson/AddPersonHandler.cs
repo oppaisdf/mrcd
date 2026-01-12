@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Contracts;
@@ -15,7 +16,8 @@ internal sealed class AddPersonHandler(
     IBaseEntityRepository<Degree> degree,
     IParentRepository parent,
     IParentPersonRepository parentPerson,
-    IPersistenceContext save
+    IPersistenceContext save,
+    ILogger<AddPersonHandler> logs
 ) : ICommandHandler<AddPersonCommand, Guid>
 {
     private readonly IPersonRepository _person = person;
@@ -24,6 +26,7 @@ internal sealed class AddPersonHandler(
     private readonly IParentRepository _parent = parent;
     private readonly IParentPersonRepository _parentPerson = parentPerson;
     private readonly IPersistenceContext _save = save;
+    private readonly ILogger<AddPersonHandler> _logs = logs;
 
     private async Task<Result> AddParentsAsync(
         Guid personId,
@@ -105,6 +108,7 @@ internal sealed class AddPersonHandler(
         if (!parentsResult.IsSuccess)
             return Result<Guid>.Failure(parentsResult.Error!);
         await _save.SaveChangesAsync(cancellationToken);
+        _logs.LogInformation("Person {person} has been added by user {user}", person.ID, command.UserId);
         return Result<Guid>.Success(personResult.Value!.ID);
     }
 }

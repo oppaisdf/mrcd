@@ -3,6 +3,7 @@ using MRCD.Application.Abstracts.Handlers;
 namespace MRCD.Application.Person.AddPerson;
 
 public sealed record AddPersonCommand(
+    Guid UserId,
     string Name,
     bool IsMasculine,
     bool IsSunday,

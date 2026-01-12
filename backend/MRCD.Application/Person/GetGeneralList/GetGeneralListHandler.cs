@@ -45,6 +45,7 @@ internal sealed class GetGeneralListHandler(
                 parentsDir.TryGetValue((p.ID, false), out var godparents)
                     ? godparents : []
             ));
+        _logs.LogInformation("User {user} has consulted the general list", query.UserId);
         return Result<IEnumerable<GeneralListDTO>>.Success(result);
     }
 }
