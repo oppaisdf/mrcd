@@ -7,24 +7,21 @@ using MRCD.Domain.Common;
 
 namespace MRCD.Application.Person.AssignPersonEntity;
 
-internal sealed class AssignPersonEntityHandler(
+internal sealed class AssignPersonEntityHandler<TEntity>(
     IPersonRepository person,
     IPersonChargeRepository charge,
     IPersonDocumentRepository document,
     IPersonSacramentRepository sacrament,
-    IBaseEntityRepository<Domain.Document.Document> doc,
-    IBaseEntityRepository<Domain.Sacrament.Sacrament> sac,
-    IBaseEntityRepository<Domain.Charge.Charge> charg,
+    IBaseEntityRepository<TEntity> entity,
     IPersistenceContext save
-) : ICommandHandler<AssignPersonEntityCommand>
+) : IBaseCommandHandler<AssignPersonEntityCommand, TEntity>
+    where TEntity : Domain.Common.BaseEntity
 {
     private readonly IPersonRepository _person = person;
     private readonly IPersonChargeRepository _charge = charge;
     private readonly IPersonDocumentRepository _document = document;
     private readonly IPersonSacramentRepository _sacrament = sacrament;
-    private readonly IBaseEntityRepository<Domain.Document.Document> _doc = doc;
-    private readonly IBaseEntityRepository<Domain.Sacrament.Sacrament> _sac = sac;
-    private readonly IBaseEntityRepository<Domain.Charge.Charge> _charg = charg;
+    private readonly IBaseEntityRepository<TEntity> _entity = entity;
     private readonly IPersistenceContext _save = save;
 
     private async Task<Result> AddAsync(
@@ -32,13 +29,7 @@ internal sealed class AssignPersonEntityHandler(
         CancellationToken ct
     )
     {
-        var existsId = command.Entity switch
-        {
-            BaseEntityType.Charge => await _charg.GetByIdAsync(command.EntityId, ct) is not null,
-            BaseEntityType.Document => await _doc.GetByIdAsync(command.EntityId, ct) is not null,
-            BaseEntityType.Sacrament => await _sac.GetByIdAsync(command.EntityId, ct) is not null,
-            _ => true
-        };
+        var existsId = await _entity.GetByIdAsync(command.EntityId, ct) is not null;
         var entityName = command.Entity switch
         {
             BaseEntityType.Charge => "cobro",
