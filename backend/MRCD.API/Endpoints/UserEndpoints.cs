@@ -86,7 +86,7 @@ internal static class UserEndpoints
         .ProducesProblem(StatusCodes.Status409Conflict);
 
         app.MapGet("", async (
-            IQueryHandler<IEnumerable<UserDTO>> handler,
+            [FromServices] IQueryHandler<IEnumerable<UserDTO>> handler,
             CancellationToken ct
         ) =>
         {
@@ -128,8 +128,8 @@ internal static class UserEndpoints
         app.MapPatch("{id}", async (
             Guid id,
             [FromBody] UpdateUserRequest request,
-            ClaimsPrincipal user,
             ICommandHandler<UpdateUserCommand> handler,
+            ClaimsPrincipal user,
             CancellationToken ct
         ) =>
         {
