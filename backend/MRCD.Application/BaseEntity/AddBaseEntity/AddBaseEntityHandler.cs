@@ -14,7 +14,7 @@ internal sealed class AddBaseEntityHandler<TEntity>(
     IPersistenceContext save,
     ICommonService service,
     ILogger<AddBaseEntityHandler<TEntity>> logs
-) : ICommandHandler<AddBaseEntityCommand, Guid>
+) : ICommandHandler<AddBaseEntityCommand, Guid, TEntity>
     where TEntity : Domain.Common.BaseEntity
 {
     private readonly IBaseEntityRepository<TEntity> _repo = repo;
