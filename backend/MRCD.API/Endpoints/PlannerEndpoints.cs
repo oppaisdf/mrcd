@@ -26,8 +26,8 @@ internal static class PlannerEndpoints
         #region Activity
         app.MapPost("/activity", async (
             [FromBody] AddActivityRequest request,
-            ClaimsPrincipal user,
             ICommandHandler<AddActivityCommand, Guid> handler,
+            ClaimsPrincipal user,
             CancellationToken ct
         ) =>
         {
@@ -54,7 +54,7 @@ internal static class PlannerEndpoints
 
         app.MapDelete("/activity/{id}", async (
             Guid id,
-            ICommandHandler<DelActivityCommand> handler,
+            [FromServices] ICommandHandler<DelActivityCommand> handler,
             ClaimsPrincipal user,
             CancellationToken ct
         ) =>
@@ -84,7 +84,7 @@ internal static class PlannerEndpoints
 
         app.MapGet("/activity/{id}", async (
             Guid id,
-            IQueryHandler<ActivityDTO, GetActivityQuery> handler,
+            [FromServices] IQueryHandler<ActivityDTO, GetActivityQuery> handler,
             CancellationToken ct
         ) =>
         {
@@ -108,7 +108,7 @@ internal static class PlannerEndpoints
         app.MapGet("/calendar", async (
             [FromQuery] ushort year,
             [FromQuery] ushort month,
-            IQueryHandler<IEnumerable<CalendarDTO>, GetCalendarQuery> handler,
+            [FromServices] IQueryHandler<IEnumerable<CalendarDTO>, GetCalendarQuery> handler,
             CancellationToken ct
         ) =>
         {
@@ -166,7 +166,7 @@ internal static class PlannerEndpoints
             Guid stageId,
             Guid activityId,
             Guid? userId,
-            ICommandHandler<AssignStageToActivityCommand> handler,
+            [FromServices] ICommandHandler<AssignStageToActivityCommand> handler,
             CancellationToken ct
         ) =>
         {
@@ -185,10 +185,10 @@ internal static class PlannerEndpoints
                 e => e.Contains("no ha sido")
             );
         })
-        .WithName("AssignStageToActivity")
-        .WithDisplayName("POST /AssignStageToActivity")
-        .WithSummary("Asignar fase de actividad")
-        .WithDescription("Asigna una fase de actividad a una actividad")
+        .WithName("DelAssignStageToActivity")
+        .WithDisplayName("DELETE /DelAssignStageToActivity")
+        .WithSummary("Elimminar fase de actividad")
+        .WithDescription("Desasgna una fase de actividad a una actividad")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound);
