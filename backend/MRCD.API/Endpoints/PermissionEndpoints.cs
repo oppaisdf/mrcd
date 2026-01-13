@@ -69,7 +69,7 @@ internal static class PermissionEndpoints
                 e => e.Contains("ya ha sido")
             );
         })
-        .WithName("AssignPermisionRole")
+        .WithName("AssignPermissionRole")
         .WithDisplayName("POST /AssignPermissionRole")
         .WithSummary("Asignar permiso a rol")
         .WithDescription("Asigna un permiso a un rol")
@@ -99,10 +99,10 @@ internal static class PermissionEndpoints
                 e => e.Contains("no existe")
             );
         })
-        .WithName("AssignPermisionRole")
-        .WithDisplayName("POST /AssignPermissionRole")
-        .WithSummary("Asignar permiso a rol")
-        .WithDescription("Asigna un permiso a un rol")
+        .WithName("DelPermission")
+        .WithDisplayName("DELETE /Permission")
+        .WithSummary("Eliminar permiso")
+        .WithDescription("Elimina un permiso")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound);
@@ -125,7 +125,7 @@ internal static class PermissionEndpoints
         .WithOpenApi()
         .Produces<IEnumerable<Domain.Role.Permission>>(StatusCodes.Status200OK);
 
-        app.MapPost("{permissionId}/role/{roleId}", async (
+        app.MapDelete("{permissionId}/role/{roleId}", async (
             Guid permissionId,
             Guid roleId,
             [FromServices] ICommandHandler<UnassignToRoleCommand> handler,
@@ -148,7 +148,7 @@ internal static class PermissionEndpoints
                 e => e.Contains("no existe")
             );
         })
-        .WithName("DelPermissionRole")
+        .WithName("UnassignPermissionRole")
         .WithDisplayName("DELETE /PermissionRole")
         .WithSummary("Eliminar permission role")
         .WithDescription("Desasigna un permiso a un rol")
