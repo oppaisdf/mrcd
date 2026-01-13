@@ -6,7 +6,7 @@ namespace MRCD.Application.BaseEntity.GetBaseEntity;
 
 internal sealed class GetBaseEntityHandler<TEntity>(
     IBaseEntityRepository<TEntity> repo
-) : IBaseQueryHandler<IEnumerable<TEntity>, TEntity>
+) : IBaseQueryHandler<TEntity>
     where TEntity : Domain.Common.BaseEntity
 {
     private readonly IBaseEntityRepository<TEntity> _repo = repo;

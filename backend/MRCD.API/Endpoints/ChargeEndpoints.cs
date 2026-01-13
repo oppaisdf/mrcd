@@ -80,7 +80,7 @@ internal static class ChargeEndpoints
         .ProducesProblem(StatusCodes.Status404NotFound);
 
         app.MapGet("", async (
-            [FromServices] IBaseQueryHandler<IEnumerable<Charge>, Charge> handler,
+            [FromServices] IBaseQueryHandler<Charge> handler,
             CancellationToken ct
         ) =>
         {

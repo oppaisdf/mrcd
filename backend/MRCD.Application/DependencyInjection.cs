@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.Abstracts.Handlers;
+using MRCD.Application.BaseEntity.GetBaseEntity;
 using MRCD.Application.Services.CommonService;
 
 namespace MRCD.Application;
@@ -13,8 +14,10 @@ public static class DependencyInjection
         Assembly assembly
     )
     {
+        services.AddScoped(typeof(IBaseQueryHandler<>), typeof(GetBaseEntityHandler<>));
         var handlers = new[]
         {
+            typeof(IQueryHandler<>),
             typeof(IQueryHandler<,>),
             typeof(ICommandHandler<>),
             typeof(ICommandHandler<,>)

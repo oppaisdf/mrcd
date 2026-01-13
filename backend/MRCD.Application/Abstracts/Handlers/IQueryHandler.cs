@@ -12,7 +12,7 @@ public interface IQueryHandler<TResponse>
     Task<Result<TResponse>> HandleAsync(CancellationToken cancellationToken);
 }
 
-public interface IBaseQueryHandler<TResponse, TEntity> where TEntity : Domain.Common.BaseEntity
+public interface IBaseQueryHandler<TEntity> where TEntity : Domain.Common.BaseEntity
 {
-    Task<Result<TResponse>> HandleAsync(CancellationToken cancellationToken);
+    Task<Result<IEnumerable<TEntity>>> HandleAsync(CancellationToken cancellationToken);
 }
