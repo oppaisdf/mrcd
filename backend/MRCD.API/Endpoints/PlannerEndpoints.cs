@@ -20,8 +20,7 @@ internal static class PlannerEndpoints
     {
         var app = builder
             .MapGroup("/api/v2/planner")
-            .WithTags("Planner")
-            .RequireAuthorization();
+            .WithTags("Planner");
 
         #region Activity
         app.MapPost("/activity", async (

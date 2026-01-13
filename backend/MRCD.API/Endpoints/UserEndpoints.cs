@@ -19,8 +19,7 @@ internal static class UserEndpoints
     {
         var app = builder
             .MapGroup("/api/v2/user")
-            .WithTags("User")
-            .RequireAuthorization();
+            .WithTags("User");
 
         app.MapPost("", async (
             [FromBody] AddUserRequest request,

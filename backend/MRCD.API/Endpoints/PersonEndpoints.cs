@@ -19,8 +19,7 @@ internal static class PersonEndpoints
     {
         var app = builder
             .MapGroup("/api/v2/person")
-            .WithTags("Person")
-            .RequireAuthorization();
+            .WithTags("Person");
 
         app.MapPost("", async (
             [FromBody] AddPersonRequest request,

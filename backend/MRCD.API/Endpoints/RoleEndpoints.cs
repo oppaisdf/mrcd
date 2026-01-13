@@ -16,8 +16,7 @@ internal static class RoleEndpoints
     {
         var app = builder
             .MapGroup("/api/v2/role")
-            .WithTags("Roles")
-            .RequireAuthorization();
+            .WithTags("Roles");
 
         app.MapPost("", async (
             [FromBody] AddRoleRequest request,
