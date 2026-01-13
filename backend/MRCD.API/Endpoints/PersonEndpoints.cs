@@ -29,7 +29,7 @@ internal static class PersonEndpoints
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            if (!Guid.TryParse(userIdString, out Guid userId))
                 ResultsMapper.Unauthorized();
 
             var command = new AddPersonCommand(
@@ -68,7 +68,7 @@ internal static class PersonEndpoints
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            if (!Guid.TryParse(userIdString, out Guid userId))
                 ResultsMapper.Unauthorized();
             var query = new GetGeneralListQuery(userId);
             var result = await handler.HandleAsync(query, ct);
@@ -92,7 +92,7 @@ internal static class PersonEndpoints
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            if (!Guid.TryParse(userIdString, out Guid userId))
                 ResultsMapper.Unauthorized();
             var query = new GetPersonByIdQuery(
                 userId,
@@ -122,7 +122,7 @@ internal static class PersonEndpoints
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            if (!Guid.TryParse(userIdString, out Guid userId))
                 ResultsMapper.Unauthorized();
             var command = new UpdatePersonCommand(
                 userId,

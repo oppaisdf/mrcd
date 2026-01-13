@@ -31,7 +31,7 @@ internal static class PlannerEndpoints
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            if (!Guid.TryParse(userIdString, out Guid userId))
                 ResultsMapper.Unauthorized();
             var command = new AddActivityCommand(
                 userId,
@@ -59,7 +59,7 @@ internal static class PlannerEndpoints
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            if (!Guid.TryParse(userIdString, out Guid userId))
                 ResultsMapper.Unauthorized();
 
             var command = new DelActivityCommand(

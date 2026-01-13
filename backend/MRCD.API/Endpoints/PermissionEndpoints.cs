@@ -54,7 +54,7 @@ internal static class PermissionEndpoints
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            if (!Guid.TryParse(userIdString, out Guid userId))
                 ResultsMapper.Unauthorized();
             var command = new AssignToRoleCommand(
                 userId,
@@ -86,7 +86,7 @@ internal static class PermissionEndpoints
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            if (!Guid.TryParse(userIdString, out Guid userId))
                 ResultsMapper.Unauthorized();
             var command = new DelPermissionCommand(
                 userId,
@@ -134,7 +134,7 @@ internal static class PermissionEndpoints
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            if (!Guid.TryParse(userIdString, out Guid userId))
                 ResultsMapper.Unauthorized();
             var command = new UnassignToRoleCommand(
                 userId,
