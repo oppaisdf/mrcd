@@ -28,14 +28,14 @@ internal static class ChargeEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var command = new AddChargeCommand(
                 userId,
                 request.Name,
                 request.Amount
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 id => Results.Created($"/api/v2/charge/{id}", id),
                 conflictWhen: e => e.Contains("en uso")
@@ -59,13 +59,13 @@ internal static class ChargeEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var command = new DelBaseEntityCommand(
                 userId,
                 chargeId
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Ok(),
                 e => e.Contains("no existe")
@@ -85,7 +85,7 @@ internal static class ChargeEndpoints
         ) =>
         {
             var result = await handler.HandleAsync(ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 cs => Results.Ok(cs)
             );

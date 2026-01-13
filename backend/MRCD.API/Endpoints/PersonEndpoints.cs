@@ -30,7 +30,7 @@ internal static class PersonEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
 
             var command = new AddPersonCommand(
                 userId,
@@ -44,7 +44,7 @@ internal static class PersonEndpoints
                 request.Parents
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 id => Results.Created($"/api/v2/person/{id}", id),
                 e => e.Contains("no existe"),
@@ -69,10 +69,10 @@ internal static class PersonEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var query = new GetGeneralListQuery(userId);
             var result = await handler.HandleAsync(query, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 l => Results.Ok(l)
             );
@@ -93,13 +93,13 @@ internal static class PersonEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var query = new GetPersonByIdQuery(
                 userId,
                 id
             );
             var result = await handler.HandleAsync(query, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 p => Results.Ok(p),
                 e => e.Contains("no existe")
@@ -123,7 +123,7 @@ internal static class PersonEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var command = new UpdatePersonCommand(
                 userId,
                 id,
@@ -137,7 +137,7 @@ internal static class PersonEndpoints
                 request.DegreeId
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Ok(),
                 e => e.Contains("no existe"),

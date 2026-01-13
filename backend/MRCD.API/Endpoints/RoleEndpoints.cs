@@ -27,14 +27,14 @@ internal static class RoleEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
 
             var command = new AddRoleCommand(
                 userId,
                 request.Name
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 r => Results.Created($"/api/v2/role/{r}", r),
                 conflictWhen: e => e.Contains("en uso")
@@ -55,7 +55,7 @@ internal static class RoleEndpoints
         ) =>
         {
             var result = await handler.HandleAsync(ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 r => Results.Ok(r)
             );
@@ -73,7 +73,7 @@ internal static class RoleEndpoints
         ) =>
         {
             var result = await handler.HandleAsync(ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 r => Results.Ok(r)
             );

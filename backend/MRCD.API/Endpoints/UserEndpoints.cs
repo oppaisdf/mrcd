@@ -30,7 +30,7 @@ internal static class UserEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out var userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
 
             var command = new AddUserCommand(
                 userId,
@@ -39,7 +39,7 @@ internal static class UserEndpoints
                 request.Roles
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 r => Results.Created($"api/v2/user/{r}", r),
                 e => e.Contains("encontraron"),
@@ -68,7 +68,7 @@ internal static class UserEndpoints
                 true
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Created(),
                 e => e.Contains("no existe"),
@@ -90,7 +90,7 @@ internal static class UserEndpoints
         ) =>
         {
             var result = await handler.HandleAsync(ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 r => Results.Ok(r)
             );
@@ -110,7 +110,7 @@ internal static class UserEndpoints
         {
             var query = new GetUserByIdQuery(userId);
             var result = await handler.HandleAsync(query, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 r => Results.Ok(r),
                 e => e.Contains("existe")
@@ -134,7 +134,7 @@ internal static class UserEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out var userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var command = new UpdateUserCommand(
                 userId,
                 id,
@@ -143,7 +143,7 @@ internal static class UserEndpoints
                 request.IsActive
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Ok(),
                 e => e.Contains("existe"),

@@ -32,14 +32,14 @@ internal static class PlannerEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var command = new AddActivityCommand(
                 userId,
                 request.Name,
                 request.Date
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 id => Results.Created($"/api/v2/planner/activity/{id}", id)
             );
@@ -60,14 +60,14 @@ internal static class PlannerEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
 
             var command = new DelActivityCommand(
                 userId,
                 id
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Ok(),
                 e => e.Contains("no existe")
@@ -89,7 +89,7 @@ internal static class PlannerEndpoints
         {
             var query = new GetActivityQuery(id);
             var result = await handler.HandleAsync(query, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 a => Results.Ok(a),
                 e => e.Contains("no existe")
@@ -116,7 +116,7 @@ internal static class PlannerEndpoints
                 month
             );
             var result = await handler.HandleAsync(query, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 c => Results.Ok(c)
             );
@@ -144,7 +144,7 @@ internal static class PlannerEndpoints
                 request.Notes
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Created(),
                 e => e.Contains("no existe"),
@@ -178,7 +178,7 @@ internal static class PlannerEndpoints
                 null
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Ok(),
                 e => e.Contains("no ha sido")

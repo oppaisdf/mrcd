@@ -30,7 +30,7 @@ internal static class PermissionEndpoints
                 request.Name
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 id => Results.Ok(id),
                 conflictWhen: e => e.Contains("ya existe")
@@ -55,14 +55,14 @@ internal static class PermissionEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var command = new AssignToRoleCommand(
                 userId,
                 permissionId,
                 roleId
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Ok(),
                 e => e.Contains("no existe"),
@@ -87,13 +87,13 @@ internal static class PermissionEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var command = new DelPermissionCommand(
                 userId,
                 permissionId
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Ok(),
                 e => e.Contains("no existe")
@@ -113,7 +113,7 @@ internal static class PermissionEndpoints
         ) =>
         {
             var result = await handler.HandleAsync(ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 ps => Results.Ok(ps)
             );
@@ -135,14 +135,14 @@ internal static class PermissionEndpoints
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!Guid.TryParse(userIdString, out Guid userId))
-                ResultsMapper.Unauthorized();
+                return ResultsMapper.Unauthorized();
             var command = new UnassignToRoleCommand(
                 userId,
                 roleId,
                 permissionId
             );
             var result = await handler.HandleAsync(command, ct);
-            ResultsMapper.ToHttp(
+            return ResultsMapper.ToHttp(
                 result,
                 () => Results.Ok(),
                 e => e.Contains("no existe")
