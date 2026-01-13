@@ -3,6 +3,5 @@ using MRCD.Application.Abstracts.Handlers;
 namespace MRCD.Application.Permission.AddPermission;
 
 public sealed record AddPermissionCommand(
-    string PermissionName,
-    Guid UserId
+    string PermissionName
 ) : ICommand<Guid>;

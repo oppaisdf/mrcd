@@ -60,4 +60,5 @@ app.MapUserEndpoints();
 app.MapRoleEndpoints();
 app.MapPlannerEndpoints();
 app.MapPersonEndpoints();
+app.MapPermissionEndpoints();
 app.Run();
