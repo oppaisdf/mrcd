@@ -64,4 +64,5 @@ app.MapPermissionEndpoints();
 app.MapChargeEndpoints();
 app.MapAttendanceEndpoints();
 app.MapAccountingMovementEndpoints();
+app.MapDocumentEndpoints();
 app.Run();
