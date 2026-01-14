@@ -112,6 +112,7 @@ internal static class AttendanceEndpoints
         .WithDisplayName("GET /Attendance")
         .WithSummary("Obtener asistencia")
         .WithDescription("Obtiene listado de asistencias")
-        .WithOpenApi();
+        .WithOpenApi()
+        .Produces<IEnumerable<AttendanceDTO>>(StatusCodes.Status200OK);
     }
 }
