@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.Abstracts.Handlers;
+using MRCD.Application.BaseEntity.AddBaseEntity;
 using MRCD.Application.BaseEntity.GetBaseEntity;
 using MRCD.Application.Services.CommonService;
 
@@ -33,6 +34,19 @@ public static class DependencyInjection
                 if (handlers.Contains(def))
                     services.AddScoped(iface, type);
             }
+        }
+
+        var entityTypes = assembly.GetTypes()
+        .Where(t => t.IsClass && !t.IsAbstract && typeof(Domain.Common.BaseEntity).IsAssignableFrom(t));
+        foreach (var entityType in entityTypes)
+        {
+            var serviceType = typeof(ICommandHandler<,,>)
+                .MakeGenericType(typeof(AddBaseEntityCommand), typeof(Guid), entityType);
+
+            var implType = typeof(AddBaseEntityHandler<>)
+                .MakeGenericType(entityType);
+
+            services.AddScoped(serviceType, implType);
         }
         return services;
     }
