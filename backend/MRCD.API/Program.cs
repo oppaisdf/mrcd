@@ -65,4 +65,5 @@ app.MapChargeEndpoints();
 app.MapAttendanceEndpoints();
 app.MapAccountingMovementEndpoints();
 app.MapDocumentEndpoints();
+app.MapSacramentEndpoints();
 app.Run();
