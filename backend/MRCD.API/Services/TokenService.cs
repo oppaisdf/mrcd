@@ -14,8 +14,7 @@ internal sealed class TokenService(
 
     public TokenDTO Create(
         Guid subject,
-        IEnumerable<string> roles,
-        IEnumerable<string> permissions
+        IEnumerable<string> roles
     )
     {
         var now = DateTimeOffset.UtcNow;
@@ -31,8 +30,6 @@ internal sealed class TokenService(
 
         foreach (var role in roles.Distinct(StringComparer.OrdinalIgnoreCase))
             claims.Add(new Claim(ClaimTypes.Role, role));
-        foreach (var perm in permissions.Distinct(StringComparer.OrdinalIgnoreCase))
-            claims.Add(new Claim("perm", perm));
 
         var keyBytes = Encoding.UTF8.GetBytes(_options.SigningKey);
         var signingKey = new SymmetricSecurityKey(keyBytes);

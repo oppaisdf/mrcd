@@ -47,8 +47,7 @@ internal static class PublicEndpoints
                 );
             var token = jwt.Create(
                 result.Value!.UserId,
-                result.Value.Roles,
-                result.Value.Permissions
+                result.Value.Roles
             );
             return Results.Ok(new TokenDTO(
                 token.AccessToken,
