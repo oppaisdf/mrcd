@@ -32,6 +32,16 @@ builder.Services.AddProblemDetails(options =>
     };
 });
 
+if (builder.Environment.IsDevelopment())
+    builder.Services.AddDistributedMemoryCache();
+else builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = Environment.GetEnvironmentVariable("REDIS")
+        ?? builder.Configuration.GetConnectionString("REDIS")
+        ?? throw new InvalidOperationException("=== No se encontró la conexión a Redis ===");
+    options.InstanceName = "mrcd:";
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
