@@ -15,7 +15,7 @@ internal static class PublicEndpoints
     {
         var app = builder
             .MapGroup("/api/v2/")
-            .WithTags("public");
+            .WithTags("Public");
 
         app.MapGet("/health", () =>
         {
@@ -34,7 +34,7 @@ internal static class PublicEndpoints
         app.MapPost("/auth/login", async (
             [FromBody] UserLoginCommand request,
             [FromServices] ICommandHandler<UserLoginCommand, LoginDTO> handler,
-            ITokenService jwt,
+            [FromServices] ITokenService jwt,
             CancellationToken ct
         ) =>
         {
