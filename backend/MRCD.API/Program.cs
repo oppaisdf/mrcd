@@ -1,4 +1,9 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using MRCD.API.Endpoints;
+using MRCD.API.Security;
 using MRCD.Application;
 using MRCD.Application.Abstracts.Security;
 using MRCD.Infrastructure;
@@ -42,14 +47,52 @@ else builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "mrcd:";
 });
 
-var app = builder.Build();
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var jwt = new MRCD.API.Services.TokenOptions(
+            Environment.GetEnvironmentVariable("JWT_ISSUER")
+                ?? builder.Configuration["JWT_ISSUER"]
+                ?? throw new InvalidOperationException("=== No se encontró ISSUER de token ==="),
+            Environment.GetEnvironmentVariable("JWT_AUDIENCE")
+                ?? builder.Configuration["JWT_AUDIENCE"]
+                ?? throw new InvalidOperationException("=== No se encontró AUDIENCE de token ==="),
+            Environment.GetEnvironmentVariable("JWT_KEY")
+                ?? builder.Configuration["JWT_KEY"]
+                ?? throw new InvalidOperationException("=== No se encontró KEY de token ==="),
+            30,
+            5
+        );
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SigningKey));
 
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwt.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwt.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = key,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromSeconds(jwt.ClockskewSeconds),
+            RoleClaimType = System.Security.Claims.ClaimTypes.Role,
+            NameClaimType = System.Security.Claims.ClaimTypes.NameIdentifier
+        };
+    });
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseExceptionHandler();
 app.MapPublicEndpoints();
 app.MapUserEndpoints();
