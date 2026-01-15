@@ -4,7 +4,7 @@ using MRCD.Application.Abstracts;
 
 namespace MRCD.Infrastructure.Caching;
 
-internal sealed class CacheService(
+internal sealed class RedisCacheService(
     IDistributedCache cache
 ) : ICacheService
 {

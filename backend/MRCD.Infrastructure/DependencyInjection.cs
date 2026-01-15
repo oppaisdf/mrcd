@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Security;
 using MRCD.Application.BaseEntity.Contracts;
+using MRCD.Infrastructure.Caching;
 using MRCD.Infrastructure.Repositories;
 using MRCD.Infrastructure.Security;
 
@@ -58,6 +59,7 @@ public static class DependencyInjection
             );
         });
         services.AddRepositories(typeof(DependencyInjection).Assembly);
+        services.AddScoped<ICacheService, RedisCacheService>();
         return services;
     }
 }
