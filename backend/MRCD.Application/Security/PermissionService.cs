@@ -1,6 +1,6 @@
 namespace MRCD.Application.Security;
 
-internal sealed class PermissionService(
+public sealed class PermissionService(
     IPermissionCache cache,
     IPermissionReader reader
 )
