@@ -4,6 +4,7 @@ using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.AddBaseEntity;
 using MRCD.Application.BaseEntity.GetBaseEntity;
+using MRCD.Application.Security;
 using MRCD.Application.Services.CommonService;
 
 namespace MRCD.Application;
@@ -82,6 +83,7 @@ public static class DependencyInjection
         services.RegisterHandlers(typeof(DependencyInjection).Assembly);
         // Services
         services.AddSingleton<ICommonService, CommonService>();
+        services.AddScoped<PermissionService>();
         return services;
     }
 }
