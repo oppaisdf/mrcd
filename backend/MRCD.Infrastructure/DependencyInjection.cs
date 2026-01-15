@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Security;
 using MRCD.Application.BaseEntity.Contracts;
+using MRCD.Application.Security;
 using MRCD.Infrastructure.Caching;
 using MRCD.Infrastructure.Repositories;
 using MRCD.Infrastructure.Security;
@@ -60,6 +61,8 @@ public static class DependencyInjection
         });
         services.AddRepositories(typeof(DependencyInjection).Assembly);
         services.AddScoped<ICacheService, RedisCacheService>();
+        services.AddScoped<IPermissionCache, DistributedPermissionCache>();
+        services.AddScoped<IPermissionReader, EFPermmissionReader>();
         return services;
     }
 }
