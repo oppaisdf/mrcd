@@ -17,6 +17,20 @@ services:
       retries: 5
       start_period: 30s
 
+  api:
+    build:
+      context: ./backend
+      target: api
+    container_name: api
+    networks: [network]
+    ports:
+      - 8080:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      db:
+        condition: service_healthy
+
 networks:
   network:
     driver: bridge

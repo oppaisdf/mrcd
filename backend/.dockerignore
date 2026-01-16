@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/TestResults/
+.vscode/
+.idea/
+.git/
+*.user
+*.suo
+Dockerfile*
+docker-compose*
