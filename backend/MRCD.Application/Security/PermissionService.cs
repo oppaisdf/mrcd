@@ -18,7 +18,7 @@ public sealed class PermissionService(
         if (cached is not null)
             return cached.Contains(permission);
         var loaded = await _reader.GetEffectivePermissionsAsync(userId, cancellationToken);
-        await _cache.SetAsync(userId, loaded, ttl: TimeSpan.FromMinutes(10), cancellationToken);
+        await _cache.SetAsync(userId, loaded, ttl: TimeSpan.FromMinutes(30), cancellationToken);
         return loaded.Contains(permission);
     }
 }

@@ -1,6 +1,7 @@
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Role.Contracts;
+using MRCD.Application.Security;
 using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 using MRCD.Domain.User;
@@ -11,13 +12,15 @@ internal sealed class AssignRoleHandler(
     IUserRepository user,
     IRoleRepository role,
     IUserRoleRepository userRole,
-    IPersistenceContext save
+    IPersistenceContext save,
+    IPermissionCache cache
 ) : ICommandHandler<AssignRoleCommand>
 {
     private readonly IUserRepository _user = user;
     private readonly IRoleRepository _role = role;
     private readonly IUserRoleRepository _userRole = userRole;
     private readonly IPersistenceContext _save = save;
+    private readonly IPermissionCache _cache = cache;
 
     public async Task<Result> HandleAsync(
         AssignRoleCommand command,
@@ -46,6 +49,7 @@ internal sealed class AssignRoleHandler(
             return Result.Failure("El rol no ha sido asignado");
         else
             await _userRole.DeleteAsync(command.UserId, command.RoleId, cancellationToken);
+        await _cache.InvalidateAsync(command.UserId, cancellationToken);
         return Result.Success();
     }
 }
