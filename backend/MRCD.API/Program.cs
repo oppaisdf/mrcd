@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using MRCD.API.Endpoints;
 using MRCD.API.Security;
+using MRCD.API.Services;
 using MRCD.Application;
 using MRCD.Application.Abstracts.Security;
 using MRCD.Infrastructure;
@@ -19,6 +20,19 @@ var encryptionOptions = new EncryptionOptions()
         ?? throw new InvalidOperationException("==== No se encontró la llave de encriptación :c ===="),
     Version = "v1"
 };
+var jwt = new TokenOptions(
+    Environment.GetEnvironmentVariable("JWT_ISSUER")
+        ?? builder.Configuration["JWT_ISSUER"]
+        ?? throw new InvalidOperationException("=== No se encontró ISSUER de token ==="),
+    Environment.GetEnvironmentVariable("JWT_AUDIENCE")
+        ?? builder.Configuration["JWT_AUDIENCE"]
+        ?? throw new InvalidOperationException("=== No se encontró AUDIENCE de token ==="),
+    Environment.GetEnvironmentVariable("JWT_KEY")
+        ?? builder.Configuration["JWT_KEY"]
+        ?? throw new InvalidOperationException("=== No se encontró KEY de token ==="),
+    30,
+    5
+);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -51,19 +65,6 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var jwt = new MRCD.API.Services.TokenOptions(
-            Environment.GetEnvironmentVariable("JWT_ISSUER")
-                ?? builder.Configuration["JWT_ISSUER"]
-                ?? throw new InvalidOperationException("=== No se encontró ISSUER de token ==="),
-            Environment.GetEnvironmentVariable("JWT_AUDIENCE")
-                ?? builder.Configuration["JWT_AUDIENCE"]
-                ?? throw new InvalidOperationException("=== No se encontró AUDIENCE de token ==="),
-            Environment.GetEnvironmentVariable("JWT_KEY")
-                ?? builder.Configuration["JWT_KEY"]
-                ?? throw new InvalidOperationException("=== No se encontró KEY de token ==="),
-            30,
-            5
-        );
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SigningKey));
 
         options.TokenValidationParameters = new TokenValidationParameters
@@ -87,6 +88,7 @@ builder.Services.AddAuthorizationBuilder()
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+builder.Services.AddScoped<ITokenService>(sp => new TokenService(jwt));
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
