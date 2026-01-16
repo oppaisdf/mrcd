@@ -50,7 +50,8 @@ internal static class AttendanceEndpoints
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .ProducesProblem(StatusCodes.Status409Conflict);
+        .ProducesProblem(StatusCodes.Status409Conflict)
+        .RequireAuthorization("perm:Attendance.Write");
 
         app.MapDelete("{personId}/date/{date}", async (
             Guid personId,
@@ -83,7 +84,8 @@ internal static class AttendanceEndpoints
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Attendance.Delete");
 
         app.MapGet("{date}", async (
             DateOnly date,
@@ -113,6 +115,7 @@ internal static class AttendanceEndpoints
         .WithSummary("Obtener asistencia")
         .WithDescription("Obtiene listado de asistencias")
         .WithOpenApi()
-        .Produces<IEnumerable<AttendanceDTO>>(StatusCodes.Status200OK);
+        .Produces<IEnumerable<AttendanceDTO>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Attendance.Read");
     }
 }

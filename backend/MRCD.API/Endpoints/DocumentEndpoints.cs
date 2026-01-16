@@ -48,7 +48,8 @@ internal static class DocumentEndpoints
         .WithOpenApi()
         .Produces<Guid>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Document.Write");
 
         app.MapDelete("{documentId}", async (
             Guid documentId,
@@ -77,7 +78,8 @@ internal static class DocumentEndpoints
         .WithDescription("Elimina un documento")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Document.Delete");
 
         app.MapGet("", async (
             [FromServices] IBaseQueryHandler<Document> handler,
@@ -95,7 +97,8 @@ internal static class DocumentEndpoints
         .WithSummary("Obtener documentos")
         .WithDescription("Retorna listado de documentos")
         .WithOpenApi()
-        .Produces<IEnumerable<Document>>(StatusCodes.Status200OK);
+        .Produces<IEnumerable<Document>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Charge.Read");
 
         app.MapPost("{documentId}/person/{personId}", async (
             Guid documentId,
@@ -125,7 +128,8 @@ internal static class DocumentEndpoints
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .ProducesProblem(StatusCodes.Status409Conflict);
+        .ProducesProblem(StatusCodes.Status409Conflict)
+        .RequireAuthorization("perm:Charge.Write");
 
         app.MapDelete("{documentId}/person/{personId}", async (
             Guid documentId,
@@ -153,6 +157,7 @@ internal static class DocumentEndpoints
         .WithDescription("Elimina la relación entre un confirmando y un documento")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Charge.Delete");
     }
 }

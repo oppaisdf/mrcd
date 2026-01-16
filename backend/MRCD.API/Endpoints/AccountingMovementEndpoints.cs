@@ -46,7 +46,8 @@ internal static class AccountingMovementEndpoints
         .WithSummary("Agregar movimiento contable")
         .WithDescription("Agrega un movimiento contable")
         .WithOpenApi()
-        .Produces<Guid>(StatusCodes.Status201Created);
+        .Produces<Guid>(StatusCodes.Status201Created)
+        .RequireAuthorization("perm:AccountingMovement.Write");
 
         app.MapDelete("{id}", async (
             Guid id,
@@ -75,7 +76,8 @@ internal static class AccountingMovementEndpoints
         .WithDescription("Elimina un movimiento contable")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:AccountingMovement.Delete");
 
         app.MapGet("", async (
             [FromQuery] DateOnly date,
@@ -104,6 +106,7 @@ internal static class AccountingMovementEndpoints
         .WithSummary("Obtener movimiento contable")
         .WithDescription("Retorna un listado con los movimientos contables")
         .WithOpenApi()
-        .Produces<IEnumerable<AccountingMovement>>(StatusCodes.Status200OK);
+        .Produces<IEnumerable<AccountingMovement>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:AccountingMovement.Read");
     }
 }

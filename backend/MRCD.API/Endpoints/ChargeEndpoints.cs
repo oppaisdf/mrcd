@@ -48,7 +48,8 @@ internal static class ChargeEndpoints
         .WithOpenApi()
         .Produces<Guid>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Charge.Write");
 
         app.MapDelete("{chargeId}", async (
             Guid chargeId,
@@ -77,7 +78,8 @@ internal static class ChargeEndpoints
         .WithDescription("Elimina un cobro")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Charge.Delete");
 
         app.MapGet("", async (
             [FromServices] IBaseQueryHandler<Charge> handler,
@@ -95,6 +97,7 @@ internal static class ChargeEndpoints
         .WithSummary("Obtener cobros")
         .WithDescription("Retornba listado de cobros")
         .WithOpenApi()
-        .Produces<IEnumerable<Charge>>(StatusCodes.Status200OK);
+        .Produces<IEnumerable<Charge>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Charge.Read");
     }
 }

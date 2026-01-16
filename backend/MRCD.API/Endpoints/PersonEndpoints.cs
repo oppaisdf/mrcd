@@ -59,7 +59,8 @@ internal static class PersonEndpoints
         .Produces<Guid>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Person.Write");
 
         app.MapGet("/generallist", async (
             ClaimsPrincipal user,
@@ -82,7 +83,8 @@ internal static class PersonEndpoints
         .WithSummary("Obtener listado general")
         .WithDescription("Obtiene listado general de personas activas")
         .WithOpenApi()
-        .Produces<IEnumerable<GeneralListDTO>>(StatusCodes.Status200OK);
+        .Produces<IEnumerable<GeneralListDTO>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Person.Read");
 
         app.MapGet("{id}", async (
             Guid id,
@@ -111,7 +113,8 @@ internal static class PersonEndpoints
         .WithDescription("Obtiene detalles de confirmando por Id")
         .WithOpenApi()
         .Produces<PersonDTO>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Person.Read");
 
         app.MapPatch("{id}", async (
             Guid id,
@@ -152,6 +155,7 @@ internal static class PersonEndpoints
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Person.Write");
     }
 }

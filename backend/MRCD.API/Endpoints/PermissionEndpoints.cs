@@ -43,7 +43,8 @@ internal static class PermissionEndpoints
         .WithOpenApi()
         .Produces<Guid>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Permission.Write");
 
         app.MapPost("{permissionId}/role/{roleId}", async (
             Guid permissionId,
@@ -76,7 +77,8 @@ internal static class PermissionEndpoints
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .ProducesProblem(StatusCodes.Status409Conflict);
+        .ProducesProblem(StatusCodes.Status409Conflict)
+        .RequireAuthorization("perm:Permission.Write");
 
         app.MapDelete("{permissionId}", async (
             Guid permissionId,
@@ -105,7 +107,8 @@ internal static class PermissionEndpoints
         .WithDescription("Elimina un permiso")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Permission.Delete");
 
         app.MapGet("", async (
             [FromServices] IQueryHandler<List<Domain.Role.Permission>> handler,
@@ -123,7 +126,8 @@ internal static class PermissionEndpoints
         .WithSummary("Obtener permisos")
         .WithDescription("Retorna listado de permisos")
         .WithOpenApi()
-        .Produces<IEnumerable<Domain.Role.Permission>>(StatusCodes.Status200OK);
+        .Produces<IEnumerable<Domain.Role.Permission>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Permission.Read");
 
         app.MapDelete("{permissionId}/role/{roleId}", async (
             Guid permissionId,
@@ -154,6 +158,7 @@ internal static class PermissionEndpoints
         .WithDescription("Desasigna un permiso a un rol")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Permission.Delete");
     }
 }

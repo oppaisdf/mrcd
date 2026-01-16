@@ -49,7 +49,8 @@ internal static class PlannerEndpoints
         .WithSummary("Agregar actividad")
         .WithDescription("Crea una actividad en la agenda")
         .WithOpenApi()
-        .Produces<Guid>(StatusCodes.Status201Created);
+        .Produces<Guid>(StatusCodes.Status201Created)
+        .RequireAuthorization("perm:Activity.Write");
 
         app.MapDelete("/activity/{id}", async (
             Guid id,
@@ -79,7 +80,8 @@ internal static class PlannerEndpoints
         .WithDescription("Elimina una actividad de la agenda")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Activity.Delete");
 
         app.MapGet("/activity/{id}", async (
             Guid id,
@@ -101,7 +103,8 @@ internal static class PlannerEndpoints
         .WithDescription("Obtiene una actividad con detalles por Id")
         .WithOpenApi()
         .Produces<ActivityDTO>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Activity.Read");
         #endregion
 
         app.MapGet("/calendar", async (
@@ -127,7 +130,8 @@ internal static class PlannerEndpoints
         .WithDescription("Obtiene actividades de todo el mes")
         .WithOpenApi()
         .Produces<IEnumerable<CalendarDTO>>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Activity.Read");
 
         app.MapPost("/stage/activity", async (
             [FromBody] AssignStageToActivityRequest request,
@@ -159,7 +163,8 @@ internal static class PlannerEndpoints
         .Produces(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Activity.Write");
 
         app.MapDelete("/stage/{stageId}/activity/{activityId}/user/{userId}", async (
             Guid stageId,
@@ -190,6 +195,7 @@ internal static class PlannerEndpoints
         .WithDescription("Desasgna una fase de actividad a una actividad")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Activity.Delete");
     }
 }

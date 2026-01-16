@@ -47,7 +47,8 @@ internal static class RoleEndpoints
         .WithOpenApi()
         .Produces<Guid>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Role.Write");
 
         app.MapGet("", async (
             [FromServices] IQueryHandler<List<Domain.Role.Role>> handler,
@@ -65,7 +66,8 @@ internal static class RoleEndpoints
         .WithSummary("Obtener roles")
         .WithDescription("Retorna todos los raw roles")
         .WithOpenApi()
-        .Produces<IEnumerable<Domain.Role.Role>>(StatusCodes.Status200OK);
+        .Produces<IEnumerable<Domain.Role.Role>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Role.Read");
 
         app.MapGet("/permission", async (
             [FromServices] IQueryHandler<IEnumerable<RoleWithPermissionDTO>> handler,
@@ -83,6 +85,7 @@ internal static class RoleEndpoints
         .WithSummary("Obtener roles con permisos")
         .WithDescription("Obtiene los roles con sus permisos asignados")
         .WithOpenApi()
-        .Produces<IEnumerable<RoleWithPermissionDTO>>(StatusCodes.Status200OK);
+        .Produces<IEnumerable<RoleWithPermissionDTO>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Role.Read");
     }
 }

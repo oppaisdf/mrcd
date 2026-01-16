@@ -53,7 +53,8 @@ internal static class UserEndpoints
         .WithOpenApi()
         .Produces<Guid>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:User.Write");
 
         app.MapPost("/assignrole", async (
             [FromQuery] Guid userId,
@@ -82,7 +83,8 @@ internal static class UserEndpoints
         .WithOpenApi()
         .Produces(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .ProducesProblem(StatusCodes.Status409Conflict);
+        .ProducesProblem(StatusCodes.Status409Conflict)
+        .RequireAuthorization("perm:User.Write");
 
         app.MapGet("", async (
             [FromServices] IQueryHandler<IEnumerable<UserDTO>> handler,
@@ -100,7 +102,8 @@ internal static class UserEndpoints
         .WithSummary("Obtiene usuarios")
         .WithDescription("Obtiene todos los usuarios con sus roles")
         .WithOpenApi()
-        .Produces<IEnumerable<UserDTO>>(StatusCodes.Status201Created);
+        .Produces<IEnumerable<UserDTO>>(StatusCodes.Status201Created)
+        .RequireAuthorization("perm:User.Read");
 
         app.MapGet("{userId}", async (
             Guid userId,
@@ -122,7 +125,8 @@ internal static class UserEndpoints
         .WithDescription("Obtiene al usuario con sus roles por ID")
         .WithOpenApi()
         .Produces<UserDTO>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:User.Read");
 
         app.MapPatch("{id}", async (
             Guid id,
@@ -158,6 +162,7 @@ internal static class UserEndpoints
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:User.Write");
     }
 }

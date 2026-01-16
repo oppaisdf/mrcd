@@ -48,7 +48,8 @@ internal static class SacarmentEndpoints
         .WithOpenApi()
         .Produces<Guid>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Sacrament.Write");
 
         app.MapDelete("{sacramentId}", async (
             Guid sacramentId,
@@ -77,7 +78,8 @@ internal static class SacarmentEndpoints
         .WithDescription("Elimina un sacramento")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Sacrament.Delete");
 
         app.MapGet("", async (
             [FromServices] IBaseQueryHandler<Sacrament> handler,
@@ -95,7 +97,8 @@ internal static class SacarmentEndpoints
         .WithSummary("Obtener sacramentos")
         .WithDescription("Retorna listado de sacramentos")
         .WithOpenApi()
-        .Produces<IEnumerable<Sacrament>>(StatusCodes.Status200OK);
+        .Produces<IEnumerable<Sacrament>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Sacrament.Read");
 
         app.MapPost("{sacramentId}/person/{personId}", async (
             Guid sacramentId,
@@ -125,7 +128,8 @@ internal static class SacarmentEndpoints
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .ProducesProblem(StatusCodes.Status409Conflict);
+        .ProducesProblem(StatusCodes.Status409Conflict)
+        .RequireAuthorization("perm:Sacrament.Write");
 
         app.MapDelete("{sacramentId}/person/{personId}", async (
             Guid sacramentId,
@@ -153,6 +157,7 @@ internal static class SacarmentEndpoints
         .WithDescription("Elimina la relación entre un confirmando y un sacramento")
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound);
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Sacrament.Delete");
     }
 }
