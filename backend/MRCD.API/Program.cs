@@ -80,7 +80,11 @@ builder.Services
             NameClaimType = System.Security.Claims.ClaimTypes.NameIdentifier
         };
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+    .RequireAuthenticatedUser()
+    .Build());
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
@@ -91,9 +95,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseExceptionHandler();
 app.MapPublicEndpoints();
 app.MapUserEndpoints();
 app.MapRoleEndpoints();
