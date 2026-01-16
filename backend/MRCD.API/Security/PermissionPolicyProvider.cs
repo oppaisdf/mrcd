@@ -16,8 +16,11 @@ internal sealed class PermissionPolicyProvider(
         if (!policyName.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase))
             return base.GetPolicyAsync(policyName);
 
-        var perm = policyName[Prefix.Length..];
+        var perm = policyName[Prefix.Length..].Trim();
+        if (string.IsNullOrWhiteSpace(perm))
+            return base.GetPolicyAsync(policyName);
         var policy = new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
             .AddRequirements(new PermissionRequirement(perm))
             .Build();
 
