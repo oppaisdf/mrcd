@@ -15,7 +15,8 @@ internal static class PublicEndpoints
     {
         var app = builder
             .MapGroup("/api/v2/")
-            .WithTags("Public");
+            .WithTags("Public")
+            .AllowAnonymous();
 
         app.MapGet("/health", () =>
         {
