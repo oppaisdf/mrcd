@@ -37,7 +37,7 @@ internal sealed class AesGcmEnryptionService : IEncryptionService
         var ciphertext = packed.AsSpan(28).ToArray();
         var plaintext = new byte[ciphertext.Length];
 
-        using var aes = new AesGcm(_key, 32);
+        using var aes = new AesGcm(_key, 16);
         aes.Decrypt(nonce, ciphertext, tag, plaintext);
         return Encoding.UTF8.GetString(plaintext);
     }
@@ -52,7 +52,7 @@ internal sealed class AesGcmEnryptionService : IEncryptionService
         var ciphertext = new byte[plaintextBytes.Length];
         var tag = new byte[16];
 
-        using var aes = new AesGcm(_key, 32);
+        using var aes = new AesGcm(_key, 16);
         aes.Encrypt(nonce, plaintextBytes, ciphertext, tag);
 
         // Payload: v1:<base64(nonce|tag|ciphertext)>
