@@ -16,90 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `Parents`
---
-
-DROP TABLE IF EXISTS `Parents`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Parents` (
-  `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
-  `Name` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `NormalizedName` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `IsMasculine` tinyint(1) NOT NULL,
-  `Phone` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Parents`
---
-
-LOCK TABLES `Parents` WRITE;
-/*!40000 ALTER TABLE `Parents` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Parents` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `People`
---
-
-DROP TABLE IF EXISTS `People`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `People` (
-  `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
-  `Name` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `NormalizedName` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `IsActive` tinyint(1) NOT NULL,
-  `IsMasculine` tinyint(1) NOT NULL,
-  `IsSunday` tinyint(1) NOT NULL,
-  `DOB` date NOT NULL,
-  `RegistrationDate` date NOT NULL,
-  `Parish` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `Address` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `Phone` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `LastDegreeId` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `People`
---
-
-LOCK TABLES `People` WRITE;
-/*!40000 ALTER TABLE `People` DISABLE KEYS */;
-/*!40000 ALTER TABLE `People` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Users`
---
-
-DROP TABLE IF EXISTS `Users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Users` (
-  `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
-  `Username` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `IsActive` tinyint(1) NOT NULL,
-  `Password` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `LastPasswordUpdate` date NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Users`
---
-
-LOCK TABLES `Users` WRITE;
-/*!40000 ALTER TABLE `Users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `__EFMigrationsHistory`
 --
 
@@ -119,7 +35,7 @@ CREATE TABLE `__EFMigrationsHistory` (
 
 LOCK TABLES `__EFMigrationsHistory` WRITE;
 /*!40000 ALTER TABLE `__EFMigrationsHistory` DISABLE KEYS */;
-INSERT INTO `__EFMigrationsHistory` VALUES ('20260112170217_InitialCreate','8.0.22'),('20260116160755_IncrementPermissionName','8.0.22');
+INSERT INTO `__EFMigrationsHistory` VALUES ('20260116191205_InitialCreate','8.0.22');
 /*!40000 ALTER TABLE `__EFMigrationsHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -190,7 +106,7 @@ CREATE TABLE `activity_stage` (
   KEY `IX_activity_stage_UserId` (`UserId`),
   CONSTRAINT `FK_ActivityStage_ActivityId_Activity_ID` FOREIGN KEY (`ActivityId`) REFERENCES `activity` (`ID`) ON DELETE CASCADE,
   CONSTRAINT `FK_ActivityStage_StageId_Stage_ID` FOREIGN KEY (`StageId`) REFERENCES `stage` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `FK_ActivityStage_UserId_User_ID` FOREIGN KEY (`UserId`) REFERENCES `Users` (`ID`) ON DELETE CASCADE
+  CONSTRAINT `FK_ActivityStage_UserId_User_ID` FOREIGN KEY (`UserId`) REFERENCES `user` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -219,8 +135,8 @@ CREATE TABLE `attendance` (
   PRIMARY KEY (`ID`),
   KEY `IX_attendance_PersonId` (`PersonId`),
   KEY `IX_attendance_UserId` (`UserId`),
-  CONSTRAINT `FK_Attendance_PersonId_Person_ID` FOREIGN KEY (`PersonId`) REFERENCES `People` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `FK_Attendance_UserId_User_ID` FOREIGN KEY (`UserId`) REFERENCES `Users` (`ID`) ON DELETE CASCADE
+  CONSTRAINT `FK_Attendance_PersonId_Person_ID` FOREIGN KEY (`PersonId`) REFERENCES `person` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `FK_Attendance_UserId_User_ID` FOREIGN KEY (`UserId`) REFERENCES `user` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -304,6 +220,32 @@ LOCK TABLES `document` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `parent`
+--
+
+DROP TABLE IF EXISTS `parent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `parent` (
+  `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `Name` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `NormalizedName` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `IsMasculine` tinyint(1) NOT NULL,
+  `Phone` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `parent`
+--
+
+LOCK TABLES `parent` WRITE;
+/*!40000 ALTER TABLE `parent` DISABLE KEYS */;
+/*!40000 ALTER TABLE `parent` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `parent_person`
 --
 
@@ -316,8 +258,8 @@ CREATE TABLE `parent_person` (
   `IsParent` tinyint(1) NOT NULL,
   PRIMARY KEY (`ParentId`,`PersonId`,`IsParent`),
   KEY `IX_parent_person_PersonId` (`PersonId`),
-  CONSTRAINT `FK_ParentPerson_ParentId_Parent_ID` FOREIGN KEY (`ParentId`) REFERENCES `Parents` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `FK_ParentPerson_PersonId_Person_ID` FOREIGN KEY (`PersonId`) REFERENCES `People` (`ID`) ON DELETE CASCADE
+  CONSTRAINT `FK_ParentPerson_ParentId_Parent_ID` FOREIGN KEY (`ParentId`) REFERENCES `parent` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `FK_ParentPerson_PersonId_Person_ID` FOREIGN KEY (`PersonId`) REFERENCES `person` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -350,8 +292,47 @@ CREATE TABLE `permission` (
 
 LOCK TABLES `permission` WRITE;
 /*!40000 ALTER TABLE `permission` DISABLE KEYS */;
-INSERT INTO `permission` VALUES ('32447978-358b-4511-a5f8-abb62b27dc4f','Permission.Read'),('b96a4f8b-b3e3-4e2d-ab18-3aeba177f557','Permission.Write');
+INSERT INTO `permission` VALUES
+	('10541623-89d2-4c99-9f13-4fab7c7dd1b4','Role.Read'),
+	('1ca78d7a-3520-421b-8284-cce2c3ac9c2e','Permission.Read'),
+	('6888801b-a53c-4d90-a63d-03b9e5a4b0ce','Permission.Write'),
+	('d13796c7-c7d3-47c4-a826-914c09de17be','Role.Write');
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `person`
+--
+
+DROP TABLE IF EXISTS `person`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `person` (
+  `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `Name` varchar(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `NormalizedName` varchar(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `IsActive` tinyint(1) NOT NULL,
+  `IsMasculine` tinyint(1) NOT NULL,
+  `IsSunday` tinyint(1) NOT NULL,
+  `DOB` date NOT NULL,
+  `RegistrationDate` date NOT NULL,
+  `Parish` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `Address` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `Phone` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `LastDegreeId` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `IX_person_LastDegreeId` (`LastDegreeId`),
+  CONSTRAINT `FK_Person_DegreeId` FOREIGN KEY (`LastDegreeId`) REFERENCES `degree` (`ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `person`
+--
+
+LOCK TABLES `person` WRITE;
+/*!40000 ALTER TABLE `person` DISABLE KEYS */;
+/*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -367,7 +348,7 @@ CREATE TABLE `person_charge` (
   PRIMARY KEY (`PersonId`,`ChargeId`),
   KEY `IX_person_charge_ChargeId` (`ChargeId`),
   CONSTRAINT `FK_PersonCharge_ChargeId` FOREIGN KEY (`ChargeId`) REFERENCES `charge` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `FK_PersonCharge_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `People` (`ID`) ON DELETE CASCADE
+  CONSTRAINT `FK_PersonCharge_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `person` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -393,7 +374,7 @@ CREATE TABLE `person_document` (
   PRIMARY KEY (`PersonId`,`DocumentId`),
   KEY `IX_person_document_DocumentId` (`DocumentId`),
   CONSTRAINT `FK_PersonDocument_DocumentId` FOREIGN KEY (`DocumentId`) REFERENCES `document` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `FK_PersonDocument_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `People` (`ID`) ON DELETE CASCADE
+  CONSTRAINT `FK_PersonDocument_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `person` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -418,7 +399,7 @@ CREATE TABLE `person_sacrament` (
   `SacramentId` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   PRIMARY KEY (`PersonId`,`SacramentId`),
   KEY `IX_person_sacrament_SacramentId` (`SacramentId`),
-  CONSTRAINT `FK_PersonSacrament_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `People` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `FK_PersonSacrament_PersonId` FOREIGN KEY (`PersonId`) REFERENCES `person` (`ID`) ON DELETE CASCADE,
   CONSTRAINT `FK_PersonSacrament_SacramentId` FOREIGN KEY (`SacramentId`) REFERENCES `sacrament` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -452,7 +433,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES ('25f63cea-2364-4217-857f-3f7ce269e62c','sys');
+INSERT INTO `role` VALUES ('63509335-0f5a-44b2-8542-a1b5dee695f6','sys');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -479,7 +460,11 @@ CREATE TABLE `role_permission` (
 
 LOCK TABLES `role_permission` WRITE;
 /*!40000 ALTER TABLE `role_permission` DISABLE KEYS */;
-INSERT INTO `role_permission` VALUES ('25f63cea-2364-4217-857f-3f7ce269e62c','32447978-358b-4511-a5f8-abb62b27dc4f'),('25f63cea-2364-4217-857f-3f7ce269e62c','b96a4f8b-b3e3-4e2d-ab18-3aeba177f557');
+INSERT INTO `role_permission` VALUES
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','10541623-89d2-4c99-9f13-4fab7c7dd1b4'),
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','1ca78d7a-3520-421b-8284-cce2c3ac9c2e'),
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','6888801b-a53c-4d90-a63d-03b9e5a4b0ce'),
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','d13796c7-c7d3-47c4-a826-914c09de17be');
 /*!40000 ALTER TABLE `role_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -530,6 +515,33 @@ LOCK TABLES `stage` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user` (
+  `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `Username` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `IsActive` tinyint(1) NOT NULL,
+  `Password` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `LastPasswordUpdate` date NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('e3d00323-99f0-40f0-8ed7-7f93a4ca37e2','Misha',1,'v1:lvsiB3s9+4tZquwJSNWKhhoULULxaDffv54fWpG3h3rEMvY=','2026-01-16');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user_role`
 --
 
@@ -542,7 +554,7 @@ CREATE TABLE `user_role` (
   PRIMARY KEY (`UserID`,`RoleID`),
   KEY `IX_user_role_RoleID` (`RoleID`),
   CONSTRAINT `FK_UserRole_RoleId` FOREIGN KEY (`RoleID`) REFERENCES `role` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `FK_UserRole_UserId` FOREIGN KEY (`UserID`) REFERENCES `Users` (`ID`) ON DELETE CASCADE
+  CONSTRAINT `FK_UserRole_UserId` FOREIGN KEY (`UserID`) REFERENCES `user` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -551,6 +563,8 @@ CREATE TABLE `user_role` (
 --
 
 LOCK TABLES `user_role` WRITE;
+/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
+INSERT INTO `user_role` VALUES ('63509335-0f5a-44b2-8542-a1b5dee695f6','e3d00323-99f0-40f0-8ed7-7f93a4ca37e2');
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -563,4 +577,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-16 16:19:52
+-- Dump completed on 2026-01-16 19:32:30
