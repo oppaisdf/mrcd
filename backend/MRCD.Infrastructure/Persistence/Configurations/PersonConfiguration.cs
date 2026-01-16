@@ -1,17 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MRCD.Application.Abstracts.Security;
 using MRCD.Domain.Degree;
 using MRCD.Domain.Person;
 
 namespace MRCD.Infrastructure.Persistence.Configurations;
 
-internal sealed class PersonConfiguration(
-    IEncryptionService service
-) : IEntityTypeConfiguration<Person>
+internal sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 {
-    private readonly IEncryptionService _service = service;
-
     public void Configure(
         EntityTypeBuilder<Person> builder
     )
@@ -32,20 +27,6 @@ internal sealed class PersonConfiguration(
         builder
             .Property(e => e.Parish)
             .HasMaxLength(30);
-        builder
-            .Property(e => e.Address)
-            .HasColumnType("longtext")
-            .HasConversion(
-                v => _service.Encrypt(v),
-                v => _service.Decrypt(v)
-            );
-        builder
-            .Property(e => e.Phone)
-            .HasColumnType("longtext")
-            .HasConversion(
-                v => _service.Encrypt(v),
-                v => _service.Decrypt(v)
-            );
         builder
             .HasOne<Degree>()
             .WithMany()

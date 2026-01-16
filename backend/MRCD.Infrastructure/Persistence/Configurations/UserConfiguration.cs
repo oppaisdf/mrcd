@@ -1,16 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MRCD.Application.Abstracts.Security;
 using MRCD.Domain.User;
 
 namespace MRCD.Infrastructure.Persistence.Configurations;
 
-internal sealed class UserConfiguration(
-    IEncryptionService service
-) : IEntityTypeConfiguration<User>
+internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {
-    private readonly IEncryptionService _service = service;
-
     public void Configure(
         EntityTypeBuilder<User> builder
     )
@@ -25,12 +20,5 @@ internal sealed class UserConfiguration(
         builder
             .Property(u => u.Username)
             .HasMaxLength(10);
-        builder
-            .Property(u => u.Password)
-            .HasColumnType("longtext")
-            .HasConversion(
-                v => _service.Encrypt(v),
-                v => _service.Decrypt(v)!
-            );
     }
 }
