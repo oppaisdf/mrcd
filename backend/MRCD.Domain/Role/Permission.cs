@@ -11,8 +11,8 @@ public sealed class Permission : BaseEntity
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result<Permission>.Failure("El nombre del permiso no puede estar vacío");
-        if (name.Trim().Length > 20)
-            return Result<Permission>.Failure("El nombre del permiso no puede exceder los 20 caracteres");
+        if (name.Trim().Length > 30)
+            return Result<Permission>.Failure("El nombre del permiso no puede exceder los 30 caracteres");
         return Result<Permission>.Success(new()
         {
             ID = Guid.NewGuid(),

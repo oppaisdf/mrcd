@@ -19,6 +19,6 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             .ValueGeneratedNever();
         builder
             .Property(e => e.Name)
-            .HasMaxLength(20);
+            .HasMaxLength(30);
     }
 }
