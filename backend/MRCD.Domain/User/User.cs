@@ -1,8 +1,9 @@
+using System.Text.RegularExpressions;
 using MRCD.Domain.Common;
 
 namespace MRCD.Domain.User;
 
-public sealed class User
+public sealed partial class User
 {
     private User() { }
 
@@ -11,6 +12,9 @@ public sealed class User
     public bool IsActive { get; private set; }
     public string Password { get; private set; } = default!;
     public DateOnly LastPasswordUpdate { get; private set; }
+
+    [GeneratedRegex("^(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{6,}$")]
+    private static partial Regex ValidPasswordRegex();
 
     public static Result<User> Create(
         string user,
@@ -23,6 +27,8 @@ public sealed class User
             return Result<User>.Failure("El usuario no puede superar los 10 caracteres");
         if (string.IsNullOrWhiteSpace(pass))
             return Result<User>.Failure("La contraseña del usuario es requerida");
+        if (!ValidPasswordRegex().IsMatch(pass))
+            return Result<User>.Failure("La contraseña debe tener, por lo menos, un número, una mayúscula y un caráacter especial");
         return Result<User>.Success(new()
         {
             ID = Guid.NewGuid(),
@@ -41,6 +47,8 @@ public sealed class User
             return Result.Failure("La nueva contraseña es requerida");
         if (pass == Password)
             return Result.Failure("La contraseña debe ser diferente a la contraseña actual");
+        if (!ValidPasswordRegex().IsMatch(pass))
+            return Result.Failure("La contraseña debe tener, por lo menos, un número, una mayúscula y un caráacter especial");
         Password = pass;
         LastPasswordUpdate = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6));
         return Result.Success();
