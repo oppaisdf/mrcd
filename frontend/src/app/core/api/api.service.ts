@@ -25,52 +25,73 @@ export class ApiService {
     async getAsync<T>(
         endpoint: string,
         params?: Record<string, any>
-    ) {
+    ): Promise<ApiResponse<T>> {
         try {
             const httpParams = this.toParams(params);
             const data = await firstValueFrom(this.http.get<T>(`${API_BASE_URL}${endpoint}`, { params: httpParams }));
-            return { success: true, data, status: 200 };
+            return {
+                isSuccess: true,
+                data: data
+            };
         } catch (err) {
-            const { status, message } = parseAPIError(err);
-            return { success: false, message, status };
+            const message = parseAPIError(err);
+            return { isSuccess: false, message: message };
         }
     }
 
     async postAsync<TIn, TOut>(
         endpoint: string,
         body: TIn
-    ) {
+    ): Promise<ApiResponse<TOut>> {
         try {
             const data = await firstValueFrom(this.http.post<TOut>(`${API_BASE_URL}${endpoint}`, body));
-            return { success: true, data, status: 200 };
+            return {
+                isSuccess: true,
+                data
+            };
         } catch (err) {
-            const { status, message } = parseAPIError(err);
-            return { success: false, message, status };
+            const message = parseAPIError(err);
+            return {
+                isSuccess: false,
+                message
+            };
         }
     }
 
-    async delAsync<TOut>(
+    async delAsync<T>(
         endpoint: string
-    ) {
+    ): Promise<ApiResponse<T>> {
         try {
-            const data = await firstValueFrom(this.http.delete<TOut>(`${API_BASE_URL}${endpoint}`));
-            return { success: true, data, status: 200 };
+            const data = await firstValueFrom(this.http.delete<T>(`${API_BASE_URL}${endpoint}`));
+            return {
+                isSuccess: true,
+                data
+            };
         } catch (err) {
-            const { status, message } = parseAPIError(err);
-            return { success: false, message, status };
+            const message = parseAPIError(err);
+            return {
+                isSuccess: false,
+                message
+            };
         }
     }
 
     async patchAsync<TIn, TOut>(
         endpoint: string,
         body: TIn
-    ) {
+    ): Promise<ApiResponse<TOut>> {
         try {
             const data = await firstValueFrom(this.http.patch<TOut>(`${API_BASE_URL}${endpoint}`, body));
-            return { success: true, data, status: 200 };
+            return {
+                isSuccess: true,
+                data
+            };
         } catch (err) {
-            const { status, message } = parseAPIError(err);
-            return { success: false, message, status };
+            const message = parseAPIError(err);
+            return {
+                isSuccess: false,
+                message
+            };
         }
     }
 }

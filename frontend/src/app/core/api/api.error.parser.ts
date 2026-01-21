@@ -3,13 +3,9 @@ import { ProblemDetails } from "./api.types";
 
 export function parseAPIError(
     error: unknown
-): {
-    status?: number;
-    message: string;
-    details?: ProblemDetails | null;
-} {
+): string {
     if (!(error instanceof HttpErrorResponse))
-        return { message: 'Error desconocido' };
+        return 'Error desconocido';
 
     const status = error.status;
     const payload = error.error;
@@ -17,11 +13,11 @@ export function parseAPIError(
     if (payload && typeof payload === 'object') {
         const pd = payload as ProblemDetails;
         const message = pd.detail || pd.title || `Error: ${status}`;
-        return { status, message, details: pd };
+        return message;
     }
 
     if (typeof payload === 'string')
-        return { status, message: payload };
+        return payload;
 
-    return { status, message: error.message || `Error: ${status}` };
+    return error.message || `Error: ${status}`;
 }
