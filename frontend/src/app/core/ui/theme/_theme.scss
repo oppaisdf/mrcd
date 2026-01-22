@@ -1,0 +1,22 @@
+/* Capa de tema: reglas globales que dependen de tokens */
+:root {
+    color-scheme: dark;
+    /* ayuda a inputs/scrollbars */
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+/* mejor UX al navegar */
+html {
+    scroll-behavior: smooth;
+}
+
+/* accesibilidad: reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}

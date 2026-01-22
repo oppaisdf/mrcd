@@ -1,1 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+@use './app/core/ui/theme/tokens';
+@use './app/core/ui/theme/theme';
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
