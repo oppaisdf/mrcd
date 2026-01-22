@@ -1,0 +1,23 @@
+.shell {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    min-height: 100dvh;
+}
+
+.shell__nav {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+}
+
+.shell__content {
+    padding: var(--space-6);
+    overflow: hidden; // para transiciones
+}
+
+.footer {
+    grid-column: 1 / -1;
+    padding: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-muted);
+}

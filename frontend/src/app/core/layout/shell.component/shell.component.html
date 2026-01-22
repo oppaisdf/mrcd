@@ -1,0 +1,11 @@
+<div class="shell">
+    <app-nav class="shell__nav" (toggleTheme)="toggleTheme()" />
+
+    <main class="shell__content">
+        <router-outlet />
+    </main>
+</div>
+
+<footer class="footer">
+    <div class="container">© {{ year }} — inevitabilidad y CSS</div>
+</footer>
