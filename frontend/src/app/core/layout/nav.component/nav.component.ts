@@ -1,6 +1,7 @@
 import { Component, computed, EventEmitter, inject, Output, signal } from '@angular/core';
 import { CategoryId, CategoryMenu, NAV_CATEGORIES } from './nav.config';
 import { ViewTransitionService } from '../../ui/transitions/view-transitions.service';
+import { SessionStore } from '../../stores/session.store';
 
 @Component({
   selector: 'app-nav',
@@ -11,11 +12,12 @@ import { ViewTransitionService } from '../../ui/transitions/view-transitions.ser
 export class NavComponent {
   @Output() toggleTheme = new EventEmitter<void>();
   private readonly _categories = signal<CategoryMenu[]>(NAV_CATEGORIES);
+  private readonly _session = inject(SessionStore);
 
   readonly router = inject(ViewTransitionService);
   readonly selectedCategory = signal<CategoryMenu | undefined>(undefined);
   readonly categories = computed(() => {
-    const roles = ['sys', 'usr', 'adm'];//this._session.roles();
+    const roles = this._session.roles();
     return this._categories()
       .filter(category =>
         category.roles.some(role => roles.includes(role))
