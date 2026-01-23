@@ -5,12 +5,12 @@ export type CategoryId =
     | 'Impresiones'
     | 'Gestiones'
     | 'Monitoreo'
-    | 'System';
+    | 'System'
+    | 'home';
 
 export interface CategoryMenu {
     id: CategoryId,
     icon: string,
-    route: string,
     roles: RoleType[],
     options: OptionMenu[]
 }
@@ -25,7 +25,6 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
     {
         id: 'Confirmandos',
         icon: '🏠',
-        route: '/',
         roles: ['usr'],
         options: [
             {
@@ -49,7 +48,6 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
     }, {
         id: 'Impresiones',
         icon: '🖨️',
-        route: '/',
         roles: ['usr'],
         options: [
             {
@@ -77,7 +75,6 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
     }, {
         id: "Gestiones",
         icon: "🛠",
-        route: "/",
         roles: ['usr'],
         options: [
             {
@@ -117,7 +114,6 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
     }, {
         id: "Monitoreo",
         icon: "🖥️",
-        route: "/",
         roles: ['adm'],
         options: [
             {
@@ -129,7 +125,6 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
     }, {
         id: "System",
         icon: "💻",
-        route: "/",
         roles: ['sys'],
         options: [
             {

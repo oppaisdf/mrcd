@@ -2,55 +2,49 @@
     <!-- RAIL -->
     <div class="rail">
         <div class="rail__top">
-            <button class="rail__btn brand" type="button" (click)="toggleCategory('main')"
-                [class.is-active]="activeCategoryId() === 'main'">
+            <a class="brand" [class.is-active]="isActiveCategory('home')"
+                (click)="router.go('/'); $event.preventDefault()">
                 <img src="favicon.ico" width="30">
-            </button>
+            </a>
         </div>
 
         <ul class="rail__menu">
-            @for (cat of visibleCategories(); track cat.id) {
+            @for (category of categories(); track $index) {
             <li>
-                <button type="button" class="rail__btn"
-                    [class.is-active]="activeCategoryId() === cat.id && isFlyoutOpen()" (click)="onCategoryClick(cat)"
-                    [attr.aria-expanded]="activeCategoryId() === cat.id && isFlyoutOpen()" [title]="cat.id">
-                    <span class="icon">{{ cat.icon }}</span>
-                </button>
+                <a [class.is-active]="isActiveCategory(category.id)" [title]="category.id"
+                    (click)="selectCategory(category.id)">
+                    <span class="icon">{{category.icon}}</span>
+                </a>
             </li>
             }
         </ul>
 
         <div class="rail__bottom">
             <button class="rail__btn" type="button" (click)="toggleTheme.emit()" title="Theme">🌓</button>
-
-            @if (isAuth()) {
-            <button class="rail__btn" type="button" (click)="logout()" title="Logout">⎋</button>
-            } @else {
-            <a class="rail__btn link" routerLink="/login" title="Login">⇢</a>
-            }
+            <button class="rail__btn" type="button" title="Logout">⎋</button>
         </div>
     </div>
 
-    <!-- FLYOUT -->
-    @if (isFlyoutOpen() && activeCategory()) {
-    <div class="flyout" (keydown.escape)="closeFlyout()">
+    @if (selectedCategory() && selectedCategory()?.id != 'home') {
+    <div class="flyout" (keydown.escape)="selectCategory(undefined)">
         <div class="flyout__header">
             <div class="flyout__title">
-                <span class="flyout__icon">{{ activeCategory()!.icon }}</span>
-                <span>{{ activeCategory()!.id }}</span>
+                <span class="flyout__icon">{{selectedCategory()?.icon}}</span>
+                <span>{{selectedCategory()?.id}}</span>
             </div>
 
-            <button class="flyout__close" type="button" (click)="closeFlyout()" title="Close">✕</button>
+            <button class="flyout__close" type="button" (click)="selectCategory(undefined)" title="Close">✕</button>
         </div>
 
-        <div class="flyout__list" role="menu">
-            @for (item of visibleItems(); track item.route) {
-            <a class="flyout__item" [routerLink]="item.route" routerLinkActive="is-active"
-                (click)="onLeafClick($event, item.route)" role="menuitem">
-                <span class="flyout__itemIcon">{{item.routeName}}</span>
-            </a>
+        <ul class="flyout__list" role="menu">
+            @for (option of selectedCategory()?.options; track $index) {
+            <li>
+                <a class="flyout__item" role="menuitem" (click)="router.go(option.route); $event.preventDefault()">
+                    <span class="flyout__itemIcon">{{option.routeName}}</span>
+                </a>
+            </li>
             }
-        </div>
+        </ul>
     </div>
     }
 </aside>
