@@ -1,5 +1,7 @@
 <div class="shell">
+    @if (isAuth()) {
     <app-nav class="shell__nav" (toggleTheme)="toggleTheme()" />
+    }
 
     <main class="shell__content">
         <router-outlet />
