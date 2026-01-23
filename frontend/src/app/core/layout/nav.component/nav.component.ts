@@ -28,7 +28,7 @@ export class NavComponent {
   protected categories = NAV_CATEGORIES;
 
   protected visibleCategories = computed(() => {
-    const roles = 'sys'; //this.session.roles();
+    const roles = ['sys', 'adm', 'usr']; //this.session.roles();
     return this.categories.filter(c =>
       !c.roles?.length || c.roles.some(r => roles.includes(r as any))
     );
@@ -42,7 +42,7 @@ export class NavComponent {
   protected visibleItems = computed(() => {
     const cat = this.activeCategory();
     if (!cat) return [];
-    const roles = ['sys']; //this.session.roles();
+    const roles = ['sys', 'adm', 'usr']; //this.session.roles();
     return cat.options.filter(i =>
       !i.roles?.length || i.roles.some(r => roles.includes(r as any))
     );

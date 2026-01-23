@@ -1,6 +1,11 @@
 import { RoleType } from "../../auth/role.type";
 
-export type CategoryId = 'main' | 'home';
+export type CategoryId =
+    'Confirmandos'
+    | 'Impresiones'
+    | 'Gestiones'
+    | 'Monitoreo'
+    | 'System';
 
 export interface CategoryMenu {
     id: CategoryId,
@@ -18,22 +23,124 @@ export interface OptionMenu {
 
 export const NAV_CATEGORIES: CategoryMenu[] = [
     {
-        id: 'main',
+        id: 'Confirmandos',
         icon: '🏠',
         route: '/',
-        roles: ['sys'],
+        roles: ['usr'],
         options: [
             {
-                routeName: 'Home',
+                routeName: 'Inscribir',
                 route: '/',
-                roles: ['sys']
+                roles: ['usr']
+            }, {
+                routeName: 'Actualizar',
+                route: '/',
+                roles: ['usr']
+            }, {
+                routeName: 'Asistencia',
+                route: '/',
+                roles: ['usr']
+            }, {
+                routeName: 'Padres/padrinos',
+                route: '/',
+                roles: ['usr']
             }
         ]
     }, {
-        id: 'home',
-        icon: '🛠',
+        id: 'Impresiones',
+        icon: '🖨️',
         route: '/',
+        roles: ['usr'],
+        options: [
+            {
+                routeName: "Agenda",
+                route: "/",
+                roles: ['usr']
+            }, {
+                routeName: "Asistencia",
+                route: "/",
+                roles: ['usr']
+            }, {
+                routeName: "Diplomas",
+                route: "/",
+                roles: ['adm']
+            }, {
+                routeName: "Gafetes",
+                route: "/",
+                roles: ['adm']
+            }, {
+                routeName: "Listado general",
+                route: "/",
+                roles: ['usr']
+            }
+        ]
+    }, {
+        id: "Gestiones",
+        icon: "🛠",
+        route: "/",
+        roles: ['usr'],
+        options: [
+            {
+                routeName: "Agenda",
+                route: "/",
+                roles: ['usr']
+            }, {
+                routeName: "Cobros",
+                route: "/",
+                roles: ['adm']
+            }, {
+                routeName: "Documentos",
+                route: "/",
+                roles: ['adm']
+            }, {
+                routeName: "Fases de actividad",
+                route: "/",
+                roles: ['usr']
+            }, {
+                routeName: "Grados académicos",
+                route: "/",
+                roles: ['adm']
+            }, {
+                routeName: "Movimientos contables",
+                route: "/",
+                roles: ['adm']
+            }, {
+                routeName: "Usuarios",
+                route: "/",
+                roles: ['adm']
+            }, {
+                routeName: "Sacramentos",
+                route: "/",
+                roles: ['adm']
+            }
+        ]
+    }, {
+        id: "Monitoreo",
+        icon: "🖥️",
+        route: "/",
+        roles: ['adm'],
+        options: [
+            {
+                routeName: "Logs",
+                route: "/",
+                roles: ['adm']
+            }
+        ]
+    }, {
+        id: "System",
+        icon: "💻",
+        route: "/",
         roles: ['sys'],
-        options: []
+        options: [
+            {
+                routeName: "Roles",
+                route: "/",
+                roles: ['sys']
+            }, {
+                routeName: "Permissions",
+                route: "/",
+                roles: ['sys']
+            }
+        ]
     }
 ];

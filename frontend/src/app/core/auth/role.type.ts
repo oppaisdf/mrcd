@@ -1,1 +1,4 @@
-export type RoleType = 'sys';
+export type RoleType =
+    'sys'
+    | 'adm'
+    | 'usr';
