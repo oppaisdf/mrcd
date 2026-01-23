@@ -5,27 +5,30 @@ type VTDocument = Document & { startViewTransition?: (cb: () => void | Promise<v
 
 @Injectable({ providedIn: 'root' })
 export class ViewTransitionService {
-    private router = inject(Router);
-    private doc = inject(DOCUMENT) as VTDocument;
+    private readonly router = inject(Router);
+    private readonly doc = inject(DOCUMENT) as VTDocument;
+    private inFlight: Promise<void> | null = null;
 
-    navigate(event: Event) {
-        // Para <a routerLink> para capturar click y meter transición.
-        // Se puede solo usar router.navigateByUrl desde código
-        event.preventDefault();
-        const target = event.currentTarget as HTMLAnchorElement;
-        const href = target.getAttribute('href') ?? '/';
-        this.go(href);
-    }
+    async go(
+        url: string
+    ) {
+        // Si hay una transición corriendo se ignoran nuevos intentos
+        if (this.inFlight) return;
 
-    async go(url: string) {
-        const startVT = this.doc.startViewTransition;
-        if (!startVT) {
-            await this.router.navigateByUrl(url);
-            return;
-        }
+        const doc = this.doc;
 
-        await startVT(async () => {
-            await this.router.navigateByUrl(url);
-        }).finished?.catch(() => void 0);
+        const run = async () => {
+            if (!doc.startViewTransition) {
+                await this.router.navigateByUrl(url);
+                return;
+            }
+
+            await doc.startViewTransition(async () => {
+                await this.router.navigateByUrl(url);
+            }).finished?.catch(() => void 0);
+        };
+
+        this.inFlight = run().finally(() => (this.inFlight = null));
+        await this.inFlight;
     }
 }
