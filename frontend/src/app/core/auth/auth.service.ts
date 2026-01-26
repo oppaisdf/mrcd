@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { LoginRequest } from './login.request';
 
 type LoginResponse = {
-  token: string;
+  accessToken: string;
   expiresAtUtc: string;
 };
 
@@ -42,10 +42,10 @@ export class AuthService {
   ) {
     const res = await this.api.postAsync<LoginRequest, LoginResponse>('/auth/login', { username, password });
 
-    if (!res.isSuccess || !res.data?.token)
-      return res.message ?? 'Login failed';
+    if (!res.isSuccess || !res.data?.accessToken)
+      return res.message;
 
-    const token = res.data.token;
+    const token = res.data.accessToken;
     const roles = decodeJwtRoles(token);
 
     this.store.setSession({
