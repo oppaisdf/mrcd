@@ -7,7 +7,6 @@ import { LoginRequest } from './login.request';
 type LoginResponse = {
   token: string;
   expiresAtUtc: string;
-  roles?: string[];
 };
 
 function decodeJwtRoles(token: string) {
@@ -44,16 +43,17 @@ export class AuthService {
     const res = await this.api.postAsync<LoginRequest, LoginResponse>('/auth/login', { username, password });
 
     if (!res.isSuccess || !res.data?.token)
-      throw new Error(res.message ?? 'Login failed');
+      return res.message ?? 'Login failed';
 
     const token = res.data.token;
-    const roles = res.data.roles?.length ? res.data.roles : decodeJwtRoles(token);
+    const roles = decodeJwtRoles(token);
 
     this.store.setSession({
       token,
       expiresAtUtc: res.data.expiresAtUtc,
       roles
     });
+    return undefined;
   }
 
   logout(
