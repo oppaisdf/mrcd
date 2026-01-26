@@ -2,6 +2,7 @@ import { Component, computed, EventEmitter, inject, Output, signal } from '@angu
 import { CategoryId, CategoryMenu, NAV_CATEGORIES } from './nav.config';
 import { ViewTransitionService } from '../../ui/transitions/view-transitions.service';
 import { SessionStore } from '../../stores/session.store';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-nav',
@@ -13,6 +14,7 @@ export class NavComponent {
   @Output() toggleTheme = new EventEmitter<void>();
   private readonly _categories = signal<CategoryMenu[]>(NAV_CATEGORIES);
   private readonly _session = inject(SessionStore);
+  private readonly _service = inject(AuthService);
 
   readonly router = inject(ViewTransitionService);
   readonly selectedCategory = signal<CategoryMenu | undefined>(undefined);
@@ -37,5 +39,9 @@ export class NavComponent {
     const category = this.categories()
       .find(c => c.id == categoryId);
     this.selectedCategory.set(category);
+  }
+
+  logout() {
+    this._service.logout();
   }
 }
