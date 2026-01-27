@@ -23,7 +23,8 @@ export class ViewTransitionService {
             return this.router.navigate(commands);
         };
 
-        const startVT = (document as any).startViewTransition as undefined | ((cb: () => Promise<any> | any) => any);
+        const doc: any = document;
+        const startVT = (doc.startViewTransition as Function | undefined)?.bind(document);
 
         if (!startVT) {
             const ok = await nav();
