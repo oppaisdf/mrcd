@@ -2,12 +2,14 @@
     min-height: 100dvh;
     display: grid;
     grid-template-columns: var(--nav-rail-w) 1fr;
+    position: relative;
 }
 
 .shell__nav {
     position: sticky;
     top: 0;
     height: 100dvh;
+    z-index: 20;
 
     @supports (view-transition-name: foo) {
         view-transition-name: none;
@@ -17,6 +19,8 @@
 .shell__content {
     min-width: 0;
     padding: var(--space-6);
+    position: relative;
+    z-index: 1;
 }
 
 .footer {
