@@ -2,7 +2,7 @@ import { Component, computed, EventEmitter, inject, Output, signal } from '@angu
 import { CategoryId, CategoryMenu, NAV_CATEGORIES } from './nav.config';
 import { SessionStore } from '../../stores/session.store';
 import { AuthService } from '../../auth/auth.service';
-import { Router } from '@angular/router';
+import { ViewTransitionService } from '../../ui/transitions/view-transitions.service';
 
 @Component({
   selector: 'app-nav',
@@ -15,8 +15,8 @@ export class NavComponent {
   private readonly _categories = signal<CategoryMenu[]>(NAV_CATEGORIES);
   private readonly _session = inject(SessionStore);
   private readonly _service = inject(AuthService);
+  private readonly _vtService = inject(ViewTransitionService);
 
-  readonly router = inject(Router);
   readonly selectedCategory = signal<CategoryMenu | undefined>(undefined);
   readonly categories = computed(() => {
     const roles = this._session.roles();
@@ -31,6 +31,13 @@ export class NavComponent {
     ev?: Event
   ) {
     ev?.preventDefault();
+
+    if (categoryId === 'home') {
+      this.selectedCategory.set(undefined);
+      void this._vtService.navigate('/', { direction: 'back' });
+      return;
+    }
+
     const category = this.categories()
       .find(c => c.id == categoryId);
     this.selectedCategory.set(category);
@@ -45,7 +52,7 @@ export class NavComponent {
     ev?: Event
   ) {
     ev?.preventDefault();
-    this.router.navigate(Array.isArray(route) ? route : [route]);
+    void this._vtService.navigate(route as any, { direction: 'forward' });
   }
 
   protected readonly isDrawerOpen = computed(() => {
