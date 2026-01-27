@@ -1,22 +1,65 @@
-/* Capa de tema: reglas globales que dependen de tokens */
 :root {
-    color-scheme: dark;
-    /* ayuda a inputs/scrollbars */
+    color-scheme: light;
+
+    /* Base */
+    --color-bg: #0f1220;
+    --color-surface: rgba(255, 255, 255, .06);
+    --color-surface-2: rgba(255, 255, 255, .10);
+    --color-border: rgba(255, 255, 255, .14);
+
+    /* Texto */
+    --color-text: rgba(255, 255, 255, .92);
+    --color-text-muted: rgba(255, 255, 255, .70);
+
+    /* Marca / acento */
+    --color-accent: #7c5cff;
+    --color-accent-contrast: #0b0b12;
+
+    /* Estados */
+    --color-danger: #ff4d4d;
+    --color-warning: #ffcc00;
+    --color-success: #42d392;
+
+    /* Focus */
+    --color-focus: rgba(124, 92, 255, .55);
+
+    /* Layout */
+    --nav-rail-w: 76px;
+    --content-max: 1200px;
 }
 
+/* Tema oscuro explícito */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --color-bg: #0b0e18;
+    --color-surface: rgba(255, 255, 255, .06);
+    --color-surface-2: rgba(255, 255, 255, .10);
+    --color-border: rgba(255, 255, 255, .14);
+
+    --color-text: rgba(255, 255, 255, .92);
+    --color-text-muted: rgba(255, 255, 255, .70);
+
+    --color-accent: #7c5cff;
+    --color-accent-contrast: #0b0b12;
+
+    --color-focus: rgba(124, 92, 255, .55);
+}
+
+/* Tema claro */
 :root[data-theme="light"] {
     color-scheme: light;
-}
 
-/* mejor UX al navegar */
-html {
-    scroll-behavior: smooth;
-}
+    --color-bg: #f6f7fb;
+    --color-surface: rgba(10, 12, 20, .05);
+    --color-surface-2: rgba(10, 12, 20, .08);
+    --color-border: rgba(10, 12, 20, .12);
 
-/* accesibilidad: reduce motion */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        transition-duration: 0.001ms !important;
-        animation-duration: 0.001ms !important;
-    }
+    --color-text: rgba(10, 12, 20, .92);
+    --color-text-muted: rgba(10, 12, 20, .66);
+
+    --color-accent: #5b5cff;
+    --color-accent-contrast: #ffffff;
+
+    --color-focus: rgba(91, 92, 255, .35);
 }
