@@ -1,158 +1,238 @@
+/* =========================================================
+   NAV — Rail + Drawer
+   ========================================================= */
+
 .nav {
-    display: flex;
     height: 100dvh;
-    position: sticky;
-    top: 0;
-    align-self: start;
+    display: grid;
+    grid-template-columns: var(--nav-rail-w) 0fr;
+    align-items: stretch;
+    border-right: 1px solid var(--color-border);
+    background: var(--color-bg);
+    transition: grid-template-columns var(--dur-2) var(--ease-out);
 }
+
+.nav--drawer-open {
+    grid-template-columns: var(--nav-rail-w) 280px;
+}
+
+/* =========================================================
+   RAIL
+   ========================================================= */
 
 .rail {
-    width: 80px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: var(--color-surface);
-    border-right: 1px solid var(--color-border);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: var(--space-4) var(--space-2);
+    gap: var(--space-5);
 }
 
-.rail__top,
-.rail__bottom {
-    padding: var(--space-4) 0;
+.rail__top {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+    justify-content: center;
+}
+
+.brand {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
 }
 
 .rail__menu {
     list-style: none;
-    padding: 0;
     margin: 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    padding: 0;
+    display: grid;
+    align-content: center;
+    justify-items: center;
     gap: var(--space-4);
-    justify-content: center;
+}
+
+/* =========================================================
+   ICON-ONLY ITEMS (sin borde, sin botón)
+   ========================================================= */
+
+.rail__item {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+
+    opacity: 1;
+    transform: scale(1);
+
+    cursor: pointer;
+
+    transition:
+        transform var(--dur-2) var(--ease-out),
+        opacity var(--dur-2) var(--ease-out);
+}
+
+/* Hover ligero, nada de fondos */
+.rail__item:hover {
+    transform: scale(1.06);
+}
+
+/* Cuando el drawer está abierto:
+   todos los iconos se vuelven translúcidos */
+.nav--drawer-open .rail__item {
+    opacity: 0.35;
+}
+
+/* El activo se salva del “fade” y crece */
+.nav--drawer-open .rail__item.is-active {
+    opacity: 1;
+    transform: scale(1.18);
+}
+
+/* Activo sin drawer (opcional pero elegante) */
+.rail__item.is-active {
+    transform: scale(1.08);
+}
+
+/* Iconos un poco más protagonistas */
+.rail__icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+/* =========================================================
+   RAIL — BOTTOM ACTIONS
+   ========================================================= */
+
+.rail__bottom {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: center;
 }
 
 .rail__btn {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-2);
-    border: 1px solid var(--color-border);
-    background: transparent;
-    color: var(--color-muted);
-    cursor: pointer;
+    width: 40px;
+    height: 40px;
     display: grid;
     place-items: center;
-    transition: transform .2s ease, background .2s ease;
 
-    &:hover {
-        background: var(--color-bg);
-        transform: scale(1.08);
-    }
+    background: transparent;
+    border: 0;
+    color: var(--color-text);
 
-    &.is-active {
-        color: var(--color-fg);
-        background: var(--color-bg);
-    }
+    cursor: pointer;
 
-    &.link {
-        text-decoration: none;
-    }
+    opacity: 0.7;
+    transition: opacity var(--dur-1) var(--ease-out),
+        transform var(--dur-1) var(--ease-out);
 }
 
-.brand {
-    font-weight: 700;
-    color: var(--color-fg);
-    background: var(--color-bg);
+.rail__btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
 }
 
-.icon {
-    font-size: 18px;
+/* =========================================================
+   DRAWER
+   ========================================================= */
+
+.drawer {
+    overflow: hidden;
+    border-left: 1px solid var(--color-border);
+    background: linear-gradient(180deg,
+            var(--color-bg),
+            rgba(0, 0, 0, 0));
+    padding: var(--space-5);
 }
 
-/* FLYOUT */
-.flyout {
-    width: 220px;
-    height: 100%;
-    background: color-mix(in oklab, var(--color-surface), transparent 0%);
-    border-right: 1px solid var(--color-border);
-    display: flex;
-    flex-direction: column;
-}
-
-.flyout__header {
+.drawer__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-4);
+    gap: var(--space-3);
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-4);
     border-bottom: 1px solid var(--color-border);
 }
 
-.flyout__title {
+.drawer__title {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    color: var(--color-fg);
+    gap: var(--space-3);
+}
+
+.drawer__icon {
+    font-size: 22px;
+}
+
+.drawer__text {
+    font-size: 14px;
     font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--color-text);
 }
 
-.flyout__icon {
-    opacity: .85;
-}
+.drawer__close {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
 
-.flyout__close {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-2);
-    border: 1px solid var(--color-border);
     background: transparent;
+    border: 0;
+    color: var(--color-text);
+
     cursor: pointer;
-    color: var(--color-muted);
-
-    &:hover {
-        background: var(--color-bg);
-        color: var(--color-fg);
-    }
+    opacity: 0.6;
+    transition: opacity var(--dur-1) var(--ease-out),
+        transform var(--dur-1) var(--ease-out);
 }
 
-/* Scrollable list */
-.flyout__list {
-    padding: var(--space-2);
-    overflow: auto;
-    flex: 1;
-
-    /* suaviza scroll sin inventar colores */
-    scrollbar-gutter: stable;
+.drawer__close:hover {
+    opacity: 1;
+    transform: scale(1.1);
 }
 
-.flyout__item {
+.drawer__menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+}
+
+.drawer__item {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-3) var(--space-4);
+
+    background: transparent;
     border-radius: var(--radius-2);
-    text-decoration: none;
-    color: var(--color-muted);
-    border: 1px solid transparent;
-    transition: background .15s ease, transform .15s ease;
 
-    &:hover {
-        background: var(--color-bg);
-        color: var(--color-fg);
-        transform: translateX(2px);
-    }
+    color: var(--color-text);
+    cursor: pointer;
 
-    &.is-active {
-        background: var(--color-bg);
-        color: var(--color-fg);
-        border-color: var(--color-border);
-    }
+    transition: background var(--dur-1) var(--ease-out);
 }
 
-.flyout__itemIcon {
-    width: 18px;
-    text-align: center;
-    opacity: .9;
+.drawer__item:hover {
+    background: var(--color-surface);
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }

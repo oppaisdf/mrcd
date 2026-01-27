@@ -1,46 +1,46 @@
-<aside class="nav">
+<aside class="nav" [class.nav--drawer-open]="isDrawerOpen()">
     <!-- RAIL -->
     <div class="rail">
         <div class="rail__top">
-            <a class="brand" [class.is-active]="isActiveCategory('home')"
-                (click)="router.go('/'); $event.preventDefault()">
-                <img src="favicon.ico" width="30">
+            <a class="brand" href="/" title="Home" (click)="go('/', $event)">
+                <img src="favicon.ico" width="30" height="30" alt="Home" />
             </a>
         </div>
 
-        <ul class="rail__menu">
+        <ul class="rail__menu" role="list">
             @for (category of categories(); track $index) {
             <li>
-                <a [class.is-active]="isActiveCategory(category.id)" [title]="category.id"
-                    (click)="selectCategory(category.id)">
-                    <span class="icon">{{category.icon}}</span>
+                <a class="rail__item" href="#" [class.is-active]="selectedCategory()?.id === category.id"
+                    [title]="category.id" (click)="selectCategory(category.id)">
+                    <span class="rail__icon" aria-hidden="true">{{ category.icon }}</span>
                 </a>
             </li>
             }
         </ul>
 
         <div class="rail__bottom">
-            <button class="rail__btn" type="button" (click)="toggleTheme.emit()" title="Theme">🌓</button>
-            <button class="rail__btn" type="button" (click)="logout()" title="Logout">⎋</button>
+            <button class="rail__btn" type="button" title="Theme" (click)="toggleTheme.emit()">🌓</button>
+            <button class="rail__btn" type="button" title="Logout" (click)="logout()">⎋</button>
         </div>
     </div>
 
-    @if (selectedCategory() && selectedCategory()?.id != 'home') {
-    <div class="flyout" (keydown.escape)="selectCategory(undefined)">
-        <div class="flyout__header">
-            <div class="flyout__title">
-                <span class="flyout__icon">{{selectedCategory()?.icon}}</span>
-                <span>{{selectedCategory()?.id}}</span>
+    <!-- DRAWER -->
+    @if (isDrawerOpen()) {
+    <div class="drawer" role="navigation" aria-label="Section">
+        <div class="drawer__header">
+            <div class="drawer__title">
+                <span class="drawer__icon" aria-hidden="true">{{ selectedCategory()?.icon }}</span>
+                <span class="drawer__text">{{ selectedCategory()?.id }}</span>
             </div>
 
-            <button class="flyout__close" type="button" (click)="selectCategory(undefined)" title="Close">✕</button>
+            <button class="drawer__close" type="button" title="Close" (click)="closeDrawer()">✕</button>
         </div>
 
-        <ul class="flyout__list" role="menu">
+        <ul class="drawer__menu" role="list">
             @for (option of selectedCategory()?.options; track $index) {
             <li>
-                <a class="flyout__item" role="menuitem" (click)="router.go(option.route); $event.preventDefault()">
-                    <span class="flyout__itemIcon">{{option.routeName}}</span>
+                <a class="drawer__item" href="#" (click)="go(option.route, $event)">
+                    <span>{{ option.routeName }}</span>
                 </a>
             </li>
             }

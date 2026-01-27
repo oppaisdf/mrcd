@@ -1,8 +1,8 @@
 import { Component, computed, EventEmitter, inject, Output, signal } from '@angular/core';
 import { CategoryId, CategoryMenu, NAV_CATEGORIES } from './nav.config';
-import { ViewTransitionService } from '../../ui/transitions/view-transitions.service';
 import { SessionStore } from '../../stores/session.store';
 import { AuthService } from '../../auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -16,7 +16,7 @@ export class NavComponent {
   private readonly _session = inject(SessionStore);
   private readonly _service = inject(AuthService);
 
-  readonly router = inject(ViewTransitionService);
+  readonly router = inject(Router);
   readonly selectedCategory = signal<CategoryMenu | undefined>(undefined);
   readonly categories = computed(() => {
     const roles = this._session.roles();
@@ -26,16 +26,11 @@ export class NavComponent {
       );
   });
 
-  isActiveCategory(
-    categoryId: CategoryId
-  ) {
-    const currentCategory = this.selectedCategory();
-    return currentCategory?.id == categoryId;
-  }
-
   selectCategory(
-    categoryId: CategoryId | undefined
+    categoryId: CategoryId | undefined,
+    ev?: Event
   ) {
+    ev?.preventDefault();
     const category = this.categories()
       .find(c => c.id == categoryId);
     this.selectedCategory.set(category);
@@ -43,5 +38,22 @@ export class NavComponent {
 
   logout() {
     this._service.logout();
+  }
+
+  protected go(
+    route: string | any[],
+    ev?: Event
+  ) {
+    ev?.preventDefault();
+    this.router.navigate(Array.isArray(route) ? route : [route]);
+  }
+
+  protected readonly isDrawerOpen = computed(() => {
+    const c = this.selectedCategory();
+    return !!c && c.id !== 'home';
+  });
+
+  protected closeDrawer() {
+    this.selectedCategory.set(undefined);
   }
 }
