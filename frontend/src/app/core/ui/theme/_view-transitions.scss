@@ -1,0 +1,86 @@
+@supports (view-transition-name: root) {
+    html {
+        view-transition-name: root;
+    }
+
+    ::view-transition-group(root) {
+        animation-duration: var(--dur-3);
+        animation-timing-function: var(--ease-out);
+    }
+
+    /* Evita flashes raros */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        mix-blend-mode: normal;
+    }
+
+    /* Dirección: forward (entra desde la derecha) */
+    html[data-nav-dir="forward"]::view-transition-old(root) {
+        animation: vt-exit-left var(--dur-3) var(--ease-out) both;
+    }
+
+    html[data-nav-dir="forward"]::view-transition-new(root) {
+        animation: vt-enter-right var(--dur-3) var(--ease-out) both;
+    }
+
+    /* Dirección: back (entra desde la izquierda) */
+    html[data-nav-dir="back"]::view-transition-old(root) {
+        animation: vt-exit-right var(--dur-3) var(--ease-out) both;
+    }
+
+    html[data-nav-dir="back"]::view-transition-new(root) {
+        animation: vt-enter-left var(--dur-3) var(--ease-out) both;
+    }
+
+    @keyframes vt-enter-right {
+        from {
+            transform: translateX(10%);
+            opacity: .75;
+            filter: blur(2px);
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+            filter: blur(0);
+        }
+    }
+
+    @keyframes vt-exit-left {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateX(-8%);
+            opacity: .65;
+        }
+    }
+
+    @keyframes vt-enter-left {
+        from {
+            transform: translateX(-10%);
+            opacity: .75;
+            filter: blur(2px);
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+            filter: blur(0);
+        }
+    }
+
+    @keyframes vt-exit-right {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateX(8%);
+            opacity: .65;
+        }
+    }
+}
