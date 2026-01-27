@@ -1,34 +1,68 @@
-import { DOCUMENT, Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-type VTDocument = Document & { startViewTransition?: (cb: () => void | Promise<void>) => any };
+export type NavDirection = 'forward' | 'back' | 'none';
 
 @Injectable({ providedIn: 'root' })
 export class ViewTransitionService {
-    private readonly router = inject(Router);
-    private readonly doc = inject(DOCUMENT) as VTDocument;
-    private inFlight: Promise<void> | null = null;
+    private _lastIndex = this.readIndex();
 
-    async go(
-        url: string
-    ) {
-        // Si hay una transición corriendo se ignoran nuevos intentos
-        if (this.inFlight) return;
+    constructor(private readonly router: Router) { }
 
-        const doc = this.doc;
+    async navigate(
+        commands: any[] | string,
+        opts?: { direction?: NavDirection }
+    ): Promise<boolean> {
+        const direction = opts?.direction ?? 'none';
+        document.documentElement.dataset['navDir'] = direction;
 
-        const run = async () => {
-            if (!doc.startViewTransition) {
-                await this.router.navigateByUrl(url);
-                return;
+        const nav = async () => {
+            if (typeof commands === 'string') {
+                return this.router.navigateByUrl(commands);
             }
-
-            await doc.startViewTransition(async () => {
-                await this.router.navigateByUrl(url);
-            }).finished?.catch(() => void 0);
+            return this.router.navigate(commands);
         };
 
-        this.inFlight = run().finally(() => (this.inFlight = null));
-        await this.inFlight;
+        const startVT = (document as any).startViewTransition as undefined | ((cb: () => Promise<any> | any) => any);
+
+        if (!startVT) {
+            const ok = await nav();
+            queueMicrotask(() => (document.documentElement.dataset['navDir'] = 'none'));
+            return ok;
+        }
+
+        const vt = startVT(async () => {
+            const ok = await nav();
+            this.bumpIndexForPush();
+            return ok;
+        });
+
+        try {
+            await vt.finished;
+        } catch {
+        } finally {
+            document.documentElement.dataset['navDir'] = 'none';
+        }
+
+        return true;
+    }
+
+    setBack(): void {
+        document.documentElement.dataset['navDir'] = 'back';
+    }
+
+    private bumpIndexForPush(): void {
+        this._lastIndex = this._lastIndex + 1;
+        this.writeIndex(this._lastIndex);
+    }
+
+    private readIndex(): number {
+        const idx = history.state?.__navIndex;
+        return typeof idx === 'number' ? idx : 0;
+    }
+
+    private writeIndex(idx: number): void {
+        const next = { ...(history.state ?? {}), __navIndex: idx };
+        history.replaceState(next, '', location.href);
     }
 }
