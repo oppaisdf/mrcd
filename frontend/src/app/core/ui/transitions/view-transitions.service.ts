@@ -1,26 +1,26 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-
-export type NavDirection = 'forward' | 'back' | 'none';
+import { Injectable, inject } from '@angular/core';
+import { Router, NavigationExtras } from '@angular/router';
+import { NavDirection, NavDirectionService } from './nav-direction.service';
 
 @Injectable({ providedIn: 'root' })
 export class ViewTransitionService {
-    private _lastIndex = this.readIndex();
-
-    constructor(private readonly router: Router) { }
+    private readonly router = inject(Router);
+    private readonly dir = inject(NavDirectionService);
 
     async navigate(
         commands: any[] | string,
-        opts?: { direction?: NavDirection }
+        opts?: { direction?: NavDirection; extras?: NavigationExtras }
     ): Promise<boolean> {
-        const direction = opts?.direction ?? 'none';
-        document.documentElement.dataset['navDir'] = direction;
+        const direction = opts?.direction ?? 'forward';
+        const extras = opts?.extras;
+
+        this.dir.setProgrammatic(direction);
 
         const nav = async () => {
             if (typeof commands === 'string') {
-                return this.router.navigateByUrl(commands);
+                return this.router.navigateByUrl(commands, extras);
             }
-            return this.router.navigate(commands);
+            return this.router.navigate(commands, extras);
         };
 
         const doc: any = document;
@@ -28,13 +28,18 @@ export class ViewTransitionService {
 
         if (!startVT) {
             const ok = await nav();
-            queueMicrotask(() => (document.documentElement.dataset['navDir'] = 'none'));
+            if (ok) {
+                extras?.replaceUrl ? this.dir.commitReplace() : this.dir.commitPush();
+            }
+            queueMicrotask(() => this.dir.reset());
             return ok;
         }
 
         const vt = startVT(async () => {
             const ok = await nav();
-            this.bumpIndexForPush();
+            if (ok) {
+                extras?.replaceUrl ? this.dir.commitReplace() : this.dir.commitPush();
+            }
             return ok;
         });
 
@@ -42,28 +47,9 @@ export class ViewTransitionService {
             await vt.finished;
         } catch {
         } finally {
-            document.documentElement.dataset['navDir'] = 'none';
+            this.dir.reset();
         }
 
         return true;
-    }
-
-    setBack(): void {
-        document.documentElement.dataset['navDir'] = 'back';
-    }
-
-    private bumpIndexForPush(): void {
-        this._lastIndex = this._lastIndex + 1;
-        this.writeIndex(this._lastIndex);
-    }
-
-    private readIndex(): number {
-        const idx = history.state?.__navIndex;
-        return typeof idx === 'number' ? idx : 0;
-    }
-
-    private writeIndex(idx: number): void {
-        const next = { ...(history.state ?? {}), __navIndex: idx };
-        history.replaceState(next, '', location.href);
     }
 }
