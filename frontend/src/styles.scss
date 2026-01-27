@@ -12,3 +12,79 @@ body {
     color: var(--color-fg);
     font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
+
+:root {
+    view-transition-name: app;
+}
+
+::view-transition-old(app),
+::view-transition-new(app) {
+    animation-duration: 420ms;
+    animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* forward = entra desde la derecha, sale a la izquierda */
+:root[data-vt-dir="forward"] ::view-transition-old(app) {
+    animation-name: slide-out-left;
+}
+
+:root[data-vt-dir="forward"] ::view-transition-new(app) {
+    animation-name: slide-in-right;
+}
+
+/* back = entra desde la izquierda, sale a la derecha */
+:root[data-vt-dir="back"] ::view-transition-old(app) {
+    animation-name: slide-out-right;
+}
+
+:root[data-vt-dir="back"] ::view-transition-new(app) {
+    animation-name: slide-in-left;
+}
+
+@keyframes slide-in-right {
+    from {
+        transform: translateX(18%);
+        opacity: .7;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-out-left {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(-18%);
+        opacity: .7;
+    }
+}
+
+@keyframes slide-in-left {
+    from {
+        transform: translateX(-18%);
+        opacity: .7;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-out-right {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(18%);
+        opacity: .7;
+    }
+}
