@@ -8,6 +8,10 @@
     position: sticky;
     top: 0;
     height: 100dvh;
+
+    @supports (view-transition-name: foo) {
+        view-transition-name: none;
+    }
 }
 
 .shell__content {
@@ -25,4 +29,10 @@
 .container {
     max-width: var(--content-max);
     margin: 0 auto;
+}
+
+.vt-content {
+    @supports (view-transition-name: foo) {
+        view-transition-name: vt-content;
+    }
 }
