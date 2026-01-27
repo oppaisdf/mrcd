@@ -1,41 +1,54 @@
-@supports (view-transition-name: root) {
+@supports (view-transition-name: foo) {
     html {
-        view-transition-name: root;
+        view-transition-name: none;
     }
 
-    ::view-transition-group(root) {
+    body {
+        view-transition-name: none;
+    }
+
+    ::view-transition-group(vt-content) {
         animation-duration: var(--dur-3);
         animation-timing-function: var(--ease-out);
     }
 
-    /* Evita flashes raros */
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
+    ::view-transition-old(vt-content),
+    ::view-transition-new(vt-content) {
         mix-blend-mode: normal;
+        backface-visibility: hidden;
     }
 
-    /* Dirección: forward (entra desde la derecha) */
-    html[data-nav-dir="forward"]::view-transition-old(root) {
+    /* Forward */
+    html[data-nav-dir="forward"]::view-transition-old(vt-content) {
         animation: vt-exit-left var(--dur-3) var(--ease-out) both;
     }
 
-    html[data-nav-dir="forward"]::view-transition-new(root) {
+    html[data-nav-dir="forward"]::view-transition-new(vt-content) {
         animation: vt-enter-right var(--dur-3) var(--ease-out) both;
     }
 
-    /* Dirección: back (entra desde la izquierda) */
-    html[data-nav-dir="back"]::view-transition-old(root) {
+    /* Back */
+    html[data-nav-dir="back"]::view-transition-old(vt-content) {
         animation: vt-exit-right var(--dur-3) var(--ease-out) both;
     }
 
-    html[data-nav-dir="back"]::view-transition-new(root) {
+    html[data-nav-dir="back"]::view-transition-new(vt-content) {
         animation: vt-enter-left var(--dur-3) var(--ease-out) both;
+    }
+
+    /* Si no hay dirección, se hace un fade suave */
+    html[data-nav-dir="none"]::view-transition-old(vt-content) {
+        animation: vt-fade-out var(--dur-2) var(--ease-out) both;
+    }
+
+    html[data-nav-dir="none"]::view-transition-new(vt-content) {
+        animation: vt-fade-in var(--dur-2) var(--ease-out) both;
     }
 
     @keyframes vt-enter-right {
         from {
-            transform: translateX(10%);
-            opacity: .75;
+            transform: translateX(12%);
+            opacity: .65;
             filter: blur(2px);
         }
 
@@ -53,15 +66,15 @@
         }
 
         to {
-            transform: translateX(-8%);
+            transform: translateX(-10%);
             opacity: .65;
         }
     }
 
     @keyframes vt-enter-left {
         from {
-            transform: translateX(-10%);
-            opacity: .75;
+            transform: translateX(-12%);
+            opacity: .65;
             filter: blur(2px);
         }
 
@@ -79,8 +92,28 @@
         }
 
         to {
-            transform: translateX(8%);
+            transform: translateX(10%);
             opacity: .65;
+        }
+    }
+
+    @keyframes vt-fade-in {
+        from {
+            opacity: .6;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes vt-fade-out {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: .6;
         }
     }
 }
