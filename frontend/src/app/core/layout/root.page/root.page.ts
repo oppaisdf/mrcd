@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from "@angular/router";
+import { PopstateDirection } from '../../ui/transitions/popstate-direction';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,5 @@ import { RouterOutlet } from "@angular/router";
   styleUrl: './root.page.scss',
 })
 export class RootPage {
+  private readonly _pop = inject(PopstateDirection); // Registro para listener
 }
