@@ -3,7 +3,7 @@
     <app-nav class="shell__nav" (toggleTheme)="toggleTheme()" />
     }
 
-    <main class="shell__content">
+    <main class="shell__content" [attr.data-theme]="currentTheme()">
         <router-outlet />
     </main>
 </div>

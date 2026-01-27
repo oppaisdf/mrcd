@@ -1,7 +1,7 @@
 .shell {
-    display: grid;
-    grid-template-columns: 80px 1fr;
     min-height: 100dvh;
+    display: grid;
+    grid-template-columns: var(--nav-rail-w) 1fr;
 }
 
 .shell__nav {
@@ -11,13 +11,18 @@
 }
 
 .shell__content {
+    min-width: 0;
     padding: var(--space-6);
-    overflow: hidden; // para transiciones
 }
 
 .footer {
-    grid-column: 1 / -1;
-    padding: var(--space-4);
     border-top: 1px solid var(--color-border);
-    color: var(--color-muted);
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+    padding: var(--space-4) var(--space-6);
+}
+
+.container {
+    max-width: var(--content-max);
+    margin: 0 auto;
 }
