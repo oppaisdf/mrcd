@@ -52,12 +52,15 @@ export class NavComponent {
     ev?: Event
   ) {
     ev?.preventDefault();
+
+    const run = () => void this._vtService.navigate(route as any, { direction: 'forward' });
+
     if (this.isDrawerOpen()) {
       this.closeDrawer();
-      requestAnimationFrame(() => void this._vtService.navigate(route as any, { direction: 'forward' }));
+      requestAnimationFrame(run);
       return;
     }
-    void this._vtService.navigate(route as any, { direction: 'forward' });
+    run();
   }
 
   protected readonly isDrawerOpen = computed(() => {

@@ -10,8 +10,8 @@
         <ul class="rail__menu" role="list">
             @for (category of categories(); track $index) {
             <li>
-                <a class="rail__item" href="#" [class.is-active]="selectedCategory()?.id === category.id"
-                    [title]="category.id" (click)="selectCategory(category.id)">
+                <a class="rail__item" [class.is-active]="selectedCategory()?.id === category.id" [title]="category.id"
+                    (click)="selectCategory(category.id)">
                     <span class="rail__icon" aria-hidden="true">{{ category.icon }}</span>
                 </a>
             </li>
@@ -39,7 +39,7 @@
         <ul class="drawer__menu" role="list">
             @for (option of selectedCategory()?.options; track $index) {
             <li>
-                <a class="drawer__item" href="#" (click)="go(option.route, $event)">
+                <a class="drawer__item" (click)="go(option.route, $event)">
                     <span>{{ option.routeName }}</span>
                 </a>
             </li>
