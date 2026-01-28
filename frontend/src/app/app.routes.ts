@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { ShellComponent } from './core/layout/shell.component/shell.component';
 import { guestGuard } from './core/guards/guest-guard';
 import { authGuard } from './core/guards/auth-guard';
+import { roleGuard } from './core/guards/role-guard';
 
 export const routes: Routes = [
     {
@@ -12,7 +13,20 @@ export const routes: Routes = [
     {
         path: '',
         canMatch: [authGuard],
-        component: ShellComponent
+        component: ShellComponent,
+        children: [
+            {
+                path: 'permissions',
+                canMatch: [roleGuard],
+                data: { roles: ['sys'] },
+                loadChildren: () => import('./features/permissions/permissions.routes').then(r => r.PERMISSIONS_ROUTES)
+            }
+        ]
     },
-    { path: '**', redirectTo: '' }
+    {
+        path: 'not-found',
+        title: 'Not found',
+        loadComponent: () => import('./features/not-found.page/not-found.page').then(p => p.NotFoundPage)
+    },
+    { path: '**', redirectTo: 'not-found' }
 ];
