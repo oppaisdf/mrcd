@@ -1,9 +1,10 @@
-import { ApplicationConfig, DOCUMENT, inject, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, DOCUMENT, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withViewTransitions } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { apiErrorInterceptor } from './core/api/api.interceptor';
+import { SessionStore } from './core/stores/session.store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +22,9 @@ export const appConfig: ApplicationConfig = {
     })),
     provideHttpClient(
       withInterceptors([apiErrorInterceptor])
-    )
+    ),
+    provideAppInitializer(() => {
+      inject(SessionStore).loadFromStorage();
+    })
   ]
 };
