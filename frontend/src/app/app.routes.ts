@@ -20,6 +20,11 @@ export const routes: Routes = [
                 canMatch: [roleGuard],
                 data: { roles: ['sys'] },
                 loadChildren: () => import('./features/permissions/permissions.routes').then(r => r.PERMISSIONS_ROUTES)
+            }, {
+                path: 'roles',
+                canMatch: [roleGuard],
+                data: { roles: ['sys'] },
+                loadChildren: () => import('./features/roles/roles.routes').then(r => r.ROLES_ROUTES)
             }
         ]
     },

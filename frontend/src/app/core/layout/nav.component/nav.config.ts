@@ -129,7 +129,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
         options: [
             {
                 routeName: "Roles",
-                route: "/",
+                route: "/roles",
                 roles: ['sys']
             }, {
                 routeName: "Permissions",
