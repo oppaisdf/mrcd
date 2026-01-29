@@ -8,6 +8,10 @@ export const routes: Routes = [
     {
         path: 'login',
         canMatch: [guestGuard],
+        data: {
+            vtIndex: 0,
+            vtTheme: 'tomato'
+        },
         loadComponent: () => import('./features/login.page/login.page').then(p => p.LoginPage)
     },
     {
@@ -18,12 +22,20 @@ export const routes: Routes = [
             {
                 path: 'permissions',
                 canMatch: [roleGuard],
-                data: { roles: ['sys'] },
+                data: {
+                    roles: ['sys'],
+                    vtIndex: 10,
+                    vtTheme: 'permissions'
+                },
                 loadChildren: () => import('./features/permissions/permissions.routes').then(r => r.PERMISSIONS_ROUTES)
             }, {
                 path: 'roles',
                 canMatch: [roleGuard],
-                data: { roles: ['sys'] },
+                data: {
+                    roles: ['sys'],
+                    vtIndex: 20,
+                    vtTheme: 'roles'
+                },
                 loadChildren: () => import('./features/roles/roles.routes').then(r => r.ROLES_ROUTES)
             }
         ]
