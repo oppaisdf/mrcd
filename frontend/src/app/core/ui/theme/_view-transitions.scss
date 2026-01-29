@@ -1,12 +1,4 @@
-@supports (view-transition-name: foo) {
-    html {
-        view-transition-name: none;
-    }
-
-    body {
-        view-transition-name: none;
-    }
-
+@supports (view-transition-name: none) {
     ::view-transition-group(vt-content) {
         animation-duration: var(--dur-3);
         animation-timing-function: var(--ease-out);
@@ -115,5 +107,11 @@
         to {
             opacity: .6;
         }
+    }
+}
+
+@supports (view-transition-name: none) {
+    .vt-content {
+        view-transition-name: vt-content;
     }
 }

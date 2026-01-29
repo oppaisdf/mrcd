@@ -35,8 +35,19 @@
     margin: 0 auto;
 }
 
-.vt-content {
-    @supports (view-transition-name: foo) {
-        view-transition-name: vt-content;
+@supports (view-transition-name: none) {
+
+    ::view-transition-old(root) .shell__nav,
+    ::view-transition-new(root) .shell__nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--nav-rail-w);
+        height: 100dvh;
+    }
+
+    ::view-transition-old(root) .shell__content,
+    ::view-transition-new(root) .shell__content {
+        margin-left: var(--nav-rail-w);
     }
 }
