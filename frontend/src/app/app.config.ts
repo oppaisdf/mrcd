@@ -14,14 +14,23 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions({
         onViewTransitionCreated: ({ from, to }) => {
           const doc = inject(DOCUMENT);
-          const fromIndex = (from?.data?.['vtIndex'] as number | undefined) ?? 0;
-          const toIndex = (to?.data?.['vtIndex'] as number | undefined) ?? 0;
-          doc.documentElement.dataset['navDir'] = toIndex === fromIndex
-            ? 'none'
-            : toIndex > fromIndex
-              ? 'forward'
-              : 'back';
-          const theme = (to?.data?.['vtTheme'] as string | undefined);
+
+          const leaf = (r: any) => {
+            let cur = r;
+            while (cur?.firstChild) cur = cur.firstChild;
+            return cur;
+          };
+
+          const fromLeaf = from ? leaf(from) : null;
+          const toLeaf = to ? leaf(to) : null;
+
+          const fromIndex = (fromLeaf?.data?.['vtIndex'] as number | undefined) ?? 0;
+          const toIndex = (toLeaf?.data?.['vtIndex'] as number | undefined) ?? 0;
+
+          doc.documentElement.dataset['navDir'] =
+            toIndex === fromIndex ? 'none' : (toIndex > fromIndex ? 'forward' : 'back');
+
+          const theme = (toLeaf?.data?.['vtTheme'] as string | undefined);
           if (theme) doc.documentElement.dataset['routeTheme'] = theme;
         }
       })),
