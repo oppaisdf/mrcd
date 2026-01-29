@@ -39,9 +39,9 @@
 
     @keyframes vt-enter-right {
         from {
-            transform: translateX(12%);
-            opacity: .65;
-            filter: blur(2px);
+            transform: translateX(100%);
+            opacity: .55;
+            filter: blur(3px);
         }
 
         to {
@@ -58,16 +58,17 @@
         }
 
         to {
-            transform: translateX(-10%);
-            opacity: .65;
+            transform: translateX(-35%);
+            opacity: .55;
+            filter: blur(2px);
         }
     }
 
     @keyframes vt-enter-left {
         from {
-            transform: translateX(-12%);
-            opacity: .65;
-            filter: blur(2px);
+            transform: translateX(-100%);
+            opacity: .55;
+            filter: blur(3px);
         }
 
         to {
@@ -84,8 +85,9 @@
         }
 
         to {
-            transform: translateX(10%);
-            opacity: .65;
+            transform: translateX(35%);
+            opacity: .55;
+            filter: blur(2px);
         }
     }
 
