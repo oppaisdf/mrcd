@@ -27,6 +27,10 @@ export const routes: Routes = [
         path: 'not-found',
         title: 'Not found',
         loadComponent: () => import('./features/not-found.page/not-found.page').then(p => p.NotFoundPage)
+    }, {
+        path: 'forbidden',
+        title: 'Forbidden',
+        loadComponent: () => import('./features/forbidden.page/forbidden.page').then(p => p.ForbiddenPage)
     },
     { path: '**', redirectTo: 'not-found' }
 ];
