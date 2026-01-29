@@ -32,6 +32,7 @@ export const appConfig: ApplicationConfig = {
 
           const theme = (toLeaf?.data?.['vtTheme'] as string | undefined);
           if (theme) doc.documentElement.dataset['routeTheme'] = theme;
+          else doc.documentElement.removeAttribute('data-route-theme');
         }
       })),
     provideHttpClient(
