@@ -2,7 +2,7 @@
     <!-- RAIL -->
     <div class="rail">
         <div class="rail__top">
-            <a class="brand" href="/" title="Home" (click)="go('/', $event)">
+            <a class="brand" title="Home" (click)="closeDrawer()" routerLink="/">
                 <img src="favicon.ico" width="30" height="30" alt="Home" />
             </a>
         </div>
@@ -39,7 +39,7 @@
         <ul class="drawer__menu" role="list">
             @for (option of selectedCategory()?.options; track $index) {
             <li>
-                <a class="drawer__item" (click)="go(option.route, $event)">
+                <a class="drawer__item" [routerLink]="option.route" (click)="closeDrawer()">
                     <span>{{ option.routeName }}</span>
                 </a>
             </li>

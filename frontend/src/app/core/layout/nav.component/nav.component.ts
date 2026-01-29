@@ -2,11 +2,11 @@ import { Component, computed, EventEmitter, inject, Output, signal } from '@angu
 import { CategoryId, CategoryMenu, NAV_CATEGORIES } from './nav.config';
 import { SessionStore } from '../../stores/session.store';
 import { AuthService } from '../../auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.scss',
 })
@@ -45,15 +45,6 @@ export class NavComponent {
 
   logout() {
     this._service.logout();
-  }
-
-  protected go(
-    route: string,
-    ev?: Event
-  ) {
-    ev?.preventDefault();
-    if (this.isDrawerOpen()) this.closeDrawer();
-    this._route.navigateByUrl(route);
   }
 
   protected readonly isDrawerOpen = computed(() => {
