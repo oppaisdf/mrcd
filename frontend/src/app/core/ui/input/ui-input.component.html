@@ -1,0 +1,11 @@
+<div class="ui-field">
+    <label [attr.for]="id" class="ui-label">{{label()}}</label>
+    <div class="ui-control">
+        <input [attr.type]="type()" class="ui-input" [id]="id" [attr.type]="type()" [attr.maxLength]="maxLength()"
+            [class.is-invalid]="hint()" [value]="value()" [disabled]="disabled()" (blur)="onTouched()"
+            (input)="onInput($event)">
+        @if(hint()){
+        <small class="ui-help ui-danger">{{hint()}}</small>
+        }
+    </div>
+</div>
