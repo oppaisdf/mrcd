@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { apiErrorInterceptor } from './core/api/api.interceptor';
 import { SessionStore } from './core/stores/session.store';
+import { apiAuthInterceptor } from './core/auth/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -36,7 +37,10 @@ export const appConfig: ApplicationConfig = {
         }
       })),
     provideHttpClient(
-      withInterceptors([apiErrorInterceptor])
+      withInterceptors([
+        apiErrorInterceptor,
+        apiAuthInterceptor
+      ])
     ),
     provideAppInitializer(() => {
       inject(SessionStore).loadFromStorage();
