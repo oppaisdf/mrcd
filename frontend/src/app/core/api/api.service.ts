@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { parseAPIError } from './api.error.parser';
 
 export const API_BASE_URL = '/api/v2';
@@ -22,76 +22,46 @@ export class ApiService {
         return hp;
     }
 
-    async getAsync<T>(
+    private async call<T>(obs$: Observable<T>) {
+        try {
+            const data = await firstValueFrom(obs$);
+            return {
+                isSuccess: true,
+                data
+            };
+        } catch (error) {
+            return {
+                isSuccess: false,
+                message: parseAPIError(error)
+            };
+        }
+    }
+
+    getAsync<T>(
         endpoint: string,
         params?: Record<string, any>
     ): Promise<ApiResponse<T>> {
-        try {
-            const httpParams = this.toParams(params);
-            const data = await firstValueFrom(this.http.get<T>(`${API_BASE_URL}${endpoint}`, { params: httpParams }));
-            return {
-                isSuccess: true,
-                data: data
-            };
-        } catch (err) {
-            const message = parseAPIError(err);
-            return { isSuccess: false, message: message };
-        }
+        const httpParams = this.toParams(params);
+        return this.call(this.http.get<T>(`${API_BASE_URL}${endpoint}`, { params: httpParams }));
     }
 
-    async postAsync<TIn, TOut>(
+    postAsync<TIn, TOut>(
         endpoint: string,
         body: TIn
     ): Promise<ApiResponse<TOut>> {
-        try {
-            const data = await firstValueFrom(this.http.post<TOut>(`${API_BASE_URL}${endpoint}`, body));
-            return {
-                isSuccess: true,
-                data
-            };
-        } catch (err) {
-            const message = parseAPIError(err);
-            return {
-                isSuccess: false,
-                message
-            };
-        }
+        return this.call(this.http.post<TOut>(`${API_BASE_URL}${endpoint}`, body));
     }
 
-    async delAsync<T>(
+    delAsync<T>(
         endpoint: string
     ): Promise<ApiResponse<T>> {
-        try {
-            const data = await firstValueFrom(this.http.delete<T>(`${API_BASE_URL}${endpoint}`));
-            return {
-                isSuccess: true,
-                data
-            };
-        } catch (err) {
-            const message = parseAPIError(err);
-            return {
-                isSuccess: false,
-                message
-            };
-        }
+        return this.call(this.http.delete<T>(`${API_BASE_URL}${endpoint}`));
     }
 
-    async patchAsync<TIn, TOut>(
+    patchAsync<TIn, TOut>(
         endpoint: string,
         body: TIn
     ): Promise<ApiResponse<TOut>> {
-        try {
-            const data = await firstValueFrom(this.http.patch<TOut>(`${API_BASE_URL}${endpoint}`, body));
-            return {
-                isSuccess: true,
-                data
-            };
-        } catch (err) {
-            const message = parseAPIError(err);
-            return {
-                isSuccess: false,
-                message
-            };
-        }
+        return this.call(this.http.patch<TOut>(`${API_BASE_URL}${endpoint}`, body));
     }
 }
