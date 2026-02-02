@@ -1,18 +1,16 @@
 @if (message()) {
-<p>{{message()}}</p>
+<p class="ui-danger">{{message()}}</p>
 }
-<form [formGroup]="form" (ngSubmit)="loginAsync()">
-    <label>Usuario</label>
-    <input type="text" formControlName="username">
-    @if (invalidField('username')) {
-    <p>El usuario es requerido</p>
-    }
 
-    <label>Contraseña</label>
-    <input type="password" formControlName="password">
-    @if (invalidField('password')) {
-    <p>La contraseña es requerida</p>
-    }
+<section class="ui-section">
+    <form class="ui-box ui-form" [formGroup]="form" (ngSubmit)="loginAsync()">
+        <ui-input label="Usuario" type="text" [hint]="invalidField('username')" formControlName="username" />
+        <ui-input label="Contraseña" type="password" [hint]="invalidField('password')" formControlName="password" />
 
-    <button type="button" (click)="loginAsync()">Login</button>
-</form>
+        <div class="ui-actions">
+            <button class="ui-button" type="submit" [disabled]="isLoading()">
+                @if (isLoading()) {...}@else {Login}
+            </button>
+        </div>
+    </form>
+</section>

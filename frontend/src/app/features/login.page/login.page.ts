@@ -2,10 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
 import { Router } from '@angular/router';
+import { UiInputComponent } from "../../core/ui/input/ui-input.component";
 
 @Component({
   selector: 'app-login.page',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, UiInputComponent],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss',
 })
@@ -27,9 +28,11 @@ export class LoginPage {
     if (this.isLoading()) return;
 
     this.isLoading.set(true);
+    this.form.disable();
     const request = this.form.getRawValue();
     const response = await this._service.loginAsync(request.username, request.password);
     this.isLoading.set(false);
+    this.form.enable();
     if (response) this.message.set(response);
     else this._router.navigateByUrl('/');
   }
@@ -38,6 +41,13 @@ export class LoginPage {
     controlName: keyof typeof this.form.controls
   ) {
     const control = this.form.controls[controlName];
-    return control.touched && control.invalid;
+    const invalid = control.touched && control.invalid;
+    if (!invalid) return undefined;
+    switch (controlName) {
+      case 'username':
+        return 'El usuario es requerido';
+      case 'password':
+        return 'La contraseña es requerida';
+    }
   }
 }
