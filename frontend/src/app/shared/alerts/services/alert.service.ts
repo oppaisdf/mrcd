@@ -8,9 +8,11 @@ export class AlertService {
   private readonly _stack = signal<AlertItem | undefined>(undefined);
   readonly alert = computed(() => this._stack());
   readonly isOpen = computed(() => this.alert() !== undefined);
+  readonly loading = signal<boolean>(false);
 
   clear() {
     this._stack.set(undefined);
+    this.loading.set(false);
   }
 
   public startLoading() {
@@ -20,6 +22,7 @@ export class AlertService {
       message: ''
     };
     this._stack.set(loading);
+    this.loading.set(true);
   }
 
   public success(
