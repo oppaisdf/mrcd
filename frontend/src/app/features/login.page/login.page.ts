@@ -21,7 +21,7 @@ export class LoginPage {
     password: ['', Validators.required]
   });
 
-  readonly isLoading = signal<boolean>(false);
+  readonly isLoading = this._alert.loading;
 
   async loginAsync() {
     this.form.markAllAsTouched();
@@ -29,11 +29,9 @@ export class LoginPage {
     if (this.isLoading()) return;
 
     this._alert.startLoading();
-    this.isLoading.set(true);
     this.form.disable();
     const request = this.form.getRawValue();
     const response = await this._service.loginAsync(request.username, request.password);
-    this.isLoading.set(false);
     this.form.enable();
     this._alert.clear();
     if (response) this._alert.error(response);
