@@ -44,5 +44,6 @@ internal sealed class PermissionRepository(
     ) => _app
         .Permissions
         .AsNoTracking()
+        .OrderBy(p => p.Name)
         .ToListAsync(cancellationToken);
 }
