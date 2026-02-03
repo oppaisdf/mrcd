@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { BaseEntitiesService } from "../../shared/baseEntities/services/base-entities.service";
 
 export const ROLES_ROUTES: Routes = [
     {
@@ -8,6 +9,9 @@ export const ROLES_ROUTES: Routes = [
             vtIndex: 2001,
             vtTheme: 'roles'
         },
+        providers: [
+            BaseEntitiesService
+        ],
         loadComponent: () => import('./list/roles-list.page').then(p => p.RolesListPage)
     }, {
         path: 'new',
@@ -16,6 +20,9 @@ export const ROLES_ROUTES: Routes = [
             vtIndex: 2002,
             vtTheme: 'roles'
         },
+        providers: [
+            BaseEntitiesService
+        ],
         loadComponent: () => import('./create/roles-create.page').then(p => p.RolesCreatePage)
     }
 ];
