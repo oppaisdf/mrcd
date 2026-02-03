@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { BaseEntitiesService } from "../../shared/baseEntities/services/base-entities.service";
 
 export const PERMISSIONS_ROUTES: Routes = [
     {
@@ -9,6 +10,9 @@ export const PERMISSIONS_ROUTES: Routes = [
             vtIndex: 1001,
             vtTheme: 'permissions'
         },
+        providers: [
+            BaseEntitiesService
+        ],
         loadComponent: () => import('./list/permissions-list.page').then(p => p.PermissionsListPage)
     }, {
         path: 'new',
@@ -17,6 +21,9 @@ export const PERMISSIONS_ROUTES: Routes = [
             vtIndex: 1002,
             vtTheme: 'permissions'
         },
+        providers: [
+            BaseEntitiesService
+        ],
         loadComponent: () => import('./create/permissions-create.page').then(p => p.PermissionsCreatePage)
     }
 ];
