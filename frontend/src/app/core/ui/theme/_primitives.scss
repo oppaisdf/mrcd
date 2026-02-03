@@ -210,6 +210,11 @@
     color: var(--color-text);
 }
 
+.ui-button.is-danger {
+    background: var(--color-danger);
+    color: var(--color-text);
+}
+
 /* Checkbox */
 .ui-check {
     display: inline-flex;
@@ -236,13 +241,21 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-2);
     background: var(--color-surface);
+    box-shadow: var(--shadow-1);
+}
+
+/* Hint visual de scroll (suave) */
+.ui-table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .ui-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 720px;
-    /* fuerza overflow horizontal en móviles */
+    min-width: 0;
+    table-layout: auto;
     font: 500 var(--text-md)/var(--line) var(--font-sans);
     color: var(--color-text);
 }
@@ -252,15 +265,26 @@
     padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--color-border);
     white-space: nowrap;
+    vertical-align: middle;
 }
 
-.ui-table th {
+.ui-table thead th {
     text-align: left;
     color: var(--color-text-muted);
     font-weight: 700;
-    background: color-mix(in oklab, var(--color-surface-2) 70%, transparent);
+    background: color-mix(in oklab, var(--color-surface-2) 90%, var(--color-bg));
 }
 
-.ui-table tr:hover td {
+.ui-table tbody tr:hover td {
     background: color-mix(in oklab, var(--color-surface-2) 55%, transparent);
+}
+
+/* Zebra */
+.ui-table tbody tr:nth-child(even) td {
+    background: color-mix(in oklab, var(--color-surface) 70%, var(--color-surface-2));
+}
+
+/* Hover por encima del zebra */
+.ui-table tbody tr:hover td {
+    background: color-mix(in oklab, var(--color-surface-2) 75%, transparent);
 }
