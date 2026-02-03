@@ -1,7 +1,3 @@
-@if (message()) {
-<p class="ui-danger">{{message()}}</p>
-}
-
 <section class="ui-section">
     <form class="ui-box ui-form" [formGroup]="form" (ngSubmit)="loginAsync()">
         <ui-input label="Usuario" type="text" [hint]="invalidField('username')" formControlName="username" />
