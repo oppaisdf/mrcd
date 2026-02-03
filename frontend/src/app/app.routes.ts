@@ -9,8 +9,7 @@ export const routes: Routes = [
         path: 'login',
         canMatch: [guestGuard],
         data: {
-            vtIndex: 0,
-            vtTheme: 'tomato'
+            vtIndex: 0
         },
         loadComponent: () => import('./features/login.page/login.page').then(p => p.LoginPage)
     },
