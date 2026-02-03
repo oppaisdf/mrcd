@@ -1,0 +1,22 @@
+<div class="am-wrap" (click)="close()">
+    <div class="am__backdrop" aria-hidden="true"></div>
+
+    <section class="am" [class.am--loading]="alert()?.type === 'loading'" [attr.data-type]="alert()?.type" role="dialog"
+        aria-modal="true" [attr.aria-label]="alert()?.title || 'Alert'" (click)="$event.stopPropagation()">
+        <header class="am__head">
+            <h2 class="am__title">{{ alert()?.title }}</h2>
+
+            @if (!isBlocking()) {
+            <button #closeBtn class="am__x" type="button" (click)="close()" aria-label="Cerrar">×</button>
+            }
+        </header>
+
+        <div class="am__body">
+            <p class="am__msg">{{ alert()?.message }}</p>
+
+            @if (alert()?.type === 'loading') {
+            <div class="am__spinner" aria-hidden="true"></div>
+            }
+        </div>
+    </section>
+</div>
