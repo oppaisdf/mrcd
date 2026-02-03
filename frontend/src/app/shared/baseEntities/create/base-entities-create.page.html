@@ -1,3 +1,5 @@
+<h1>{{title()}}</h1>
+
 <form [formGroup]="form" class="ui-form" (ngSubmit)="createAsync()">
     <ui-input label="Nombre" type="text" formControlName="name" [hint]="hint()" [maxLength]="3" />
 
