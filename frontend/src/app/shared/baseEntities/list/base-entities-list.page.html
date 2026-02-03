@@ -1,0 +1,26 @@
+<h1>{{title()}}</h1>
+
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                @if(showActions()){
+                <th>Acción</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of items(); track $index) {
+            <tr>
+                <td>{{item.name}}</td>
+                @if (showActions()) {
+                <td>
+                    <button class="ui-button is-danger" (click)="deleteAsync(item.id)">Eliminar</button>
+                </td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
