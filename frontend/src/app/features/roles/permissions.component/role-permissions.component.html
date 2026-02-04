@@ -14,9 +14,9 @@
                 <td>{{permission.permissionName}}</td>
                 <td>
                     @if (permission.isUsed) {
-                    <button class="ui-button is-danger">Eliminar</button>
+                    <button class="ui-button is-danger" (click)="assignAsync(permission, false)">Eliminar</button>
                     }@else {
-                    <button class="ui-button">Asignar</button>
+                    <button class="ui-button" (click)="assignAsync(permission, true)">Asignar</button>
                     }
                 </td>
             </tr>

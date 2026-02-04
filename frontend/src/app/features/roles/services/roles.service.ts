@@ -9,4 +9,18 @@ export class RolesService {
   public toListAsync() {
     return this._api.getAsync<RoleDTO[]>('/role/permission');
   }
+
+  public assignPermissionAsync(
+    roleId: string,
+    permissionId: string
+  ) {
+    return this._api.postAsync(`/permission/${permissionId}/role/${roleId}`, undefined);
+  }
+
+  public unassignPermissionAsync(
+    roleId: string,
+    permissionId: string
+  ) {
+    return this._api.delAsync(`/permission/${permissionId}/role/${roleId}`);
+  }
 }
