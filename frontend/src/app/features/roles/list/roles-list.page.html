@@ -15,10 +15,15 @@
             <tr>
                 <td>{{role.roleName}}</td>
                 <td>
-                    <button class="ui-button" (click)="selectRole(role.roleID)">Ver</button>
+                    <button class="ui-button" (click)="selectRole(role)">Ver</button>
                 </td>
             </tr>
             }
         </tbody>
     </table>
 </div>
+
+<hr>
+@if (selectedRole() !== undefined) {
+<role-permissions [role]="selectedRole()!" />
+}
