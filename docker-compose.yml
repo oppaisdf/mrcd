@@ -4,12 +4,9 @@ services:
     container_name: db
     networks: [network]
     env_file:
-      - .env
+      - .db-env
     expose:
       - 3306
-    environment:
-      - MYSQL_DATABASE=${DB}
-      - MYSQL_ROOT_PASSWORD=${PASSWD}
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
       interval: 10s
@@ -25,8 +22,8 @@ services:
     networks: [network]
     ports:
       - 8080:8080
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+    env_file:
+      - .dotnet-env
     depends_on:
       db:
         condition: service_healthy
