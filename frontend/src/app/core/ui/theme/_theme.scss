@@ -81,3 +81,11 @@
 :root[data-theme="dark"][data-route-theme="roles"] {
     --page-bg: #112a0f;
 }
+
+:root[data-theme="light"][data-route-theme="documents"] {
+    --page-bg: #ace79c;
+}
+
+:root[data-theme="dark"][data-route-theme="documents"] {
+    --page-bg: #152a0f;
+}
