@@ -3,9 +3,12 @@ services:
     build: ./db
     container_name: db
     networks: [network]
-    env_file:
-      - .db-env
     expose: [3306]
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
       interval: 10s
@@ -33,8 +36,14 @@ services:
     networks: [network]
     ports:
       - 8080:8080
-    env_file:
-      - .dotnet-env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - REDIS=${REDIS_CONNECTION}
+      - DB_CONNECTION=${DB_CONNECTION}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      - JWT_KEY=${JWT_KEY}
     depends_on:
       db:
         condition: service_healthy
