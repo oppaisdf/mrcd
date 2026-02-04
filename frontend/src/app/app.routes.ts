@@ -36,6 +36,15 @@ export const routes: Routes = [
                     vtTheme: 'roles'
                 },
                 loadChildren: () => import('./features/roles/roles.routes').then(r => r.ROLES_ROUTES)
+            }, {
+                path: 'documents',
+                canMatch: [roleGuard],
+                data: {
+                    roles: ['adm'],
+                    vtIndex: 30,
+                    vtTheme: 'documents'
+                },
+                loadChildren: () => import('./features/documents/documnts.routes').then(r => r.DOCUMENTS_ROUTES)
             }
         ]
     },

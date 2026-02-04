@@ -87,7 +87,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
                 roles: ['adm']
             }, {
                 routeName: "Documentos",
-                route: "/",
+                route: "/documents",
                 roles: ['adm']
             }, {
                 routeName: "Fases de actividad",
