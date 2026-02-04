@@ -89,3 +89,11 @@
 :root[data-theme="dark"][data-route-theme="documents"] {
     --page-bg: #152a0f;
 }
+
+:root[data-theme="light"][data-route-theme="permissions"] {
+    --page-bg: #9ccde7;
+}
+
+:root[data-theme="dark"][data-route-theme="permissions"] {
+    --page-bg: #0f202a;
+}
