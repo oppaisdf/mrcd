@@ -6,8 +6,7 @@ export const DOCUMENTS_ROUTES: Routes = [
         path: '',
         title: 'Documentos',
         data: {
-            vtIndex: 3001,
-            vtTheme: 'documents'
+            vtIndex: 3001
         },
         providers: [
             BaseEntitiesService
@@ -17,8 +16,7 @@ export const DOCUMENTS_ROUTES: Routes = [
         path: 'new',
         title: 'Nuevo documento',
         data: {
-            vtIndex: 3002,
-            vtTheme: 'documents'
+            vtIndex: 3002
         },
         providers: [
             BaseEntitiesService

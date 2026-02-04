@@ -6,8 +6,7 @@ export const ROLES_ROUTES: Routes = [
         path: '',
         title: 'List roles',
         data: {
-            vtIndex: 2001,
-            vtTheme: 'roles'
+            vtIndex: 2001
         },
         providers: [
             BaseEntitiesService
@@ -17,8 +16,7 @@ export const ROLES_ROUTES: Routes = [
         path: 'new',
         title: 'Create role',
         data: {
-            vtIndex: 2002,
-            vtTheme: 'roles'
+            vtIndex: 2002
         },
         providers: [
             BaseEntitiesService

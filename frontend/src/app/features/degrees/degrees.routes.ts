@@ -6,8 +6,7 @@ export const DEGREES_ROUTES: Routes = [
         path: '',
         title: 'Grados académicos',
         data: {
-            vtIndex: 4001,
-            vtTheme: 'degrees'
+            vtIndex: 4001
         },
         providers: [
             BaseEntitiesService
@@ -17,8 +16,7 @@ export const DEGREES_ROUTES: Routes = [
         path: 'new',
         title: 'Nuevo grado académico',
         data: {
-            vtIndex: 4002,
-            vtTheme: 'degrees'
+            vtIndex: 4002
         },
         providers: [
             BaseEntitiesService

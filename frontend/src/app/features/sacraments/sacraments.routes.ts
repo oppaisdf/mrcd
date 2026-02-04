@@ -6,8 +6,7 @@ export const SACRAMENTS_ROUTES: Routes = [
         path: '',
         title: 'Sacramentos',
         data: {
-            vtIndex: 5001,
-            vtTheme: 'sacraments'
+            vtIndex: 5001
         },
         providers: [
             BaseEntitiesService
@@ -17,8 +16,7 @@ export const SACRAMENTS_ROUTES: Routes = [
         path: 'new',
         title: 'Nuevo sacramento',
         data: {
-            vtIndex: 5002,
-            vtTheme: 'sacraments'
+            vtIndex: 5002
         },
         providers: [
             BaseEntitiesService

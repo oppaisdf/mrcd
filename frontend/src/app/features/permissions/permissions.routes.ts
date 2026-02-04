@@ -7,8 +7,7 @@ export const PERMISSIONS_ROUTES: Routes = [
         pathMatch: 'full',
         title: 'List permissions',
         data: {
-            vtIndex: 1001,
-            vtTheme: 'permissions'
+            vtIndex: 1001
         },
         providers: [
             BaseEntitiesService
@@ -18,8 +17,7 @@ export const PERMISSIONS_ROUTES: Routes = [
         path: 'new',
         title: 'Create permission',
         data: {
-            vtIndex: 1002,
-            vtTheme: 'permissions'
+            vtIndex: 1002
         },
         providers: [
             BaseEntitiesService
