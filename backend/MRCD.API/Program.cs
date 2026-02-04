@@ -111,4 +111,5 @@ app.MapAttendanceEndpoints();
 app.MapAccountingMovementEndpoints();
 app.MapDocumentEndpoints();
 app.MapSacramentEndpoints();
+app.MapDegreeEndpoints();
 app.Run();
