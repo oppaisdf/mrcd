@@ -66,34 +66,18 @@
     --color-focus: rgba(91, 92, 255, .35);
 }
 
-:root[data-theme="light"][data-route-theme="permissions"] {
+:root[data-theme="light"][data-route-theme="system"] {
     --page-bg: #9caee7;
 }
 
-:root[data-theme="dark"][data-route-theme="permissions"] {
+:root[data-theme="dark"][data-route-theme="system"] {
     --page-bg: #0f172a;
 }
 
-:root[data-theme="light"][data-route-theme="roles"] {
+:root[data-theme="light"][data-route-theme="admin"] {
     --page-bg: #9ce7b2;
 }
 
-:root[data-theme="dark"][data-route-theme="roles"] {
+:root[data-theme="dark"][data-route-theme="admin"] {
     --page-bg: #112a0f;
-}
-
-:root[data-theme="light"][data-route-theme="documents"] {
-    --page-bg: #ace79c;
-}
-
-:root[data-theme="dark"][data-route-theme="documents"] {
-    --page-bg: #152a0f;
-}
-
-:root[data-theme="light"][data-route-theme="permissions"] {
-    --page-bg: #9ccde7;
-}
-
-:root[data-theme="dark"][data-route-theme="permissions"] {
-    --page-bg: #0f202a;
 }

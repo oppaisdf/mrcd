@@ -24,7 +24,7 @@ export const routes: Routes = [
                 data: {
                     roles: ['sys'],
                     vtIndex: 10,
-                    vtTheme: 'permissions'
+                    vtTheme: 'system'
                 },
                 loadChildren: () => import('./features/permissions/permissions.routes').then(r => r.PERMISSIONS_ROUTES)
             }, {
@@ -33,7 +33,7 @@ export const routes: Routes = [
                 data: {
                     roles: ['sys'],
                     vtIndex: 20,
-                    vtTheme: 'roles'
+                    vtTheme: 'system'
                 },
                 loadChildren: () => import('./features/roles/roles.routes').then(r => r.ROLES_ROUTES)
             }, {
@@ -42,7 +42,7 @@ export const routes: Routes = [
                 data: {
                     roles: ['adm'],
                     vtIndex: 30,
-                    vtTheme: 'documents'
+                    vtTheme: 'admin'
                 },
                 loadChildren: () => import('./features/documents/documnts.routes').then(r => r.DOCUMENTS_ROUTES)
             }, {
@@ -51,7 +51,7 @@ export const routes: Routes = [
                 data: {
                     roles: ['adm'],
                     vtIndex: 40,
-                    vtTheme: 'degrees'
+                    vtTheme: 'admin'
                 },
                 loadChildren: () => import('./features/degrees/degrees.routes').then(r => r.DEGREES_ROUTES)
             }, {
@@ -60,7 +60,7 @@ export const routes: Routes = [
                 data: {
                     roles: ['adm'],
                     vtIndex: 50,
-                    vtTheme: 'sacraments'
+                    vtTheme: 'admin'
                 },
                 loadChildren: () => import('./features/sacraments/sacraments.routes').then(r => r.SACRAMENTS_ROUTES)
             }
