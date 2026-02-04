@@ -14,7 +14,6 @@ export class BaseEntitiesListPage {
   private readonly _alert = inject(AlertService);
   title = input.required<string>();
   endpoint = input.required<string>();
-  showActions = input<boolean>(true);
   readonly items = signal<Array<BaseEntityDTO>>([]);
 
   private _ = effect(() => this.loadAsync());
