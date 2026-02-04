@@ -46,7 +46,7 @@ export const routes: Routes = [
                 },
                 loadChildren: () => import('./features/documents/documnts.routes').then(r => r.DOCUMENTS_ROUTES)
             }, {
-                path: '/degrees',
+                path: 'degrees',
                 canMatch: [roleGuard],
                 data: {
                     roles: ['adm'],
@@ -54,6 +54,15 @@ export const routes: Routes = [
                     vtTheme: 'degrees'
                 },
                 loadChildren: () => import('./features/degrees/degrees.routes').then(r => r.DEGREES_ROUTES)
+            }, {
+                path: 'sacraments',
+                canMatch: [roleGuard],
+                data: {
+                    roles: ['adm'],
+                    vtIndex: 50,
+                    vtTheme: 'sacraments'
+                },
+                loadChildren: () => import('./features/sacraments/sacraments.routes').then(r => r.SACRAMENTS_ROUTES)
             }
         ]
     },
