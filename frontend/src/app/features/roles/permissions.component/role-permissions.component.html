@@ -1,0 +1,26 @@
+<h2>Permisos del rol '{{role().roleName}}'</h2>
+
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Permiso</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (permission of permissions(); track $index) {
+            <tr>
+                <td>{{permission.permissionName}}</td>
+                <td>
+                    @if (permission.isUsed) {
+                    <button class="ui-button is-danger">Eliminar</button>
+                    }@else {
+                    <button class="ui-button">Asignar</button>
+                    }
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
