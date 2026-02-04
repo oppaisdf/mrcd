@@ -95,7 +95,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
                 roles: ['usr']
             }, {
                 routeName: "Grados académicos",
-                route: "/",
+                route: "/degrees",
                 roles: ['adm']
             }, {
                 routeName: "Movimientos contables",
