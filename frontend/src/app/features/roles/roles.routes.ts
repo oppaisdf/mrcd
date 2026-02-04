@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { BaseEntitiesService } from "../../shared/baseEntities/services/base-entities.service";
+import { RolesService } from "./services/roles.service";
 
 export const ROLES_ROUTES: Routes = [
     {
@@ -9,7 +10,7 @@ export const ROLES_ROUTES: Routes = [
             vtIndex: 2001
         },
         providers: [
-            BaseEntitiesService
+            RolesService
         ],
         loadComponent: () => import('./list/roles-list.page').then(p => p.RolesListPage)
     }, {

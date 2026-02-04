@@ -1,3 +1,24 @@
 <a class="ui-button" routerLink="/roles/new">Nuevo</a>
 
-<shared-be-list endpoint="/role" title="Roles" [showActions]="false" />
+<h1>Roles</h1>
+
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (role of roles(); track $index) {
+            <tr>
+                <td>{{role.roleName}}</td>
+                <td>
+                    <button class="ui-button" (click)="selectRole(role.roleID)">Ver</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
