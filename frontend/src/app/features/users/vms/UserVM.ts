@@ -1,5 +1,5 @@
 export type UserVM = {
     username: string;
-    password: string;
-    isActive: boolean;
+    password: string | null;
+    isActive?: boolean;
 };

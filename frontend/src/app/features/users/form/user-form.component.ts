@@ -44,7 +44,7 @@ export class UserFormComponent {
       const user = this.user();
       this.form.patchValue({
         username: user.username,
-        password: user.password,
+        password: user.password ?? '',
         isActive: user.isActive
       }, { emitEvent: false });
       if (user.isActive) {
