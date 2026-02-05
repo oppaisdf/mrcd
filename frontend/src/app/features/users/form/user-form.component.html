@@ -1,0 +1,9 @@
+<form [formGroup]="form" class="ui-form" (ngSubmit)="sendSubmit()">
+    <ui-input label="Nombre" type="text" formControlName="username" />
+    <ui-input label="Contraseña" type="password" formControlName="password" />
+    @if (mode() === 'Editar') {
+    <ui-select label="Activo" type="boolean" [items]="states" formControlName="isActive" />
+    }
+
+    <button class="ui-button" type="submit">{{mode()}}</button>
+</form>
