@@ -61,4 +61,19 @@ export class UserFormComponent {
     if (this.form.invalid || this.form.pending) return;
     this.submit.emit(this.form.getRawValue() as UserVM);
   }
+
+  invalidField(
+    controlName: keyof typeof this.form.controls
+  ) {
+    const control = this.form.get(controlName);
+    if (!control) return null;
+    if (!control.touched || control.valid) return null;
+    switch (controlName) {
+      case 'username':
+        return `El nombre del usuario es requerido`;
+      case 'password':
+        return `La contraseña debe tener un número, una mayúscula, un carácter especial y su longitud debe ser mayor a cinco caracteres`;
+    }
+    return null;
+  }
 }
