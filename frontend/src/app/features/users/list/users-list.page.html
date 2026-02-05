@@ -1,0 +1,28 @@
+<a class="ui-button" routerLink="/users/new">Nuevo</a>
+
+<h1>Usuarios</h1>
+<hr>
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (user of users(); track $index) {
+            <tr>
+                <td>{{user.username}}</td>
+                <td>
+                    <button class="ui-button" (click)="selectUser(user)">Ver</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (selectedUser()) {
+<users-details [user]="selectedUser()!" />
+}
