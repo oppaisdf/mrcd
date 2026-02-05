@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, model } from '@angular/core';
 import { UserDTO } from '../dtos/UserDTO';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { AlertService } from '../../../shared/alerts/services/alert.service';
@@ -14,8 +14,7 @@ import { UserRoleDTO } from '../../roles/dtos/UserRoleDTO';
 export class UsersDetailsComponent {
   private readonly _alert = inject(AlertService);
   private readonly _service = inject(UserRoleService);
-  user = input.required<UserDTO>();
-  updated = output<void>();
+  user = model.required<UserDTO>();
 
   roles = computed(() => this.user().roles);
   isActive = computed(() => this.user().isActive);
@@ -38,6 +37,12 @@ export class UsersDetailsComponent {
       return;
     }
     this._alert.success(`Se ha ${isAssignation ? "des" : ""}asignado el rol al usuario correctamente`);
-    this.updated.emit();
+    const user = this.user();
+    this.user.set({
+      ...user,
+      roles: user.roles.map(r =>
+        r.id === role.id ? { ...r, hasRole: !r.hasRole } : r
+      ),
+    });
   }
 }

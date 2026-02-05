@@ -23,7 +23,6 @@
     </table>
 </div>
 
-@let user = selectedUser();
-@if (user) {
-<users-details [user]="user" />
+@if (selectedUser) {
+<users-details [(user)]="selectedUser" />
 }

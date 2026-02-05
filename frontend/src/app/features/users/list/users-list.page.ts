@@ -17,7 +17,7 @@ import { UsersDetailsComponent } from '../details/users-details.component';
 export class UsersListPage {
   private readonly _service = inject(UserService);
   private readonly _alert = inject(AlertService);
-  readonly selectedUser = signal<UserDTO | undefined>(undefined);
+  private readonly _selectedUser = signal<UserDTO | null>(null);
   readonly users = signal<Array<UserDTO>>([]);
 
   private async loadAsync() {
@@ -34,6 +34,9 @@ export class UsersListPage {
   selectUser(
     user: UserDTO
   ) {
-    this.selectedUser.set(user);
+    this._selectedUser.set(user);
   }
+
+  get selectedUser() { return this._selectedUser(); }
+  set selectedUser(user: UserDTO | null) { this._selectedUser.set(user); }
 }
