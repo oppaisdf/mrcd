@@ -14,5 +14,15 @@ export const USERS_ROUTES: Routes = [
             UserRoleService
         ],
         loadComponent: () => import('./list/users-list.page').then(p => p.UsersListPage)
+    }, {
+        path: 'new',
+        title: 'Crear usuario',
+        data: {
+            vtIndex: 6002
+        },
+        providers: [
+            UserService
+        ],
+        loadComponent: () => import('./create/users-create.page').then(p => p.UsersCreatePage)
     }
 ];
