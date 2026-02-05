@@ -21,22 +21,19 @@ internal sealed class GetUserHandler(
         CancellationToken cancellationToken
     )
     {
-        var userTask = _user.ToListAsync(cancellationToken);
-        var roleTask = _role.ToListAsync(cancellationToken);
-        var userRoleTask = _userRole.ToListAsync(cancellationToken);
-        await Task.WhenAll(userTask, roleTask, userRoleTask);
+        var users = await _user.ToListAsync(cancellationToken);
+        var roles = await _role.ToListAsync(cancellationToken);
+        var userRoles = await _userRole.ToListAsync(cancellationToken);
 
-        var assigned = userRoleTask
-            .Result
+        var assigned = userRoles
             .Select(ur => (ur.UserID, ur.RoleID))
             .ToHashSet();
 
-        return Result<IEnumerable<UserDTO>>.Success(userTask.Result.Select(u => new UserDTO(
+        return Result<IEnumerable<UserDTO>>.Success(users.Select(u => new UserDTO(
             u.ID,
             u.Username,
             u.IsActive,
-            roleTask
-                .Result
+            roles
                 .Select(r => new UsingRoleDTO(
                     r.ID,
                     r.Name,
