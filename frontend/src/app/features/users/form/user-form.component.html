@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="ui-form" (ngSubmit)="sendSubmit()">
+<form [formGroup]="form" class="ui-form" (ngSubmit)="onSubmit()">
     <ui-input label="Nombre" type="text" formControlName="username" />
     <ui-input label="Contraseña" type="password" formControlName="password" />
     @if (mode() === 'Editar') {

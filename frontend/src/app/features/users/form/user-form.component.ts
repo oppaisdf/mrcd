@@ -47,7 +47,7 @@ export class UserFormComponent {
         password: user.password ?? '',
         isActive: user.isActive
       }, { emitEvent: false });
-      if (user.isActive) {
+      if (user.isActive ?? true) {
         this.form.enable();
         return;
       }
@@ -56,11 +56,9 @@ export class UserFormComponent {
     });
   }
 
-  sendSubmit() {
-    this.form.markAsTouched();
-    if (this.form.invalid) return;
-    const user: UserVM = this.form.getRawValue();
-    this.submit.emit(user);
-    this.form.disable();
+  onSubmit() {
+    this.form.markAllAsTouched();
+    if (this.form.invalid || this.form.pending) return;
+    this.submit.emit(this.form.getRawValue() as UserVM);
   }
 }
