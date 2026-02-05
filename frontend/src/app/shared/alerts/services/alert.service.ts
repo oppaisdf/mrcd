@@ -5,13 +5,13 @@ import { AlertItem } from './alert.item';
   providedIn: 'root',
 })
 export class AlertService {
-  private readonly _stack = signal<AlertItem | undefined>(undefined);
+  private readonly _stack = signal<AlertItem | null>(null);
   readonly alert = computed(() => this._stack());
-  readonly isOpen = computed(() => this.alert() !== undefined);
+  readonly isOpen = computed(() => this.alert() !== null);
   readonly loading = signal<boolean>(false);
 
   clear() {
-    this._stack.set(undefined);
+    this._stack.set(null);
     this.loading.set(false);
   }
 
