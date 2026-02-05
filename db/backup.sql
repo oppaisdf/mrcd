@@ -294,11 +294,21 @@ CREATE TABLE `permission` (
 LOCK TABLES `permission` WRITE;
 /*!40000 ALTER TABLE `permission` DISABLE KEYS */;
 INSERT INTO `permission` VALUES
+	('02b70407-c1d7-412f-bf8b-abb20b057708','Document.Write'),
 	('10541623-89d2-4c99-9f13-4fab7c7dd1b4','Role.Read'),
 	('1ca78d7a-3520-421b-8284-cce2c3ac9c2e','Permission.Read'),
 	('6888801b-a53c-4d90-a63d-03b9e5a4b0ce','Permission.Write'),
+	('74bca746-e066-44ba-bb5d-e85b177efce7','Sacrament.Delete'),
+	('827feedf-dfca-4b8a-bc72-4725eb623425','Degree.Write'),
+	('93c55742-19ef-477d-9437-cc88812a0178','Degree.Delete'),
+	('941e8e93-7f83-4e4e-a12f-22ef57f9b233','Sacrament.Read'),
+	('97730e91-395f-4a1f-922d-98e0e388110b','User.Read'),
 	('a3f21364-381d-4ec4-8bdc-45b00e66eadf','User.Write'),
-	('d13796c7-c7d3-47c4-a826-914c09de17be','Role.Write');
+	('b794bcfe-43cc-4f46-8219-b63867719703','Document.Read'),
+	('cdc9d742-8260-4317-a4c2-ac29d27f63de','Document.Delete'),
+	('ce9f8627-cced-4216-bbab-eccb984dd7fd','Degree.Read'),
+	('d13796c7-c7d3-47c4-a826-914c09de17be','Role.Write'),
+	('fd719e16-8b15-47ab-916b-52189d431f26','Sacrament.Write');
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -438,7 +448,7 @@ LOCK TABLES `role` WRITE;
 INSERT INTO `role` VALUES
 	('32aa8d94-3d20-49de-94eb-676fee70230f','adm'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','sys'),
-	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8', 'usr');
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','usr');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -466,11 +476,21 @@ CREATE TABLE `role_permission` (
 LOCK TABLES `role_permission` WRITE;
 /*!40000 ALTER TABLE `role_permission` DISABLE KEYS */;
 INSERT INTO `role_permission` VALUES
+	('32aa8d94-3d20-49de-94eb-676fee70230f','02b70407-c1d7-412f-bf8b-abb20b057708'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','10541623-89d2-4c99-9f13-4fab7c7dd1b4'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','1ca78d7a-3520-421b-8284-cce2c3ac9c2e'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','6888801b-a53c-4d90-a63d-03b9e5a4b0ce'),
+	('32aa8d94-3d20-49de-94eb-676fee70230f','74bca746-e066-44ba-bb5d-e85b177efce7'),
+	('32aa8d94-3d20-49de-94eb-676fee70230f','827feedf-dfca-4b8a-bc72-4725eb623425'),
+	('32aa8d94-3d20-49de-94eb-676fee70230f','93c55742-19ef-477d-9437-cc88812a0178'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','941e8e93-7f83-4e4e-a12f-22ef57f9b233'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','97730e91-395f-4a1f-922d-98e0e388110b'),
 	('32aa8d94-3d20-49de-94eb-676fee70230f','a3f21364-381d-4ec4-8bdc-45b00e66eadf'),
-	('63509335-0f5a-44b2-8542-a1b5dee695f6','d13796c7-c7d3-47c4-a826-914c09de17be');
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','b794bcfe-43cc-4f46-8219-b63867719703'),
+	('32aa8d94-3d20-49de-94eb-676fee70230f','cdc9d742-8260-4317-a4c2-ac29d27f63de'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','ce9f8627-cced-4216-bbab-eccb984dd7fd'),
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','d13796c7-c7d3-47c4-a826-914c09de17be'),
+	('32aa8d94-3d20-49de-94eb-676fee70230f','fd719e16-8b15-47ab-916b-52189d431f26');
 /*!40000 ALTER TABLE `role_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -572,9 +592,9 @@ CREATE TABLE `user_role` (
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
 INSERT INTO `user_role` VALUES
+	('32aa8d94-3d20-49de-94eb-676fee70230f','e3d00323-99f0-40f0-8ed7-7f93a4ca37e2'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','e3d00323-99f0-40f0-8ed7-7f93a4ca37e2'),
-	('32aa8d94-3d20-49de-94eb-676fee70230f', 'e3d00323-99f0-40f0-8ed7-7f93a4ca37e2'),
-	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8', 'e3d00323-99f0-40f0-8ed7-7f93a4ca37e2');
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','e3d00323-99f0-40f0-8ed7-7f93a4ca37e2');
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -587,4 +607,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-05 13:54:58
+-- Dump completed on 2026-02-05 17:16:38
