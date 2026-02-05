@@ -133,12 +133,15 @@ internal static class UserEndpoints
         .Produces<IEnumerable<UserDTO>>(StatusCodes.Status201Created)
         .RequireAuthorization("perm:User.Read");
 
-        app.MapGet("{userId}", async (
-            Guid userId,
-            IQueryHandler<UserDTO, GetUserByIdQuery> handler,
+        app.MapGet("me", async (
+            [FromServices] IQueryHandler<UserDTO, GetUserByIdQuery> handler,
+            ClaimsPrincipal user,
             CancellationToken ct
         ) =>
         {
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out var userId))
+                return ResultsMapper.Unauthorized();
             var query = new GetUserByIdQuery(userId);
             var result = await handler.HandleAsync(query, ct);
             return ResultsMapper.ToHttp(
@@ -147,10 +150,10 @@ internal static class UserEndpoints
                 e => e.Contains("existe")
             );
         })
-        .WithName("GetUserById")
-        .WithDisplayName("GET /GetUserById")
-        .WithSummary("Obtiene usuario por ID")
-        .WithDescription("Obtiene al usuario con sus roles por ID")
+        .WithName("GetMyUser")
+        .WithDisplayName("GET /MyUser")
+        .WithSummary("Obtiene mi usuario")
+        .WithDescription("Obtiene al usuario logueado que hace la consulta con sus roles")
         .WithOpenApi()
         .Produces<UserDTO>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
