@@ -18,9 +18,9 @@ let nextId = 0;
   ]
 })
 export class UiSelectComponent implements ControlValueAccessor {
-  items = input.required<Array<SelectItem<number>> | Array<SelectItem<string>>>();
+  items = input.required<Array<SelectItem<number>> | Array<SelectItem<string>> | Array<SelectItem<boolean>>>();
   label = input.required<string>();
-  type = input.required<'string' | 'number'>();
+  type = input.required<'string' | 'number' | 'boolean'>();
 
   value = signal<string>('');
   id = `ui-select-${++nextId}`;
@@ -53,9 +53,12 @@ export class UiSelectComponent implements ControlValueAccessor {
       this.onChange(null);
       return;
     }
-    const value = this.type() === 'number'
+    const type = this.type();
+    const value = type === 'number'
       ? Number(rawValue)
-      : rawValue;
+      : type === 'boolean'
+        ? rawValue.trim() === 'true'
+        : rawValue;
     this.onChange(value);
   }
 }
