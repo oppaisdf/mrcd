@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, model } from '@angular/core';
 import { RoleDTO } from '../dtos/RoleDTO';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { RolesService } from '../services/roles.service';
@@ -14,7 +14,7 @@ export class RolePermissionsComponent {
   private readonly _alert = inject(AlertService);
   private readonly _service = inject(RolesService);
 
-  role = input.required<RoleDTO>();
+  role = model.required<RoleDTO>();
   permissions = computed(() => this.role().permissions);
 
   protected async assignAsync(
@@ -33,7 +33,16 @@ export class RolePermissionsComponent {
       this._alert.error(response.message!);
       return;
     }
-    permission.isUsed = !permission.isUsed;
+    const role = this.role();
+    this.role.set({
+      ...role,
+      permissions: role.permissions.map(p =>
+        p.permissionID === permission.permissionID ? {
+          ...p,
+          isUsed: !p.isUsed
+        } : p
+      )
+    });
     this._alert.success(`Se ha ${isAssignation ? 'des' : ''}asignado el permiso al rol correctamente`);
   }
 }

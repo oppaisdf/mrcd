@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { RolesService } from '../services/roles.service';
 import { RoleDTO } from '../dtos/RoleDTO';
@@ -11,13 +11,13 @@ import { RolePermissionsComponent } from "../permissions.component/role-permissi
   templateUrl: './roles-list.page.html',
   styleUrl: './roles-list.page.scss',
 })
-export class RolesListPage {
+export class RolesListPage implements OnInit {
   private readonly _service = inject(RolesService);
   protected readonly roles = signal<Array<RoleDTO>>([]);
   private readonly _alert = inject(AlertService);
-  readonly selectedRole = signal<RoleDTO | undefined>(undefined);
+  private readonly _selectedRole = signal<RoleDTO | null>(null);
 
-  private async loadAsync() {
+  async ngOnInit() {
     const response = await this._service.toListAsync();
     if (!response.isSuccess) {
       this._alert.error(response.message!);
@@ -25,11 +25,15 @@ export class RolesListPage {
     }
     this.roles.set(response.data ?? []);
   }
-  private _ = effect(() => this.loadAsync());
 
-  selectRole(
+  get selectedRole() { return this._selectedRole(); }
+  set selectedRole(
+    role: RoleDTO | null
+  ) { this._selectedRole.set(role); }
+
+  protected selectRole(
     role: RoleDTO
   ) {
-    this.selectedRole.set(role);
+    this.selectedRole = role;
   }
 }

@@ -24,6 +24,6 @@
 </div>
 
 <hr>
-@if (selectedRole() !== undefined) {
-<role-permissions [role]="selectedRole()!" />
+@if (selectedRole !== null) {
+<role-permissions [(role)]="selectedRole" />
 }
