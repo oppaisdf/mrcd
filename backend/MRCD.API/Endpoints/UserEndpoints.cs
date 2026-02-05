@@ -56,9 +56,9 @@ internal static class UserEndpoints
         .ProducesProblem(StatusCodes.Status404NotFound)
         .RequireAuthorization("perm:User.Write");
 
-        app.MapPost("/assignrole", async (
-            [FromQuery] Guid userId,
-            [FromQuery] Guid roleId,
+        app.MapPost("{userId}/role/{roleId}", async (
+            Guid userId,
+            Guid roleId,
             ICommandHandler<AssignRoleCommand> handler,
             CancellationToken ct
         ) =>
@@ -84,6 +84,34 @@ internal static class UserEndpoints
         .Produces(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status409Conflict)
+        .RequireAuthorization("perm:User.Write");
+
+        app.MapDelete("{userId}/role/{roleId}", async (
+            Guid userId,
+            Guid roleId,
+            ICommandHandler<AssignRoleCommand> handler,
+            CancellationToken ct
+        ) =>
+        {
+            var command = new AssignRoleCommand(
+                userId,
+                roleId,
+                false
+            );
+            var result = await handler.HandleAsync(command, ct);
+            return ResultsMapper.ToHttp(
+                result,
+                () => Results.Ok(),
+                e => e.Contains("no existe")
+            );
+        })
+        .WithName("UnassignRoleToUser")
+        .WithDisplayName("DELETE /UnassignRoleToUser")
+        .WithSummary("Desasignar rol a usuario")
+        .WithDescription("Desasigna un rol a un usuario activo")
+        .WithOpenApi()
+        .Produces(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound)
         .RequireAuthorization("perm:User.Write");
 
         app.MapGet("", async (
