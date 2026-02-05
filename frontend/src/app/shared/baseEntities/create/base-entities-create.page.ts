@@ -28,8 +28,8 @@ export class BaseEntitiesCreatePage {
 
   hint() {
     const control = this.form.controls.name;
-    if (!control.touched) return undefined;
-    if (control.valid) return undefined;
+    if (!control.touched) return null;
+    if (control.valid) return null;
     if (control.value?.length ?? 0 > this.maxLength())
       return `La longitud no puede exceder los ${this.maxLength()} caracteres`;
     return 'Este campo es requerido';

@@ -20,7 +20,7 @@ export class UiInputComponent implements ControlValueAccessor {
   label = input.required<string>();
   type = input.required<'text' | 'password' | 'number'>();
   maxLength = input<number | null>();
-  hint = input<string | undefined>(undefined);
+  hint = input<string | null>(null);
 
   value = signal<string>('');
   id = `ui-input-${++nextId}`;
