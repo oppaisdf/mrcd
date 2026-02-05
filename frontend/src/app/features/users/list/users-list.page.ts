@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { UserDTO } from '../dtos/UserDTO';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
@@ -14,13 +14,13 @@ import { UsersDetailsComponent } from '../details/users-details.component';
   templateUrl: './users-list.page.html',
   styleUrl: './users-list.page.scss',
 })
-export class UsersListPage {
+export class UsersListPage implements OnInit {
   private readonly _service = inject(UserService);
   private readonly _alert = inject(AlertService);
   private readonly _selectedUser = signal<UserDTO | null>(null);
   readonly users = signal<Array<UserDTO>>([]);
 
-  private async loadAsync() {
+  async ngOnInit() {
     if (this._alert.loading()) return;
     const response = await this._service.toListAsync();
     if (!response.isSuccess) {
@@ -29,7 +29,6 @@ export class UsersListPage {
     }
     this.users.set(response.data ?? []);
   }
-  private _ = effect(() => this.loadAsync());
 
   selectUser(
     user: UserDTO

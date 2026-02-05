@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            @for (role of roles(); track $index) {
+            @for (role of roles(); track role.id) {
             <tr>
                 <td>{{role.roleName}}</td>
                 @if (active) {
