@@ -1,0 +1,32 @@
+<h2>Usuario seleccionado: {{user().username}}</h2>
+<hr>
+<ui-input label="Nombre" type="text" />
+
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Rol</th>
+                @if (isActive) {
+                <th>Acción</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (role of roles; track $index) {
+            <tr>
+                <td>{{role.roleName}}</td>
+                @if (isActive) {
+                <td>
+                    @if (role.hasRole) {
+                    <button class="ui-button is-danger">Eliminar</button>
+                    }@else {
+                    <button class="ui-button">Asignar</button>
+                    }
+                </td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
