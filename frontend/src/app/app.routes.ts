@@ -63,6 +63,15 @@ export const routes: Routes = [
                     vtTheme: 'admin'
                 },
                 loadChildren: () => import('./features/sacraments/sacraments.routes').then(r => r.SACRAMENTS_ROUTES)
+            }, {
+                path: 'users',
+                canMatch: [roleGuard],
+                data: {
+                    roles: ['adm'],
+                    vtIndex: 60,
+                    vtTheme: 'admin'
+                },
+                loadChildren: () => import('./features/users/users.routes').then(r => r.USERS_ROUTES)
             }
         ]
     },

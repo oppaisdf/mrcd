@@ -103,7 +103,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
                 roles: ['adm']
             }, {
                 routeName: "Usuarios",
-                route: "/",
+                route: "/users",
                 roles: ['adm']
             }, {
                 routeName: "Sacramentos",
