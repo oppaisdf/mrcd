@@ -35,7 +35,8 @@ CREATE TABLE `__EFMigrationsHistory` (
 
 LOCK TABLES `__EFMigrationsHistory` WRITE;
 /*!40000 ALTER TABLE `__EFMigrationsHistory` DISABLE KEYS */;
-INSERT INTO `__EFMigrationsHistory` VALUES ('20260116191205_InitialCreate','8.0.22');
+INSERT INTO `__EFMigrationsHistory` VALUES
+	('20260116191205_InitialCreate','8.0.22');
 /*!40000 ALTER TABLE `__EFMigrationsHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -292,7 +293,12 @@ CREATE TABLE `permission` (
 
 LOCK TABLES `permission` WRITE;
 /*!40000 ALTER TABLE `permission` DISABLE KEYS */;
-INSERT INTO `permission` VALUES ('10541623-89d2-4c99-9f13-4fab7c7dd1b4','Role.Read'),('1ca78d7a-3520-421b-8284-cce2c3ac9c2e','Permission.Read'),('6888801b-a53c-4d90-a63d-03b9e5a4b0ce','Permission.Write'),('a3f21364-381d-4ec4-8bdc-45b00e66eadf','User.Write'),('d13796c7-c7d3-47c4-a826-914c09de17be','Role.Write');
+INSERT INTO `permission` VALUES
+	('10541623-89d2-4c99-9f13-4fab7c7dd1b4','Role.Read'),
+	('1ca78d7a-3520-421b-8284-cce2c3ac9c2e','Permission.Read'),
+	('6888801b-a53c-4d90-a63d-03b9e5a4b0ce','Permission.Write'),
+	('a3f21364-381d-4ec4-8bdc-45b00e66eadf','User.Write'),
+	('d13796c7-c7d3-47c4-a826-914c09de17be','Role.Write');
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -429,7 +435,10 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES ('32aa8d94-3d20-49de-94eb-676fee70230f','adm'),('63509335-0f5a-44b2-8542-a1b5dee695f6','sys');
+INSERT INTO `role` VALUES
+	('32aa8d94-3d20-49de-94eb-676fee70230f','adm'),
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','sys'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8', 'usr');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -456,7 +465,12 @@ CREATE TABLE `role_permission` (
 
 LOCK TABLES `role_permission` WRITE;
 /*!40000 ALTER TABLE `role_permission` DISABLE KEYS */;
-INSERT INTO `role_permission` VALUES ('63509335-0f5a-44b2-8542-a1b5dee695f6','10541623-89d2-4c99-9f13-4fab7c7dd1b4'),('63509335-0f5a-44b2-8542-a1b5dee695f6','1ca78d7a-3520-421b-8284-cce2c3ac9c2e'),('63509335-0f5a-44b2-8542-a1b5dee695f6','6888801b-a53c-4d90-a63d-03b9e5a4b0ce'),('32aa8d94-3d20-49de-94eb-676fee70230f','a3f21364-381d-4ec4-8bdc-45b00e66eadf'),('63509335-0f5a-44b2-8542-a1b5dee695f6','d13796c7-c7d3-47c4-a826-914c09de17be');
+INSERT INTO `role_permission` VALUES
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','10541623-89d2-4c99-9f13-4fab7c7dd1b4'),
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','1ca78d7a-3520-421b-8284-cce2c3ac9c2e'),
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','6888801b-a53c-4d90-a63d-03b9e5a4b0ce'),
+	('32aa8d94-3d20-49de-94eb-676fee70230f','a3f21364-381d-4ec4-8bdc-45b00e66eadf'),
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','d13796c7-c7d3-47c4-a826-914c09de17be');
 /*!40000 ALTER TABLE `role_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -529,7 +543,8 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('e3d00323-99f0-40f0-8ed7-7f93a4ca37e2','Misha',1,'v1:lvsiB3s9+4tZquwJSNWKhhoULULxaDffv54fWpG3h3rEMvY=','2026-01-16');
+INSERT INTO `user` VALUES
+	('e3d00323-99f0-40f0-8ed7-7f93a4ca37e2','Misha',1,'v1:lvsiB3s9+4tZquwJSNWKhhoULULxaDffv54fWpG3h3rEMvY=','2026-01-16');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -556,7 +571,10 @@ CREATE TABLE `user_role` (
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES ('63509335-0f5a-44b2-8542-a1b5dee695f6','e3d00323-99f0-40f0-8ed7-7f93a4ca37e2');
+INSERT INTO `user_role` VALUES
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','e3d00323-99f0-40f0-8ed7-7f93a4ca37e2'),
+	('32aa8d94-3d20-49de-94eb-676fee70230f', 'e3d00323-99f0-40f0-8ed7-7f93a4ca37e2'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8', 'e3d00323-99f0-40f0-8ed7-7f93a4ca37e2');
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
