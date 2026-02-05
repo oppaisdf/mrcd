@@ -129,7 +129,7 @@ internal static class SacarmentEndpoints
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .RequireAuthorization("perm:Sacrament.Write");
+        .RequireAuthorization("perm:Person.Write");
 
         app.MapDelete("{sacramentId}/person/{personId}", async (
             Guid sacramentId,
@@ -158,6 +158,6 @@ internal static class SacarmentEndpoints
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .RequireAuthorization("perm:Sacrament.Delete");
+        .RequireAuthorization("perm:Person.Write");
     }
 }

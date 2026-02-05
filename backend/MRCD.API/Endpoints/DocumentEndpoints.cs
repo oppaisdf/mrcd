@@ -129,7 +129,7 @@ internal static class DocumentEndpoints
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .RequireAuthorization("perm:Document.Write");
+        .RequireAuthorization("perm:Person.Write");
 
         app.MapDelete("{documentId}/person/{personId}", async (
             Guid documentId,
@@ -158,6 +158,6 @@ internal static class DocumentEndpoints
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .RequireAuthorization("perm:Document.Delete");
+        .RequireAuthorization("perm:Person.Write");
     }
 }
