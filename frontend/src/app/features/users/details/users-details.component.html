@@ -19,9 +19,9 @@
                 @if (isActive) {
                 <td>
                     @if (role.hasRole) {
-                    <button class="ui-button is-danger">Eliminar</button>
+                    <button class="ui-button is-danger" (click)="assignAsync(role, false)">Eliminar</button>
                     }@else {
-                    <button class="ui-button">Asignar</button>
+                    <button class="ui-button" (click)="assignAsync(role, true)">Asignar</button>
                     }
                 </td>
                 }
