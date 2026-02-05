@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { UserDTO } from '../dtos/UserDTO';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { AlertService } from '../../../shared/alerts/services/alert.service';
@@ -15,9 +15,10 @@ export class UsersDetailsComponent {
   private readonly _alert = inject(AlertService);
   private readonly _service = inject(UserRoleService);
   user = input.required<UserDTO>();
+  updated = output<void>();
 
-  get roles() { return this.user().roles; }
-  get isActive() { return this.user().isActive; }
+  roles = computed(() => this.user().roles);
+  isActive = computed(() => this.user().isActive);
 
   protected async assignAsync(
     role: UserRoleDTO,
@@ -37,6 +38,6 @@ export class UsersDetailsComponent {
       return;
     }
     this._alert.success(`Se ha ${isAssignation ? "des" : ""}asignado el rol al usuario correctamente`);
-    role.hasRole = !role.hasRole;
+    this.updated.emit();
   }
 }

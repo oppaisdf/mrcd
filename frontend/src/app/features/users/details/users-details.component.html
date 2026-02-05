@@ -2,21 +2,22 @@
 <hr>
 <ui-input label="Nombre" type="text" />
 
+@let active = isActive();
 <div class="ui-table-wrap">
     <table class="ui-table">
         <thead>
             <tr>
                 <th>Rol</th>
-                @if (isActive) {
+                @if (active) {
                 <th>Acción</th>
                 }
             </tr>
         </thead>
         <tbody>
-            @for (role of roles; track $index) {
+            @for (role of roles(); track $index) {
             <tr>
                 <td>{{role.roleName}}</td>
-                @if (isActive) {
+                @if (active) {
                 <td>
                     @if (role.hasRole) {
                     <button class="ui-button is-danger" (click)="assignAsync(role, false)">Eliminar</button>
