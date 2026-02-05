@@ -1,6 +1,9 @@
 <h2>Usuario seleccionado: {{user().username}}</h2>
 <hr>
-<ui-input label="Nombre" type="text" />
+
+<form [formGroup]="form" class="ui-form">
+    <ui-input label="Nombre" type="text" formControlName="username" />
+</form>
 
 @let active = isActive();
 <div class="ui-table-wrap">

@@ -1,23 +1,44 @@
-import { Component, computed, inject, model } from '@angular/core';
+import { Component, computed, effect, inject, model } from '@angular/core';
 import { UserDTO } from '../dtos/UserDTO';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { UserRoleService } from '../services/user-role.service';
 import { UserRoleDTO } from '../../roles/dtos/UserRoleDTO';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'users-details',
-  imports: [UiInputComponent],
+  imports: [
+    UiInputComponent,
+    ReactiveFormsModule
+  ],
   templateUrl: './users-details.component.html',
   styleUrl: './users-details.component.scss',
 })
 export class UsersDetailsComponent {
   private readonly _alert = inject(AlertService);
   private readonly _service = inject(UserRoleService);
-  user = model.required<UserDTO>();
+  private readonly _form = inject(FormBuilder);
 
+  user = model.required<UserDTO>();
   roles = computed(() => this.user().roles);
   isActive = computed(() => this.user().isActive);
+  readonly form = this._form.nonNullable.group({
+    username: ['', [Validators.required, Validators.maxLength(10)]],
+    isActive: [false]
+  });
+
+  constructor() {
+    effect(() => {
+      const user = this.user();
+      this.form.patchValue({
+        username: user.username,
+        isActive: user.isActive
+      }, { emitEvent: false });
+      if (user.isActive) this.form.controls.username.enable();
+      else this.form.controls.username.disable();
+    });
+  }
 
   protected async assignAsync(
     role: UserRoleDTO,
