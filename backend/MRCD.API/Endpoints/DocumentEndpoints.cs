@@ -98,7 +98,7 @@ internal static class DocumentEndpoints
         .WithDescription("Retorna listado de documentos")
         .WithOpenApi()
         .Produces<IEnumerable<Document>>(StatusCodes.Status200OK)
-        .RequireAuthorization("perm:Charge.Read");
+        .RequireAuthorization("perm:Document.Read");
 
         app.MapPost("{documentId}/person/{personId}", async (
             Guid documentId,
@@ -129,7 +129,7 @@ internal static class DocumentEndpoints
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .RequireAuthorization("perm:Charge.Write");
+        .RequireAuthorization("perm:Document.Write");
 
         app.MapDelete("{documentId}/person/{personId}", async (
             Guid documentId,
@@ -158,6 +158,6 @@ internal static class DocumentEndpoints
         .WithOpenApi()
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .RequireAuthorization("perm:Charge.Delete");
+        .RequireAuthorization("perm:Document.Delete");
     }
 }
