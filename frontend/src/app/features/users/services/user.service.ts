@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../../../core/api/api.service';
 import { UserDTO } from '../dtos/UserDTO';
+import { UserRequest } from '../dtos/UserRequest';
 
 @Injectable()
 export class UserService {
@@ -8,5 +9,11 @@ export class UserService {
 
   public toListAsync() {
     return this._api.getAsync<Array<UserDTO>>('/user');
+  }
+
+  public createAsync(
+    request: UserRequest
+  ) {
+    return this._api.postAsync<UserRequest, string>('/user', request);
   }
 }

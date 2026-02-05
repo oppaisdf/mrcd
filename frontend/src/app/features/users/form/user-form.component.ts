@@ -61,5 +61,6 @@ export class UserFormComponent {
     if (this.form.invalid) return;
     const user: UserVM = this.form.getRawValue();
     this.submit.emit(user);
+    this.form.disable();
   }
 }
