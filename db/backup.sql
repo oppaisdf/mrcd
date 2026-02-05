@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.4.8, for Linux (x86_64)
 --
 -- Host: localhost    Database: mrcdb
 -- ------------------------------------------------------
--- Server version       8.0.37
+-- Server version       8.4.8
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -292,11 +292,7 @@ CREATE TABLE `permission` (
 
 LOCK TABLES `permission` WRITE;
 /*!40000 ALTER TABLE `permission` DISABLE KEYS */;
-INSERT INTO `permission` VALUES
-	('10541623-89d2-4c99-9f13-4fab7c7dd1b4','Role.Read'),
-	('1ca78d7a-3520-421b-8284-cce2c3ac9c2e','Permission.Read'),
-	('6888801b-a53c-4d90-a63d-03b9e5a4b0ce','Permission.Write'),
-	('d13796c7-c7d3-47c4-a826-914c09de17be','Role.Write');
+INSERT INTO `permission` VALUES ('10541623-89d2-4c99-9f13-4fab7c7dd1b4','Role.Read'),('1ca78d7a-3520-421b-8284-cce2c3ac9c2e','Permission.Read'),('6888801b-a53c-4d90-a63d-03b9e5a4b0ce','Permission.Write'),('a3f21364-381d-4ec4-8bdc-45b00e66eadf','User.Write'),('d13796c7-c7d3-47c4-a826-914c09de17be','Role.Write');
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -433,7 +429,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES ('63509335-0f5a-44b2-8542-a1b5dee695f6','sys');
+INSERT INTO `role` VALUES ('32aa8d94-3d20-49de-94eb-676fee70230f','adm'),('63509335-0f5a-44b2-8542-a1b5dee695f6','sys');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -460,11 +456,7 @@ CREATE TABLE `role_permission` (
 
 LOCK TABLES `role_permission` WRITE;
 /*!40000 ALTER TABLE `role_permission` DISABLE KEYS */;
-INSERT INTO `role_permission` VALUES
-	('63509335-0f5a-44b2-8542-a1b5dee695f6','10541623-89d2-4c99-9f13-4fab7c7dd1b4'),
-	('63509335-0f5a-44b2-8542-a1b5dee695f6','1ca78d7a-3520-421b-8284-cce2c3ac9c2e'),
-	('63509335-0f5a-44b2-8542-a1b5dee695f6','6888801b-a53c-4d90-a63d-03b9e5a4b0ce'),
-	('63509335-0f5a-44b2-8542-a1b5dee695f6','d13796c7-c7d3-47c4-a826-914c09de17be');
+INSERT INTO `role_permission` VALUES ('63509335-0f5a-44b2-8542-a1b5dee695f6','10541623-89d2-4c99-9f13-4fab7c7dd1b4'),('63509335-0f5a-44b2-8542-a1b5dee695f6','1ca78d7a-3520-421b-8284-cce2c3ac9c2e'),('63509335-0f5a-44b2-8542-a1b5dee695f6','6888801b-a53c-4d90-a63d-03b9e5a4b0ce'),('32aa8d94-3d20-49de-94eb-676fee70230f','a3f21364-381d-4ec4-8bdc-45b00e66eadf'),('63509335-0f5a-44b2-8542-a1b5dee695f6','d13796c7-c7d3-47c4-a826-914c09de17be');
 /*!40000 ALTER TABLE `role_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -577,4 +569,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-16 19:32:30
+-- Dump completed on 2026-02-05 13:54:58
