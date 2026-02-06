@@ -3,8 +3,8 @@ import { UserDTO } from '../dtos/UserDTO';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { UserRoleService } from '../services/user-role.service';
-import { UserRoleDTO } from '../../roles/dtos/UserRoleDTO';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
 
 @Component({
   selector: 'users-details',
@@ -41,7 +41,7 @@ export class UsersDetailsComponent {
   }
 
   protected async assignAsync(
-    role: UserRoleDTO,
+    role: UsedRoleResponse,
     isAssignation: boolean
   ) {
     if (this._alert.loading()) return;
