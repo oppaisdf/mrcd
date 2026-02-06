@@ -1,10 +1,10 @@
 import { Component, computed, effect, inject, model } from '@angular/core';
-import { UserDTO } from '../dtos/UserDTO';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { UserRoleService } from '../services/user-role.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
+import { UserResponse } from '../responses/User.response';
 
 @Component({
   selector: 'users-details',
@@ -20,7 +20,7 @@ export class UsersDetailsComponent {
   private readonly _service = inject(UserRoleService);
   private readonly _form = inject(FormBuilder);
 
-  user = model.required<UserDTO>();
+  user = model.required<UserResponse>();
   roles = computed(() => this.user().roles);
   isActive = computed(() => this.user().isActive);
   readonly form = this._form.nonNullable.group({

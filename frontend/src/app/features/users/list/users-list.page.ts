@@ -1,9 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { UserService } from '../services/user.service';
-import { UserDTO } from '../dtos/UserDTO';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { RouterLink } from "@angular/router";
 import { UsersDetailsComponent } from '../details/users-details.component';
+import { UserResponse } from '../responses/User.response';
 
 @Component({
   selector: 'app-users-list.page',
@@ -17,8 +17,8 @@ import { UsersDetailsComponent } from '../details/users-details.component';
 export class UsersListPage implements OnInit {
   private readonly _service = inject(UserService);
   private readonly _alert = inject(AlertService);
-  private readonly _selectedUser = signal<UserDTO | null>(null);
-  readonly users = signal<Array<UserDTO>>([]);
+  private readonly _selectedUser = signal<UserResponse | null>(null);
+  readonly users = signal<Array<UserResponse>>([]);
 
   async ngOnInit() {
     if (this._alert.loading()) return;
@@ -31,11 +31,11 @@ export class UsersListPage implements OnInit {
   }
 
   selectUser(
-    user: UserDTO
+    user: UserResponse
   ) {
     this._selectedUser.set(user);
   }
 
   get selectedUser() { return this._selectedUser(); }
-  set selectedUser(user: UserDTO | null) { this._selectedUser.set(user); }
+  set selectedUser(user: UserResponse | null) { this._selectedUser.set(user); }
 }
