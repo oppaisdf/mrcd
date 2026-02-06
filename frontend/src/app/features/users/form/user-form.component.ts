@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, output } from '@angular/core';
+import { Component, effect, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UiInputComponent } from '../../../core/ui/input/ui-input.component';
 import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
@@ -99,11 +99,11 @@ export class UserFormComponent {
     return null;
   }
 
-  hasSelectedRoles = computed(() => {
+  get hasSelectedRoles() {
     const roles = this.roles();
     const selectedRoles = roles.filter(r => r.hasRole);
     return selectedRoles.length > 0;
-  });
+  };
 
   onRoleSubmit(
     role: UsedRoleResponse
