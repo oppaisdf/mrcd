@@ -26,7 +26,7 @@ export class UserFormComponent {
   });
 
   mode = input.required<'Crear' | 'Editar'>();
-  user = input.required<UserResponse>();
+  user = input.required<UserVM>();
   formSubmit = output<UserVM>();
   readonly states: Array<SelectItem<boolean>> = [
     {
@@ -43,7 +43,7 @@ export class UserFormComponent {
       const user = this.user();
       this.form.patchValue({
         username: user.username,
-        password: '',
+        password: null,
         isActive: user.isActive
       }, { emitEvent: false });
       this.addValidators();

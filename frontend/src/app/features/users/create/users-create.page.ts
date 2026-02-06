@@ -20,11 +20,9 @@ export class UsersCreatePage implements OnInit {
   private readonly _roles = inject(RolesService);
   private readonly _router = inject(Router);
 
-  readonly user = signal<UserResponse>({
-    id: '',
-    username: '',
-    isActive: false,
-    roles: []
+  readonly user = signal<UserVM>({
+    username: null,
+    password: null
   });
 
   async ngOnInit() {
@@ -39,13 +37,6 @@ export class UsersCreatePage implements OnInit {
         roleName: r.roleName,
         hasRole: false
       }));
-    const user: UserResponse = {
-      id: '',
-      username: '',
-      isActive: false,
-      roles: roles
-    };
-    this.user.set(user);
   }
 
   async createAsync(
