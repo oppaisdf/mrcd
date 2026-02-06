@@ -1,3 +1,4 @@
 <h1>Crear usuario</h1>
 
-<user-form mode="Crear" [user]="user()" (formSubmit)="createAsync($event)" />
+<user-form mode="Crear" [user]="user()" (formSubmit)="createAsync($event)" [roles]="roles()"
+    (roleSubmit)="addRole($event)" />

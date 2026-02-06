@@ -1,11 +1,11 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UiInputComponent } from '../../../core/ui/input/ui-input.component';
 import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
 import { SelectItem } from '../../../core/ui/select/SelectItem';
-import { UserResponse } from '../responses/User.response';
 import { UserVM } from '../vms/User.vm';
 import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
+import { RoleSubmitVM } from '../../roles/vms/role-submit.vm';
 
 @Component({
   selector: 'user-form',
@@ -27,7 +27,9 @@ export class UserFormComponent {
 
   mode = input.required<'Crear' | 'Editar'>();
   user = input.required<UserVM>();
+  roles = input.required<Array<UsedRoleResponse>>();
   formSubmit = output<UserVM>();
+  roleSubmit = output<RoleSubmitVM>();
   readonly states: Array<SelectItem<boolean>> = [
     {
       label: 'Activo',
@@ -95,5 +97,21 @@ export class UserFormComponent {
         return `La contraseña debe tener un número, una mayúscula, un carácter especial y su longitud debe ser mayor a cinco caracteres`;
     }
     return null;
+  }
+
+  hasSelectedRoles = computed(() => {
+    const roles = this.roles();
+    const selectedRoles = roles.filter(r => r.hasRole);
+    return selectedRoles.length > 0;
+  });
+
+  onRoleSubmit(
+    role: UsedRoleResponse
+  ) {
+    const roleVM: RoleSubmitVM = {
+      roleId: role.id,
+      hasBeenAdded: !role.hasRole
+    };
+    this.roleSubmit.emit(roleVM);
   }
 }

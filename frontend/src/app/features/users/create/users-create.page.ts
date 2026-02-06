@@ -5,8 +5,9 @@ import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { CreateUserRequest } from '../requests/create-user.request';
 import { UserVM } from '../vms/User.vm';
-import { UserResponse } from '../responses/User.response';
 import { RolesService } from '../../roles/services/roles.service';
+import { RoleSubmitVM } from '../../roles/vms/role-submit.vm';
+import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
 
 @Component({
   selector: 'app-users-create.page',
@@ -20,6 +21,7 @@ export class UsersCreatePage implements OnInit {
   private readonly _roles = inject(RolesService);
   private readonly _router = inject(Router);
 
+  readonly roles = signal<Array<UsedRoleResponse>>([]);
   readonly user = signal<UserVM>({
     username: null,
     password: null
@@ -37,6 +39,7 @@ export class UsersCreatePage implements OnInit {
         roleName: r.roleName,
         hasRole: false
       }));
+    this.roles.set(roles);
   }
 
   async createAsync(
@@ -58,5 +61,11 @@ export class UsersCreatePage implements OnInit {
     }
     this._alert.success('El usuario ha sido creado exitosamente');
     this._router.navigateByUrl('/users');
+  }
+
+  addRole(
+    role: RoleSubmitVM
+  ) {
+    console.log(role);
   }
 }
