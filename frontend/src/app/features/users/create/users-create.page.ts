@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { CreateUserRequest } from '../requests/create-user.request';
 import { UserVM } from '../vms/User.vm';
 import { RolesService } from '../../roles/services/roles.service';
-import { RoleSubmitVM } from '../../roles/vms/role-submit.vm';
 import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
 
 @Component({
@@ -64,7 +63,7 @@ export class UsersCreatePage implements OnInit {
   }
 
   addRole(
-    role: RoleSubmitVM
+    role: string
   ) {
     console.log(role);
   }

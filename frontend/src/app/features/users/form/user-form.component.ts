@@ -5,7 +5,6 @@ import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
 import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { UserVM } from '../vms/User.vm';
 import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
-import { RoleSubmitVM } from '../../roles/vms/role-submit.vm';
 
 @Component({
   selector: 'user-form',
@@ -29,7 +28,7 @@ export class UserFormComponent {
   user = input.required<UserVM>();
   roles = input.required<Array<UsedRoleResponse>>();
   formSubmit = output<UserVM>();
-  roleSubmit = output<RoleSubmitVM>();
+  roleSubmit = output<string>();
   readonly states: Array<SelectItem<boolean>> = [
     {
       label: 'Activo',
@@ -106,12 +105,8 @@ export class UserFormComponent {
   };
 
   onRoleSubmit(
-    role: UsedRoleResponse
+    roleId: string
   ) {
-    const roleVM: RoleSubmitVM = {
-      roleId: role.id,
-      hasBeenAdded: !role.hasRole
-    };
-    this.roleSubmit.emit(roleVM);
+    this.roleSubmit.emit(roleId);
   }
 }

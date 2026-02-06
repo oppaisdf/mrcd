@@ -26,7 +26,7 @@
             <tr>
                 <td>{{role.roleName}}</td>
                 <td>
-                    <button class="ui-button" [class.is-danger]="role.hasRole" (click)="onRoleSubmit(role)">
+                    <button class="ui-button" [class.is-danger]="role.hasRole" (click)="onRoleSubmit(role.id)">
                         @if (role.hasRole) {Eliminar}@else {Agregar}
                     </button>
                 </td>
