@@ -57,7 +57,7 @@ export class UsersCreatePage implements OnInit {
     const request: CreateUserRequest = {
       username: rawUser.username ?? '',
       password: rawUser.password ?? '',
-      roles: rawUser.roles ?? []
+      roles: []
     };
     const response = await this._service.createAsync(request);
     this._alert.clear();

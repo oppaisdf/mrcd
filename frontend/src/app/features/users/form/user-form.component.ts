@@ -85,7 +85,6 @@ export class UserFormComponent {
     const mode = this.mode();
     if (mode === 'Editar')
       response.isActive = form.isActive!;
-    else response.roles = this._roles;
     if (mode === 'Crear' && this._roles.length < 1) return;
     this.formSubmit.emit(response);
   }
