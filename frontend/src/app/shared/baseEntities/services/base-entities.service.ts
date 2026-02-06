@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../../../core/api/api.service';
-import { BaseEntityCommand } from '../dtos/BaseEntityCommand';
 import { BaseEntityDTO } from '../dtos/BaseEntityDTO';
+import { BaseEntityRequest } from '../requests/BaseEntity.request';
 
 @Injectable()
 export class BaseEntitiesService {
@@ -9,9 +9,9 @@ export class BaseEntitiesService {
 
   public createAsync(
     endpoint: string,
-    request: BaseEntityCommand
+    request: BaseEntityRequest
   ) {
-    return this._api.postAsync<BaseEntityCommand, string>(endpoint, request);
+    return this._api.postAsync<BaseEntityRequest, string>(endpoint, request);
   }
 
   public deleteAsync(

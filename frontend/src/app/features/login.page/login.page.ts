@@ -43,7 +43,7 @@ export class LoginPage {
   ) {
     const control = this.form.controls[controlName];
     const invalid = control.touched && control.invalid;
-    if (!invalid) return undefined;
+    if (!invalid) return null;
     switch (controlName) {
       case 'username':
         return 'El usuario es requerido';

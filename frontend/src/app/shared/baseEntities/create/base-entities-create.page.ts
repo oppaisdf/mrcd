@@ -2,9 +2,9 @@ import { Component, inject, input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '../../alerts/services/alert.service';
 import { BaseEntitiesService } from '../services/base-entities.service';
-import { BaseEntityCommand } from '../dtos/BaseEntityCommand';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { ActivatedRoute, Router } from '@angular/router';
+import { BaseEntityRequest } from '../requests/BaseEntity.request';
 
 @Component({
   selector: 'shared-be-create',
@@ -43,7 +43,7 @@ export class BaseEntitiesCreatePage {
     this._alert.startLoading();
     this.form.disable();
 
-    const request: BaseEntityCommand = this.form.getRawValue();
+    const request: BaseEntityRequest = this.form.getRawValue();
     const response = await this._service.createAsync(this.endpoint(), request);
 
     this._alert.clear();
