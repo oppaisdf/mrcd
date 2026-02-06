@@ -28,9 +28,6 @@ export class UserFormComponent {
   mode = input.required<'Crear' | 'Editar'>();
   user = input.required<UserResponse>();
   formSubmit = output<UserVM>();
-
-  readonly roles = signal<Array<UsedRoleResponse>>([]);
-  private readonly _roles: Array<string> = [];
   readonly states: Array<SelectItem<boolean>> = [
     {
       label: 'Activo',
@@ -44,7 +41,6 @@ export class UserFormComponent {
   constructor() {
     effect(() => {
       const user = this.user();
-      this.roles.set(user.roles);
       this.form.patchValue({
         username: user.username,
         password: '',
@@ -80,12 +76,9 @@ export class UserFormComponent {
     const form = this.form.getRawValue();
     const response: UserVM = {
       username: form.username,
-      password: form.password
+      password: form.password,
+      isActive: this.mode() === 'Crear' ? form.isActive! : undefined
     };
-    const mode = this.mode();
-    if (mode === 'Editar')
-      response.isActive = form.isActive!;
-    if (mode === 'Crear' && this._roles.length < 1) return;
     this.formSubmit.emit(response);
   }
 
@@ -102,19 +95,5 @@ export class UserFormComponent {
         return `La contraseña debe tener un número, una mayúscula, un carácter especial y su longitud debe ser mayor a cinco caracteres`;
     }
     return null;
-  }
-
-  get emptyRoles() { return this._roles.length < 1; }
-
-  private indexRoleAdded = (roleId: string) => this._roles.indexOf(roleId);
-  roleAdded = (roleId: string) => this.indexRoleAdded(roleId) !== -1;
-
-  addRole(
-    roleId: string
-  ) {
-    const index = this.indexRoleAdded(roleId);
-    if (index !== -1)
-      this._roles.splice(index, 1);
-    else this._roles.push(roleId);
   }
 }

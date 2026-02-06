@@ -7,34 +7,3 @@
 
     <button class="ui-button" type="submit">{{mode()}}</button>
 </form>
-
-<h3>Roles</h3>
-<hr>
-@if(emptyRoles){
-<small class="ui-help is-danger">Debe seleccionar un rol</small>
-}
-<div class="ui-table-wraper">
-    <table class="ui-table">
-        <thead>
-            <tr>
-                <th>Rol</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (role of roles(); track role.id) {
-            <tr>
-                <td>{{role.roleName}}</td>
-                <td>
-                    @if (mode() === 'Crear') {
-                    @let added = roleAdded(role.id);
-                    <button class="ui-button" [class.is-danger]="added" (click)="addRole(role.id)">
-                        @if (added) {Remover}@else{Agregar}
-                    </button>
-                    }
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-</div>
