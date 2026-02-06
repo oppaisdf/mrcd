@@ -3,8 +3,8 @@ import { UserFormComponent } from "../form/user-form.component";
 import { UserVM } from '../vms/UserVM';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { UserService } from '../services/user.service';
-import { UserRequest } from '../dtos/UserRequest';
 import { Router } from '@angular/router';
+import { CreateUserRequest } from '../requests/create-user.requests';
 
 @Component({
   selector: 'app-users-create.page',
@@ -28,7 +28,7 @@ export class UsersCreatePage {
     if (this._alert.loading()) return;
     this._alert.startLoading();
 
-    const request: UserRequest = {
+    const request: CreateUserRequest = {
       username: rawUser.username,
       password: rawUser.password ?? ''
     };

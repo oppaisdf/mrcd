@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../../../core/api/api.service';
 import { UserDTO } from '../dtos/UserDTO';
-import { UserRequest } from '../dtos/UserRequest';
+import { CreateUserRequest } from '../requests/create-user.requests';
 
 @Injectable()
 export class UserService {
@@ -12,8 +12,8 @@ export class UserService {
   }
 
   public createAsync(
-    request: UserRequest
+    request: CreateUserRequest
   ) {
-    return this._api.postAsync<UserRequest, string>('/user', request);
+    return this._api.postAsync<CreateUserRequest, string>('/user', request);
   }
 }
