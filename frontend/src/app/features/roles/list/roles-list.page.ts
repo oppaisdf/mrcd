@@ -1,9 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { RolesService } from '../services/roles.service';
-import { RoleDTO } from '../dtos/RoleDTO';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { RolePermissionsComponent } from "../permissions.component/role-permissions.component";
+import { RoleResponse } from '../responses/Role.response';
 
 @Component({
   selector: 'app-roles-list.page',
@@ -13,9 +13,9 @@ import { RolePermissionsComponent } from "../permissions.component/role-permissi
 })
 export class RolesListPage implements OnInit {
   private readonly _service = inject(RolesService);
-  protected readonly roles = signal<Array<RoleDTO>>([]);
+  protected readonly roles = signal<Array<RoleResponse>>([]);
   private readonly _alert = inject(AlertService);
-  private readonly _selectedRole = signal<RoleDTO | null>(null);
+  private readonly _selectedRole = signal<RoleResponse | null>(null);
 
   async ngOnInit() {
     const response = await this._service.toListAsync();
@@ -28,11 +28,11 @@ export class RolesListPage implements OnInit {
 
   get selectedRole() { return this._selectedRole(); }
   set selectedRole(
-    role: RoleDTO | null
+    role: RoleResponse | null
   ) { this._selectedRole.set(role); }
 
   protected selectRole(
-    role: RoleDTO
+    role: RoleResponse
   ) {
     this.selectedRole = role;
   }
