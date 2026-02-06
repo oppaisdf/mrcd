@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { UserFormComponent } from "../form/user-form.component";
-import { UserVM } from '../vms/UserVM';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { CreateUserRequest } from '../requests/create-user.request';
+import { UpdateUserRequest } from '../requests/update-user.request';
 
 @Component({
   selector: 'app-users-create.page',
@@ -17,19 +17,16 @@ export class UsersCreatePage {
   private readonly _service = inject(UserService);
   private readonly _router = inject(Router);
 
-  user: UserVM = {
-    username: '',
-    password: null
-  }
+  user: UpdateUserRequest = {};
 
   async createAsync(
-    rawUser: UserVM
+    rawUser: UpdateUserRequest
   ) {
     if (this._alert.loading()) return;
     this._alert.startLoading();
 
     const request: CreateUserRequest = {
-      username: rawUser.username,
+      username: rawUser.username ?? '',
       password: rawUser.password ?? ''
     };
     const response = await this._service.createAsync(request);
