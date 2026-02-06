@@ -37,7 +37,7 @@ internal sealed class AssignRoleHandler(
             .Select(r => r.ID);
         if (command.IsAssignment && userRoles.Contains(command.RoleId))
             return Result.Failure("El rol ya ha sido asignado");
-        else
+        if (command.IsAssignment)
         {
             _userRole.Add(new UserRole(
                 command.RoleId,
@@ -47,7 +47,7 @@ internal sealed class AssignRoleHandler(
         }
         if (!command.IsAssignment && !userRoles.Contains(command.RoleId))
             return Result.Failure("El rol no ha sido asignado");
-        else
+        if (!command.IsAssignment)
             await _userRole.DeleteAsync(command.UserId, command.RoleId, cancellationToken);
         await _cache.InvalidateAsync(command.UserId, cancellationToken);
         return Result.Success();
