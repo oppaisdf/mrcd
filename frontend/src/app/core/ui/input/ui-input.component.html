@@ -5,7 +5,7 @@
             [class.is-invalid]="hint()" [value]="value()" [disabled]="disabled()" (blur)="onTouched()"
             (input)="onInput($event)">
         @if(hint()){
-        <small class="ui-help ui-danger">{{hint()}}</small>
+        <small class="ui-help is-danger">{{hint()}}</small>
         }
     </div>
 </div>
