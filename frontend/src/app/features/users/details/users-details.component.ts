@@ -1,69 +1,95 @@
-import { Component, computed, effect, inject, model } from '@angular/core';
-import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
-import { AlertService } from '../../../shared/alerts/services/alert.service';
-import { UserRoleService } from '../services/user-role.service';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
+import { Component, computed, effect, inject, model, signal } from '@angular/core';
 import { UserResponse } from '../responses/User.response';
+import { UserFormComponent } from "../form/user-form.component";
+import { UserVM } from '../vms/User.vm';
+import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
+import { UserService } from '../services/user.service';
+import { AlertService } from '../../../shared/alerts/services/alert.service';
+import { UpdateUserRequest } from '../requests/update-user.request';
+import { UserRoleService } from '../services/user-role.service';
 
 @Component({
   selector: 'users-details',
-  imports: [
-    UiInputComponent,
-    ReactiveFormsModule
-  ],
+  imports: [UserFormComponent],
   templateUrl: './users-details.component.html',
   styleUrl: './users-details.component.scss',
 })
 export class UsersDetailsComponent {
+  private readonly _userService = inject(UserService);
+  private readonly _userRoleService = inject(UserRoleService);
   private readonly _alert = inject(AlertService);
-  private readonly _service = inject(UserRoleService);
-  private readonly _form = inject(FormBuilder);
 
   user = model.required<UserResponse>();
-  roles = computed(() => this.user().roles);
-  isActive = computed(() => this.user().isActive);
-  readonly form = this._form.nonNullable.group({
-    username: ['', [Validators.required, Validators.maxLength(10)]],
-    isActive: [false]
+  readonly roles = signal<Array<UsedRoleResponse>>([]);
+  private readonly _request: UpdateUserRequest = {};
+  userVM = computed(() => {
+    const user = this.user();
+    const userVM: UserVM = {
+      username: user.username,
+      password: null,
+      isActive: user.isActive
+    };
+    return userVM;
   });
 
   constructor() {
     effect(() => {
       const user = this.user();
-      this.form.patchValue({
-        username: user.username,
-        isActive: user.isActive
-      }, { emitEvent: false });
-      if (user.isActive) this.form.controls.username.enable();
-      else this.form.controls.username.disable();
+      const roles = user.roles;
+      this.roles.set(roles);
+      this._request.username = user.username;
+      this._request.isActive = user.isActive;
     });
   }
 
-  protected async assignAsync(
-    role: UsedRoleResponse,
-    isAssignation: boolean
+  async updateAsync(
+    user: UserVM
   ) {
     if (this._alert.loading()) return;
     this._alert.startLoading();
 
-    const userId = this.user().id;
-    const response = isAssignation
-      ? await this._service.assignRoleAsync(userId, role.id)
-      : await this._service.unassignRoleAsync(userId, role.id);
+    const request = this._request;
+    const currentUser = this.user();
+    if (request.isActive !== user.isActive && user.isActive !== undefined) request.isActive = user.isActive;
+    else user.isActive = undefined;
+    if (request.username !== user.username && user.username !== null) request.username = user.username;
+    else request.username = undefined;
+    if (user.password !== null) request.password = user.password;
+    else request.password = undefined;
 
+    const response = await this._userService.updateAsync(currentUser.id, request);
     this._alert.clear();
     if (!response.isSuccess) {
       this._alert.error(response.message!);
       return;
     }
-    this._alert.success(`Se ha ${isAssignation ? "des" : ""}asignado el rol al usuario correctamente`);
+    if (request.isActive !== user.isActive && user.isActive !== undefined)
+      currentUser.isActive = user.isActive;
+    if (request.username !== user.username && user.username !== null)
+      currentUser.username = user.username;
+    this.user.set(currentUser);
+  }
+
+  async assignRoleAsync(
+    roleId: string
+  ) {
+    if (this._alert.loading()) return;
     const user = this.user();
-    this.user.set({
-      ...user,
-      roles: user.roles.map(r =>
-        r.id === role.id ? { ...r, hasRole: !r.hasRole } : r
-      ),
-    });
+    const role = user.roles.find(r => r.id === roleId);
+    if (!role) return;
+
+    this._alert.startLoading();
+    const response = role.hasRole
+      ? await this._userRoleService.unassignRoleAsync(user.id, roleId)
+      : await this._userRoleService.assignRoleAsync(user.id, roleId);
+    this._alert.clear();
+
+    if (!response.isSuccess) {
+      this._alert.error(response.message!);
+      return;
+    }
+    this._alert.success(`Se ha ${role.hasRole ? 'des' : ''}asignado el rol al usuario exitosamente`);
+    role.hasRole = !role.hasRole;
+    this.user.set(user);
   }
 }

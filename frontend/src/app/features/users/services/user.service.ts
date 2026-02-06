@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../../../core/api/api.service';
 import { CreateUserRequest } from '../requests/create-user.request';
 import { UserResponse } from '../responses/User.response';
+import { UpdateUserRequest } from '../requests/update-user.request';
 
 @Injectable()
 export class UserService {
@@ -15,5 +16,12 @@ export class UserService {
     request: CreateUserRequest
   ) {
     return this._api.postAsync<CreateUserRequest, string>('/user', request);
+  }
+
+  public updateAsync(
+    userId: string,
+    request: UpdateUserRequest
+  ) {
+    return this._api.patchAsync(`/user/${userId}`, request);
   }
 }
