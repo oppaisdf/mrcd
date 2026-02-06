@@ -2,7 +2,7 @@ import { Component, computed, inject, model } from '@angular/core';
 import { RoleDTO } from '../dtos/RoleDTO';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { RolesService } from '../services/roles.service';
-import { PermissionDTO } from '../dtos/PermissionDTO';
+import { PermissionResponse } from '../../permissions/reponses/Permission.response';
 
 @Component({
   selector: 'role-permissions',
@@ -18,7 +18,7 @@ export class RolePermissionsComponent {
   permissions = computed(() => this.role().permissions);
 
   protected async assignAsync(
-    permission: PermissionDTO,
+    permission: PermissionResponse,
     isAssignation: boolean
   ) {
     if (this._alert.loading()) return;

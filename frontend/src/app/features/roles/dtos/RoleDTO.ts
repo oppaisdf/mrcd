@@ -1,7 +1,7 @@
-import { PermissionDTO } from "./PermissionDTO";
+import { PermissionResponse } from "../../permissions/reponses/Permission.response";
 
 export type RoleDTO = {
     roleID: string;
     roleName: string;
-    permissions: PermissionDTO[];
+    permissions: Array<PermissionResponse>;
 };
