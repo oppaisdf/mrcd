@@ -77,9 +77,10 @@ export class UserFormComponent {
     const form = this.form.getRawValue();
     const response: UserVM = {
       username: form.username,
-      password: form.password,
-      isActive: this.mode() === 'Crear' ? form.isActive! : undefined
+      password: form.password
     };
+    if (this.mode() === 'Editar' && form.isActive !== null)
+      response.isActive = form.isActive;
     this.formSubmit.emit(response);
   }
 
