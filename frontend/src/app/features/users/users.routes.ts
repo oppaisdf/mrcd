@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { UserService } from "./services/user.service";
 import { UserRoleService } from "./services/user-role.service";
+import { RolesService } from "../roles/services/roles.service";
 
 export const USERS_ROUTES: Routes = [
     {
@@ -21,7 +22,8 @@ export const USERS_ROUTES: Routes = [
             vtIndex: 6002
         },
         providers: [
-            UserService
+            UserService,
+            RolesService
         ],
         loadComponent: () => import('./create/users-create.page').then(p => p.UsersCreatePage)
     }
