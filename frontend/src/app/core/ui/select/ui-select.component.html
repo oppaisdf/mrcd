@@ -4,7 +4,8 @@
         <select [id]="id" class="ui-select" [disabled]="disabled()" (blur)="onTouched()"
             (change)="onSelectChange($event)" [value]="value()">
             @for (item of items(); track $index) {
-            <option [value]="item.value">{{item.label}}</option>
+            <option [value]="item.value.toString()" [selected]="item.value.toString() === value()">{{item.label}}
+            </option>
             }
         </select>
     </div>
