@@ -4,7 +4,7 @@ import { UserVM } from '../vms/UserVM';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
-import { CreateUserRequest } from '../requests/create-user.requests';
+import { CreateUserRequest } from '../requests/create-user.request';
 
 @Component({
   selector: 'app-users-create.page',

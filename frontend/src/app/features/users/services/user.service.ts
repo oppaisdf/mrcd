@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../../../core/api/api.service';
-import { CreateUserRequest } from '../requests/create-user.requests';
+import { CreateUserRequest } from '../requests/create-user.request';
 import { UserResponse } from '../responses/User.response';
 
 @Injectable()
