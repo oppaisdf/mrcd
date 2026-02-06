@@ -17,9 +17,10 @@ import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
 export class UsersCreatePage implements OnInit {
   private readonly _alert = inject(AlertService);
   private readonly _service = inject(UserService);
-  private readonly _roles = inject(RolesService);
+  private readonly _rolesService = inject(RolesService);
   private readonly _router = inject(Router);
 
+  private readonly _roles: Array<string> = [];
   readonly roles = signal<Array<UsedRoleResponse>>([]);
   readonly user = signal<UserVM>({
     username: null,
@@ -27,7 +28,7 @@ export class UsersCreatePage implements OnInit {
   });
 
   async ngOnInit() {
-    const response = await this._roles.toListAsync();
+    const response = await this._rolesService.toListAsync();
     if (!response.isSuccess) {
       this._alert.error(response.message!);
       return;
@@ -45,12 +46,13 @@ export class UsersCreatePage implements OnInit {
     rawUser: UserVM
   ) {
     if (this._alert.loading()) return;
+    if (this._roles.length < 1) return;
     this._alert.startLoading();
 
     const request: CreateUserRequest = {
       username: rawUser.username ?? '',
       password: rawUser.password ?? '',
-      roles: []
+      roles: this._roles
     };
     const response = await this._service.createAsync(request);
     this._alert.clear();
@@ -63,8 +65,17 @@ export class UsersCreatePage implements OnInit {
   }
 
   addRole(
-    role: string
+    roleId: string
   ) {
-    console.log(role);
+    const usedRoles = this.roles();
+    const usedRole = usedRoles.find(r => r.id === roleId);
+    const roleIndex = this._roles.indexOf(roleId);
+    if (!usedRole) return;
+    if (!usedRole.hasRole && roleIndex === -1)
+      this._roles.push(roleId);
+    if (usedRole.hasRole && roleIndex !== -1)
+      this._roles.splice(roleIndex, 1);
+    usedRole.hasRole = !usedRole.hasRole;
+    this.roles.set(usedRoles);
   }
 }
