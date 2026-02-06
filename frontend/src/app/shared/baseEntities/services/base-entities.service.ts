@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../../../core/api/api.service';
-import { BaseEntityDTO } from '../dtos/BaseEntityDTO';
 import { BaseEntityRequest } from '../requests/BaseEntity.request';
+import { BaseEntityResponse } from '../reponses/BaseEntity.response';
 
 @Injectable()
 export class BaseEntitiesService {
@@ -24,6 +24,6 @@ export class BaseEntitiesService {
   public toListAsync(
     endpoint: string
   ) {
-    return this._api.getAsync<BaseEntityDTO[]>(endpoint);
+    return this._api.getAsync<Array<BaseEntityResponse>>(endpoint);
   }
 }

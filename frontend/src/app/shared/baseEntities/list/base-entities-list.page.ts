@@ -1,7 +1,7 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { BaseEntitiesService } from '../services/base-entities.service';
 import { AlertService } from '../../alerts/services/alert.service';
-import { BaseEntityDTO } from '../dtos/BaseEntityDTO';
+import { BaseEntityResponse } from '../reponses/BaseEntity.response';
 
 @Component({
   selector: 'shared-be-list',
@@ -14,7 +14,7 @@ export class BaseEntitiesListPage {
   private readonly _alert = inject(AlertService);
   title = input.required<string>();
   endpoint = input.required<string>();
-  readonly items = signal<Array<BaseEntityDTO>>([]);
+  readonly items = signal<Array<BaseEntityResponse>>([]);
 
   private _ = effect(() => this.loadAsync());
   private async loadAsync() {
