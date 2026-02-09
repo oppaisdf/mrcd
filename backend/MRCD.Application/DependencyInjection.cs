@@ -37,8 +37,14 @@ public static class DependencyInjection
             }
         }
 
-        var entityTypes = assembly.GetTypes()
-        .Where(t => t.IsClass && !t.IsAbstract && typeof(Domain.Common.BaseEntity).IsAssignableFrom(t));
+        var entityTypes = typeof(Domain.Common.BaseEntity).Assembly
+            .GetTypes()
+            .Where(t =>
+                t.IsClass
+                && !t.IsAbstract
+                && t != typeof(Domain.Common.BaseEntity)
+                && typeof(Domain.Common.BaseEntity).IsAssignableFrom(t)
+            );
         foreach (var entityType in entityTypes)
         {
             var serviceType = typeof(ICommandHandler<,,>)
