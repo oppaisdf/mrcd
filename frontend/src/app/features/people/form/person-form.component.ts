@@ -104,6 +104,8 @@ export class PersonFormComponent implements OnInit {
       degreeId: form.degreeId,
       dob: form.dob
     };
+    if (this.mode() === 'Inscribir')
+      this.form.reset()
     this.formSubmit.emit(response);
   }
 
