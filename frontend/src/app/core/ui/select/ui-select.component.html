@@ -1,11 +1,10 @@
 <div class="ui-field">
     <label [attr.for]="id" class="ui-label">{{label()}}</label>
     <div class="ui-control">
-        <select [id]="id" class="ui-select" [disabled]="disabled()" (blur)="onTouched()"
+        <select #select [id]="id" class="ui-select" [disabled]="disabled()" (blur)="onTouched()"
             (change)="onSelectChange($event)" [value]="value()">
             @for (item of items(); track $index) {
-            <option [value]="item.value.toString()" [selected]="item.value.toString() === value()">{{item.label}}
-            </option>
+            <option [value]="item.value.toString()">{{item.label}}</option>
             }
         </select>
     </div>

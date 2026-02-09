@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, signal } from '@angular/core';
+import { Component, effect, ElementRef, forwardRef, input, signal, viewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from './SelectItem';
 
@@ -25,6 +25,20 @@ export class UiSelectComponent implements ControlValueAccessor {
   value = signal<string>('');
   id = `ui-select-${++nextId}`;
   disabled = signal<boolean>(false);
+  private readonly _select = viewChild<ElementRef<HTMLSelectElement>>('select');
+
+  constructor() {
+    effect(() => {
+      const value = this.value();
+      this.items();
+
+      queueMicrotask(() => {
+        const select = this._select()?.nativeElement;
+        if (!select) return;
+        select.value = value ?? '';
+      });
+    });
+  }
 
   private onChange: (v: any) => void = () => { };
   onTouched: () => void = () => { };
@@ -45,6 +59,7 @@ export class UiSelectComponent implements ControlValueAccessor {
   onSelectChange(
     event: Event
   ) {
+    this.onTouched();
     const element = event.target as HTMLSelectElement;
     const rawValue = element.value;
     this.value.set(rawValue);
