@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
+using MRCD.Application.Common;
 using MRCD.Application.Person.AddPerson;
 using MRCD.Application.Person.DTOs;
 using MRCD.Application.Person.GetGeneralList;
+using MRCD.Application.Person.GetPerson;
 using MRCD.Application.Person.GetPersonById;
 using MRCD.Application.Person.UpdatePerson;
 
@@ -84,6 +86,42 @@ internal static class PersonEndpoints
         .WithDescription("Obtiene listado general de personas activas")
         .WithOpenApi()
         .Produces<IEnumerable<GeneralListDTO>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Person.Read");
+
+        app.MapGet("", async (
+            [FromQuery] bool isActive,
+            [FromQuery] ushort page,
+            [FromServices] IQueryHandler<Pagination<SimplePersonDTO>, GetPersonQuery> handler,
+            ClaimsPrincipal user,
+            CancellationToken ct,
+            string? name = null,
+            bool? isSunday = null,
+            bool? isMasculine = null
+        ) =>
+        {
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out Guid userId))
+                return ResultsMapper.Unauthorized();
+            var query = new GetPersonQuery(
+                userId,
+                isActive,
+                page,
+                name,
+                isSunday,
+                isMasculine
+            );
+            var result = await handler.HandleAsync(query, ct);
+            return ResultsMapper.ToHttp(
+                result,
+                r => Results.Ok(r)
+            );
+        })
+        .WithName("GetPeople")
+        .WithDisplayName("GET /People")
+        .WithSummary("Obtiene listado simple")
+        .WithDescription("Retorna listado simple de confirmandos")
+        .WithOpenApi()
+        .Produces<Pagination<SimplePersonDTO>>(StatusCodes.Status200OK)
         .RequireAuthorization("perm:Person.Read");
 
         app.MapGet("{id}", async (
