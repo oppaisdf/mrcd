@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.AddBaseEntity;
+using MRCD.Application.BaseEntity.DelBaseEntity;
 using MRCD.Application.BaseEntity.GetBaseEntity;
 using MRCD.Application.Security;
 using MRCD.Application.Services.CommonService;
@@ -47,13 +48,19 @@ public static class DependencyInjection
             );
         foreach (var entityType in entityTypes)
         {
+            // ICommandHandler<,,>
             var serviceType = typeof(ICommandHandler<,,>)
                 .MakeGenericType(typeof(AddBaseEntityCommand), typeof(Guid), entityType);
-
             var implType = typeof(AddBaseEntityHandler<>)
                 .MakeGenericType(entityType);
-
             services.AddScoped(serviceType, implType);
+
+            // IBaseCommandHandler
+            var baseServiceType = typeof(IBaseCommandHandler<,>)
+                .MakeGenericType(typeof(DelBaseEntityCommand), entityType);
+            var baseImplType = typeof(DelBaseEntityHandler<>)
+                .MakeGenericType(entityType);
+            services.AddScoped(baseServiceType, baseImplType);
         }
         return services;
     }
