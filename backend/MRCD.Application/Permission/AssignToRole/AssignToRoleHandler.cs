@@ -3,6 +3,8 @@ using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Permission.Contracts;
 using MRCD.Application.Role.Contracts;
+using MRCD.Application.Security;
+using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 using MRCD.Domain.Role;
 
@@ -13,7 +15,9 @@ internal sealed class AssignToRoleHandler(
     IRoleRepository role,
     IRolePermissionRepository rolePermission,
     ILogger<AssignToRoleHandler> logs,
-    IPersistenceContext save
+    IPersistenceContext save,
+    IUserRepository user,
+    IPermissionCache cache
 ) : ICommandHandler<AssignToRoleCommand>
 {
     private readonly IPermissionRepository _permission = permission;
@@ -21,6 +25,20 @@ internal sealed class AssignToRoleHandler(
     private readonly IRolePermissionRepository _rolePermission = rolePermission;
     private readonly ILogger<AssignToRoleHandler> _logs = logs;
     private readonly IPersistenceContext _save = save;
+    private readonly IPermissionCache _cache = cache;
+    private readonly IUserRepository _user = user;
+
+    private async Task ClearCache(
+        CancellationToken ct
+    )
+    {
+        var users = await _user.ToListAsync(ct);
+        var ids = users
+            .Where(u => u.IsActive)
+            .Select(u => u.ID);
+        foreach (var id in ids)
+            await _cache.InvalidateAsync(id, ct);
+    }
 
     public async Task<Result> HandleAsync(
         AssignToRoleCommand command,
@@ -38,6 +56,7 @@ internal sealed class AssignToRoleHandler(
         var rolePermission = new RolePermission(command.RoleId, command.PermissionId);
         _rolePermission.Add(rolePermission);
         await _save.SaveChangesAsync(cancellationToken);
+        await ClearCache(cancellationToken);
         _logs.LogInformation("Permission {permission} has been assigned to role {role}", command.PermissionId, command.RoleId);
         return Result.Success();
     }
