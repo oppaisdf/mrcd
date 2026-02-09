@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using MRCD.Application.Common;
 using MRCD.Application.Person.Contracts;
+using MRCD.Application.Person.DTOs;
 using MRCD.Domain.Person;
 
 namespace MRCD.Infrastructure.Repositories;
@@ -66,4 +68,38 @@ internal sealed class PersonRepository(
         .AsNoTracking()
         .Where(p => p.IsActive)
         .ToListAsync(cancellationToken);
+
+    public async Task<Pagination<SimplePersonDTO>> ToListAsync(
+        bool isActive,
+        int page,
+        int size,
+        string? normalizedName,
+        bool? isSunday,
+        bool? isMasculine,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = _app
+            .People
+            .Where(p => p.IsActive == isActive)
+            .AsQueryable();
+        if (!string.IsNullOrWhiteSpace(normalizedName))
+            query = query.Where(p => p.NormalizedName.Contains(normalizedName));
+        if (isSunday is not null)
+            query = query.Where(p => p.IsSunday == isSunday);
+        if (isMasculine is not null)
+            query = query.Where(p => p.IsMasculine == isMasculine);
+
+        var total = await query.CountAsync(cancellationToken);
+        var skip = (page - 1) * size;
+        var people = await query
+            .Select(p => new SimplePersonDTO(
+                p.ID,
+                p.Name
+            )).OrderBy(p => p.Name)
+            .Skip(skip)
+            .Take(size)
+            .ToListAsync(cancellationToken);
+        return Pagination<SimplePersonDTO>.Create(people, total, page, size);
+    }
 }
