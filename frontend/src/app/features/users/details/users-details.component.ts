@@ -75,7 +75,8 @@ export class UsersDetailsComponent {
   ) {
     if (this._alert.loading()) return;
     const user = this.user();
-    const role = user.roles.find(r => r.id === roleId);
+    const roles = this.roles();
+    const role = roles.find(r => r.id === roleId);
     if (!role) return;
 
     this._alert.startLoading();
@@ -89,7 +90,7 @@ export class UsersDetailsComponent {
       return;
     }
     this._alert.success(`Se ha ${role.hasRole ? 'des' : ''}asignado el rol al usuario exitosamente`);
-    role.hasRole = !role.hasRole;
-    this.user.set(user);
+    const newRoles = roles.map(r => r.id === roleId ? { ...r, hasRole: !r.hasRole } : r);
+    this.roles.set(newRoles);
   }
 }

@@ -42,7 +42,7 @@ export class UserFormComponent {
   constructor() {
     effect(() => {
       const user = this.user();
-      this.form.patchValue({
+      this.form.reset({
         username: user.username,
         password: null,
         isActive: user.isActive
