@@ -18,8 +18,10 @@ let nextId = 0;
 })
 export class UiInputComponent implements ControlValueAccessor {
   label = input.required<string>();
-  type = input.required<'text' | 'password' | 'number'>();
+  type = input.required<'text' | 'password' | 'number' | 'date'>();
   maxLength = input<number | null>();
+  max = input<string>();
+  min = input<string>();
   hint = input<string | null>(null);
 
   value = signal<string>('');
