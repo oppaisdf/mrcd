@@ -1,5 +1,5 @@
 export type CreateSimpleParentRequest = {
     name: string;
-    isMasculine: string;
+    isMasculine: boolean;
     phone?: string;
 };
