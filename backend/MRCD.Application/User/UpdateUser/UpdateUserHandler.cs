@@ -39,8 +39,8 @@ internal sealed class UpdateUserHandler(
         bool updated = false;
 
         var user = await _user.GetByIdAsync(command.Id, cancellationToken);
-        if (user == null || !user.IsActive)
-            return Result.Failure("El usuario no existe o está inactivo");
+        if (user == null)
+            return Result.Failure("El usuario no existe");
 
         if (!string.IsNullOrWhiteSpace(command.Username))
         {
