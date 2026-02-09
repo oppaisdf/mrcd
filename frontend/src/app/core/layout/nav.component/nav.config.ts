@@ -29,7 +29,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
         options: [
             {
                 routeName: 'Inscribir',
-                route: '/',
+                route: '/people/new',
                 roles: ['usr']
             }, {
                 routeName: 'Actualizar',
