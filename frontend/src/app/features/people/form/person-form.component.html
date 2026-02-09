@@ -1,0 +1,17 @@
+<form [formGroup]="form" class="ui-form" (ngSubmit)="onSubmit()">
+    <ui-input label="Nombre" type="text" [hint]="hint('name')" formControlName="name" />
+    <ui-select label="Género" type="boolean" [items]="arrayBoolean('genders')" formControlName="isMasculine" />
+    <ui-select label="Día" type="boolean" [items]="arrayBoolean('days')" formControlName="isSunday" />
+
+    @if (mode() !== 'Inscribir') {
+    <ui-select label="Estado" type="boolean" [items]="arrayBoolean('states')" formControlName="isActive" />
+    <ui-input label="Parroquia de bautizo" type="text" [hint]="hint('parish')" formControlName="parish" />
+    }
+    <ui-input label="Dirección" type="text" [hint]="hint('address')" formControlName="address" />
+    <ui-input label="Teléfono" type="text" [hint]="hint('phone')" formControlName="phone" />
+    <ui-input label="Fecha de nacimineto" type="date" [hint]="hint('dob')" [min]="dateLimit(false)"
+        [max]="dateLimit(true)" formControlName="dob" />
+    <ui-select label="Último grado académico" type="string" [items]="degrees()" formControlName="degreeId" />
+
+    <button class="ui-button" type="submit">{{mode()}}</button>
+</form>
