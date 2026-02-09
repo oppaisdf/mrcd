@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { catchError, throwError } from "rxjs";
+import { catchError, EMPTY, throwError } from "rxjs";
 import { AuthService } from "../auth/auth.service";
 import { Router } from "@angular/router";
 import { AlertService } from "../../shared/alerts/services/alert.service";
@@ -14,15 +14,16 @@ export const apiErrorInterceptor: HttpInterceptorFn = (req, next) => {
         catchError((err: HttpErrorResponse) => {
             switch (err.status) {
                 case 403:
+                    alert.clear();
                     router.navigateByUrl('/forbidden');
-                    alert.clear();
-                    break;
+                    return EMPTY;
                 case 401:
-                    auth.logout();
                     alert.clear();
-                    break;
+                    auth.logout();
+                    return EMPTY;
+                default:
+                    return throwError(() => err);
             }
-            return throwError(() => err);
         })
     );
 };
