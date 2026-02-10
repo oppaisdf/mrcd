@@ -41,7 +41,7 @@ internal sealed class UpdatePersonHandler(
         if (string.IsNullOrWhiteSpace(name))
             return Result<bool>.Success(false);
         var normalizedName = _service.NormalizeString(name);
-        if (_service.HasOnlyLetters(normalizedName))
+        if (!_service.HasOnlyLetters(normalizedName))
             return Result<bool>.Failure("El nombre del confirmando solo debe contener letras");
         var alreadyExists = await _person.AlreadyExistExceptIdAsync(normalizedName, person.ID, ct);
         if (alreadyExists)

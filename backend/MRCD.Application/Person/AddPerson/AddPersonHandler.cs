@@ -40,6 +40,8 @@ internal sealed class AddPersonHandler(
         foreach (var parent in parents)
         {
             var normalizedName = _service.NormalizeString(parent.Name);
+            if (!_service.HasOnlyLetters(normalizedName))
+                return Result.Failure($"El nombre del padre '{parent.Name}' solo debe contener letras");
             var existingParent = await _parent.GetByNameAsync(normalizedName, ct);
             if (existingParent is not null)
             {
@@ -82,6 +84,8 @@ internal sealed class AddPersonHandler(
         if (phone is not null && !_service.HasOnlyNumbers(phone))
             return Result<Guid>.Failure("El número telefónico no es válido");
         var normalizedName = _service.NormalizeString(command.Name);
+        if (!_service.HasOnlyLetters(normalizedName))
+            return Result<Guid>.Failure("El nombre del confirmando solo debe contener letras");
         var personResult = Domain.Person.Person.Create(
             command.Name,
             normalizedName,
