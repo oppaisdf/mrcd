@@ -6,13 +6,13 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { CreateSimpleParentRequest } from '../../parents/requests/create-simple-parent.request';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { PersonService } from '../services/person.service';
-import { PersonParentComponent } from "../parents/person-parent.component";
+import { AddSimpleParentComponent } from "../../parents/simple-add/add-simple-parent.component";
 
 @Component({
   selector: 'person-create.page',
   imports: [
     PersonFormComponent,
-    PersonParentComponent
+    AddSimpleParentComponent
   ],
   templateUrl: './person-create.page.html',
   styleUrl: './person-create.page.scss',
