@@ -35,6 +35,6 @@ export class BaseEntitiesListPage {
     this._alert.clear();
     if (response.isSuccess)
       this._alert.success("Se ha eliminado el registro correctamente");
-    else this._alert.error(response.message!);
+    else if (response.message) this._alert.error(response.message);
   }
 }

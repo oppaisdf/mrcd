@@ -60,7 +60,8 @@ export class UsersDetailsComponent {
     const response = await this._userService.updateAsync(currentUser.id, request);
     this._alert.clear();
     if (!response.isSuccess) {
-      this._alert.error(response.message!);
+      if (response.message)
+        this._alert.error(response.message);
       return;
     }
     if (request.isActive !== user.isActive && user.isActive !== undefined)
@@ -86,7 +87,8 @@ export class UsersDetailsComponent {
     this._alert.clear();
 
     if (!response.isSuccess) {
-      this._alert.error(response.message!);
+      if (response.message)
+        this._alert.error(response.message);
       return;
     }
     this._alert.success(`Se ha ${role.hasRole ? 'des' : ''}asignado el rol al usuario exitosamente`);

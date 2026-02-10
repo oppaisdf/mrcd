@@ -30,7 +30,8 @@ export class UsersCreatePage implements OnInit {
   async ngOnInit() {
     const response = await this._rolesService.toListAsync();
     if (!response.isSuccess) {
-      this._alert.error(response.message!);
+      if (response.message)
+        this._alert.error(response.message);
       return;
     }
     const roles = (response.data ?? [])
@@ -57,7 +58,8 @@ export class UsersCreatePage implements OnInit {
     const response = await this._service.createAsync(request);
     this._alert.clear();
     if (!response.isSuccess) {
-      this._alert.error(response.message!);
+      if (response.message)
+        this._alert.error(response.message);
       return;
     }
     this._alert.success('El usuario ha sido creado exitosamente');

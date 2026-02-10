@@ -50,7 +50,8 @@ export class BaseEntitiesCreatePage {
     this.form.enable();
 
     if (!response.isSuccess) {
-      this._alert.error(response.message!);
+      if (response.message)
+        this._alert.error(response.message);
       return;
     }
     this._alert.success("Registro creado con éxito");
