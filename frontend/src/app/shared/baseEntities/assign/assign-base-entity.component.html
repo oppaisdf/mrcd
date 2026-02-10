@@ -1,0 +1,29 @@
+@let _items = items();
+
+@if (_items.length > 0) {
+<ui-accordeon [title]="title()">
+    <div class="ui-table wrap">
+        <table class="ui-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of _items; track item.id) {
+                <tr>
+                    <td>{{item.name}}</td>
+                    <td>
+                        <button class="ui-button" [class.is-danger]="item.hasAssociation"
+                            (click)="assignAsync(item.id)">
+                            @if (item.hasAssociation) {Remover}@else {Asignar}
+                        </button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</ui-accordeon>
+}
