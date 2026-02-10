@@ -34,6 +34,9 @@ export class PeopleDetailsPage implements OnInit {
   private readonly _sacraments = signal<Array<AssignedBaseEntityResponse>>([]);
   get sacraments() { return this._sacraments(); }
   set sacraments(sacs) { this._sacraments.set(sacs); }
+  private readonly _charges = signal<Array<AssignedBaseEntityResponse>>([]);
+  get charges() { return this._charges(); }
+  set charges(chs) { this._charges.set(chs); }
 
   constructor() {
     this.id = this._me.snapshot.paramMap.get("id")!;
@@ -62,6 +65,7 @@ export class PeopleDetailsPage implements OnInit {
     this.person.set(person);
     this._documents.set(response.data.documents);
     this._sacraments.set(response.data.sacraments);
+    this._charges.set(response.data.charges);
   }
 
   async updateAsync(

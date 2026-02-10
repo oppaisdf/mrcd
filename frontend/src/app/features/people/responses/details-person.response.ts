@@ -2,6 +2,7 @@ import { AssignedBaseEntityResponse } from "../../../shared/baseEntities/reponse
 import { PersonResponse } from "./person.response";
 
 export interface DetailsPersonResponse extends PersonResponse {
+    charges: Array<AssignedBaseEntityResponse>;
     documents: Array<AssignedBaseEntityResponse>;
     sacraments: Array<AssignedBaseEntityResponse>;
 }
