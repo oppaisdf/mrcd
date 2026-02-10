@@ -81,3 +81,11 @@
 :root[data-theme="dark"][data-route-theme="admin"] {
     --page-bg: #112a0f;
 }
+
+:root[data-theme="light"][data-route-theme="people"] {
+    --page-bg: #d39ce7;
+}
+
+:root[data-theme="dark"][data-route-theme="people"] {
+    --page-bg: #290f2a;
+}

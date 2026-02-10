@@ -78,7 +78,7 @@ export const routes: Routes = [
                 data: {
                     roles: ['usr'],
                     vtIndex: 70,
-                    vtTheme: 'normal'
+                    vtTheme: 'people'
                 },
                 loadChildren: () => import('./features/people/people.routes').then(r => r.PEOPLE_ROUTES)
             }
