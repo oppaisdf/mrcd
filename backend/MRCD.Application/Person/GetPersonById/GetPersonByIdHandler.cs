@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Parent.Contracts;
+using MRCD.Application.Parent.DTOs;
 using MRCD.Application.Person.Contracts;
 using MRCD.Application.Person.DTOs;
 using MRCD.Domain.Common;
@@ -46,8 +47,8 @@ internal sealed class GetPersonByIdHandler(
             person.Parish,
             person.Address,
             person.Phone,
-            parents.Where(p => p.IsParent),
-            parents.Where(p => !p.IsParent),
+            parents.Where(p => p.IsParent).Select(p => new ParentDTO(p.ParentId, p.ParentName, p.IsMasculine, p.Phone)),
+            parents.Where(p => !p.IsParent).Select(p => new ParentDTO(p.ParentId, p.ParentName, p.IsMasculine, p.Phone)),
             charges,
             documents,
             sacraments

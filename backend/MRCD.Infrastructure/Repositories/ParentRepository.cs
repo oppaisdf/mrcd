@@ -34,9 +34,11 @@ internal sealed class ParentRepository(
         where
             p.ID == personId
         select new ParentByPersonDTO(
-            pp.PersonId,
+            pp.ParentId,
+            p.ID,
             p.Name,
             pp.IsParent,
+            p.IsMasculine,
             p.Phone
         )
     ).ToListAsync(cancellationToken);
@@ -65,9 +67,11 @@ internal sealed class ParentRepository(
         where
             person.IsActive
         select new ParentByPersonDTO(
+            parent.ID,
             person.ID,
             parent.Name,
             pp.IsParent,
+            parent.IsMasculine,
             parent.Phone
         )
     ).ToListAsync(cancellationToken);

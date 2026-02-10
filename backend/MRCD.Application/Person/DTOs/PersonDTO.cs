@@ -13,8 +13,8 @@ public sealed record PersonDTO(
     string? Parish,
     string? Address,
     string? Phone,
-    IEnumerable<ParentByPersonDTO> Parents,
-    IEnumerable<ParentByPersonDTO> Godparents,
+    IEnumerable<ParentDTO> Parents,
+    IEnumerable<ParentDTO> Godparents,
     IEnumerable<AssociationBaseEntityDTO> Charges,
     IEnumerable<AssociationBaseEntityDTO> Documents,
     IEnumerable<AssociationBaseEntityDTO> Sacraments
