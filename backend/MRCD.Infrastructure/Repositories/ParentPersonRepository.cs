@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Domain.Parent;
 
@@ -14,4 +15,24 @@ internal sealed class ParentPersonRepository(
     ) => _app
         .ParentsPersons
         .Add(parentPerson);
+
+    public void Del(
+        ParentPerson parentPerson
+    ) => _app
+        .ParentsPersons
+        .Remove(parentPerson);
+
+    public Task<ParentPerson?> GetAsync(
+        Guid personId,
+        Guid parentId,
+        bool isParent,
+        CancellationToken cancellationToken
+    ) => _app
+        .ParentsPersons
+        .AsNoTracking()
+        .Where(pp =>
+            pp.ParentId == parentId
+            && pp.PersonId == personId
+            && pp.IsParent == isParent
+        ).SingleOrDefaultAsync(cancellationToken);
 }
