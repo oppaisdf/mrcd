@@ -5,6 +5,7 @@ using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.DelBaseEntity;
 using MRCD.Application.Charge.AddCharge;
+using MRCD.Application.Person.AssignPersonEntity;
 using MRCD.Domain.Charge;
 
 namespace MRCD.API.Endpoints;
@@ -99,5 +100,65 @@ internal static class ChargeEndpoints
         .WithOpenApi()
         .Produces<IEnumerable<Charge>>(StatusCodes.Status200OK)
         .RequireAuthorization("perm:Charge.Read");
+
+        app.MapPost("{chargeId}/person/{personId}", async (
+            Guid chargeId,
+            Guid personId,
+            [FromServices] IBaseCommandHandler<AssignPersonEntityCommand, Charge> handler,
+            CancellationToken ct
+        ) =>
+        {
+            var command = new AssignPersonEntityCommand(
+                personId,
+                chargeId,
+                true,
+                Application.BaseEntity.Common.BaseEntityType.Charge
+            );
+            var result = await handler.HandleAsync(command, ct);
+            return ResultsMapper.ToHttp(
+                result,
+                () => Results.Ok(),
+                e => e.Contains("no existe"),
+                e => e.Contains("ya ha sido")
+            );
+        })
+        .WithName("AssignPersonCharge")
+        .WithDisplayName("POST /PersonCharge")
+        .WithSummary("Asigna cobro a persona")
+        .WithDescription("Crea relación entre un confirmando y un cobro")
+        .WithOpenApi()
+        .Produces(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .ProducesProblem(StatusCodes.Status409Conflict)
+        .RequireAuthorization("perm:Person.Write");
+
+        app.MapDelete("{chargeId}/person/{personId}", async (
+            Guid chargeId,
+            Guid personId,
+            [FromServices] IBaseCommandHandler<AssignPersonEntityCommand, Charge> handler,
+            CancellationToken ct
+        ) =>
+        {
+            var command = new AssignPersonEntityCommand(
+                personId,
+                chargeId,
+                false,
+                Application.BaseEntity.Common.BaseEntityType.Charge
+            );
+            var result = await handler.HandleAsync(command, ct);
+            return ResultsMapper.ToHttp(
+                result,
+                () => Results.Ok(),
+                e => e.Contains("se ha registrado")
+            );
+        })
+        .WithName("UnassignPersonCharge")
+        .WithDisplayName("DELETE /PersonCharge")
+        .WithSummary("Desasigna cobro a persona")
+        .WithDescription("Elimina la relación entre un confirmando y un cobro")
+        .WithOpenApi()
+        .Produces(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .RequireAuthorization("perm:Person.Write");
     }
 }
