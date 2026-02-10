@@ -1,3 +1,9 @@
 <h1>Detalles del confirmando</h1>
 
 <person-form mode="Actualizar" [person]="person()" (formSubmit)="updateAsync($event)" />
+
+<hr>
+
+<shared-assign-base-entity title="Documentos" endpoint="/document" [personId]="id" [(items)]="documents" />
+<br>
+<shared-assign-base-entity title="Sacramentos" endpoint="/sacrament" [personId]="id" [(items)]="sacraments" />

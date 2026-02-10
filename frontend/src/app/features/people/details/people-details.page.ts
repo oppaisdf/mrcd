@@ -6,10 +6,12 @@ import { PersonFormComponent } from "../form/person-form.component";
 import { PersonResponse } from '../responses/person.response';
 import { PersonVM } from '../vms/person.vm';
 import { UpdatePersonRequest } from '../requests/update-person.request';
+import { AssignedBaseEntityResponse } from '../../../shared/baseEntities/reponses/Assigned-BaseEntity.response';
+import { AssignBaseEntityComponent } from "../../../shared/baseEntities/assign/assign-base-entity.component";
 
 @Component({
   selector: 'app-people-details.page',
-  imports: [PersonFormComponent],
+  imports: [PersonFormComponent, AssignBaseEntityComponent],
   templateUrl: './people-details.page.html',
   styleUrl: './people-details.page.scss',
 })
@@ -17,7 +19,7 @@ export class PeopleDetailsPage implements OnInit {
   private readonly _me = inject(ActivatedRoute);
   private readonly _service = inject(PersonService);
   private readonly _alert = inject(AlertService);
-  private readonly _id: string;
+  readonly id: string;
   readonly person = signal<PersonResponse>({
     name: '',
     isActive: false,
@@ -26,14 +28,20 @@ export class PeopleDetailsPage implements OnInit {
     dob: new Date(),
     degreeId: ''
   });
+  private readonly _documents = signal<Array<AssignedBaseEntityResponse>>([]);
+  get documents() { return this._documents(); }
+  set documents(docs) { this._documents.set(docs); }
+  private readonly _sacraments = signal<Array<AssignedBaseEntityResponse>>([]);
+  get sacraments() { return this._sacraments(); }
+  set sacraments(sacs) { this._sacraments.set(sacs); }
 
   constructor() {
-    this._id = this._me.snapshot.paramMap.get("id")!;
+    this.id = this._me.snapshot.paramMap.get("id")!;
   }
 
   async ngOnInit() {
     this._alert.startLoading();
-    const response = await this._service.getByIdAsync(this._id);
+    const response = await this._service.getByIdAsync(this.id);
     this._alert.clear();
     if (!response.isSuccess) {
       this._alert.error(response.message);
@@ -52,6 +60,8 @@ export class PeopleDetailsPage implements OnInit {
       parish: response.data.parish
     };
     this.person.set(person);
+    this._documents.set(response.data.documents);
+    this._sacraments.set(response.data.sacraments);
   }
 
   async updateAsync(
@@ -70,7 +80,7 @@ export class PeopleDetailsPage implements OnInit {
       address: person.address !== null && person.address !== current.address ? person.address : undefined,
       phone: person.phone !== null && person.phone !== current.phone ? person.phone : undefined
     };
-    const response = await this._service.updateAsync(this._id, request);
+    const response = await this._service.updateAsync(this.id, request);
     if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
