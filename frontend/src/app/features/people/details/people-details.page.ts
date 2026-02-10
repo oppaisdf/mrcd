@@ -8,6 +8,7 @@ import { PersonVM } from '../vms/person.vm';
 import { UpdatePersonRequest } from '../requests/update-person.request';
 import { AssignedBaseEntityResponse } from '../../../shared/baseEntities/reponses/Assigned-BaseEntity.response';
 import { AssignBaseEntityComponent } from "../../../shared/baseEntities/assign/assign-base-entity.component";
+import { AssignedParentResponse } from '../../parents/responses/assigned-parent.response';
 
 @Component({
   selector: 'app-people-details.page',
@@ -31,6 +32,8 @@ export class PeopleDetailsPage implements OnInit {
   readonly documents = signal<Array<AssignedBaseEntityResponse>>([]);
   readonly sacraments = signal<Array<AssignedBaseEntityResponse>>([]);
   readonly charges = signal<Array<AssignedBaseEntityResponse>>([]);
+  readonly parents = signal<Array<AssignedParentResponse>>([]);
+  readonly godparents = signal<Array<AssignedParentResponse>>([]);
 
   constructor() {
     this.id = this._me.snapshot.paramMap.get("id")!;
@@ -60,6 +63,8 @@ export class PeopleDetailsPage implements OnInit {
     this.documents.set(response.data.documents);
     this.sacraments.set(response.data.sacraments);
     this.charges.set(response.data.charges);
+    this.parents.set(response.data.parents);
+    this.godparents.set(response.data.godparents);
   }
 
   async updateAsync(
