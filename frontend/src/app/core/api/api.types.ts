@@ -1,10 +1,10 @@
-export interface Result<T> {
+export type Result<T> = {
     success: boolean;
     message?: string;
     data?: T;
 }
 
-export interface ProblemDetails {
+export type ProblemDetails = {
     type: string;
     title: string;
     status: number;
@@ -15,7 +15,7 @@ export interface ProblemDetails {
     additionalProp3?: string;
 }
 
-export interface PagedResult<T> {
+export type PagedResult<T> = {
     items: T[];
     totalCount: number;
     page: number;

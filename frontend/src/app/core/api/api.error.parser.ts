@@ -4,6 +4,9 @@ import { ProblemDetails } from "./api.types";
 export function parseAPIError(
     error: unknown
 ): string {
+    const wrapper = error as any;
+    if (wrapper?.silent) return '';
+    if (wrapper?.original) error = wrapper.original;
     if (!(error instanceof HttpErrorResponse))
         return 'Error desconocido';
 
