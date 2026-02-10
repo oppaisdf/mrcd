@@ -20,7 +20,7 @@ export class BaseEntitiesListPage {
   private async loadAsync() {
     const response = await this._service.toListAsync(this.endpoint());
     if (!response.isSuccess)
-      this._alert.error(response.message!);
+      this._alert.error(response.message);
     else this.items.set(response.data ?? []);
   }
 
@@ -35,6 +35,6 @@ export class BaseEntitiesListPage {
     this._alert.clear();
     if (response.isSuccess)
       this._alert.success("Se ha eliminado el registro correctamente");
-    else if (response.message) this._alert.error(response.message);
+    else this._alert.error(response.message);
   }
 }

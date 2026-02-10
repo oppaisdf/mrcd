@@ -24,8 +24,7 @@ export class UsersListPage implements OnInit {
     if (this._alert.loading()) return;
     const response = await this._service.toListAsync();
     if (!response.isSuccess) {
-      if (response.message)
-        this._alert.error(response.message);
+      this._alert.error(response.message);
       return;
     }
     this.users.set(response.data ?? []);

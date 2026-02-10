@@ -36,8 +36,7 @@ export class PeopleDetailsPage implements OnInit {
     const response = await this._service.getByIdAsync(this._id);
     this._alert.clear();
     if (!response.isSuccess) {
-      if (response.message)
-        this._alert.error(response.message);
+      this._alert.error(response.message);
       return;
     }
     if (!response.data) return;
@@ -73,8 +72,7 @@ export class PeopleDetailsPage implements OnInit {
     };
     const response = await this._service.updateAsync(this._id, request);
     if (!response.isSuccess) {
-      if (response.message)
-        this._alert.error(response.message);
+      this._alert.error(response.message);
       return;
     }
     this._alert.success("Se ha actualizado al confirmando correctamente");

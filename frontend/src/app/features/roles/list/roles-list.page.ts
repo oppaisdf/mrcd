@@ -19,11 +19,11 @@ export class RolesListPage implements OnInit {
 
   async ngOnInit() {
     const response = await this._service.toListAsync();
-    if (!response.isSuccess && response.message) {
+    if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
     }
-    if (response.isSuccess && response.data)
+    if (response.data)
       this.roles.set(response.data);
   }
 

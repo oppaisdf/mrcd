@@ -49,8 +49,8 @@ export class PersonCreatePage {
     };
     const response = await this._service.addAsync(request);
     this._alert.clear();
-    if (!response.isSuccess && response.message)
+    if (!response.isSuccess)
       this._alert.error(response.message);
-    if (response.isSuccess) this._alert.success("Se ha inscrito el confirmando correctamente");
+    else this._alert.success("Se ha inscrito el confirmando correctamente");
   }
 }

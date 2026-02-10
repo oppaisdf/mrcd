@@ -37,8 +37,9 @@ export class AlertService {
   }
 
   public error(
-    message: string
+    message?: string
   ) {
+    if (!message) return;
     const error: AlertItem = {
       type: 'error',
       title: 'Error',

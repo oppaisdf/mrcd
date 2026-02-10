@@ -30,8 +30,7 @@ export class RolePermissionsComponent {
       : await this._service.unassignPermissionAsync(roleId, permission.permissionID);
     this._alert.clear();
     if (!response.isSuccess) {
-      if (response.message)
-        this._alert.error(response.message);
+      this._alert.error(response.message);
       return;
     }
     const role = this.role();
