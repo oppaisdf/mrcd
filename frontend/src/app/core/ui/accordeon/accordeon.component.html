@@ -1,0 +1,16 @@
+<details class="ui-acc" [open]="open()" (toggle)="onToggle($event)">
+    <summary class="ui-acc__summary" [attr.aria-controls]="id">
+        <div class="ui-acc__title">
+            {{title()}}
+            <ng-content select="[acc-title]" />
+        </div>
+
+        <span class="ui-acc__chev" aria-hidden="true">›</span>
+    </summary>
+
+    <div class="ui-acc__panel" [id]="id" role="region">
+        <div class="ui-acc__content">
+            <ng-content />
+        </div>
+    </div>
+</details>
