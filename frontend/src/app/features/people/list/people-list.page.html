@@ -1,16 +1,15 @@
 <h1>Confirmandos</h1>
 
-<hr>
-<h2>Filtros</h2>
-<form [formGroup]="form" class="ui-form" (ngSubmit)="getAsync()">
-    <ui-input label="Nombre" type="text" formControlName="name" />
-    <ui-select label="Estado" [items]="getItems('isActive')" type="boolean" formControlName="isActive" />
-    <ui-select label="Género" [items]="getItems('isMasculine')" type="boolean" formControlName="isMasculine" />
+<ui-accordeon title="Filtros">
+    <form [formGroup]="form" class="ui-form" (ngSubmit)="getAsync()">
+        <ui-input label="Nombre" type="text" formControlName="name" />
+        <ui-select label="Estado" [items]="getItems('isActive')" type="boolean" formControlName="isActive" />
+        <ui-select label="Género" [items]="getItems('isMasculine')" type="boolean" formControlName="isMasculine" />
 
-    <button class="ui-button" type="submit">Buscar</button>
-</form>
-<hr>
-
+        <button class="ui-button" type="submit">Buscar</button>
+    </form>
+</ui-accordeon>
+<br>
 @let paginated = people();
 @if (paginated.items.length > 0) {
 <div class="ui-table-wrap">
@@ -33,7 +32,7 @@
         </tbody>
     </table>
 </div>
-
+<br>
 @if (paginated.hasPrevious) {
 <button class="ui-button is-ghost" (click)="changePageAsync(false)">Página anterior</button>
 }

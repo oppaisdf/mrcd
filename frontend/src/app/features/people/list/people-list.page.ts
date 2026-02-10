@@ -8,6 +8,7 @@ import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
 import { RouterLink } from "@angular/router";
+import { AccordeonComponent } from "../../../core/ui/accordeon/accordeon.component";
 
 @Component({
   selector: 'people-list.page',
@@ -15,7 +16,8 @@ import { RouterLink } from "@angular/router";
     ReactiveFormsModule,
     UiInputComponent,
     UiSelectComponent,
-    RouterLink
+    RouterLink,
+    AccordeonComponent
   ],
   templateUrl: './people-list.page.html',
   styleUrl: './people-list.page.scss',
