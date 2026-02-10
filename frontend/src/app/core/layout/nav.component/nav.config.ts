@@ -33,7 +33,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
                 roles: ['usr']
             }, {
                 routeName: 'Actualizar',
-                route: '/',
+                route: '/people',
                 roles: ['usr']
             }, {
                 routeName: 'Asistencia',

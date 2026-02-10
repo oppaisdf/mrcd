@@ -4,6 +4,12 @@ import { PersonService } from "./services/person.service";
 
 export const PEOPLE_ROUTES: Routes = [
     {
+        path: '',
+        title: 'Confirmandos',
+        data: { vtIndex: 7002 },
+        providers: [PersonService],
+        loadComponent: () => import('./list/people-list.page').then(p => p.PeopleListPage)
+    }, {
         path: 'new',
         title: 'Inscripción',
         data: {
