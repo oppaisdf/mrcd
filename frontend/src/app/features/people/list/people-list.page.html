@@ -1,0 +1,44 @@
+<h1>Confirmandos</h1>
+
+<hr>
+<h2>Filtros</h2>
+<form [formGroup]="form" class="ui-form" (ngSubmit)="getAsync()">
+    <ui-input label="Nombre" type="text" formControlName="name" />
+    <ui-select label="Estado" [items]="getItems('isActive')" type="boolean" formControlName="isActive" />
+    <ui-select label="Género" [items]="getItems('isMasculine')" type="boolean" formControlName="isMasculine" />
+
+    <button class="ui-button" type="submit">Buscar</button>
+</form>
+<hr>
+
+@let paginated = people();
+@if (paginated.items.length > 0) {
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (person of paginated.items; track person.id) {
+            <tr>
+                <td>{{person.name}}</td>
+                <td>
+                    <button class="ui-button">Detalles</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (paginated.hasPrevious) {
+<button class="ui-button is-ghost" (click)="changePageAsync(false)">Página anterior</button>
+}
+{{paginated.page}}/{{paginated.totalPages}}
+@if(paginated.hasNext){
+<button class="ui-button is-ghost" (click)="changePageAsync(true)">Siguiente página</button>
+}
+}
