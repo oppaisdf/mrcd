@@ -81,6 +81,15 @@ export const routes: Routes = [
                     vtTheme: 'people'
                 },
                 loadChildren: () => import('./features/people/people.routes').then(r => r.PEOPLE_ROUTES)
+            }, {
+                path: 'charges',
+                canMatch: [roleGuard],
+                data: {
+                    roles: ['adm'],
+                    vtIndex: 80,
+                    vtTheme: 'admin'
+                },
+                loadChildren: () => import('./features/charges/charges.routes').then(r => r.CHARGES_ROUTES)
             }
         ]
     },
