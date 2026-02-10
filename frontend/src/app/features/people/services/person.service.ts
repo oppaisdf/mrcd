@@ -3,6 +3,8 @@ import { ApiService } from '../../../core/api/api.service';
 import { CreatePersonRequest } from '../requests/create-person.request';
 import { PagedResult } from '../../../core/api/api.types';
 import { SimplePersonResponse } from '../responses/simple-person.response';
+import { DetailsPersonResponse } from '../responses/details-person.response';
+import { UpdatePersonRequest } from '../requests/update-person.request';
 
 @Injectable()
 export class PersonService {
@@ -27,5 +29,18 @@ export class PersonService {
       isMasculine: isMasculine
     };
     return this._api.getAsync<PagedResult<SimplePersonResponse>>('/person', params);
+  }
+
+  public getByIdAsync(
+    id: string
+  ) {
+    return this._api.getAsync<DetailsPersonResponse>(`/person/${id}`);
+  }
+
+  public updateAsync(
+    id: string,
+    request: UpdatePersonRequest
+  ) {
+    return this._api.patchAsync(`/person/${id}`, request);
   }
 }
