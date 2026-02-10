@@ -5,6 +5,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.AddBaseEntity;
 using MRCD.Application.BaseEntity.DelBaseEntity;
 using MRCD.Application.BaseEntity.GetBaseEntity;
+using MRCD.Application.Person.AssignPersonEntity;
 using MRCD.Application.Security;
 using MRCD.Application.Services.CommonService;
 
@@ -43,7 +44,6 @@ public static class DependencyInjection
             .Where(t =>
                 t.IsClass
                 && !t.IsAbstract
-                && t != typeof(Domain.Common.BaseEntity)
                 && typeof(Domain.Common.BaseEntity).IsAssignableFrom(t)
             );
         foreach (var entityType in entityTypes)
@@ -55,12 +55,19 @@ public static class DependencyInjection
                 .MakeGenericType(entityType);
             services.AddScoped(serviceType, implType);
 
-            // IBaseCommandHandler
+            // IBaseCommandHandler delete
             var baseServiceType = typeof(IBaseCommandHandler<,>)
                 .MakeGenericType(typeof(DelBaseEntityCommand), entityType);
             var baseImplType = typeof(DelBaseEntityHandler<>)
                 .MakeGenericType(entityType);
             services.AddScoped(baseServiceType, baseImplType);
+
+            // IBaseCommandHandler assign
+            var assignServiceType = typeof(IBaseCommandHandler<,>)
+                .MakeGenericType(typeof(AssignPersonEntityCommand), entityType);
+            var assignImplType = typeof(AssignPersonEntityHandler<>)
+                .MakeGenericType(entityType);
+            services.AddScoped(assignServiceType, assignImplType);
         }
         return services;
     }
