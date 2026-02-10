@@ -7,13 +7,15 @@ import { PagedResult } from '../../../core/api/api.types';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'people-list.page',
   imports: [
     ReactiveFormsModule,
     UiInputComponent,
-    UiSelectComponent
+    UiSelectComponent,
+    RouterLink
   ],
   templateUrl: './people-list.page.html',
   styleUrl: './people-list.page.scss',
