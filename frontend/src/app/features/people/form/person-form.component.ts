@@ -52,7 +52,7 @@ export class PersonFormComponent implements OnInit {
         isMasculine: person.isMasculine,
         isSunday: person.isSunday,
         parish: person.parish,
-        address: person.adress,
+        address: person.address,
         phone: person.phone,
         degreeId: person.degreeId,
         dob: person.dob

@@ -1,4 +1,4 @@
-export type PersonResponse = {
+export interface PersonResponse {
     name: string;
     isActive: boolean;
     isMasculine: boolean;
@@ -6,6 +6,6 @@ export type PersonResponse = {
     dob: Date;
     degreeId: string;
     parish?: string;
-    adress?: string;
+    address?: string;
     phone?: string;
 };
