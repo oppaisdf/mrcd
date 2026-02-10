@@ -28,15 +28,9 @@ export class PeopleDetailsPage implements OnInit {
     dob: new Date(),
     degreeId: ''
   });
-  private readonly _documents = signal<Array<AssignedBaseEntityResponse>>([]);
-  get documents() { return this._documents(); }
-  set documents(docs) { this._documents.set(docs); }
-  private readonly _sacraments = signal<Array<AssignedBaseEntityResponse>>([]);
-  get sacraments() { return this._sacraments(); }
-  set sacraments(sacs) { this._sacraments.set(sacs); }
-  private readonly _charges = signal<Array<AssignedBaseEntityResponse>>([]);
-  get charges() { return this._charges(); }
-  set charges(chs) { this._charges.set(chs); }
+  readonly documents = signal<Array<AssignedBaseEntityResponse>>([]);
+  readonly sacraments = signal<Array<AssignedBaseEntityResponse>>([]);
+  readonly charges = signal<Array<AssignedBaseEntityResponse>>([]);
 
   constructor() {
     this.id = this._me.snapshot.paramMap.get("id")!;
@@ -63,9 +57,9 @@ export class PeopleDetailsPage implements OnInit {
       parish: response.data.parish
     };
     this.person.set(person);
-    this._documents.set(response.data.documents);
-    this._sacraments.set(response.data.sacraments);
-    this._charges.set(response.data.charges);
+    this.documents.set(response.data.documents);
+    this.sacraments.set(response.data.sacraments);
+    this.charges.set(response.data.charges);
   }
 
   async updateAsync(
