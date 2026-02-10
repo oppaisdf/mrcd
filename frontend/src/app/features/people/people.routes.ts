@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { BaseEntitiesService } from "../../shared/baseEntities/services/base-entities.service";
 import { PersonService } from "./services/person.service";
+import { guidParamGuard } from "../../core/guards/guid-param-guard";
 
 export const PEOPLE_ROUTES: Routes = [
     {
@@ -20,5 +21,17 @@ export const PEOPLE_ROUTES: Routes = [
             PersonService
         ],
         loadComponent: () => import('./create/person-create.page').then(p => p.PersonCreatePage)
+    }, {
+        path: ':id',
+        title: 'Detalles del confirmando',
+        canMatch: [guidParamGuard('id')],
+        data: {
+            vtIndex: 7003
+        },
+        providers: [
+            PersonService,
+            BaseEntitiesService
+        ],
+        loadComponent: () => import('./details/people-details.page').then(p => p.PeopleDetailsPage)
     }
 ];
