@@ -30,11 +30,10 @@ internal sealed class GetPersonByIdHandler(
         if (person is null)
             return Result<PersonDTO>.Failure("El confirmando no existe :c");
 
-        var parentsTask = _parent.ByPersonToListAsync(query.PersonId, cancellationToken);
-        var chargesTask = _charge.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
-        var documentTask = _document.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
-        var sacramentTask = _document.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
-        await Task.WhenAll(parentsTask, chargesTask, documentTask, sacramentTask);
+        var parents = await _parent.ByPersonToListAsync(query.PersonId, cancellationToken);
+        var charges = await _charge.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
+        var documents = await _document.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
+        var sacraments = await _document.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
         var response = new PersonDTO(
             person.Name,
             person.IsActive,
@@ -45,11 +44,11 @@ internal sealed class GetPersonByIdHandler(
             person.Parish,
             person.Address,
             person.Phone,
-            parentsTask.Result.Where(p => p.IsParent),
-            parentsTask.Result.Where(p => !p.IsParent),
-            chargesTask.Result,
-            documentTask.Result,
-            sacramentTask.Result
+            parents.Where(p => p.IsParent),
+            parents.Where(p => !p.IsParent),
+            charges,
+            documents,
+            sacraments
         );
         _logs.LogInformation("Person {person} has been consulted by user {user}", query.PersonId, query.UserId);
         return Result<PersonDTO>.Success(response);
