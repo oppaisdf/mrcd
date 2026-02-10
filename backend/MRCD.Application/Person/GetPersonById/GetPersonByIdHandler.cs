@@ -12,6 +12,7 @@ internal sealed class GetPersonByIdHandler(
     IParentRepository parent,
     IPersonChargeRepository charge,
     IPersonDocumentRepository document,
+    IPersonSacramentRepository sacrament,
     ILogger<GetPersonByIdHandler> logs
 ) : IQueryHandler<PersonDTO, GetPersonByIdQuery>
 {
@@ -19,6 +20,7 @@ internal sealed class GetPersonByIdHandler(
     private readonly IParentRepository _parent = parent;
     private readonly IPersonChargeRepository _charge = charge;
     private readonly IPersonDocumentRepository _document = document;
+    private readonly IPersonSacramentRepository _sacrament = sacrament;
     private readonly ILogger<GetPersonByIdHandler> _logs = logs;
 
     public async Task<Result<PersonDTO>> HandleAsync(
@@ -33,7 +35,7 @@ internal sealed class GetPersonByIdHandler(
         var parents = await _parent.ByPersonToListAsync(query.PersonId, cancellationToken);
         var charges = await _charge.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
         var documents = await _document.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
-        var sacraments = await _document.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
+        var sacraments = await _sacrament.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
         var response = new PersonDTO(
             person.Name,
             person.IsActive,
