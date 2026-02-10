@@ -1,0 +1,7 @@
+<h1>Creación de cobros</h1>
+
+<form [formGroup]="form" class="ui-form" (ngSubmit)="createAsync()">
+    <ui-input label="Nombre" type="text" [hint]="hint('name')" formControlName="name" [maxLength]="30" />
+    <ui-input label="Monto" type="number" [hint]="hint('amount')" formControlName="amount" />
+    <button class="ui-button" type="submit">Agregar</button>
+</form>
