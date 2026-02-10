@@ -26,4 +26,20 @@ export class BaseEntitiesService {
   ) {
     return this._api.getAsync<Array<BaseEntityResponse>>(endpoint);
   }
+
+  public assignAsync(
+    endpoint: string,
+    personId: string,
+    entityId: string
+  ) {
+    return this._api.postAsync(`${endpoint}/${entityId}/person/${personId}`, undefined);
+  }
+
+  public unassignAsync(
+    endpoint: string,
+    personId: string,
+    entityId: string
+  ) {
+    return this._api.delAsync(`${endpoint}/${entityId}/person/${personId}`);
+  }
 }
