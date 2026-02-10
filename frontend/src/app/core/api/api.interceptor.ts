@@ -17,6 +17,10 @@ export const apiErrorInterceptor: HttpInterceptorFn = (req, next) => {
                     alert.clear();
                     router.navigateByUrl('/forbidden');
                     return throwError(() => ({ silent: true, original: err }));
+                case 404:
+                    alert.clear();
+                    router.navigateByUrl('/not-found');
+                    return throwError(() => ({ silent: true, original: err }));
                 case 401:
                     alert.clear();
                     auth.logout();
