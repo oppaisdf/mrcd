@@ -38,17 +38,17 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
             }, {
                 routeName: 'Asistencia',
                 route: '/',
-                roles: ['usr']
+                roles: ['ukn']
             }, {
                 routeName: 'Padres/padrinos',
                 route: '/',
-                roles: ['usr']
+                roles: ['ukn']
             }
         ]
     }, {
         id: 'Impresiones',
         icon: '🖨️',
-        roles: ['usr'],
+        roles: ['ukn'],
         options: [
             {
                 routeName: "Agenda",
@@ -80,7 +80,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
             {
                 routeName: "Agenda",
                 route: "/",
-                roles: ['usr']
+                roles: ['ukn']
             }, {
                 routeName: "Cobros",
                 route: "/charges",
@@ -92,7 +92,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
             }, {
                 routeName: "Fases de actividad",
                 route: "/",
-                roles: ['usr']
+                roles: ['ukn']
             }, {
                 routeName: "Grados académicos",
                 route: "/degrees",
@@ -100,7 +100,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
             }, {
                 routeName: "Movimientos contables",
                 route: "/",
-                roles: ['adm']
+                roles: ['ukn']
             }, {
                 routeName: "Usuarios",
                 route: "/users",
@@ -114,7 +114,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
     }, {
         id: "Monitoreo",
         icon: "🖥️",
-        roles: ['adm'],
+        roles: ['ukn'],
         options: [
             {
                 routeName: "Logs",
