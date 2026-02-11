@@ -86,6 +86,9 @@ internal sealed class AddParentHandler(
             return Result<Guid>.Failure("El nombre del padre/padrino solo puede contener letras");
         var currentParent = await _repo.GetByNameAsync(normalizedName, cancellationToken);
 
+        if (currentParent is not null && command.PersonId is null)
+            return Result<Guid>.Failure("El nombre del padre/padrino ya se ha registrado");
+
         Guid id;
         if (currentParent is null)
         {
