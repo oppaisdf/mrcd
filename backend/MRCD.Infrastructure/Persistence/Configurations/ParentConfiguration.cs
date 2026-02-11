@@ -23,5 +23,9 @@ internal sealed class ParentConfiguration : IEntityTypeConfiguration<Parent>
         builder
             .Property(e => e.NormalizedName)
             .HasMaxLength(80);
+        builder
+            .HasIndex(e => e.NormalizedName)
+            .IsUnique()
+            .HasDatabaseName("UX_Parent_NormalizedName");
     }
 }

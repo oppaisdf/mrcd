@@ -25,6 +25,10 @@ internal sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             .Property(e => e.NormalizedName)
             .HasMaxLength(65);
         builder
+            .HasIndex(e => e.NormalizedName)
+            .IsUnique()
+            .HasDatabaseName("UX_Person_NormalizedName");
+        builder
             .Property(e => e.Parish)
             .HasMaxLength(30);
         builder
