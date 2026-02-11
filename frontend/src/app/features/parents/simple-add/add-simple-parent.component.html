@@ -1,13 +1,6 @@
 <h2>{{title()}}</h2>
 <hr>
-<form [formGroup]="form" class="ui-form" (ngSubmit)="addParent()">
-    <ui-input label="Nombre del padre" type="text" [hint]="hint('name')" formControlName="name" />
-    <ui-select label="Género del padre" type="boolean" [items]="genders" formControlName="isMasculine" />
-    <ui-input label="Teléfono del padre" type="text" formControlName="phone" />
-    @if (!fullParents) {
-    <button class="ui-button" type="submit">Agregar padre</button>
-    }
-</form>
+<parents-form [hideIsParent]="true" (parent)="addParent($event)" />
 <hr>
 
 @if (parents().length > 0) {
