@@ -1,4 +1,4 @@
-export type CreateparentRequest = {
+export type CreateParentRequest = {
     parentName: string;
     isMasculine: boolean;
     isParent: boolean;
