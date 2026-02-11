@@ -1,6 +1,6 @@
 export type AssignedParentResponse = {
-    personId: string;
-    parentName: string;
-    isParent: boolean;
+    id: string;
+    name: string;
+    isMasculine: boolean;
     phone?: string;
 };
