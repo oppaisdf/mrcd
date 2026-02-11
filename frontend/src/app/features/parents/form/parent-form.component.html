@@ -1,0 +1,10 @@
+<form [formGroup]="form" class="ui-form" (ngSubmit)="onSubmit()">
+    <ui-input label="Nombre" type="text" [hint]="hint('name')" [maxlength]="80" formControlName="name" />
+    <ui-select label="Género" [items]="items('genders')" type="boolean" formControlName="isMasculine" />
+    @if (!hideIsParent()) {
+    <ui-select label="Tipo" [items]="items('typeParent')" type="boolean" formControlName="isParent" />
+    }
+    <ui-input label="Teléfono" type="text" [hint]="hint('phone')" formControlName="phone" />
+
+    <button class="ui-button" type="submit">Agregar</button>
+</form>
