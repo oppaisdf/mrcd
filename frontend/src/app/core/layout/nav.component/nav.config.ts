@@ -41,8 +41,8 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
                 roles: ['ukn']
             }, {
                 routeName: 'Padres/padrinos',
-                route: '/',
-                roles: ['ukn']
+                route: '/parents',
+                roles: ['usr']
             }
         ]
     }, {
@@ -119,7 +119,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
             {
                 routeName: "Logs",
                 route: "/",
-                roles: ['adm']
+                roles: ['ukn']
             }
         ]
     }, {
