@@ -1,0 +1,309 @@
+/* ---------- 404 Page wrapper (mismo look que 403) ---------- */
+.notfound {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: var(--space-8);
+    background: var(--page-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+}
+
+.notfound__panel {
+    width: min(980px, 100%);
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: clamp(var(--space-4), 4vw, var(--space-12));
+    padding: clamp(var(--space-4), 3.5vw, var(--space-12));
+    border-radius: var(--radius-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-2);
+    overflow: visible;
+}
+
+@media (min-width: 860px) {
+    .notfound__panel {
+        grid-template-columns: 360px 1fr;
+    }
+}
+
+.notfound__art {
+    display: grid;
+    place-items: center;
+    padding: var(--space-6);
+}
+
+.notfound__copy {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.notfound__code {
+    margin: 0;
+    font-size: clamp(28px, 3.4vw, 44px);
+    letter-spacing: .14em;
+    font-weight: 850;
+    opacity: .85;
+}
+
+.notfound__title {
+    margin: 0;
+    font-size: clamp(26px, 3.8vw, 44px);
+    line-height: 1.05;
+}
+
+.notfound__desc {
+    margin: 0;
+    max-width: 60ch;
+    color: var(--color-text-muted);
+}
+
+/* ---------- CAT BASE (compartida) ---------- */
+.cat404 {
+    --cat-fur: #0b0b12;
+    --cat-eye: var(--color-warning);
+    --cat-nose: color-mix(in srgb, var(--color-text-muted) 70%, transparent);
+    --cat-glass: color-mix(in srgb, var(--color-border) 70%, #fff);
+    --cat-glass-hi: color-mix(in srgb, #fff 65%, transparent);
+
+    width: clamp(220px, 28vw, 320px);
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    position: relative;
+    isolation: isolate;
+
+    animation: purr var(--dur-3) infinite var(--ease-out);
+}
+
+.cat404 * {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cat404 .head,
+.cat404 .body,
+.cat404 .paw,
+.cat404 .tail-segment {
+    background-color: var(--cat-fur);
+}
+
+/* Reusa tu estructura de head/ears/eyes/muzzle/body/paw/tail
+   pero con una pose distinta (curioso + inclinado) */
+.cat404 .head {
+    position: absolute;
+    width: 110px;
+    height: 100px;
+    left: 34%;
+    top: 40%;
+    transform: translate(-50%, -50%) rotate(-6deg);
+    border-radius: 50%;
+    z-index: 3;
+    animation: head-tilt calc(var(--dur-3) * 5) infinite ease-in-out;
+}
+
+.cat404 .ears {
+    position: absolute;
+    left: 50%;
+    top: -12px;
+    transform: translateX(-50%);
+    width: 120px;
+    display: flex;
+    justify-content: space-between;
+    z-index: -1;
+}
+
+.cat404 .ear {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 50px solid var(--cat-fur);
+}
+
+.cat404 .ear.left {
+    transform: rotate(-18deg) translateX(-6px);
+}
+
+.cat404 .ear.right {
+    transform: rotate(22deg) translateX(10px);
+}
+
+.cat404 .eyes {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cat404 .eye {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--cat-eye);
+    animation: look-around calc(var(--dur-3) * 6) infinite ease-in-out,
+        eye-blink calc(var(--dur-3) * 6) infinite ease-in-out;
+}
+
+.cat404 .muzzle {
+    position: absolute;
+    left: 50%;
+    top: 74%;
+    transform: translate(-50%, -50%);
+}
+
+.cat404 .nose {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--cat-nose);
+}
+
+.cat404 .body {
+    position: absolute;
+    width: 210px;
+    height: 105px;
+    left: 58%;
+    top: 64%;
+    transform: translate(-50%, -50%);
+    border-top-left-radius: 150px;
+    border-top-right-radius: 150px;
+    overflow: visible;
+}
+
+.cat404 .paw {
+    position: absolute;
+    width: 58px;
+    height: 34px;
+    left: -22px;
+    top: 72px;
+    border-radius: 999px;
+    z-index: 2;
+}
+
+/* cola (reusa tu curva) */
+.cat404 .tail {
+    position: absolute;
+    left: 57%;
+    top: 70%;
+    transform: translate(86px, -10px) rotate(62deg);
+    transform-origin: left center;
+    z-index: 1;
+}
+
+.cat404 .tail-segment {
+    position: relative;
+    width: 34px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--cat-fur);
+    transform-origin: 6px 11px;
+    animation: tail-swish calc(var(--dur-3) * 4) infinite var(--ease-spring);
+}
+
+.cat404 .tail-segment>.tail-segment {
+    position: absolute;
+    left: 14px;
+    top: 2px;
+    transform: rotate(10deg);
+    transform-origin: 6px 11px;
+    width: 32px;
+    height: 21px;
+}
+
+/* ---------- LUPA (pura CSS) ---------- */
+.cat404 .glass {
+    position: absolute;
+    left: 72%;
+    top: 58%;
+    transform: translate(-50%, -50%) rotate(10deg);
+    width: 70px;
+    height: 70px;
+    z-index: 4;
+    pointer-events: none;
+    animation: glass-hover calc(var(--dur-3) * 6) infinite ease-in-out;
+}
+
+.cat404 .lens {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 4px solid var(--cat-glass);
+    box-shadow: 0 0 0 2px color-mix(in srgb, #000 35%, transparent);
+    background: radial-gradient(circle at 30% 30%, var(--cat-glass-hi), transparent 55%);
+}
+
+.cat404 .handle {
+    position: absolute;
+    width: 50px;
+    height: 10px;
+    left: 55px;
+    top: 50px;
+    border-radius: 999px;
+    background: var(--cat-glass);
+    transform: rotate(35deg);
+}
+
+/* ---------- Animaciones nuevas 404 ---------- */
+@keyframes look-around {
+
+    0%,
+    15%,
+    100% {
+        transform: translateX(0);
+    }
+
+    35% {
+        transform: translateX(5px);
+    }
+
+    55% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(2px);
+    }
+}
+
+@keyframes head-tilt {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) rotate(-6deg);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) rotate(4deg);
+    }
+}
+
+@keyframes glass-hover {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) rotate(10deg) translateY(0);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) rotate(8deg) translateY(-6px);
+    }
+}
+
+/* respeta reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .cat404,
+    .cat404 .head,
+    .cat404 .eye,
+    .cat404 .tail-segment,
+    .cat404 .glass {
+        animation: none !important;
+    }
+}
