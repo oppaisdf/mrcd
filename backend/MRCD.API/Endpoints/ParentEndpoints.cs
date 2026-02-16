@@ -144,16 +144,18 @@ internal static class ParentEndpoints
         .ProducesProblem(StatusCodes.Status409Conflict)
         .RequireAuthorization("perm:Parent.Write");
 
-        app.MapDelete("/person", async (
-            [FromBody] AssignParentRequest request,
+        app.MapDelete("/person/{personId}/parent/{parentId}/type/{isParent}", async (
+            Guid personId,
+            Guid parentId,
+            bool isParent,
             [FromServices] ICommandHandler<AssignParentCommand> handler,
             CancellationToken ct
         ) =>
         {
             var command = new AssignParentCommand(
-                request.ParentId,
-                request.PersonId,
-                request.IsParent,
+                parentId,
+                personId,
+                isParent,
                 false
             );
             var result = await handler.HandleAsync(command, ct);
