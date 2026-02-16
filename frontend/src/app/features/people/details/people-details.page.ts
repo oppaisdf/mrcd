@@ -9,10 +9,11 @@ import { UpdatePersonRequest } from '../requests/update-person.request';
 import { AssignedBaseEntityResponse } from '../../../shared/baseEntities/reponses/Assigned-BaseEntity.response';
 import { AssignBaseEntityComponent } from "../../../shared/baseEntities/assign/assign-base-entity.component";
 import { AssignedParentResponse } from '../../parents/responses/assigned-parent.response';
+import { AssignParentComponent } from "../../parents/assign/assign-parent.component";
 
 @Component({
   selector: 'app-people-details.page',
-  imports: [PersonFormComponent, AssignBaseEntityComponent],
+  imports: [PersonFormComponent, AssignBaseEntityComponent, AssignParentComponent],
   templateUrl: './people-details.page.html',
   styleUrl: './people-details.page.scss',
 })

@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { BaseEntitiesService } from "../../shared/baseEntities/services/base-entities.service";
 import { PersonService } from "./services/person.service";
 import { guidParamGuard } from "../../core/guards/guid-param-guard";
+import { ParentService } from "../parents/services/parent.service";
 
 export const PEOPLE_ROUTES: Routes = [
     {
@@ -30,7 +31,8 @@ export const PEOPLE_ROUTES: Routes = [
         },
         providers: [
             PersonService,
-            BaseEntitiesService
+            BaseEntitiesService,
+            ParentService
         ],
         loadComponent: () => import('./details/people-details.page').then(p => p.PeopleDetailsPage)
     }

@@ -3,7 +3,10 @@
 <person-form mode="Actualizar" [person]="person()" (formSubmit)="updateAsync($event)" />
 
 <hr>
-
+<parents-assign [typeParent]="true" [personId]="id" [rawParents]="parents()" />
+<br>
+<parents-assign [typeParent]="false" [personId]="id" [rawParents]="godparents()" />
+<br>
 <shared-assign-base-entity title="Cobros" endpoint="/charge" [personId]="id" [(items)]="charges" />
 <br>
 <shared-assign-base-entity title="Documentos" endpoint="/document" [personId]="id" [(items)]="documents" />
