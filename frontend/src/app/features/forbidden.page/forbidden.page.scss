@@ -1,0 +1,322 @@
+/* Forbidden page */
+.forbidden {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: var(--space-8);
+    background: var(--page-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+}
+
+.forbidden__panel {
+    width: min(980px, 100%);
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: clamp(var(--space-4), 4vw, var(--space-12));
+    padding: clamp(var(--space-4), 3.5vw, var(--space-12));
+    border-radius: var(--radius-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-2);
+    overflow: visible;
+}
+
+@media (min-width: 860px) {
+    .forbidden__panel {
+        grid-template-columns: 360px 1fr;
+    }
+}
+
+.forbidden__art {
+    display: grid;
+    place-items: center;
+    padding: var(--space-6);
+}
+
+.forbidden__copy {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.forbidden__code {
+    margin: 0;
+    font-size: clamp(28px, 3.4vw, 44px);
+    letter-spacing: .14em;
+    font-weight: 850;
+    opacity: .85;
+}
+
+.forbidden__title {
+    margin: 0;
+    font-size: clamp(26px, 3.8vw, 44px);
+    line-height: 1.05;
+}
+
+.forbidden__desc {
+    margin: 0;
+    max-width: 60ch;
+    color: var(--color-text-muted);
+}
+
+/* ------------------ CAT (tokenizado) ------------------ */
+.cat {
+    --cat-fur: #0b0b12;
+    --cat-eye: var(--color-warning);
+    --cat-nose: color-mix(in srgb, var(--color-text-muted) 70%, transparent);
+
+    width: clamp(220px, 28vw, 320px);
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    position: relative;
+    isolation: isolate;
+
+    /* animaciones con tus duraciones/easings */
+    animation: purr var(--dur-3) infinite var(--ease-out);
+}
+
+/* si en light querés menos “boca de lobo” */
+:root[data-theme="light"] .cat {
+    --cat-fur: #0b0b12;
+    --cat-eye: color-mix(in srgb, var(--color-warning) 85%, #000);
+    --cat-nose: color-mix(in srgb, var(--color-text-muted) 80%, transparent);
+}
+
+.cat * {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.head,
+.body,
+.paw,
+.tail-segment {
+    background-color: var(--cat-fur);
+}
+
+.left,
+.right {
+    float: none;
+}
+
+/* Head */
+.head {
+    position: absolute;
+    width: 110px;
+    height: 100px;
+    left: 30%;
+    top: 42%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 3;
+    animation: head-bob calc(var(--dur-3) * 4) infinite var(--ease-out);
+    will-change: transform;
+}
+
+/* Ears */
+.ears {
+    position: absolute;
+    left: 50%;
+    top: -12px;
+    transform: translateX(-50%);
+    width: 120px;
+    display: flex;
+    justify-content: space-between;
+    z-index: -1;
+}
+
+.ear {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 50px solid var(--cat-fur);
+}
+
+.ear.left {
+    transform: rotate(-20deg) translateX(-10px);
+}
+
+.ear.right {
+    transform: rotate(20deg) translateX(10px);
+}
+
+/* Eyes */
+.eyes {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    width: 65px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.eye {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--cat-eye);
+    animation: eye-blink calc(var(--dur-3) * 4) infinite ease-in-out;
+}
+
+/* Nose */
+.muzzle {
+    position: absolute;
+    left: 50%;
+    top: 72%;
+    transform: translate(-50%, -50%);
+}
+
+.nose {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--cat-nose);
+}
+
+.body {
+    position: absolute;
+    width: 210px;
+    height: 105px;
+    left: 55%;
+    top: 63%;
+    transform: translate(-50%, -50%);
+    border-top-left-radius: 150px;
+    border-top-right-radius: 150px;
+    z-index: auto;
+    overflow: visible;
+}
+
+.paw {
+    position: absolute;
+    width: 58px;
+    height: 34px;
+    left: -30px;
+    top: 72px;
+    border-radius: 999px;
+    z-index: 2;
+}
+
+/* Tail */
+.tail {
+    position: absolute;
+    left: 88%;
+    top: 75%;
+    transform: translate(-50%, -50%) rotate(70deg);
+    transform-origin: left center;
+    z-index: 1;
+}
+
+.tail-segment {
+    position: relative;
+    width: 34px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--cat-fur);
+    transform-origin: 6px 11px;
+    animation: tail-swish calc(var(--dur-3) * 4) infinite var(--ease-spring);
+}
+
+.tail-segment>.tail-segment {
+    position: absolute;
+    left: 14px;
+    /* menos que 18 => menos “barra” */
+    top: 2px;
+    transform: rotate(10deg);
+    /* curva acumulativa */
+    transform-origin: 6px 11px;
+    width: 32px;
+    /* micro-taper */
+    height: 21px;
+}
+
+/* ------------------ Animations (misma lógica, timings coherentes) ------------------ */
+@keyframes tail-swish {
+
+    0%,
+    10%,
+    100% {
+        transform: rotate(12deg);
+    }
+
+    40%,
+    60% {
+        transform: rotate(-5deg);
+    }
+
+    50% {
+        transform: rotate(5deg);
+    }
+}
+
+@keyframes head-bob {
+
+    0%,
+    12%,
+    100% {
+        transform: translate(-50%, -50%) translateY(34px);
+    }
+
+    35% {
+        transform: translate(-50%, -50%) translateY(0px);
+    }
+
+    45% {
+        transform: translate(-50%, -50%) translateY(0px);
+    }
+
+    70% {
+        transform: translate(-50%, -50%) translateY(34px);
+    }
+}
+
+@keyframes eye-blink {
+
+    0%,
+    10%,
+    95%,
+    100% {
+        transform: scaleY(0.08);
+    }
+
+    15%,
+    48%,
+    52%,
+    90% {
+        transform: scaleY(1);
+    }
+
+    50% {
+        transform: scaleY(0.08);
+    }
+}
+
+@keyframes purr {
+    0% {
+        transform: translateX(-1px);
+    }
+
+    50% {
+        transform: translateX(0px);
+    }
+
+    100% {
+        transform: translateX(-1px);
+    }
+}
+
+/* Accesibilidad: si el usuario odia la animación, lo respetamos */
+@media (prefers-reduced-motion: reduce) {
+
+    .cat,
+    .head,
+    .eye,
+    .tail-segment {
+        animation: none !important;
+    }
+}
