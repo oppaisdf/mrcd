@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Domain.Parent;
+using MRCD.Domain.Person;
 
 namespace MRCD.Infrastructure.Repositories;
 
@@ -15,6 +16,17 @@ internal sealed class ParentPersonRepository(
     ) => _app
         .ParentsPersons
         .Add(parentPerson);
+
+    public Task<int> AssignedCountAsync(
+        Guid personId,
+        bool isParent,
+        CancellationToken cancellationToken
+    ) => _app
+        .ParentsPersons
+        .Where(pp =>
+            pp.IsParent == isParent
+            && pp.PersonId == personId
+        ).CountAsync(cancellationToken);
 
     public void Del(
         ParentPerson parentPerson
