@@ -10,5 +10,13 @@ export const PARENTS_ROUTES: Routes = [
             ParentService
         ],
         loadComponent: () => import('./list/list-parents.page').then(p => p.ListParentsPage)
+    }, {
+        path: 'new',
+        title: 'Nuevo padre/padrino',
+        data: { vtIndex: 9002 },
+        providers: [
+            ParentService
+        ],
+        loadComponent: () => import('./create/create-parents.page').then(p => p.CreateParentsPage)
     }
 ];

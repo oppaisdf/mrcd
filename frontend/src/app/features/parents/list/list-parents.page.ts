@@ -6,13 +6,15 @@ import { ParentService } from '../services/parent.service';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { AccordeonComponent } from '../../../core/ui/accordeon/accordeon.component';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-list-parents.page',
   imports: [
     AccordeonComponent,
     ReactiveFormsModule,
-    UiInputComponent
+    UiInputComponent,
+    RouterLink
   ],
   templateUrl: './list-parents.page.html',
   styleUrl: './list-parents.page.scss',
