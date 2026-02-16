@@ -38,6 +38,9 @@ internal sealed class AddParentHandler(
         var exists = await _parentPerson.GetAsync(personId.Value, parentId, isParent, ct);
         if (exists is not null)
             return Result.Failure("El padre/padrino ya se ha asignado al confirmando");
+        var parentsCount = await _parentPerson.AssignedCountAsync(personId.Value, isParent, ct);
+        if (parentsCount == 2)
+            return Result.Failure("Ya se ha asignado el máximo de padre/padrinos al confirmando");
         _parentPerson.Add(new(
             parentId,
             personId.Value,
