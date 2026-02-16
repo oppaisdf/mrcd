@@ -9,6 +9,7 @@ using MRCD.Application.Parent.AssignParent;
 using MRCD.Application.Parent.DelParent;
 using MRCD.Application.Parent.DTOs;
 using MRCD.Application.Parent.GetParent;
+using MRCD.Application.Parent.GetparentById;
 
 namespace MRCD.API.Endpoints;
 
@@ -82,6 +83,35 @@ internal static class ParentEndpoints
         .WithDescription("Retorna listado de padres/padrinos paginado")
         .WithOpenApi()
         .Produces<Pagination<ParentDTO>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Parent.Read");
+
+        app.MapGet("{parentid}", async (
+            Guid parentId,
+            [FromServices] IQueryHandler<ParentDetailsDTO, GetParentByIdQuery> handler,
+            ClaimsPrincipal user,
+            CancellationToken ct
+        ) =>
+        {
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out Guid userId))
+                ResultsMapper.Unauthorized();
+            var query = new GetParentByIdQuery(
+                parentId,
+                userId
+            );
+            var result = await handler.HandleAsync(query, ct);
+            return ResultsMapper.ToHttp(
+                result,
+                r => Results.Ok(r),
+                e => e.Contains("no existe")
+            );
+        })
+        .WithName("GetParentById")
+        .WithDisplayName("GET /ParentById")
+        .WithSummary("Obtener detalles de padre/padrino")
+        .WithDescription("Retorna detalles de una padre/padrino")
+        .WithOpenApi()
+        .Produces<Pagination<ParentDetailsDTO>>(StatusCodes.Status200OK)
         .RequireAuthorization("perm:Parent.Read");
 
         app.MapDelete("{parentId}", async (
