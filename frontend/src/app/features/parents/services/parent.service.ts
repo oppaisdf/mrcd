@@ -24,4 +24,12 @@ export class ParentService {
     };
     return this._api.getAsync<PagedResult<AssignedParentResponse>>('/parent', params);
   }
+
+  public unassignAsync(
+    parentId: string,
+    personId: string,
+    isParent: boolean
+  ) {
+    return this._api.delAsync(`/parent/${parentId}/person/${personId}/type/${isParent}`);
+  }
 }
