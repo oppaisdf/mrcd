@@ -40,6 +40,22 @@ internal sealed class PersonRepository(
             cancellationToken
         );
 
+    public Task<List<PeopleByParentDTO>> ByPaerentToListAsync(
+        Guid parentId,
+        CancellationToken cancellationToken
+    ) => (
+        from p in _app.People
+        join pp in _app.ParentsPersons on p.ID equals pp.PersonId
+        where
+            pp.ParentId == parentId
+        orderby p.Name
+        select new PeopleByParentDTO(
+            p.ID,
+            p.Name,
+            pp.IsParent
+        )
+    ).ToListAsync(cancellationToken);
+
     public Task<bool> ExistsActiveAsync(
         Guid personId,
         CancellationToken cancellationToken
@@ -88,7 +104,7 @@ internal sealed class PersonRepository(
             query = query.Where(p => p.IsMasculine == isMasculine.Value);
         if (!string.IsNullOrWhiteSpace(normalizedName))
             query = query.Where(p => p.NormalizedName.Contains(normalizedName));
-        
+
         var total = await query.CountAsync(cancellationToken);
         var skip = (page - 1) * size;
         var people = await query
