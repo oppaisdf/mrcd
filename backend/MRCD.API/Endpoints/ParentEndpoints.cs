@@ -114,36 +114,6 @@ internal static class ParentEndpoints
         .ProducesProblem(StatusCodes.Status404NotFound)
         .RequireAuthorization("perm:Parent.Delete");
 
-        app.MapPost("/person", async (
-            [FromBody] AssignParentRequest request,
-            [FromServices] ICommandHandler<AssignParentCommand> handler,
-            CancellationToken ct
-        ) =>
-        {
-            var command = new AssignParentCommand(
-                request.ParentId,
-                request.PersonId,
-                request.IsParent,
-                true
-            );
-            var result = await handler.HandleAsync(command, ct);
-            return ResultsMapper.ToHttp(
-                result,
-                () => Results.Ok(),
-                e => e.Contains("no existe"),
-                e => e.Contains("se ha")
-            );
-        })
-        .WithName("AssignParent")
-        .WithDisplayName("POST /ParentPerson")
-        .WithSummary("Asociar padre/padrino")
-        .WithDescription("Asocia un padre/padrino a un confirmando")
-        .WithOpenApi()
-        .Produces<Pagination<ParentDTO>>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound)
-        .ProducesProblem(StatusCodes.Status409Conflict)
-        .RequireAuthorization("perm:Parent.Write");
-
         app.MapDelete("/person/{personId}/parent/{parentId}/type/{isParent}", async (
             Guid personId,
             Guid parentId,
