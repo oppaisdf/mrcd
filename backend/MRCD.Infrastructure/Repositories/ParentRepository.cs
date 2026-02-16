@@ -76,6 +76,14 @@ internal sealed class ParentRepository(
         )
     ).ToListAsync(cancellationToken);
 
+    public Task<Parent?> GetByIdAsync(
+        Guid parentId,
+        CancellationToken cancellationToken
+    ) => _app
+        .Parents
+        .AsNoTracking()
+        .SingleOrDefaultAsync(p => p.ID == parentId, cancellationToken);
+
     public Task<Parent?> GetByNameAsync(
         string normalizedName,
         CancellationToken cancellationToken
