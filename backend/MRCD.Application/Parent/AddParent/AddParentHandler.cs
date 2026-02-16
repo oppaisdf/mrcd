@@ -82,7 +82,7 @@ internal sealed class AddParentHandler(
     )
     {
         var normalizedName = _service.NormalizeString(command.ParentName);
-        if (_service.HasOnlyLetters(normalizedName))
+        if (!_service.HasOnlyLetters(normalizedName))
             return Result<Guid>.Failure("El nombre del padre/padrino solo puede contener letras");
         var currentParent = await _repo.GetByNameAsync(normalizedName, cancellationToken);
 
