@@ -1,0 +1,38 @@
+@let isParent = typeParent();
+<ui-accordeon [title]="isParent ? 'Padres' : 'Padrinos'">
+    @if (!fullParents()) {
+    <parents-form [hideIsParent]="true" (parent)="addAsync($event)" />
+    }
+    <br>
+    @let _parents = parents();
+    @if(_parents.length > 0){
+    <div class="ui-table-wrap">
+        <table class="ui-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Género</th>
+                    @if (isParent) {
+                    <th>Teléfono</th>
+                    }
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (parent of _parents; track parent.id) {
+                <tr>
+                    <td>{{parent.name}}</td>
+                    <td>{{parent.isMasculine ? "Masculino": "Femenino"}}</td>
+                    @if (isParent) {
+                    <td>{{parent.phone}}</td>
+                    }
+                    <td>
+                        <button class="ui-button" (click)="delAsync(parent.id)">Eliminar</button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+</ui-accordeon>
