@@ -1,0 +1,59 @@
+<h1>Detalles del padre/padrino</h1>
+
+<form class="ui-form" [formGroup]="form">
+    <ui-input label="Nombre" type="text" formControlName="name" />
+    <ui-input label="Teléfono" type="text" formControlName="phone" />
+    <ui-select label="Género" type="boolean" [items]="genders" formControlName="isMasculine" />
+</form>
+
+@let _children = children();
+@if(_children.length > 0){
+<ui-accordeon title="Padre de">
+    <div class="ui-table-wrap">
+        <table class="ui-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (child of _children; track child.id) {
+                <tr>
+                    <td>{{child.name}}</td>
+                    <td>
+                        <button class="ui-button is-danger">Desasignar</button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</ui-accordeon>
+}
+
+@let _goodchildren = goodchildren();
+@if (_goodchildren.length > 0) {
+<ui-accordeon title="Padrino de">
+    <div class="ui-table-wrap">
+        <table class="ui-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (goodchild of _goodchildren; track goodchild.id) {
+                <tr>
+                    <td>{{goodchild.name}}</td>
+                    <td>
+                        <button class="ui-button is-danger">Desasignar</button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</ui-accordeon>
+}
