@@ -1,13 +1,18 @@
 <h1>Asistencia</h1>
 
 <ui-accordeon title="Opciones de escaneo">
-    <form [formGroup]="form" class="ui-form">
+    <form [formGroup]="form" class="ui-form" (ngSubmit)="startScanAsync()">
         <ui-select label="Tipo de asistencia" type="boolean" [items]="items('isAttendance')"
             formControlName="isAttendance" />
         <ui-select label="Cerrar scanner al terminar" type="boolean" [items]="items('closeToScann')"
             formControlName="closeToScann" />
         <ui-input label="Fecha" type="date" formControlName="date" [min]="limitDate(false)" [max]="limitDate(true)" />
 
-        <button class="ui-button" type="submit">Iniciar escáner</button>
+        @let isOpenScanner = openScanner();
+        <button class="ui-button" [class.is-danger]="isOpenScanner" type="submit">
+            @if (!isOpenScanner) {Iniciar}@else {Finalizar} escaneo
+        </button>
     </form>
 </ui-accordeon>
+
+<attendances-scanner #scanner (goScan)="scanAsync($event)" />
