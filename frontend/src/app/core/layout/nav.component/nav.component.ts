@@ -21,9 +21,11 @@ export class NavComponent {
   readonly categories = computed(() => {
     const roles = this._session.roles();
     return this._categories()
-      .filter(category =>
-        category.roles.some(role => roles.includes(role))
-      );
+      .map(category => ({
+        ...category,
+        options: category.options.filter(option => option.roles.some(role => roles.includes(role)))
+      }))
+      .filter(category => category.roles.some(role => roles.includes(role)) && category.options.length > 0);
   });
 
   selectCategory(
