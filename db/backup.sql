@@ -35,8 +35,7 @@ CREATE TABLE `__EFMigrationsHistory` (
 
 LOCK TABLES `__EFMigrationsHistory` WRITE;
 /*!40000 ALTER TABLE `__EFMigrationsHistory` DISABLE KEYS */;
-INSERT INTO `__EFMigrationsHistory` VALUES
-	('20260116191205_InitialCreate','8.0.22');
+INSERT INTO `__EFMigrationsHistory` VALUES ('20260116191205_InitialCreate','8.0.22');
 /*!40000 ALTER TABLE `__EFMigrationsHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,6 +193,8 @@ CREATE TABLE `degree` (
 
 LOCK TABLES `degree` WRITE;
 /*!40000 ALTER TABLE `degree` DISABLE KEYS */;
+INSERT INTO `degree` VALUES
+	('739cb894-bec3-4f9c-8204-fdf835df5e9b','Inscripción');
 /*!40000 ALTER TABLE `degree` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,6 +218,10 @@ CREATE TABLE `document` (
 
 LOCK TABLES `document` WRITE;
 /*!40000 ALTER TABLE `document` DISABLE KEYS */;
+INSERT INTO `document` VALUES
+	('378f5ef4-d3be-486c-baca-f24339061b50','Constancia de padrinos'),
+	('61032040-fbe2-4152-b528-83665e65e447','Certificado de nacimiento'),
+	('81eca86f-06cc-4167-a2d1-03342aba82d8','Constancia de bautizo');
 /*!40000 ALTER TABLE `document` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -297,17 +302,26 @@ INSERT INTO `permission` VALUES
 	('02b70407-c1d7-412f-bf8b-abb20b057708','Document.Write'),
 	('10541623-89d2-4c99-9f13-4fab7c7dd1b4','Role.Read'),
 	('1ca78d7a-3520-421b-8284-cce2c3ac9c2e','Permission.Read'),
+	('20ba90dd-69a3-4ff6-a526-e07ff1ff3486','Person.Write'),
+	('2d05c800-99ec-4046-a4da-f2d2b3394f2d','Parent.Delete'),
+	('402e007d-11a7-486e-ae82-264b405c13d7','Permission.Delete'),
+	('561e4d9b-b89c-49df-982c-1c5c0dcf928a','Attendance.Read'),
+	('59bd5e67-fa6b-46d9-9223-4387ae060635','Person.Read'),
 	('6888801b-a53c-4d90-a63d-03b9e5a4b0ce','Permission.Write'),
 	('74bca746-e066-44ba-bb5d-e85b177efce7','Sacrament.Delete'),
 	('827feedf-dfca-4b8a-bc72-4725eb623425','Degree.Write'),
 	('93c55742-19ef-477d-9437-cc88812a0178','Degree.Delete'),
 	('941e8e93-7f83-4e4e-a12f-22ef57f9b233','Sacrament.Read'),
+	('965789ae-2da8-4aa9-a27c-886906aa627e','Parent.Write'),
 	('97730e91-395f-4a1f-922d-98e0e388110b','User.Read'),
 	('a3f21364-381d-4ec4-8bdc-45b00e66eadf','User.Write'),
 	('b794bcfe-43cc-4f46-8219-b63867719703','Document.Read'),
+	('c8cc19db-149d-4511-9cc7-9b20083c1daa','Parent.Read'),
 	('cdc9d742-8260-4317-a4c2-ac29d27f63de','Document.Delete'),
 	('ce9f8627-cced-4216-bbab-eccb984dd7fd','Degree.Read'),
 	('d13796c7-c7d3-47c4-a826-914c09de17be','Role.Write'),
+	('d1d672fd-65be-4a05-9ae9-5aee1b8c89a3','Attendance.Delete'),
+	('f5b0e3a1-85b9-4790-b544-a24a37435786','Attendance.Write'),
 	('fd719e16-8b15-47ab-916b-52189d431f26','Sacrament.Write');
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -479,17 +493,26 @@ INSERT INTO `role_permission` VALUES
 	('32aa8d94-3d20-49de-94eb-676fee70230f','02b70407-c1d7-412f-bf8b-abb20b057708'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','10541623-89d2-4c99-9f13-4fab7c7dd1b4'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','1ca78d7a-3520-421b-8284-cce2c3ac9c2e'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','20ba90dd-69a3-4ff6-a526-e07ff1ff3486'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','2d05c800-99ec-4046-a4da-f2d2b3394f2d'),
+	('63509335-0f5a-44b2-8542-a1b5dee695f6','402e007d-11a7-486e-ae82-264b405c13d7'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','561e4d9b-b89c-49df-982c-1c5c0dcf928a'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','59bd5e67-fa6b-46d9-9223-4387ae060635'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','6888801b-a53c-4d90-a63d-03b9e5a4b0ce'),
 	('32aa8d94-3d20-49de-94eb-676fee70230f','74bca746-e066-44ba-bb5d-e85b177efce7'),
 	('32aa8d94-3d20-49de-94eb-676fee70230f','827feedf-dfca-4b8a-bc72-4725eb623425'),
 	('32aa8d94-3d20-49de-94eb-676fee70230f','93c55742-19ef-477d-9437-cc88812a0178'),
 	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','941e8e93-7f83-4e4e-a12f-22ef57f9b233'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','965789ae-2da8-4aa9-a27c-886906aa627e'),
 	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','97730e91-395f-4a1f-922d-98e0e388110b'),
 	('32aa8d94-3d20-49de-94eb-676fee70230f','a3f21364-381d-4ec4-8bdc-45b00e66eadf'),
 	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','b794bcfe-43cc-4f46-8219-b63867719703'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','c8cc19db-149d-4511-9cc7-9b20083c1daa'),
 	('32aa8d94-3d20-49de-94eb-676fee70230f','cdc9d742-8260-4317-a4c2-ac29d27f63de'),
 	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','ce9f8627-cced-4216-bbab-eccb984dd7fd'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','d13796c7-c7d3-47c4-a826-914c09de17be'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','d1d672fd-65be-4a05-9ae9-5aee1b8c89a3'),
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','f5b0e3a1-85b9-4790-b544-a24a37435786'),
 	('32aa8d94-3d20-49de-94eb-676fee70230f','fd719e16-8b15-47ab-916b-52189d431f26');
 /*!40000 ALTER TABLE `role_permission` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -514,6 +537,11 @@ CREATE TABLE `sacrament` (
 
 LOCK TABLES `sacrament` WRITE;
 /*!40000 ALTER TABLE `sacrament` DISABLE KEYS */;
+INSERT INTO `sacrament` VALUES
+	('256a42a9-f3b6-4dd0-be65-61e7c79603c1','Otros'),
+	('4d348f8e-d7fe-4017-9798-69877f1e7b99','Carrera'),
+	('bc810398-10f6-4e2b-932f-a12a8c219cfd','Básicos'),
+	('eb1f3007-c953-4459-b8e4-5abc48beb136','Primaria');
 /*!40000 ALTER TABLE `sacrament` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -607,4 +635,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-05 17:16:38
+-- Dump completed on 2026-02-17 20:01:31
