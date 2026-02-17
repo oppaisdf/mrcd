@@ -17,6 +17,12 @@ internal sealed class PersonSacramentRepository(
         .PersonSacraments
         .Add(personSacrament);
 
+    public void AddRange(
+        IEnumerable<PersonSacrament> sacraments
+    ) => _app
+        .PersonSacraments
+        .AddRange(sacraments);
+
     public Task<List<AssociationBaseEntityDTO>> AssignationByPersonToListAsync(
         Guid personId,
         CancellationToken cancellationToken
