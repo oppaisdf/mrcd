@@ -1,0 +1,13 @@
+<h1>Asistencia</h1>
+
+<ui-accordeon title="Opciones de escaneo">
+    <form [formGroup]="form" class="ui-form">
+        <ui-select label="Tipo de asistencia" type="boolean" [items]="items('isAttendance')"
+            formControlName="isAttendance" />
+        <ui-select label="Cerrar scanner al terminar" type="boolean" [items]="items('closeToScann')"
+            formControlName="closeToScann" />
+        <ui-input label="Fecha" type="date" formControlName="date" [min]="limitDate(false)" [max]="limitDate(true)" />
+
+        <button class="ui-button" type="submit">Iniciar escáner</button>
+    </form>
+</ui-accordeon>
