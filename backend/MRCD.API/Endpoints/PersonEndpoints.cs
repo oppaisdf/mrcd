@@ -43,7 +43,8 @@ internal static class PersonEndpoints
                 request.Address,
                 request.Phone,
                 request.DegreeId,
-                request.Parents
+                request.Parents,
+                request.Sacraments
             );
             var result = await handler.HandleAsync(command, ct);
             return ResultsMapper.ToHttp(

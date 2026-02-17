@@ -10,7 +10,8 @@ public sealed record AddPersonRequest(
     string Address,
     string? Phone,
     Guid DegreeId,
-    IEnumerable<AddSimpleParentCommand> Parents
+    IEnumerable<AddSimpleParentCommand> Parents,
+    IEnumerable<Guid> Sacraments
 );
 
 public sealed record UpdatePersonRequest(

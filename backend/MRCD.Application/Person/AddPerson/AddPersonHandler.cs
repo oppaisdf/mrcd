@@ -7,6 +7,7 @@ using MRCD.Application.Person.Contracts;
 using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 using MRCD.Domain.Degree;
+using MRCD.Domain.Sacrament;
 
 namespace MRCD.Application.Person.AddPerson;
 
@@ -16,6 +17,8 @@ internal sealed class AddPersonHandler(
     IBaseEntityRepository<Degree> degree,
     IParentRepository parent,
     IParentPersonRepository parentPerson,
+    IBaseEntityRepository<Sacrament> sacraments,
+    IPersonSacramentRepository personSacrament,
     IPersistenceContext save,
     ILogger<AddPersonHandler> logs
 ) : ICommandHandler<AddPersonCommand, Guid>
@@ -25,6 +28,8 @@ internal sealed class AddPersonHandler(
     private readonly IBaseEntityRepository<Degree> _degree = degree;
     private readonly IParentRepository _parent = parent;
     private readonly IParentPersonRepository _parentPerson = parentPerson;
+    private readonly IBaseEntityRepository<Sacrament> _sacraments = sacraments;
+    private readonly IPersonSacramentRepository _personSacrament = personSacrament;
     private readonly IPersistenceContext _save = save;
     private readonly ILogger<AddPersonHandler> _logs = logs;
 
@@ -74,6 +79,21 @@ internal sealed class AddPersonHandler(
         return Result.Success();
     }
 
+    private async Task AssignSacramentsAsync(
+        IEnumerable<Guid> rawSacraments,
+        Guid personId,
+        CancellationToken ct
+    )
+    {
+        var sacraments = await _sacraments.ToListAsync(ct);
+        var sacramentIds = sacraments.Select(s => s.ID);
+        var ids = rawSacraments.Intersect(sacramentIds);
+        if (!ids.Any()) return;
+        _personSacrament.AddRange(
+            ids.Select(id => new Domain.Person.PersonSacrament(personId, id))
+        );
+    }
+
     public async Task<Result<Guid>> HandleAsync(
         AddPersonCommand command,
         CancellationToken cancellationToken
@@ -111,6 +131,7 @@ internal sealed class AddPersonHandler(
         var parentsResult = await AddParentsAsync(person.ID, command.Parents, cancellationToken);
         if (!parentsResult.IsSuccess)
             return Result<Guid>.Failure(parentsResult.Error!);
+        await AssignSacramentsAsync(command.Sacraments, person.ID, cancellationToken);
         await _save.SaveChangesAsync(cancellationToken);
         _logs.LogInformation("Person {person} has been added by user {user}", person.ID, command.UserId);
         return Result<Guid>.Success(personResult.Value!.ID);

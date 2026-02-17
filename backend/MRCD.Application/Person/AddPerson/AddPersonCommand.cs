@@ -11,7 +11,8 @@ public sealed record AddPersonCommand(
     string Address,
     string? Phone,
     Guid DegreeId,
-    IEnumerable<AddSimpleParentCommand> Parents
+    IEnumerable<AddSimpleParentCommand> Parents,
+    IEnumerable<Guid> Sacraments
 ) : ICommand<Guid>;
 
 public sealed record AddSimpleParentCommand(
