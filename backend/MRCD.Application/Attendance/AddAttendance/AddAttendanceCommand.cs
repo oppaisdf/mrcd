@@ -6,5 +6,6 @@ namespace MRCD.Application.Attendance.AddAttendance;
 public sealed record AddAttendanceCommand(
     Guid UserId,
     Guid PersonId,
-    bool IsAttendance
+    bool IsAttendance,
+    DateOnly Date
 ) : ICommand<Result>;

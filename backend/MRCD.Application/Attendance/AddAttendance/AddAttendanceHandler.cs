@@ -24,11 +24,13 @@ internal sealed class AddAttendanceHandler(
         var personIsActive = await _person.ExistsActiveAsync(command.PersonId, cancellationToken);
         if (!personIsActive)
             return Result.Failure("El confirmando no existe o se encuentra inactivo");
+        if (command.Date.Year != DateTime.UtcNow.Year)
+            return Result.Failure("Solo se admiten fechas para el año en curso");
         var attendance = Domain.Attendance.Attendance.Create(
             command.UserId,
             command.PersonId,
             command.IsAttendance,
-            DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6))
+            command.Date
         );
         var alreadyExists = await _repo.AlreadyExistsAsync(attendance, cancellationToken);
         if (alreadyExists)
