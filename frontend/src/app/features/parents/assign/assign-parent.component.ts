@@ -20,7 +20,7 @@ export class AssignParentComponent {
   readonly parents = linkedSignal(() => this.rawParents());
   personId = input.required<string>();
 
-  fullParents = computed(() => this.parents.length === 2);
+  fullParents = computed(() => this.parents().length === 2);
 
   constructor() {
     effect(() => {
