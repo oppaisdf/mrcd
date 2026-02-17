@@ -35,7 +35,8 @@ CREATE TABLE `__EFMigrationsHistory` (
 
 LOCK TABLES `__EFMigrationsHistory` WRITE;
 /*!40000 ALTER TABLE `__EFMigrationsHistory` DISABLE KEYS */;
-INSERT INTO `__EFMigrationsHistory` VALUES ('20260116191205_InitialCreate','8.0.22');
+INSERT INTO `__EFMigrationsHistory` VALUES
+	('20260116191205_InitialCreate','8.0.22');
 /*!40000 ALTER TABLE `__EFMigrationsHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,7 +195,10 @@ CREATE TABLE `degree` (
 LOCK TABLES `degree` WRITE;
 /*!40000 ALTER TABLE `degree` DISABLE KEYS */;
 INSERT INTO `degree` VALUES
-	('739cb894-bec3-4f9c-8204-fdf835df5e9b','Inscripción');
+	('07b50b6b-b571-42e0-9435-42ab3e3500c3','Carrera'),
+	('6cd89fa3-95d6-42bf-a611-cad4e9946144','Primaria'),
+	('81833517-ca8e-488d-b5d4-13ffd519bff1','Básicos'),
+	('9ea533ee-7ffb-4be7-8e4a-8c1a14fe4fba','Otros');
 /*!40000 ALTER TABLE `degree` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -219,9 +223,9 @@ CREATE TABLE `document` (
 LOCK TABLES `document` WRITE;
 /*!40000 ALTER TABLE `document` DISABLE KEYS */;
 INSERT INTO `document` VALUES
-	('378f5ef4-d3be-486c-baca-f24339061b50','Constancia de padrinos'),
-	('61032040-fbe2-4152-b528-83665e65e447','Certificado de nacimiento'),
-	('81eca86f-06cc-4167-a2d1-03342aba82d8','Constancia de bautizo');
+	('47ad2fbd-16e9-420c-87e4-cba3a16f9fa2','Constancia de bautizo'),
+	('529b75b3-3786-40a9-bd78-bd5f0e6948b3','Certificado de nacimiento'),
+	('a8831411-4d93-461b-9161-c6fa1b5e1033','Constancia padrinos');
 /*!40000 ALTER TABLE `document` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -538,10 +542,8 @@ CREATE TABLE `sacrament` (
 LOCK TABLES `sacrament` WRITE;
 /*!40000 ALTER TABLE `sacrament` DISABLE KEYS */;
 INSERT INTO `sacrament` VALUES
-	('256a42a9-f3b6-4dd0-be65-61e7c79603c1','Otros'),
-	('4d348f8e-d7fe-4017-9798-69877f1e7b99','Carrera'),
-	('bc810398-10f6-4e2b-932f-a12a8c219cfd','Básicos'),
-	('eb1f3007-c953-4459-b8e4-5abc48beb136','Primaria');
+	('2fb2657d-fbdc-4a5e-ae42-596c5a95912f','Bautizo'),
+	('65447e6d-7fed-494f-9959-095291ffaf40','Comunión');
 /*!40000 ALTER TABLE `sacrament` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -635,4 +637,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-17 20:01:31
+-- Dump completed on 2026-02-17 21:24:11
