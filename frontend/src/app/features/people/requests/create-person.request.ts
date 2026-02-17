@@ -9,4 +9,5 @@ export type CreatePersonRequest = {
     phone: string;
     degreeId: string;
     parents: Array<CreateSimpleParentRequest>;
+    sacraments: Array<string>;
 };

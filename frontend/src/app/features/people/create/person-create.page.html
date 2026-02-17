@@ -2,4 +2,32 @@
 
 <person-form mode="Inscribir" (formSubmit)="createAsync($event)" />
 
+<br>
+<h2>Sacramentos</h2>
+<hr>
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (sacrament of sacraments(); track sacrament.id) {
+            <tr>
+                <td>{{sacrament.name}}</td>
+                <td>
+                    <button class="ui-button" [class.is-danger]="sacrament.hasAssociation"
+                        (click)="assignSacrament(sacrament.id)">
+                        @if (sacrament.hasAssociation) {Remover}@else {Agregar}
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<br>
+
 <parents-add-simple title="Padres" [parents]="parents" />
