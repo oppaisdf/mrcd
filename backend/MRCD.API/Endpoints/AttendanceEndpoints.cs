@@ -24,8 +24,7 @@ internal static class AttendanceEndpoints
             [FromBody] AttendanceRequest request,
             ICommandHandler<AddAttendanceCommand> handler,
             ClaimsPrincipal user,
-            CancellationToken ct,
-            DateOnly? date = null
+            CancellationToken ct
         ) =>
         {
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -35,7 +34,7 @@ internal static class AttendanceEndpoints
                 userId,
                 request.PersonId,
                 request.IsAttendance,
-                date ?? DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6))
+                request.Date ?? DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6))
             );
             var result = await handler.HandleAsync(command, ct);
             return ResultsMapper.ToHttp(
