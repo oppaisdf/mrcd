@@ -19,12 +19,16 @@
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>Acción</th>
             </tr>
         </thead>
         <tbody>
             @for (parent of _page.items; track parent.id) {
             <tr>
                 <td>{{parent.name}}</td>
+                <td>
+                    <a class="ui-button" routerLink="/parents/{{parent.id}}">Detalles</a>
+                </td>
             </tr>
             }
         </tbody>
