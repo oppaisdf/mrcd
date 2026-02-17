@@ -30,9 +30,9 @@ internal sealed class ParentRepository(
         CancellationToken cancellationToken
     ) => (
         from p in _app.Parents
-        join pp in _app.ParentsPersons on p.ID equals pp.PersonId
+        join pp in _app.ParentsPersons on p.ID equals pp.ParentId
         where
-            p.ID == personId
+            pp.PersonId == personId
         select new ParentByPersonDTO(
             pp.ParentId,
             p.ID,
