@@ -54,7 +54,7 @@ internal sealed class AddPersonHandler(
             }
             var phone = string.IsNullOrWhiteSpace(parent.Phone)
                 ? null : parent.Phone.Trim();
-            if (phone is not null && _service.HasOnlyNumbers(phone))
+            if (phone is not null && !_service.HasOnlyNumbers(phone))
                 return Result.Failure($"El teléfono {phone} es inválido para el padre {parent.Name}");
             var parentResult = Domain.Parent.Parent.Create(
                 parent.Name,
