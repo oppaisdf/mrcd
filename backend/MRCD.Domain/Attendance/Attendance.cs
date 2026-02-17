@@ -12,13 +12,14 @@ public sealed class Attendance
     public static Attendance Create(
         Guid user,
         Guid person,
-        bool isAttendance
+        bool isAttendance,
+        DateOnly date
     ) => new()
     {
         ID = Guid.NewGuid(),
         UserId = user,
         PersonId = person,
         IsAttendance = isAttendance,
-        Date = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6))
+        Date = date
     };
 }

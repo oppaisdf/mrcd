@@ -27,7 +27,8 @@ internal sealed class AddAttendanceHandler(
         var attendance = Domain.Attendance.Attendance.Create(
             command.UserId,
             command.PersonId,
-            command.IsAttendance
+            command.IsAttendance,
+            DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6))
         );
         var alreadyExists = await _repo.AlreadyExistsAsync(attendance, cancellationToken);
         if (alreadyExists)
