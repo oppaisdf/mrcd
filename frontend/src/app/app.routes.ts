@@ -99,6 +99,15 @@ export const routes: Routes = [
                     vtTheme: 'people'
                 },
                 loadChildren: () => import('./features/parents/parents.routes').then(r => r.PARENTS_ROUTES)
+            }, {
+                path: 'attendances',
+                canMatch: [roleGuard],
+                data: {
+                    roles: ['usr'],
+                    vtIndex: 100,
+                    vtTheme: 'people'
+                },
+                loadChildren: () => import('./features/attendances/attendances.routes').then(r => r.ATTENDANCES_ROUTES)
             }
         ]
     },
