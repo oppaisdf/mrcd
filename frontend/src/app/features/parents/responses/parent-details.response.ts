@@ -5,5 +5,5 @@ export type ParentDetailsResponse = {
     isMasculine: boolean;
     phone: string;
     children: Array<SimplePersonResponse>;
-    goodchildre: Array<SimplePersonResponse>;
+    goodchildren: Array<SimplePersonResponse>;
 };
