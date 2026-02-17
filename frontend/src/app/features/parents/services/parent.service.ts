@@ -3,6 +3,7 @@ import { ApiService } from '../../../core/api/api.service';
 import { CreateParentRequest } from '../requests/create-parent.request';
 import { PagedResult } from '../../../core/api/api.types';
 import { AssignedParentResponse } from '../responses/assigned-parent.response';
+import { ParentDetailsResponse } from '../responses/parent-details.response';
 
 @Injectable()
 export class ParentService {
@@ -23,6 +24,12 @@ export class ParentService {
       parentName: parentName
     };
     return this._api.getAsync<PagedResult<AssignedParentResponse>>('/parent', params);
+  }
+
+  public getByIdAsync(
+    parentId: string
+  ) {
+    return this._api.getAsync<ParentDetailsResponse>(`/parent/${parentId}`);
   }
 
   public unassignAsync(
