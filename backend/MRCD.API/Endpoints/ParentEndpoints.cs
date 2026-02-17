@@ -111,7 +111,7 @@ internal static class ParentEndpoints
         .WithSummary("Obtener detalles de padre/padrino")
         .WithDescription("Retorna detalles de una padre/padrino")
         .WithOpenApi()
-        .Produces<Pagination<ParentDetailsDTO>>(StatusCodes.Status200OK)
+        .Produces<ParentDetailsDTO>(StatusCodes.Status200OK)
         .RequireAuthorization("perm:Parent.Read");
 
         app.MapDelete("{parentId}", async (
