@@ -5,6 +5,7 @@ import { PagedResult } from '../../../core/api/api.types';
 import { SimplePersonResponse } from '../responses/simple-person.response';
 import { DetailsPersonResponse } from '../responses/details-person.response';
 import { UpdatePersonRequest } from '../requests/update-person.request';
+import { GeneralListResponse } from '../responses/general-list.response';
 
 @Injectable()
 export class PersonService {
@@ -14,6 +15,10 @@ export class PersonService {
     request: CreatePersonRequest
   ) {
     return this._api.postAsync<CreatePersonRequest, string>('/person', request);
+  }
+
+  public generalListAsync() {
+    return this._api.getAsync<Array<GeneralListResponse>>('/person/generallist');
   }
 
   public toListAsync(
