@@ -3,6 +3,7 @@ using MRCD.Application.Parent.DTOs;
 namespace MRCD.Application.Person.DTOs;
 
 public sealed record GeneralListDTO(
+    Guid PersonId,
     string PersonName,
     bool IsMasculine,
     bool IsSunday,

@@ -32,6 +32,7 @@ internal sealed class GetGeneralListHandler(
             );
         var result = people
             .Select(p => new GeneralListDTO(
+                p.ID,
                 p.Name,
                 p.IsMasculine,
                 p.IsSunday,
