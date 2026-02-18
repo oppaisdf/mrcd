@@ -1,0 +1,118 @@
+:host {
+    display: block;
+}
+
+.ui-print__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.ui-print__title {
+    font: 600 var(--text-lg) / var(--line) var(--font-sans);
+}
+
+.ui-print__viewport {
+    max-height: calc(100dvh - 96px);
+    overflow: auto;
+    padding: var(--space-4);
+}
+
+.ui-print__sheet {
+    background: #fff !important;
+    color: #111 !important;
+
+    font-family: var(--font-sans);
+    font-size: var(--text-md);
+    line-height: var(--line);
+
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: var(--radius-3);
+    box-shadow: var(--shadow-2);
+
+    padding: var(--space-8);
+    width: min(100%, 210mm);
+    margin: 0 auto;
+}
+
+:host([data-paper="letter"]) .ui-print__sheet {
+    width: min(100%, 216mm);
+}
+
+:host([data-orientation="landscape"]) .ui-print__sheet {
+    width: min(100%, 297mm);
+}
+
+.ui-print__body {
+    display: block;
+    font: 400 var(--text-md) / var(--line) var(--font-sans);
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    :host,
+    .ui-print__sheet {
+        margin: 0 !important;
+    }
+
+    .ui-print__sheet {
+        width: auto !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Saltos de página controlables */
+    .pb {
+        break-before: page;
+    }
+
+    .pba {
+        break-after: page;
+    }
+
+    .avoid-break {
+        break-inside: avoid;
+    }
+
+    /* Tablas: evita headers perdidos */
+    thead {
+        display: table-header-group;
+    }
+}
+
+@page {
+    size: A4 portrait;
+    margin: 12mm;
+}
+
+:host([data-paper="letter"]) {
+    @page {
+        size: Letter portrait;
+    }
+}
+
+:host([data-orientation="landscape"]) {
+    @page {
+        size: A4 landscape;
+    }
+}
+
+:host([data-paper="letter"][data-orientation="landscape"]) {
+    @page {
+        size: Letter landscape;
+    }
+}

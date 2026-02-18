@@ -43,3 +43,23 @@ a {
         scroll-behavior: auto !important;
     }
 }
+
+@media print {
+    html.print-mode body * {
+        visibility: hidden !important;
+    }
+
+    html.print-mode ui-print,
+    html.print-mode ui-print * {
+        visibility: visible !important;
+    }
+
+    html.print-mode ui-print {
+        position: fixed !important;
+        inset: 0 !important;
+    }
+
+    html.print-mode ui-print .no-print {
+        display: none !important;
+    }
+}

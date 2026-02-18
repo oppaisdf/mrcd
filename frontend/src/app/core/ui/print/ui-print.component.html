@@ -1,0 +1,15 @@
+<div class="ui-print__toolbar">
+    @let t = title();
+    @if(t){
+    <div class="ui-print__title">{{t}}</div>
+    }
+    <button class="ui-button no-print" type="button" (click)="print()">Imprimir</button>
+</div>
+
+<div class="ui-print__viewport">
+    <article class="ui-print__sheet" role="document">
+        <section class="ui-print__body">
+            <ng-content />
+        </section>
+    </article>
+</div>
