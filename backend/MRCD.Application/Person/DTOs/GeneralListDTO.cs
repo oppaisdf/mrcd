@@ -10,8 +10,7 @@ public sealed record GeneralListDTO(
     DateOnly DOB,
     DateOnly RegistrationDate,
     string? Parish,
-    string? Address,
     string? Phone,
-    IEnumerable<ParentByPersonDTO> Parents,
-    IEnumerable<ParentByPersonDTO> Godparents
+    IEnumerable<SimpleParentDTO> Parents,
+    IEnumerable<SimpleParentDTO> Godparents
 );

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Parent.Contracts;
+using MRCD.Application.Parent.DTOs;
 using MRCD.Application.Person.Contracts;
 using MRCD.Application.Person.DTOs;
 using MRCD.Domain.Common;
@@ -39,12 +40,11 @@ internal sealed class GetGeneralListHandler(
                 p.DOB,
                 p.RegistrationDate,
                 p.Parish,
-                p.Address,
                 p.Phone,
                 parentsDir.TryGetValue((p.ID, true), out var parents)
-                    ? parents : [],
+                    ? parents.Select(p => new SimpleParentDTO(p.ParentName, p.Phone)) : [],
                 parentsDir.TryGetValue((p.ID, false), out var godparents)
-                    ? godparents : []
+                    ? godparents.Select(p => new SimpleParentDTO(p.ParentName, p.Phone)) : []
             ));
         _logs.LogInformation("User {user} has consulted the general list", query.UserId);
         return Result<IEnumerable<GeneralListDTO>>.Success(result);
