@@ -32,7 +32,7 @@
 <br>
 @let printables = printablesSorted();
 @if (printables.length > 0) {
-<ui-print title="Impresión de gafetes" paper="A4" orientation="landscape">
+<ui-print title="Impresión de gafetes" paper="A4">
 
     <section [class]="'label-grid cols-' + cols">
         @for (printable of printables; track $index) {

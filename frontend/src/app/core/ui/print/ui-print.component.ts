@@ -1,6 +1,5 @@
 import { Component, HostBinding, input } from '@angular/core';
 import { Paper } from './paper';
-import { Orientation } from './orientation';
 
 @Component({
   selector: 'ui-print',
@@ -11,7 +10,6 @@ import { Orientation } from './orientation';
 export class UiPrintComponent {
   @HostBinding('attr.data-print-root') printRoot = 'true';
   paper = input.required<Paper>();
-  orientation = input.required<Orientation>();
   title = input<string>();
 
   constructor() {
