@@ -1,0 +1,52 @@
+<h1>Página</h1>
+<hr>
+<form class="ui-form" [formGroup]="form">
+    <ui-select label="Columnas" type="number" [items]="columns" formControlName="columns" />
+    <ui-select label="Ordenamiento" type="boolean" [items]="order" formControlName="orderByName" />
+</form>
+<br>
+
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (person of peopleSorted(); track $index) {
+            <tr>
+                <td>{{person.personName}}</td>
+                <td>
+                    <button class="ui-button" [class.is-danger]="person.isSelected"
+                        (click)="selectPerson(person.personId)">
+                        @if (person.isSelected) {Remover}@else {Agregar}
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<br>
+@let printables = printablesSorted();
+@if (printables.length > 0) {
+<ui-print title="Impresión de gafetes" paper="A4" orientation="landscape">
+
+    <section [class]="'label-grid cols-' + cols">
+        @for (printable of printables; track $index) {
+        <article class="label">
+            <div class="qr">
+                <qrcode [qrdata]="printable.personId" elementType="img" />
+            </div>
+
+            <div class="text">
+                <div class="name">{{printable.personName}}</div>
+                <div class="day">{{printable.isSunday ? "Domingo" : "Sábado"}}</div>
+            </div>
+        </article>
+        }
+    </section>
+</ui-print>
+}
