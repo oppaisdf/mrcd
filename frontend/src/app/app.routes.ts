@@ -108,6 +108,15 @@ export const routes: Routes = [
                     vtTheme: 'people'
                 },
                 loadChildren: () => import('./features/attendances/attendances.routes').then(r => r.ATTENDANCES_ROUTES)
+            }, {
+                path: 'print',
+                canMatch: [roleGuard],
+                data: {
+                    roles: ['adm'],
+                    vtIndex: 110,
+                    vtTheme: 'prints'
+                },
+                loadChildren: () => import('./features/prints/prints.routes').then(r => r.PRINTS_ROUTES)
             }
         ]
     },

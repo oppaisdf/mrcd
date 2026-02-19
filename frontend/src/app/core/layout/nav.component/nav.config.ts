@@ -48,28 +48,28 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
     }, {
         id: 'Impresiones',
         icon: '🖨️',
-        roles: ['ukn'],
+        roles: ['adm'],
         options: [
             {
                 routeName: "Agenda",
                 route: "/",
-                roles: ['usr']
+                roles: ['ukn']
             }, {
                 routeName: "Asistencia",
                 route: "/",
-                roles: ['usr']
+                roles: ['ukn']
             }, {
                 routeName: "Diplomas",
                 route: "/",
-                roles: ['adm']
+                roles: ['ukn']
             }, {
                 routeName: "Gafetes",
-                route: "/",
+                route: "/print/badges",
                 roles: ['adm']
             }, {
                 routeName: "Listado general",
                 route: "/",
-                roles: ['usr']
+                roles: ['ukn']
             }
         ]
     }, {
