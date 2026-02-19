@@ -62,7 +62,7 @@ services:
     environment:
       - DOMAIN=${DOMAIN}
       - API_URI=${API_URI}
-      - API_HOST=${API_HOST}
+      - API_PROTOCOL=${API_PROTOCOL}
     depends_on:
       - api
 
