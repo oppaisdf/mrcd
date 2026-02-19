@@ -51,6 +51,21 @@ services:
       cache:
         condition: service_healthy
 
+  server:
+    build:
+      context: ./frontend
+      target: server
+    container_name: server
+    networks: [network]
+    ports:
+      - 80:80
+    environment:
+      - DOMAIN=${DOMAIN}
+      - API_URI=${API_URI}
+      - API_HOST=${API_HOST}
+    depends_on:
+      - api
+
 networks:
   network:
     driver: bridge
