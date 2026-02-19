@@ -1,4 +1,4 @@
-<h1>Página</h1>
+<h1>Impresión de gafetes</h1>
 <hr>
 <form class="ui-form" [formGroup]="form">
     <ui-select label="Columnas" type="number" [items]="columns" formControlName="columns" />
@@ -32,7 +32,7 @@
 <br>
 @let printables = printablesSorted();
 @if (printables.length > 0) {
-<ui-print title="Impresión de gafetes" paper="A4">
+<ui-print paper="A4">
 
     <section [class]="'label-grid cols-' + cols">
         @for (printable of printables; track $index) {

@@ -99,19 +99,25 @@
     margin: 12mm;
 }
 
-:host([data-paper="letter"]) {
+:host([data-paper="A4"]) {
     @page {
-        size: Letter portrait;
+        size: A4 portrait;
     }
 }
 
-:host([data-orientation="landscape"]) {
+:host([data-paper="A4"][data-orientation="landscape"]) {
     @page {
         size: A4 landscape;
     }
 }
 
-:host([data-paper="letter"][data-orientation="landscape"]) {
+:host([data-paper="Letter"]) {
+    @page {
+        size: Letter portrait;
+    }
+}
+
+:host([data-paper="Letter"][data-orientation="landscape"]) {
     @page {
         size: Letter landscape;
     }

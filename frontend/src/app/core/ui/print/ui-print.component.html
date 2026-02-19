@@ -1,9 +1,14 @@
-<div class="ui-print__toolbar">
+<div class="ui-print__toolbar no-print">
     @let t = title();
     @if(t){
     <div class="ui-print__title">{{t}}</div>
     }
-    <button class="ui-button no-print" type="button" (click)="print()">Imprimir</button>
+
+    <form [formGroup]="form" class="ui-form">
+        <ui-select label="Orientación" type="string" [items]="orientations" formControlName="orientation" />
+    </form>
+
+    <button class="ui-button" type="button" (click)="print()">Imprimir</button>
 </div>
 
 <div class="ui-print__viewport">
