@@ -16,7 +16,7 @@ internal sealed class AesGcmEnryptionService : IEncryptionService
     {
         var options = opt.Value;
         _key = Convert.FromBase64String(options.KeyBase64);
-        if (_key.Length != 32) throw new InvalidOperationException("EncryptionOptions.KeyBase64 debe decodificar a 32 bytes (AES-256).");
+        if (_key.Length != 32) throw new InvalidOperationException($"EncryptionOptions.KeyBase64 debe decodificar a 32 bytes (AES-256). Actual: {_key.Length}");
         _version = options.Version;
     }
 
