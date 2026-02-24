@@ -4,36 +4,43 @@
     <ui-select label="Columnas" type="number" [items]="columns" formControlName="columns" />
     <ui-select label="Ordenamiento" type="boolean" [items]="order" formControlName="orderByName" />
 </form>
+
 <br>
 
-<div class="ui-table-wrap">
-    <table class="ui-table">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (person of peopleSorted(); track $index) {
-            <tr>
-                <td>{{person.personName}}</td>
-                <td>
-                    <button class="ui-button" [class.is-danger]="person.isSelected"
-                        (click)="selectPerson(person.personId)">
-                        @if (person.isSelected) {Remover}@else {Agregar}
-                    </button>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-</div>
+@let sorted = peopleSorted();
+@if (sorted.length > 0) {
+<ui-accordeon title="Confirmandos">
+    <div class="ui-table-wrap">
+        <table class="ui-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (person of sorted; track $index) {
+                <tr>
+                    <td>{{person.personName}}</td>
+                    <td>
+                        <button class="ui-button" [class.is-danger]="person.isSelected"
+                            (click)="selectPerson(person.personId)">
+                            @if (person.isSelected) {Remover}@else {Agregar}
+                        </button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</ui-accordeon>
+
 <br>
+}
+
 @let printables = printablesSorted();
 @if (printables.length > 0) {
 <ui-print paper="A4">
-
     <section [class]="'label-grid cols-' + cols">
         @for (printable of printables; track $index) {
         <article class="label">

@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { UiPrintComponent } from '../../../core/ui/print/ui-print.component';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { PersonService } from '../../people/services/person.service';
@@ -8,6 +8,7 @@ import { FormBuilder, ɵInternalFormsSharedModule, ReactiveFormsModule } from '@
 import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
 import { toSignal } from '@angular/core/rxjs-interop';
+import { AccordeonComponent } from "../../../core/ui/accordeon/accordeon.component";
 
 @Component({
   selector: 'app-badges.page',
@@ -16,7 +17,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
     QRCodeComponent,
     UiSelectComponent,
     ɵInternalFormsSharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AccordeonComponent
   ],
   templateUrl: './badges.page.html',
   styleUrl: './badges.page.scss',
