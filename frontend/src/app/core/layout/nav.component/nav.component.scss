@@ -87,7 +87,7 @@
 /* El activo se salva del “fade” y crece */
 .nav--drawer-open .rail__item.is-active {
     opacity: 1;
-    transform: scale(1.18);
+    transform: scale(1.5);
 }
 
 /* Activo sin drawer (opcional pero elegante) */
@@ -130,7 +130,7 @@
 
 .rail__btn:hover {
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(1.25);
 }
 
 /* =========================================================
