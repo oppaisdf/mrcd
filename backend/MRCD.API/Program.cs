@@ -113,4 +113,5 @@ app.MapDocumentEndpoints();
 app.MapSacramentEndpoints();
 app.MapDegreeEndpoints();
 app.MapParentEndpoints();
+app.MapAlertEndpoints();
 app.Run();
