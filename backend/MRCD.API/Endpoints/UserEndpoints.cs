@@ -159,6 +159,43 @@ internal static class UserEndpoints
         .ProducesProblem(StatusCodes.Status404NotFound)
         .RequireAuthorization("perm:User.Read");
 
+        app.MapPatch("me", async (
+            [FromBody] UpdateUserRequest request,
+            [FromServices] ICommandHandler<UpdateUserCommand> handler,
+            ClaimsPrincipal user,
+            CancellationToken ct
+        ) =>
+        {
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out var userId))
+                return ResultsMapper.Unauthorized();
+
+            var command = new UpdateUserCommand(
+                userId,
+                userId,
+                request.Username,
+                request.Password,
+                null
+            );
+            var result = await handler.HandleAsync(command, ct);
+            return ResultsMapper.ToHttp(
+                result,
+                () => Results.Ok(),
+                e => e.Contains("existe"),
+                e => e.Contains("en uso")
+            );
+        })
+        .WithName("PatchMyUser")
+        .WithDisplayName("PATCH /MyUser")
+        .WithSummary("Actualizar mi usuario")
+        .WithDescription("Actualiza mi usuario")
+        .WithOpenApi()
+        .Produces(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status409Conflict)
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:User.Read");
+
         app.MapPatch("{id}", async (
             Guid id,
             [FromBody] UpdateUserRequest request,
