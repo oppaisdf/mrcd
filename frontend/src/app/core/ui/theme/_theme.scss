@@ -89,3 +89,11 @@
 :root[data-theme="dark"][data-route-theme="people"] {
     --page-bg: #290f2a;
 }
+
+:root[data-theme="light"][data-route-theme="pritns"] {
+    --page-bg: #e7b79c;
+}
+
+:root[data-theme="dark"][data-route-theme="prints"] {
+    --page-bg: #2a1a0f;
+}
