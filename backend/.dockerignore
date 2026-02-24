@@ -1,10 +1,47 @@
-**/bin/
-**/obj/
-**/TestResults/
-.vscode/
+# Build artifacts
+bin/
+obj/
+out/
+publish/
+
+# Rider / VS / VS Code
+.vs/
 .idea/
-.git/
-*.user
+.vscode/
 *.suo
-Dockerfile*
+*.user
+*.userosscache
+*.sln.docstates
+
+# Tests / coverage
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# NuGet
+*.nupkg
+.nuget/
+packages/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
 docker-compose*
+Dockerfile*
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Secrets / env
+.env
+.env.*
+secrets.json
