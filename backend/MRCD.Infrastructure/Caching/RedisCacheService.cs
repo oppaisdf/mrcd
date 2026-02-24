@@ -18,7 +18,7 @@ internal sealed class RedisCacheService(
     public async Task<T?> GetAsync<T>(
         string key,
         CancellationToken cancellationToken
-    )
+    ) where T : struct
     {
         var bytes = await _cache.GetAsync(key, cancellationToken);
         if (bytes is null || bytes.Length == 0) return default;
