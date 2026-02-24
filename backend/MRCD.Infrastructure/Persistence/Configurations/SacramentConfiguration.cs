@@ -20,5 +20,9 @@ internal sealed class SacramentConfiguration : IEntityTypeConfiguration<Sacramen
         builder
             .Property(e => e.Name)
             .HasMaxLength(16);
+        builder
+            .HasIndex(e => e.Name)
+            .IsUnique()
+            .HasDatabaseName("UX_Sacrament_Name");
     }
 }

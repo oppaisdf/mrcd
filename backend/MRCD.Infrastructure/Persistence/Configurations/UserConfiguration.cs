@@ -20,5 +20,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder
             .Property(u => u.Username)
             .HasMaxLength(10);
+        builder
+            .HasIndex(e => e.Username)
+            .IsUnique()
+            .HasDatabaseName("UX_User_Username");
     }
 }

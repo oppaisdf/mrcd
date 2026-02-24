@@ -20,5 +20,9 @@ internal sealed class DegreeConfiguration : IEntityTypeConfiguration<Degree>
         builder
             .Property(e => e.Name)
             .HasMaxLength(30);
+        builder
+            .HasIndex(e => e.Name)
+            .IsUnique()
+            .HasDatabaseName("UX_Degree_Name");
     }
 }

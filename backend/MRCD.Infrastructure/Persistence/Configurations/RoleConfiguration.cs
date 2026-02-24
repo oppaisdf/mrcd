@@ -20,5 +20,9 @@ internal sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
         builder
             .Property(e => e.Name)
             .HasMaxLength(3);
+        builder
+            .HasIndex(e => e.Name)
+            .IsUnique()
+            .HasDatabaseName("UX_Role_Name");
     }
 }

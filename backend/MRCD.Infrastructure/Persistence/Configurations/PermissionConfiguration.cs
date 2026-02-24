@@ -20,5 +20,9 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
         builder
             .Property(e => e.Name)
             .HasMaxLength(30);
+        builder
+            .HasIndex(e => e.Name)
+            .IsUnique()
+            .HasDatabaseName("UX_Permission_Name");
     }
 }

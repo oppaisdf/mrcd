@@ -20,5 +20,9 @@ internal sealed class ActivityConfigurarion : IEntityTypeConfiguration<Activity>
         builder
             .Property(e => e.Name)
             .HasMaxLength(50);
+        builder
+            .HasIndex(e => e.Name)
+            .IsUnique()
+            .HasDatabaseName("UX_Activity_Name");
     }
 }
