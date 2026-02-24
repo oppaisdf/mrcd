@@ -1,3 +1,4 @@
+<h1>Alertas</h1>
 <section class="ui-kpi-grid">
     @for (alert of alerts(); track $index) {
     <article class="ui-kpi" role="group" [attr.aria-label]="alert.message">
@@ -12,3 +13,8 @@
     </article>
     }
 </section>
+
+<br>
+<h1>Mi usuario</h1>
+<hr>
+<user-form mode="Actualizarme" [roles]="roles()" [user]="user()" (formSubmit)="updateMeAsync($event)" />
