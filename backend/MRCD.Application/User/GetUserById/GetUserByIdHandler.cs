@@ -22,23 +22,21 @@ internal sealed class GetUserByIdHandler(
         CancellationToken cancellationToken
     )
     {
-        var userTask = _user.GetByIdAsync(query.Id, cancellationToken);
-        var rolesTask = _role.ToListAsync(cancellationToken);
-        var userRolesTask = _userRole.RolesByUserIdToListAsync(query.Id, cancellationToken);
-        await Task.WhenAll(userTask, rolesTask, userRolesTask);
+        var user = await _user.GetByIdAsync(query.Id, cancellationToken);
+        var roles = await _role.ToListAsync(cancellationToken);
+        var userRoles = await _userRole.RolesByUserIdToListAsync(query.Id, cancellationToken);
 
-        var assigned = userRolesTask
-            .Result
+        var assigned = userRoles
             .Select(ur => ur.RoleID)
             .ToHashSet();
 
-        if (userTask.Result is null)
+        if (user is null)
             return Result<UserDTO>.Failure("El usuario no existe");
         return Result<UserDTO>.Success(new UserDTO(
-            userTask.Result.ID,
-            userTask.Result.Username,
-            userTask.Result.IsActive,
-            rolesTask.Result.Select(r => new UsingRoleDTO(
+            user.ID,
+            user.Username,
+            user.IsActive,
+            roles.Select(r => new UsingRoleDTO(
                 r.ID,
                 r.Name,
                 assigned.Contains(r.ID)
