@@ -1,11 +1,11 @@
-/* Layout: cajitas que se acomodan */
 .ui-kpi-grid {
     display: grid;
     gap: var(--space-6);
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    width: 100%;
+    overflow-x: auto;
 }
 
-/* Card base (misma vibra que .ui-acc) */
 .ui-kpi {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-2);
@@ -21,13 +21,11 @@
         transform var(--dur-2) var(--ease-out);
 }
 
-/* Hover sutil como tu summary */
 .ui-kpi:hover {
     background: color-mix(in oklab, var(--color-surface-2) 12%, var(--color-surface));
     transform: translateY(-1px);
 }
 
-/* Header: usa surface-2 “tint” igual que el acc */
 .ui-kpi__head {
     padding: var(--space-5);
     color: var(--color-text);
@@ -55,7 +53,6 @@
     opacity: .9;
 }
 
-/* Footer: barra inferior tipo “panel border-top” */
 .ui-kpi__foot {
     border-top: 1px solid var(--color-border);
     padding: var(--space-4) var(--space-5);
@@ -75,12 +72,10 @@
     text-decoration: underline;
 }
 
-/* Focus ring coherente con tu kit */
 .ui-kpi:focus-within {
     box-shadow: 0 0 0 4px var(--color-focus);
 }
 
-/* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
 
     .ui-kpi,
