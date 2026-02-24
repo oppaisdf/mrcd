@@ -310,6 +310,7 @@ CREATE TABLE `permission` (
 LOCK TABLES `permission` WRITE;
 /*!40000 ALTER TABLE `permission` DISABLE KEYS */;
 INSERT INTO `permission` VALUES
+	('e97e1922-fa39-4631-938c-9e1b55caec87','Alert.Read'),
 	('02b70407-c1d7-412f-bf8b-abb20b057708','Document.Write'),
 	('10541623-89d2-4c99-9f13-4fab7c7dd1b4','Role.Read'),
 	('1ca78d7a-3520-421b-8284-cce2c3ac9c2e','Permission.Read'),
@@ -503,6 +504,7 @@ CREATE TABLE `role_permission` (
 LOCK TABLES `role_permission` WRITE;
 /*!40000 ALTER TABLE `role_permission` DISABLE KEYS */;
 INSERT INTO `role_permission` VALUES
+	('ec9e1959-13cf-4858-aa1f-95f0432ba3a8','e97e1922-fa39-4631-938c-9e1b55caec87'),
 	('32aa8d94-3d20-49de-94eb-676fee70230f','02b70407-c1d7-412f-bf8b-abb20b057708'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','10541623-89d2-4c99-9f13-4fab7c7dd1b4'),
 	('63509335-0f5a-44b2-8542-a1b5dee695f6','1ca78d7a-3520-421b-8284-cce2c3ac9c2e'),
