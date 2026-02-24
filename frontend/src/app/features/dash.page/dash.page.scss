@@ -1,0 +1,91 @@
+/* Layout: cajitas que se acomodan */
+.ui-kpi-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+/* Card base (misma vibra que .ui-acc) */
+.ui-kpi {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-1);
+    overflow: clip;
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+
+    transition:
+        background var(--dur-2) var(--ease-out),
+        transform var(--dur-2) var(--ease-out);
+}
+
+/* Hover sutil como tu summary */
+.ui-kpi:hover {
+    background: color-mix(in oklab, var(--color-surface-2) 12%, var(--color-surface));
+    transform: translateY(-1px);
+}
+
+/* Header: usa surface-2 “tint” igual que el acc */
+.ui-kpi__head {
+    padding: var(--space-5);
+    color: var(--color-text);
+    background: color-mix(in oklab, var(--color-surface-2) 75%, transparent);
+    transition: background var(--dur-2) var(--ease-out);
+
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+    min-height: 104px;
+}
+
+.ui-kpi:hover .ui-kpi__head {
+    background: color-mix(in oklab, var(--color-surface-2) 92%, transparent);
+}
+
+.ui-kpi__value {
+    font: 800 var(--text-lg, 16px)/1.2 var(--font-sans);
+    letter-spacing: .2px;
+}
+
+.ui-kpi__label {
+    font-size: var(--text-md);
+    line-height: var(--line);
+    opacity: .9;
+}
+
+/* Footer: barra inferior tipo “panel border-top” */
+.ui-kpi__foot {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-4) var(--space-5);
+    display: grid;
+    place-items: center;
+}
+
+.ui-kpi__link {
+    color: var(--color-link);
+    text-decoration: none;
+    font-size: var(--text-md);
+    transition: opacity var(--dur-1) var(--ease-out);
+}
+
+.ui-kpi__link:hover {
+    opacity: .8;
+    text-decoration: underline;
+}
+
+/* Focus ring coherente con tu kit */
+.ui-kpi:focus-within {
+    box-shadow: 0 0 0 4px var(--color-focus);
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .ui-kpi,
+    .ui-kpi__head,
+    .ui-kpi__link {
+        transition: none !important;
+    }
+}

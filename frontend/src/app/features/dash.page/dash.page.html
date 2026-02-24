@@ -1,0 +1,14 @@
+<section class="ui-kpi-grid">
+    @for (alert of alerts(); track $index) {
+    <article class="ui-kpi" role="group" [attr.aria-label]="alert.message">
+        <header class="ui-kpi__head">
+            <div class="ui-kpi__value">{{ alert.count }}</div>
+            <div class="ui-kpi__label">{{ alert.message }}</div>
+        </header>
+
+        <footer class="ui-kpi__foot">
+            <a class="ui-kpi__link">Ver</a>
+        </footer>
+    </article>
+    }
+</section>

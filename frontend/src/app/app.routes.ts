@@ -19,6 +19,13 @@ export const routes: Routes = [
         component: ShellComponent,
         children: [
             {
+                path: '',
+                data: {
+                    vtIndex: 1
+                },
+                loadComponent: () => import('./features/dash.page/dash.page').then(p => p.DashPage)
+            },
+            {
                 path: 'permissions',
                 canMatch: [roleGuard],
                 data: {
