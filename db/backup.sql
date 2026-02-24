@@ -36,7 +36,8 @@ CREATE TABLE `__EFMigrationsHistory` (
 LOCK TABLES `__EFMigrationsHistory` WRITE;
 /*!40000 ALTER TABLE `__EFMigrationsHistory` DISABLE KEYS */;
 INSERT INTO `__EFMigrationsHistory` VALUES
-	('20260116191205_InitialCreate','8.0.22');
+  ('20260116191205_InitialCreate','8.0.22'),
+  ('20260224141919_UniqueEntityName','8.0.22');
 /*!40000 ALTER TABLE `__EFMigrationsHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -76,7 +77,8 @@ CREATE TABLE `activity` (
   `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `Name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Date` date NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Activity_Name` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -161,7 +163,8 @@ CREATE TABLE `charge` (
   `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `Amount` decimal(5,2) NOT NULL,
   `Name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Charge_Name` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -184,7 +187,8 @@ DROP TABLE IF EXISTS `degree`;
 CREATE TABLE `degree` (
   `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `Name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Degree_Name` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -212,7 +216,8 @@ DROP TABLE IF EXISTS `document`;
 CREATE TABLE `document` (
   `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `Name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Document_Name` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -242,7 +247,8 @@ CREATE TABLE `parent` (
   `NormalizedName` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `IsMasculine` tinyint(1) NOT NULL,
   `Phone` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Parent_NormalizedName` (`NormalizedName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -292,7 +298,8 @@ DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission` (
   `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `Name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Permission_Name` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -351,6 +358,7 @@ CREATE TABLE `person` (
   `Phone` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `LastDegreeId` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Person_NormalizedName` (`NormalizedName`),
   KEY `IX_person_LastDegreeId` (`LastDegreeId`),
   CONSTRAINT `FK_Person_DegreeId` FOREIGN KEY (`LastDegreeId`) REFERENCES `degree` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -453,7 +461,8 @@ DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
   `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `Name` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Role_Name` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -531,7 +540,8 @@ DROP TABLE IF EXISTS `sacrament`;
 CREATE TABLE `sacrament` (
   `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `Name` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Sacrament_Name` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -557,7 +567,8 @@ DROP TABLE IF EXISTS `stage`;
 CREATE TABLE `stage` (
   `ID` char(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `Name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_Stage_Name` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -583,7 +594,8 @@ CREATE TABLE `user` (
   `IsActive` tinyint(1) NOT NULL,
   `Password` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `LastPasswordUpdate` date NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UX_User_Username` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -637,4 +649,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-17 21:24:11
+-- Dump completed on 2026-02-24 14:22:25
