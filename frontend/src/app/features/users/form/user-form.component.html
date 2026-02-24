@@ -1,13 +1,15 @@
+@let _mode = mode();
 <form [formGroup]="form" class="ui-form" (ngSubmit)="onSubmit()">
     <ui-input label="Nombre" type="text" formControlName="username" [hint]="invalidField('username')" />
     <ui-input label="Contraseña" type="password" formControlName="password" [hint]="invalidField('password')" />
-    @if (mode() === 'Editar') {
+    @if (_mode === 'Editar') {
     <ui-select label="Activo" type="boolean" [items]="states" formControlName="isActive" />
     }
 
-    <button class="ui-button" type="submit">{{mode()}}</button>
+    <button class="ui-button" type="submit">{{_mode}}</button>
 </form>
 
+@if (_mode !== 'Actualizarme') {
 <h2>Roles</h2>
 @if (!hasSelectedRoles) {
 <small class="ui-help is-danger">Debe seleccionar un rol</small>
@@ -35,3 +37,4 @@
         </tbody>
     </table>
 </div>
+}

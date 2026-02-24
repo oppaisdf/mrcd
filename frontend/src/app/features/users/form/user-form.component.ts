@@ -24,7 +24,7 @@ export class UserFormComponent {
     isActive: [true]
   });
 
-  mode = input.required<'Crear' | 'Editar'>();
+  mode = input.required<'Crear' | 'Editar' | 'Actualizarme'>();
   user = input.required<UserVM>();
   roles = input.required<Array<UsedRoleResponse>>();
   formSubmit = output<UserVM>();
