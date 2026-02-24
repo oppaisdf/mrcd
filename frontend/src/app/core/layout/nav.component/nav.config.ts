@@ -24,7 +24,7 @@ export interface OptionMenu {
 export const NAV_CATEGORIES: CategoryMenu[] = [
     {
         id: 'Confirmandos',
-        icon: '🏠',
+        icon: '/icons/people.png',
         roles: ['usr'],
         options: [
             {
@@ -47,7 +47,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
         ]
     }, {
         id: 'Impresiones',
-        icon: '🖨️',
+        icon: '/icons/print.png',
         roles: ['adm'],
         options: [
             {
@@ -74,7 +74,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
         ]
     }, {
         id: "Gestiones",
-        icon: "🛠",
+        icon: "/icons/managements.png",
         roles: ['usr'],
         options: [
             {
@@ -124,7 +124,7 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
         ]
     }, {
         id: "System",
-        icon: "💻",
+        icon: "/icons/system.png",
         roles: ['sys'],
         options: [
             {

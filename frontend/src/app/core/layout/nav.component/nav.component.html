@@ -1,3 +1,4 @@
+@let currentCategory = selectedCategory();
 <aside class="nav" [class.nav--drawer-open]="isDrawerOpen()">
     <!-- RAIL -->
     <div class="rail">
@@ -10,17 +11,21 @@
         <ul class="rail__menu" role="list">
             @for (category of categories(); track $index) {
             <li>
-                <a class="rail__item" [class.is-active]="selectedCategory()?.id === category.id" [title]="category.id"
+                <a class="rail__item" [class.is-active]="currentCategory?.id === category.id" [title]="category.id"
                     (click)="selectCategory(category.id)">
-                    <span class="rail__icon" aria-hidden="true">{{ category.icon }}</span>
+                    <img class="rail__icon" aria-hidden="true" [src]="category.icon">
                 </a>
             </li>
             }
         </ul>
 
         <div class="rail__bottom">
-            <button class="rail__btn" type="button" title="Theme" (click)="toggleTheme.emit()">🌓</button>
-            <button class="rail__btn" type="button" title="Logout" (click)="logout()">⎋</button>
+            <button class="rail__btn" type="button" title="Theme" (click)="toggleTheme.emit()">
+                <img src="/icons/theme.png">
+            </button>
+            <button class="rail__btn" type="button" title="Logout" (click)="logout()">
+                <img src="/icons/logout.png">
+            </button>
         </div>
     </div>
 
@@ -29,15 +34,15 @@
     <div class="drawer" role="navigation" aria-label="Section">
         <div class="drawer__header">
             <div class="drawer__title">
-                <span class="drawer__icon" aria-hidden="true">{{ selectedCategory()?.icon }}</span>
-                <span class="drawer__text">{{ selectedCategory()?.id }}</span>
+                <img [src]="currentCategory?.icon" alt="" class="drawwer__icon">
+                <span class="drawer__text">{{ currentCategory?.id }}</span>
             </div>
 
             <button class="drawer__close" type="button" title="Close" (click)="closeDrawer()">✕</button>
         </div>
 
         <ul class="drawer__menu" role="list">
-            @for (option of selectedCategory()?.options; track $index) {
+            @for (option of currentCategory?.options; track $index) {
             <li>
                 <a class="drawer__item" [routerLink]="option.route" (click)="closeDrawer()">
                     <span>{{ option.routeName }}</span>
