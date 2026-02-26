@@ -16,6 +16,7 @@ export class AttendanceService {
     personId: string,
     date: Date
   ) {
-    return this._api.delAsync(`/attendance/${personId}/date/${date}`);
+    const dateString = date.toISOString().split('T')[0];
+    return this._api.delAsync(`/attendance/${personId}/date/${dateString}`);
   }
 }

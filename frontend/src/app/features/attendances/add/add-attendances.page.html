@@ -2,8 +2,8 @@
 
 <ui-accordeon title="Opciones de escaneo">
     <form [formGroup]="form" class="ui-form" (ngSubmit)="startScanAsync()">
-        <ui-select label="Tipo de asistencia" type="boolean" [items]="items('isAttendance')"
-            formControlName="isAttendance" />
+        <ui-select label="Tipo de asistencia" type="number" [items]="items('typeAttendance')"
+            formControlName="typeAttendance" />
         <ui-select label="Cerrar scanner al terminar" type="boolean" [items]="items('closeToScann')"
             formControlName="closeToScann" />
         <ui-input label="Fecha" type="date" formControlName="date" [min]="limitDate(false)" [max]="limitDate(true)" />

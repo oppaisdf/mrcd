@@ -26,29 +26,32 @@ export class AddAttendancesPage {
   private readonly _service = inject(AttendanceService);
   @ViewChild(AttendancesScannerComponent) private _scanner!: AttendancesScannerComponent;
   readonly form = this._form.group({
-    isAttendance: [true],
+    typeAttendance: [1],
     closeToScann: [true],
     date: [new Date()]
   });
   readonly openScanner = signal<boolean>(false);
 
   items(
-    controlName: 'isAttendance' | 'closeToScann'
+    controlName: 'typeAttendance' | 'closeToScann'
   ) {
-    const labelA = ({
-      'isAttendance': 'Asistencia',
-      'closeToScann': 'Cerrar al escanear'
-    } as const)[controlName];
-    const labelB = ({
-      'isAttendance': 'Permiso inasistencia',
-      'closeToScann': 'Mantener visible al escanear'
-    } as const)[controlName];
-    return [{
-      label: labelA,
-      value: true
+    if (controlName === 'closeToScann')
+      return [{
+        label: 'Cerrar al escanear',
+        value: true
+      }, {
+        label: 'Mantener visible al escanear',
+        value: false
+      }];
+    else return [{
+      label: 'Asistencia',
+      value: 1
     }, {
-      label: labelB,
-      value: false
+      label: 'Permiso inasistencia',
+      value: 2
+    }, {
+      label: 'Remover asistencia',
+      value: 3
     }];
   }
 
@@ -71,10 +74,12 @@ export class AddAttendancesPage {
     const form = this.form.getRawValue();
     const request: AttendanceRequest = {
       personId: qr,
-      isAttendance: form.isAttendance ?? true,
+      isAttendance: form.typeAttendance === 1,
       date: form.date === null ? undefined : form.date
     };
-    const response = await this._service.addAsync(request);
+    const response = form.typeAttendance !== 3
+      ? await this._service.addAsync(request)
+      : await this._service.delAsync(request.personId, request.date ?? new Date());
     this._alert.clear();
 
     if (!response.isSuccess)
