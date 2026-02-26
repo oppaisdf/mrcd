@@ -11,4 +11,11 @@ export class AttendanceService {
   ) {
     return this._api.postAsync('/attendance', request);
   }
+
+  delAsync(
+    personId: string,
+    date: Date
+  ) {
+    return this._api.delAsync(`/attendance/${personId}/date/${date}`);
+  }
 }
