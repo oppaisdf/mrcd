@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject, input } from '@angular/core';
+import { Component, HostBinding, inject, input, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { UiSelectComponent } from '../select/ui-select.component';
 import { SelectItem } from '../select/SelectItem';
@@ -15,8 +15,9 @@ import { SelectItem } from '../select/SelectItem';
     '[attr.data-orientation]': 'orientation'
   }
 })
-export class UiPrintComponent {
+export class UiPrintComponent implements OnDestroy {
   private readonly _form = inject(FormBuilder);
+  private pageStyleEl?: HTMLStyleElement;
   readonly form = this._form.nonNullable.group({
     orientation: ['portrait']
   });
@@ -31,13 +32,34 @@ export class UiPrintComponent {
   }];
 
   constructor() {
-    window.addEventListener('afterprint', () => {
-      document.documentElement.classList.remove('print-mode');
-    });
+    window.addEventListener('afterprint', this.afterPrint);
   }
+
+  ngOnDestroy() {
+    window.removeEventListener('afterprint', this.afterPrint);
+  }
+
+  private afterPrint = () => {
+    document.documentElement.classList.remove('print-mode');
+    this.pageStyleEl?.remove();
+    this.pageStyleEl = undefined;
+  };
 
   print() {
     document.documentElement.classList.add('print-mode');
+
+    const isLandscape = this.orientation === 'landscape';
+    const size = isLandscape ? 'A4 landscape' : 'A4 portrait';
+
+    this.pageStyleEl?.remove();
+    this.pageStyleEl = document.createElement('style');
+    this.pageStyleEl.setAttribute('data-ui-print-page', 'true');
+    this.pageStyleEl.textContent = `
+      @media print {
+        @page { size: ${size}; margin: 12mm; }
+      }
+    `;
+    document.head.appendChild(this.pageStyleEl);
     requestAnimationFrame(() => window.print());
   }
 
