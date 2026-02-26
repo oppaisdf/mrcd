@@ -4,6 +4,7 @@
     <ui-select label="Columnas" type="number" [items]="items('columns')" formControlName="columns" />
     <ui-select label="Ordenamiento" type="boolean" [items]="order" formControlName="orderByName" />
     <ui-select label="Tamaño de QR" type="number" [items]="items('qrSize')" formControlName="qrSize" />
+    <ui-select label="Tamaño de fuente" type="number" [items]="items('fontSize')" formControlName="fontSize" />
 </form>
 
 <br>
@@ -44,7 +45,7 @@
 <ui-print paper="A4">
     <section [class]="'label-grid cols-' + cols">
         @for (printable of printables; track $index) {
-        <article class="label">
+        <article class="label" [style.--fs-name.px]="fontSize(true)" [style.--fs-day.px]="fontSize(false)">
             <div class="qr" [style.--qr.px]="qrSize">
                 <qrcode [qrdata]="printable.personId" elementType="img" />
             </div>

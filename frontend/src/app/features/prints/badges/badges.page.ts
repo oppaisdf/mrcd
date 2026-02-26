@@ -42,6 +42,20 @@ export class BadgesPage implements OnInit {
     return ({ 2: 64, 3: 86, 4: 110 } as const)[size] ?? 86;
   }
 
+  fontSize(
+    isTitle: boolean
+  ) {
+    const value = this.form.controls.fontSize.value;
+    const size = ({
+      2: 12,
+      3: 22,
+      4: 26
+    } as const)[value] ?? 16;
+    return isTitle
+      ? size + 12
+      : size;
+  }
+
   items(
     controlName: 'columns' | 'qrSize' | 'fontSize'
   ) {
