@@ -42,7 +42,7 @@
 
 @let printables = printablesSorted();
 @if (printables.length > 0) {
-<ui-print paper="A4">
+<ui-print>
     <section [class]="'label-grid cols-' + cols">
         @for (printable of printables; track $index) {
         <article class="label" [style.--fs-name.px]="fontSize(true)" [style.--fs-day.px]="fontSize(false)">

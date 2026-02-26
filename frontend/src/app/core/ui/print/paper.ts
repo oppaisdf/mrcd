@@ -1,1 +1,0 @@
-export type Paper = 'A4' | 'letter';

@@ -1,5 +1,4 @@
 import { Component, HostBinding, inject, input } from '@angular/core';
-import { Paper } from './paper';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { UiSelectComponent } from '../select/ui-select.component';
 import { SelectItem } from '../select/SelectItem';
@@ -13,7 +12,6 @@ import { SelectItem } from '../select/SelectItem';
   templateUrl: './ui-print.component.html',
   styleUrl: './ui-print.component.scss',
   host: {
-    '[attr.data-paper]': 'paper()',
     '[attr.data-orientation]': 'orientation'
   }
 })
@@ -23,7 +21,6 @@ export class UiPrintComponent {
     orientation: ['portrait']
   });
   @HostBinding('attr.data-print-root') printRoot = 'true';
-  paper = input.required<Paper>();
   title = input<string>();
   readonly orientations: Array<SelectItem<string>> = [{
     label: 'Vertical',

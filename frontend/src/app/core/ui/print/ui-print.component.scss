@@ -37,10 +37,6 @@
     margin: 0 auto;
 }
 
-:host([data-paper="letter"]) .ui-print__sheet {
-    width: min(100%, 216mm);
-}
-
 :host([data-orientation="landscape"]) .ui-print__sheet {
     width: min(100%, 297mm);
 }
@@ -99,25 +95,13 @@
     margin: 12mm;
 }
 
-:host([data-paper="A4"]) {
-    @page {
-        size: A4 portrait;
-    }
-}
-
-:host([data-paper="A4"][data-orientation="landscape"]) {
+:host([data-orientation="landscape"]) {
     @page {
         size: A4 landscape;
     }
 }
 
-:host([data-paper="Letter"]) {
-    @page {
-        size: Letter portrait;
-    }
-}
-
-:host([data-paper="Letter"][data-orientation="landscape"]) {
+:host([data-orientation="landscape"]) {
     @page {
         size: Letter landscape;
     }
