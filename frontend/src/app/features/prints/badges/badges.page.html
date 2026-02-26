@@ -1,8 +1,9 @@
 <h1>Impresión de gafetes</h1>
 <hr>
 <form class="ui-form" [formGroup]="form">
-    <ui-select label="Columnas" type="number" [items]="columns" formControlName="columns" />
+    <ui-select label="Columnas" type="number" [items]="items('columns')" formControlName="columns" />
     <ui-select label="Ordenamiento" type="boolean" [items]="order" formControlName="orderByName" />
+    <ui-select label="Tamaño de QR" type="number" [items]="items('qrSize')" formControlName="qrSize" />
 </form>
 
 <br>
@@ -44,7 +45,7 @@
     <section [class]="'label-grid cols-' + cols">
         @for (printable of printables; track $index) {
         <article class="label">
-            <div class="qr">
+            <div class="qr" [style.--qr.px]="qrSize">
                 <qrcode [qrdata]="printable.personId" elementType="img" />
             </div>
 

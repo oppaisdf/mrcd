@@ -31,22 +31,47 @@ export class BadgesPage implements OnInit {
   private readonly _form = inject(FormBuilder);
   readonly form = this._form.nonNullable.group({
     columns: [2],
-    orderByName: [true]
+    orderByName: [true],
+    qrSize: [2],
+    fontSize: [2]
   });
 
   get cols() { return this.form.controls.columns.value; }
-  readonly columns: Array<SelectItem<number>> = [
-    {
-      label: '2',
+  get qrSize() {
+    const size = this.form.controls.qrSize.value;
+    return ({ 2: 64, 3: 86, 4: 110 } as const)[size] ?? 86;
+  }
+
+  items(
+    controlName: 'columns' | 'qrSize' | 'fontSize'
+  ) {
+    const labelA = ({
+      'columns': 'Dos',
+      'qrSize': 'Pequeño',
+      'fontSize': 'Pequeña'
+    } as const)[controlName];
+    const labelB = ({
+      'columns': 'Tres',
+      'qrSize': 'Mediano',
+      'fontSize': 'Mediana'
+    } as const)[controlName];
+    const labelC = ({
+      'columns': 'Cuatro',
+      'qrSize': 'Grande',
+      'fontSize': 'Grande'
+    } as const)[controlName];
+    return [{
+      label: labelA,
       value: 2
     }, {
-      label: '3',
+      label: labelB,
       value: 3
     }, {
-      label: '4',
+      label: labelC,
       value: 4
-    }
-  ];
+    }];
+  }
+
   readonly order: Array<SelectItem<boolean>> = [{
     label: 'Por nombre',
     value: true
