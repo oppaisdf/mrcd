@@ -33,12 +33,12 @@
     box-shadow: var(--shadow-2);
 
     padding: var(--space-8);
-    width: min(100%, 210mm);
+    width: 210mm;
     margin: 0 auto;
 }
 
 :host([data-orientation="landscape"]) .ui-print__sheet {
-    width: min(100%, 297mm);
+    width: 297mm;
 }
 
 .ui-print__body {
@@ -98,11 +98,5 @@
 :host([data-orientation="landscape"]) {
     @page {
         size: A4 landscape;
-    }
-}
-
-:host([data-orientation="landscape"]) {
-    @page {
-        size: Letter landscape;
     }
 }
