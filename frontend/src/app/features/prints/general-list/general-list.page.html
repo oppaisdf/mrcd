@@ -1,0 +1,75 @@
+<ui-accordeon title="Filtros">
+    <form [formGroup]="form" class="ui-form">
+        <ui-select label="Ordenamiento" type="boolean" [items]="items('orderByName')" formControlName="orderByName" />
+        <ui-select label="Mostrar fecha de nacimiento" type="boolean" [items]="items('showDOB')"
+            formControlName="showDOB" />
+        <ui-select label="Mostrar padrinos" type="boolean" [items]="items('showGodparents')"
+            formControlName="showGodparents" />
+        <ui-select label="Mostrar padres" type="boolean" [items]="items('showParents')" formControlName="showParents" />
+        <ui-select label="Mostrar teléfonos" type="boolean" [items]="items('showPhones')"
+            formControlName="showPhones" />
+        <ui-select label="Mostrar parroquia de bautizo" type="boolean" [items]="items('showParish')"
+            formControlName="showParish" />
+    </form>
+</ui-accordeon>
+
+<br>
+
+@let people = peopleSorted();
+@if(people){
+<ui-print>
+    <h1 style="text-align: center;">Listado general</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Día</th>
+                <th>Género</th>
+                @if (value('showDOB')) {
+                <th>Fecha de nacimiento</th>
+                }
+                @if(value('showPhones')){
+                <th>Teléfono</th>
+                }
+                @if (value('showParish')) {
+                <th>Parroquia de bautizo</th>
+                }
+                @if (value('showParents')) {
+                <th>Padres</th>
+                }
+                @if (value('showGodparents')) {
+                <th>Padrinos</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (person of people; track person.personId) {
+            <tr>
+                <td>{{person.personName}}</td>
+                <td>
+                    @if (person.isSunday) {Domingo} @else {Sábado}
+                </td>
+                <td>
+                    @if (person.isMasculine) {Masculino} @else {Femenino}
+                </td>
+                @if (value('showDOB')) {
+                <td>{{formatedDOB(person.dob)}}</td>
+                }
+                @if(value('showPhones')){
+                <td>{{person.phone}}</td>
+                }
+                @if (value('showParish')) {
+                <td>{{person.parish}}</td>
+                }
+                @if (value('showParents')) {
+                <td>{{parentsInLine(person.parents)}}</td>
+                }
+                @if (value('showGodparents')) {
+                <td>{{parentsInLine(person.godparents)}}</td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</ui-print>
+}
