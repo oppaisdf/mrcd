@@ -157,5 +157,5 @@ backend/
 - Alerta de inasistencias.
 - Alerta de actividad fuera de horario.
 - Registrar logs en entidad propia.
-- Impresión de: listado general, asistencias, diplomas y agenda.
+- Impresión de: asistencias, diplomas y agenda.
 - Páginas de: agenda, movimientos contables

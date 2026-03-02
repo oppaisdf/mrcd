@@ -68,8 +68,8 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
                 roles: ['adm']
             }, {
                 routeName: "Listado general",
-                route: "/",
-                roles: ['ukn']
+                route: "/print/list",
+                roles: ['usr']
             }
         ]
     }, {

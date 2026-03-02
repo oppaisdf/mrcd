@@ -8,5 +8,11 @@ export const PRINTS_ROUTES: Routes = [
         data: { vtIndex: 1011 },
         providers: [PersonService],
         loadComponent: () => import('./badges/badges.page').then(p => p.BadgesPage)
+    }, {
+        path: 'list',
+        title: 'Listado general',
+        data: { vtIndex: 1012 },
+        providers: [PersonService],
+        loadComponent: () => import('./general-list/general-list.page').then(p => p.GeneralListPage)
     }
 ];
