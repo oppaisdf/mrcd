@@ -57,7 +57,13 @@ internal sealed class AssignToRoleHandler(
         _rolePermission.Add(rolePermission);
         await _save.SaveChangesAsync(cancellationToken);
         await ClearCache(cancellationToken);
-        _logs.LogInformation("Permission {permission} has been assigned to role {role}", command.PermissionId, command.RoleId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Permission {permission} has been assigned to role {role}", command.PermissionId, command.RoleId);
+        }
         return Result.Success();
     }
 }

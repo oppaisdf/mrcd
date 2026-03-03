@@ -21,7 +21,13 @@ internal sealed class DelPermissionHandler(
         var exists = await _repo.IdExistsAsync(command.PermissionId, cancellationToken);
         if (!exists) return Result.Failure("El permiso no existe");
         await _repo.DeleteAsync(command.PermissionId, cancellationToken);
-        _logs.LogInformation("Permission {id} has been deleted by user {user}", command.PermissionId, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Permission {permission} has been deleted.", command.PermissionId);
+        }
         return Result.Success();
     }
 }

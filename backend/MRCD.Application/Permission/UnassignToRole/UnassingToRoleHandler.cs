@@ -40,7 +40,13 @@ internal sealed class UnassignToRoleHandler(
         if (!exists)
             return Result.Failure("El permiso asignado al rol no existe");
         await _rolePermission.DeleteAsync(command.RoleId, command.PermissionId, cancellationToken);
-        _logs.LogInformation("The permission {permission} has been removed to role {role}", command.RoleId, command.PermissionId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("The permission {permission} has been removed from role {role}", command.PermissionId, command.RoleId);
+        }
         await ClearCache(cancellationToken);
         return Result.Success();
     }
