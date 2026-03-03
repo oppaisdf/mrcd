@@ -69,7 +69,13 @@ internal sealed class UpdateUserHandler(
         if (!updated)
             return Result.Failure("No se encontraron datos a actualizar");
         await _save.SaveChangesAsync(cancellationToken);
-        _logs.LogInformation("User {user} has been updated by user {userModifier}", user.ID, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("User {user} with ID {id} has been updated.", user.Username, user.ID);
+        }
         return Result.Success();
     }
 }

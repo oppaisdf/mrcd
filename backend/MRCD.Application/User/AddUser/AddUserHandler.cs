@@ -69,7 +69,13 @@ internal sealed class AddUserHandler(
             user.Value!.ID
         )));
         await _save.SaveChangesAsync(cancellationToken);
-        _logs.LogInformation("User {user} has been added by user {creater}", user.Value!.ID, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("User {user} with ID {id} has been created.", command.Username, user.Value!.ID);
+        }
         return Result<Guid>.Success(user.Value!.ID);
     }
 }
