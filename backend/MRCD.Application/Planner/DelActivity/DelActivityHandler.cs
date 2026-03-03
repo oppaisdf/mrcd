@@ -22,7 +22,13 @@ internal sealed class DelActivityHandler(
         if (!exists)
             return Result.Failure("La actividad no existe");
         await _repo.DeleteAsync(command.ActivityId, cancellationToken);
-        _logs.LogInformation("Activity {activity} has been deleted by user {user}", command.ActivityId, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Activity {activity} has been deleted.", command.ActivityId);
+        }
         return Result.Success();
     }
 }

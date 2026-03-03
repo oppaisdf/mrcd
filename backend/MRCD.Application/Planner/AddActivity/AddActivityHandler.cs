@@ -26,7 +26,13 @@ internal sealed class AddActivityHandler(
             return Result<Guid>.Failure(activityResult.Error!);
         _repo.Add(activityResult.Value!);
         await _save.SaveChangesAsync(cancellationToken);
-        _logs.LogInformation("Activity {activity} has been created by user {user}", activityResult.Value!.ID, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Activity {activity} with ID {id} has been created.", command.ActivityName, activityResult.Value!.ID);
+        }
         return Result<Guid>.Success(activityResult.Value!.ID);
     }
 }
