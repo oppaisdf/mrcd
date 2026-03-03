@@ -26,7 +26,13 @@ internal sealed class DelBaseEntityHandler<TEntity>(
         if (record is null)
             return Result.Failure("El registro no existe");
         _repo.Remove(record);
-        _logs.LogInformation("Record {record} has been deleted by user {user}", command.Id, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Record {record} with ID {id} has been deleted.", record.Name, record.ID);
+        }
         await _save.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }

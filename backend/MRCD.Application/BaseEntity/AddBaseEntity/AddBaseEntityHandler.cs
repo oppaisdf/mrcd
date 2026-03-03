@@ -41,7 +41,13 @@ internal sealed class AddBaseEntityHandler<TEntity>(
             return Result<Guid>.Failure(newRecord.Error!);
         _repo.Add(newRecord.Value!);
         await _save.SaveChangesAsync(cancellationToken);
-        _logs.LogInformation("Record {record} has been created by user {user}", newRecord.Value!.ID, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Record {record} with ID {id} has been created.", command.Name, newRecord.Value!.ID);
+        }
         return Result<Guid>.Success(newRecord.Value!.ID);
     }
 }
