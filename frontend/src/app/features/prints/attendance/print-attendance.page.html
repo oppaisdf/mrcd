@@ -1,0 +1,46 @@
+<h1>Asistencia</h1>
+
+<ui-accordeon title="Filtros">
+    <form [formGroup]="form" class="ui-form" (ngSubmit)="loadAsync()">
+        <ui-input label="Fecha" type="date" formControlName="date" />
+        <ui-select label="Tipo de filtrado" type="boolean" [items]="items('onlyByYear')" formControlName="onlyByYear" />
+        <ui-select label="Día" type="boolean" [items]="items('isSunday')" formControlName="isSunday" />
+        <ui-select label="Género" type="boolean" [items]="items('isMasculine')" formControlName="isMasculine" />
+        <ui-input label="Nombre" type="text" formControlName="name" />
+        <button class="ui-button" type="submit">Buscar</button>
+    </form>
+</ui-accordeon>
+
+<br>
+
+@let attds = attendances();
+@if (attds.length > 0) {
+<ui-print title="Asistencia general">
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                @for (header of headers(); track $index) {
+                <th>{{header}}</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (attendance of attds; track $index) {
+            <tr>
+                <td>{{attendance.personName}}</td>
+                @for (date of attendance.dates; track $index) {
+                <td>
+                    @switch (date.type) {
+                    @case (0) {I}
+                    @case (1) {O}
+                    @default {X}
+                    }
+                </td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</ui-print>
+}
