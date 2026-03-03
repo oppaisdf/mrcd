@@ -23,7 +23,13 @@ internal sealed class GetPersonHandler(
         CancellationToken cancellationToken
     )
     {
-        _logs.LogInformation("User {user} has been read people", query.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = query.UserId
+        }))
+        {
+            _logs.LogInformation("Paginated people has been consulted. Page {page}", query.Page);
+        }
         var normalized = string.IsNullOrWhiteSpace(query.Name)
             ? null
             : _service.NormalizeString(query.Name);

@@ -154,7 +154,13 @@ internal sealed class UpdatePersonHandler(
         if (!changed)
             return Result.Failure("No se han encontrado datos para actualizar");
         await _save.SaveChangesAsync(cancellationToken);
-        _logs.LogInformation("Person {person} has been updated by user {user}", command.PersonId, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Person {person} with ID {id} has been updated.", person.Name, person.ID);
+        }
         return Result.Success();
     }
 }

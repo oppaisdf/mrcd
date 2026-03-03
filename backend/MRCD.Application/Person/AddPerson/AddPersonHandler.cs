@@ -133,7 +133,13 @@ internal sealed class AddPersonHandler(
             return Result<Guid>.Failure(parentsResult.Error!);
         await AssignSacramentsAsync(command.Sacraments, person.ID, cancellationToken);
         await _save.SaveChangesAsync(cancellationToken);
-        _logs.LogInformation("Person {person} has been added by user {user}", person.ID, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Person {person} with ID {id} has been created.", person.Name, person.ID);
+        }
         return Result<Guid>.Success(personResult.Value!.ID);
     }
 }

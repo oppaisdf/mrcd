@@ -53,7 +53,13 @@ internal sealed class GetPersonByIdHandler(
             documents,
             sacraments
         );
-        _logs.LogInformation("Person {person} has been consulted by user {user}", query.PersonId, query.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = query.UserId
+        }))
+        {
+            _logs.LogInformation("Person {person} with ID {id} has been consulted.", person.Name, person.ID);
+        }
         return Result<PersonDTO>.Success(response);
     }
 }
