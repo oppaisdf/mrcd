@@ -28,7 +28,13 @@ internal sealed class DelAttendanceHandler(
         if (!exists)
             return Result.Failure($"No se ha pasado asistencia a este confirmando en la fecha {command.Date:dd/MM/yyyy}");
         await _repo.DeleteAsync(command.PersonId, command.Date, cancellationToken);
-        _logs.LogInformation("Attendance {date} has been deleted to person {person} by user {user}", command.Date, command.PersonId, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Attendance {date} has been deleted to person {person}.", command.Date, command.PersonId);
+        }
         return Result.Success();
     }
 }
