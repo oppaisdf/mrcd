@@ -75,7 +75,13 @@ internal sealed class AddParentHandler(
         if (!resultAssign.IsSuccess)
             return Result<Guid>.Failure(resultAssign.Error!);
 
-        _logs.LogInformation("Parent {parent} has been added by user {user}", result.Value!.ID, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Parent {parent} with ID {id} has been created.", command.ParentName, result.Value!.ID);
+        }
         return Result<Guid>.Success(result.Value!.ID);
     }
 

@@ -22,7 +22,13 @@ internal sealed class DelParentHandler(
         if (!exists)
             return Result.Failure("El padre/padrino no existe");
         await _repo.DeleteAsync(command.ParentId, cancellationToken);
-        _logs.LogInformation("Parent {parent} has been deleted by user {user}", command.ParentId, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Parent {parent} has been deleted.", command.ParentId);
+        }
         return Result.Success();
     }
 }

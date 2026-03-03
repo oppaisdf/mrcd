@@ -27,7 +27,13 @@ internal sealed class GetParentByIdHandler(
         if (parent is null)
             return Result<ParentDetailsDTO>.Failure("El padre/padrino no existe");
         var people = await _person.ByPaerentToListAsync(query.ParentId, cancellationToken);
-        _logs.LogInformation("Parent {parent} has been consulted by user {user}", query.ParentId, query.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = query.UserId
+        }))
+        {
+            _logs.LogInformation("Parent {parent} with ID {id} has been consulted.", parent.Name, query.ParentId);
+        }
         return Result<ParentDetailsDTO>.Success(new(
             parent.Name,
             parent.IsMasculine,
