@@ -26,7 +26,13 @@ internal sealed class AddAccountingMovementHandler(
             return Result<Guid>.Failure(movement.Error!);
         _repo.Add(movement.Value!);
         await _save.SaveChangesAsync(cancellationToken);
-        _logs.LogInformation("Accounting movement {movement} has been added by user {use!}", movement.Value!.ID, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Accounting movement {movement} has been added with ID {id}.", command.Description, movement.Value!.ID);
+        }
         return Result<Guid>.Success(movement.Value!.ID);
     }
 }

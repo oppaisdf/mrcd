@@ -21,7 +21,14 @@ internal sealed class GetAccountingMovementHandler(
         var results = query.FilterOnlyByYear
             ? _repo.OnlyByYearToListAsync(query.Date.Year, cancellationToken)
             : _repo.ByDateToListAsync(query.Date, cancellationToken);
-        _logs.LogInformation("Accounting movements listed by user {user} in date {date}", query.UserId, query.Date);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = query.UserId
+        }))
+        {
+            _logs.LogInformation("Accounting movement has been listed in date {date}", query.Date);
+        }
+
         return results
             .ContinueWith(r =>
                 Result<IEnumerable<Domain.AccountingMovement.AccountingMovement>>.Success(r.Result),

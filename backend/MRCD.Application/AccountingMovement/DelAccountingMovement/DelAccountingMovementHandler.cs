@@ -22,7 +22,13 @@ internal sealed class DelAccountingMovementHandler(
         if (!exists)
             return Result.Failure("El movimiento contable no existe");
         await _repo.DeleteAsync(command.MovementId, cancellationToken);
-        _logs.LogInformation("Accoutning movement {movement} has been deleted by user {user}", command.MovementId, command.UserId);
+        using (_logs.BeginScope(new Dictionary<string, object>
+        {
+            ["UserId"] = command.UserId
+        }))
+        {
+            _logs.LogInformation("Accounting movement {moement} has been deleted.", command.MovementId);
+        }
         return Result.Success();
     }
 }
