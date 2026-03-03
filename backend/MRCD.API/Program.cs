@@ -8,6 +8,7 @@ using MRCD.API.Services;
 using MRCD.Application;
 using MRCD.Application.Abstracts.Security;
 using MRCD.Infrastructure;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var connection = Environment.GetEnvironmentVariable("DB_CONNECTION")
@@ -89,6 +90,16 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 builder.Services.AddScoped<ITokenService>(sp => new TokenService(jwt));
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .WriteTo.MySQL(
+        connectionString: connection,
+        tableName: "logs"
+    )
+    .WriteTo.Console().CreateLogger();
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
