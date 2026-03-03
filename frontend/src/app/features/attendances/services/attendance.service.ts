@@ -29,12 +29,11 @@ export class AttendanceService {
     personName?: string
   ) {
     const params: Record<string, any> = {
-      date: date,
       filteredOnlyByYear: filteredOnlyByYear,
       isSunday: isSunday,
       isMasculine: isMasculine,
       personName: personName
     }
-    return this._api.getAsync<Array<AttendanceResponse>>('/attendance', params);
+    return this._api.getAsync<Array<AttendanceResponse>>(`/attendance/${date.toISOString().split('T')[0]}`, params);
   }
 }
