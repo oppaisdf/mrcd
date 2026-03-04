@@ -9,6 +9,7 @@ using MRCD.Application;
 using MRCD.Application.Abstracts.Security;
 using MRCD.Infrastructure;
 using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 var connection = Environment.GetEnvironmentVariable("DB_CONNECTION")
@@ -93,12 +94,14 @@ builder.Services.AddScoped<ITokenService>(sp => new TokenService(jwt));
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("Pomelo.EntityFrameworkCore.MySql", LogEventLevel.Warning)
     .Enrich.FromLogContext()
-    .WriteTo.MySQL(
-        connectionString: connection,
-        tableName: "logs"
-    )
-    .WriteTo.Console().CreateLogger();
+    .WriteTo.MySQL(connectionString: connection, tableName: "logs")
+    .WriteTo.Console()
+    .CreateLogger();
 builder.Host.UseSerilog();
 
 var app = builder.Build();
