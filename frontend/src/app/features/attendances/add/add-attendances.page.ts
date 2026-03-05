@@ -75,11 +75,11 @@ export class AddAttendancesPage {
     const request: AttendanceRequest = {
       personId: qr,
       isAttendance: form.typeAttendance === 1,
-      date: form.date === null ? undefined : form.date
+      date: form.date === null ? undefined : new Date(form.date).toISOString().split('T')[0]
     };
     const response = form.typeAttendance !== 3
       ? await this._service.addAsync(request)
-      : await this._service.delAsync(request.personId, request.date ?? new Date());
+      : await this._service.delAsync(request.personId, request.date);
     this._alert.clear();
 
     if (!response.isSuccess)
