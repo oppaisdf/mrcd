@@ -40,6 +40,10 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
                 route: '/attendances',
                 roles: ['usr']
             }, {
+                routeName: 'Asistencia manual',
+                route: '/attendances/manual',
+                roles: ['usr']
+            }, {
                 routeName: 'Padres/padrinos',
                 route: '/parents',
                 roles: ['usr']
