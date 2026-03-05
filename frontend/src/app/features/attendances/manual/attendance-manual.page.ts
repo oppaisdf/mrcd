@@ -29,7 +29,7 @@ export class AttendanceManualPage {
   readonly form = this._form.nonNullable.group({
     isSunday: [true],
     date: [new Date()],
-    isAttendance: [true]
+    type: [1]
   });
 
   readonly people = computed(() => {
@@ -39,24 +39,28 @@ export class AttendanceManualPage {
   });
   readonly year = new Date().getFullYear();
 
-  items(
-    controlName: 'isSunday' | 'isAttendance'
-  ) {
-    const labelA = ({
-      'isSunday': 'Domingo',
-      'isAttendance': 'Asistencia'
-    } as const)[controlName];
-    const labelB = ({
-      'isSunday': 'Sábado',
-      'isAttendance': 'Permiso de inasistencia'
-    } as const)[controlName];
-    return [{
-      label: labelA,
-      value: true
-    }, {
-      label: labelB,
-      value: false
-    }];
+  readonly days = [{
+    label: 'Domingo',
+    value: true
+  }, {
+    label: 'Sábado',
+    value: false
+  }];
+
+  readonly attendanceTypes = [{
+    label: 'Asistencia',
+    value: 1
+  }, {
+    label: 'Permiso de inasistencia',
+    value: 2
+  }, {
+    label: 'Eliminar asistencia',
+    value: 3
+  }];
+
+  get isDelete() {
+    const type = this.form.controls.type.value;
+    return type === 3;
   }
 
   async loadAsync() {
@@ -83,10 +87,12 @@ export class AttendanceManualPage {
     const date = new Date(form.date).toISOString().split("T")[0];
     const request: AttendanceRequest = {
       personId: personId,
-      isAttendance: form.isAttendance,
+      isAttendance: form.type === 1,
       date: now !== date ? date : undefined
     };
-    const response = await this._service.addAsync(request);
+    const response = form.type !== 3
+      ? await this._service.addAsync(request)
+      : await this._service.delAsync(personId, request.date);
     this._alert.clear();
 
     if (!response.isSuccess) {
