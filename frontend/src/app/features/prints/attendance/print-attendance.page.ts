@@ -35,7 +35,10 @@ export class PrintAttendancePage {
   readonly headers = computed(() => {
     const attendances = this.attendances();
     if (!attendances) return;
-    return attendances[0].dates.map(d => `${d.date.getDate()}-${d.date.getMonth() + 1}`);
+    return attendances[0].dates.map(d => {
+      const date = new Date(d.date);
+      return `${date.getDate()}-${date.getMonth() + 1}`;
+    });
   });
 
   async loadAsync() {
