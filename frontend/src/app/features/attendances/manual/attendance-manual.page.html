@@ -1,0 +1,38 @@
+<h1>Asistencia manual</h1>
+
+<ui-accordeon title="Filtros">
+    <form [formGroup]="form" class="ui-form" (ngSubmit)="loadAsync()">
+        <ui-select label="Día" type="boolean" [items]="items('isSunday')" formControlName="isSunday" />
+        <ui-select label="Tipo de asistencia" type="boolean" [items]="items('isAttendance')"
+            formControlName="isAttendance" />
+        <ui-input label="Fecha" type="date" min="{{year}}-01-01" max="{{year}}-12-31" formControlName="date" />
+
+        <button class="ui-button" type="submit">Buscar</button>
+    </form>
+</ui-accordeon>
+
+<br>
+
+@let pps = people();
+@if (pps.length > 0) {
+<div class="ui-table wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (person of pps; track person.personId) {
+            <tr>
+                <td>{{person.personName}}</td>
+                <td>
+                    <button class="ui-button" (click)="attendanceAsync(person.personId)">Asistir</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
