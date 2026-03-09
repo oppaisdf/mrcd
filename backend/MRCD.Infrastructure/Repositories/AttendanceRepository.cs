@@ -60,5 +60,7 @@ internal sealed class AttendanceRepository(
         .Where(a =>
             a.Date.Year == date.Year
             && (filteredOnlyByYear || a.Date.Month == date.Month)
-        ).ToListAsync(cancellationToken);
+        )
+        .OrderBy(a => a.Date)
+        .ToListAsync(cancellationToken);
 }
