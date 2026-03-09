@@ -83,6 +83,7 @@ internal sealed class PersonRepository(
         .People
         .AsNoTracking()
         .Where(p => p.IsActive)
+        .OrderBy(p => p.Name)
         .ToListAsync(cancellationToken);
 
     public async Task<Pagination<SimplePersonDTO>> ToListAsync(
