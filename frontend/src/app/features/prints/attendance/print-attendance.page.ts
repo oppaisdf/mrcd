@@ -34,10 +34,15 @@ export class PrintAttendancePage {
   readonly attendances = signal<Array<AttendanceResponse>>([]);
   readonly headers = computed(() => {
     const attendances = this.attendances();
-    if (!attendances) return;
+    if (!attendances) return [];
+
+    const formatter = new Intl.DateTimeFormat('es-ES', {
+      day: '2-digit',
+      month: 'short'
+    });
     return attendances[0].dates.map(d => {
-      const date = new Date(d.date);
-      return `${date.getDate()}-${date.getMonth() + 1}`;
+      const [year, month, day] = new Date(d.date).toISOString().split("T")[0].split("-").map(Number)
+      return formatter.format(new Date(year, month - 1, day)).replace(" ", "-");
     });
   });
 
