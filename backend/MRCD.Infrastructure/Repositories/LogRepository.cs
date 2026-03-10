@@ -20,7 +20,7 @@ internal sealed class LogRepository(
         var skip = (page - 1) * size;
         var total = await _app
             .Database
-            .SqlQuery<int>($"select count(1) from logs;")
+            .SqlQuery<int>($"select count(1) as Value from logs where Properties ->> '$.UserId' != 'null'")
             .SingleAsync(cancellationToken);
         var logs = await _app
             .Database
@@ -35,7 +35,7 @@ internal sealed class LogRepository(
                 Properties ->> '$.UserId' != 'null'
             order by
                 _ts desc
-            limit {size} offset {skip};
+            limit {size} offset {skip}
             """)
             .ToListAsync(cancellationToken);
         return Pagination<LogDTO>.Create(
