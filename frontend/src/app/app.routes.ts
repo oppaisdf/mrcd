@@ -124,6 +124,15 @@ export const routes: Routes = [
                     vtTheme: 'prints'
                 },
                 loadChildren: () => import('./features/prints/prints.routes').then(r => r.PRINTS_ROUTES)
+            }, {
+                path: 'logs',
+                canMatch: [roleGuard],
+                data: {
+                    roles: ['adm'],
+                    vtINdex: 120,
+                    vtTheme: 'admin'
+                },
+                loadChildren: () => import('./features/logs/log.routes').then(r => r.LOG_ROUTES)
             }
         ]
     },

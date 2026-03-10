@@ -117,13 +117,13 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
         ]
     }, {
         id: "Monitoreo",
-        icon: "🖥️",
-        roles: ['ukn'],
+        icon: "/icons/log.png",
+        roles: ['adm'],
         options: [
             {
                 routeName: "Logs",
-                route: "/",
-                roles: ['ukn']
+                route: "/logs",
+                roles: ['adm']
             }
         ]
     }, {
