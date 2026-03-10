@@ -31,8 +31,10 @@ internal sealed class LogRepository(
                 Message
             from
                 logs
+            where
+                Properties ->> '$.UserId' != 'null'
             order by
-                _ts descending
+                _ts desc
             limit {size} offset {skip};
             """)
             .ToListAsync(cancellationToken);
