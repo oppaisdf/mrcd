@@ -1,0 +1,34 @@
+<h1>Logs</h1>
+
+@let paginated = page();
+
+@if (paginated.items.length > 0) {
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Fecha</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (log of paginated.items; track $index) {
+            <tr>
+                <td>{{log.username}}</td>
+                <td>{{log.time}}</td>
+                <td>{{log.message}}</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (paginated.hasPrevious) {
+<button class="ui-button is-ghost" (click)="changePageAsync(false)">Página anterior</button>
+}
+{{paginated.page}}/{{paginated.totalPages}}
+@if(paginated.hasNext){
+<button class="ui-button is-ghost" (click)="changePageAsync(true)">Siguiente página</button>
+}
+}
