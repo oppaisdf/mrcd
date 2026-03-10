@@ -128,4 +128,5 @@ app.MapSacramentEndpoints();
 app.MapDegreeEndpoints();
 app.MapParentEndpoints();
 app.MapAlertEndpoints();
+app.MapLogEndpoints();
 app.Run();
