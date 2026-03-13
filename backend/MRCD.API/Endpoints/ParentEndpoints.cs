@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
+using MRCD.Application.Alert.Common;
 using MRCD.Application.Common;
 using MRCD.Application.Parent.AddParent;
 using MRCD.Application.Parent.AssignParent;
@@ -58,6 +59,34 @@ internal static class ParentEndpoints
         .ProducesProblem(StatusCodes.Status409Conflict)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .RequireAuthorization("perm:Parent.Write");
+
+        app.MapGet("/alert/{alert}", async (
+            AlertType alert,
+            [FromQuery] ushort page,
+            [FromServices] IQueryHandler<Pagination<ParentDTO>, GetParentQuery> handler,
+            CancellationToken ct,
+            string? parentName = null
+        ) =>
+        {
+            var query = new GetParentQuery(
+                page,
+                20,
+                parentName,
+                alert
+            );
+            var result = await handler.HandleAsync(query, ct);
+            return ResultsMapper.ToHttp(
+                result,
+                parents => Results.Ok(parents)
+            );
+        })
+        .WithName("GetParentAlert")
+        .WithDisplayName("GET /ParentAlert")
+        .WithSummary("Obtener padres/padrinos sin hijos/ahijados")
+        .WithDescription("Retorna listado de padres/padrinos paginado sin hijos/ahijados")
+        .WithOpenApi()
+        .Produces<Pagination<ParentDTO>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Parent.Read");
 
         app.MapGet("", async (
             [FromQuery] ushort page,
