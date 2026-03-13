@@ -14,4 +14,5 @@ public interface IParentRepository
     Task<Domain.Parent.Parent?> GetByNameAsync(string normalizedName, CancellationToken cancellationToken);
     Task<List<ParentByPersonDTO>> FilteredByActivePersonToListAsync(CancellationToken cancellationToken);
     Task<Pagination<ParentDTO>> ToListAsync(int page, int size, string? normalizedParentName, CancellationToken cancellationToken);
+    Task<Pagination<ParentDTO>> NoChildrenToListAsync(int page, int size, CancellationToken cancellationToken);
 }

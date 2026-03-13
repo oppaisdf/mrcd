@@ -94,6 +94,45 @@ internal sealed class ParentRepository(
             cancellationToken
         );
 
+    public async Task<Pagination<ParentDTO>> NoChildrenToListAsync(
+        int page,
+        int size,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = _app
+            .Parents
+            .GroupJoin(
+                _app.ParentsPersons,
+                p => p.ID,
+                pp => pp.ParentId,
+                (p, pp) => new
+                {
+                    Parent = p,
+                    HasChildren = pp.Any()
+                }
+            ).Where(g => !g.HasChildren)
+            .AsQueryable();
+        var totalCount = await query.CountAsync(cancellationToken);
+        var skip = (page - 1) * size;
+        var parents = await query
+            .Skip(skip)
+            .Take(size)
+            .ToListAsync(cancellationToken);
+        return Pagination<ParentDTO>.Create(
+            parents
+                .Select(p => new ParentDTO(
+                    p.Parent.ID,
+                    p.Parent.Name,
+                    p.Parent.IsMasculine,
+                    p.Parent.Phone
+                )),
+            totalCount,
+            page,
+            size
+        );
+    }
+
     public async Task<Pagination<ParentDTO>> ToListAsync(
         int page,
         int size,

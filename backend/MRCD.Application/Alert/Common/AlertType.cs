@@ -2,8 +2,8 @@ namespace MRCD.Application.Alert.Common;
 
 public enum AlertType
 {
-    ParentsLonely,
-    PendingCharges,
-    PendingDocuments,
-    WithoutGodparents
+    ParentsLonely,      // 0
+    PendingCharges,     // 1
+    PendingDocuments,   // 2
+    WithoutGodparents   // 3
 }
