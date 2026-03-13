@@ -69,7 +69,8 @@ internal static class ParentEndpoints
             var query = new GetParentQuery(
                 page,
                 20,
-                parentName
+                parentName,
+                null
             );
             var result = await handler.HandleAsync(query, ct);
             return ResultsMapper.ToHttp(

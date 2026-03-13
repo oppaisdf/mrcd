@@ -15,19 +15,29 @@ internal sealed class GetParentHandler(
     private readonly IParentRepository _repo = repo;
     private readonly ICommonService _service = service;
 
-    public Task<Result<Pagination<ParentDTO>>> HandleAsync(
+    public async Task<Result<Pagination<ParentDTO>>> HandleAsync(
         GetParentQuery query,
         CancellationToken cancellationToken
-    ) => _repo
-        .ToListAsync(
-            query.Page < 1 ? 1 : query.Page,
-            query.Size is < 1 or > 30 ? 30 : query.Size,
-            string.IsNullOrWhiteSpace(query.ParentName)
-                ? null
-                : _service.NormalizeString(query.ParentName),
-            cancellationToken
-        ).ContinueWith(r =>
-            Result<Pagination<ParentDTO>>.Success(r.Result),
-            cancellationToken
-        );
+    )
+    {
+        var page = query.Page < 1 ? 1 : query.Page;
+        var size = query.Size is < 1 or > 30 ? 30 : query.Size;
+
+        var parents = query.Alert is null || query.Alert != Alert.Common.AlertType.ParentsLonely
+            ? await _repo
+                .ToListAsync(
+                    page,
+                    size,
+                    string.IsNullOrWhiteSpace(query.ParentName)
+                        ? null
+                        : _service.NormalizeString(query.ParentName),
+                    cancellationToken
+                )
+            : await _repo.NoChildrenToListAsync(
+                page,
+                size,
+                cancellationToken
+            );
+        return Result<Pagination<ParentDTO>>.Success(parents);
+    }
 }
