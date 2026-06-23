@@ -37,7 +37,7 @@ internal sealed class GetAttendaceHandler(
         var rawPeople = await _person.OnlyActiveToListAsync(cancellationToken);
         var people = rawPeople
             .Where(p =>
-                (query.IsSunday is null || query.IsSunday == p.IsActive)
+                (query.IsSunday is null || query.IsSunday == p.IsSunday)
                 && (query.IsMasculine is null || query.IsMasculine == p.IsMasculine)
                 && (normalizedPersonName is null || p.NormalizedName.Contains(normalizedPersonName))
             );
