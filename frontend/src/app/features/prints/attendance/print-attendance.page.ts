@@ -46,12 +46,23 @@ export class PrintAttendancePage {
     });
   });
 
+  private goodDate(
+    date: unknown
+  ){
+    if (date instanceof Date) return date;
+    if (typeof date !== 'string') return new Date();
+    const dateString = date.toString();
+    const dateParts = dateString.split("-");
+    if (dateParts.length < 3) return new Date();
+    return new Date(parseInt(dateParts[0]), parseInt(dateParts[1]), parseInt(dateParts[2]));
+  }
+
   async loadAsync() {
     if (this._alert.loading()) return;
     this._alert.startLoading();
     const params = this.form.getRawValue();
     const response = await this._service.toListAsync(
-      params.date,
+      this.goodDate(params.date),
       params.onlyByYear,
       params.isSunday,
       params.isMasculine,
