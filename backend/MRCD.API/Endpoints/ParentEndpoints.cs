@@ -86,6 +86,7 @@ internal static class ParentEndpoints
         .WithDescription("Retorna listado de padres/padrinos paginado sin hijos/ahijados")
         .WithOpenApi()
         .Produces<Pagination<ParentDTO>>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status400BadRequest)
         .RequireAuthorization("perm:Parent.Read");
 
         app.MapGet("", async (
