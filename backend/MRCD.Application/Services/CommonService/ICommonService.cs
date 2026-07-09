@@ -10,4 +10,5 @@ public interface ICommonService
     string NormalizeString(string text);
     bool HasOnlyLetters(string text);
     bool HasOnlyNumbers(string text);
+    bool IsValidPermission(string permission);
 }
