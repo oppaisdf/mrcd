@@ -9,6 +9,7 @@ public interface ICommonService
     /// <returns>string</returns>
     string NormalizeString(string text);
     bool HasOnlyLetters(string text);
+    bool HasOnlyLettersWithSpaces(string text);
     bool HasOnlyNumbers(string text);
     bool IsValidPermission(string permission);
 }

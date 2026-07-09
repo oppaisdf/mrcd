@@ -5,8 +5,10 @@ namespace MRCD.Application.Services.CommonService;
 
 internal sealed partial class CommonService : ICommonService
 {
-    [GeneratedRegex("^[A-Za-z]+$")]
+    [GeneratedRegex(@"^[\p{L}]+$")]
     private static partial Regex OnlyLettersRegex();
+    [GeneratedRegex(@"^[\p{L} ]+$")]
+    private static partial Regex OnlyLettersWithSpacesRegex();
     [GeneratedRegex("^[0-9]+$")]
     private static partial Regex OnlyNumbersRegex();
     [GeneratedRegex("^[A-Za-z]+\\.[A-Za-z]+$")]
@@ -15,6 +17,11 @@ internal sealed partial class CommonService : ICommonService
     public bool HasOnlyLetters(
         string text
     ) => OnlyLettersRegex()
+        .IsMatch(text);
+
+    public bool HasOnlyLettersWithSpaces(
+        string text
+    ) => OnlyLettersWithSpacesRegex()
         .IsMatch(text);
 
     public bool HasOnlyNumbers(
