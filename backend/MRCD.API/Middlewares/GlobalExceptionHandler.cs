@@ -15,9 +15,12 @@ internal sealed class GlobalExceptionHandler(
         // Clasificación mínima de excepciones conocidas de infra
         var (status, title) = ex switch
         {
+            BadHttpRequestException => (StatusCodes.Status400BadRequest, "Solicitud inválida"),
+            JsonException => (StatusCodes.Status400BadRequest, "JSON inválido"),
+            FormatException => (StatusCodes.Status400BadRequest, "Formato inválido"),
             DbUpdateConcurrencyException => (StatusCodes.Status409Conflict, "Conflicto de concurrencia"),
             DbUpdateException => (StatusCodes.Status409Conflict, "Conflicto al persistir datos"),
-            OperationCanceledException => (StatusCodes.Status499ClientClosedRequest, "Solicitud cancelada"), // 499 no estándar, pero útil
+            OperationCanceledException => (StatusCodes.Status499ClientClosedRequest, "Solicitud cancelada"),
             TimeoutException => (StatusCodes.Status504GatewayTimeout, "Timeout de operación"),
             _ => (StatusCodes.Status500InternalServerError, "Error interno del servidor :c")
         };
@@ -31,6 +34,9 @@ internal sealed class GlobalExceptionHandler(
         {
             Status = status,
             Title = title,
+            Detail = status == StatusCodes.Status400BadRequest
+                ? "El cuerpo de la solicitud contiene datos inválidos."
+                : null,
             Instance = http.TraceIdentifier
         };
 
