@@ -16,7 +16,7 @@ internal sealed class GlobalExceptionHandler(
         var (status, title) = ex switch
         {
             BadHttpRequestException => (StatusCodes.Status400BadRequest, "Solicitud inválida"),
-            JsonException => (StatusCodes.Status400BadRequest, "JSON inválido"),
+            System.Text.Json.JsonException => (StatusCodes.Status400BadRequest, "JSON inválido"),
             FormatException => (StatusCodes.Status400BadRequest, "Formato inválido"),
             DbUpdateConcurrencyException => (StatusCodes.Status409Conflict, "Conflicto de concurrencia"),
             DbUpdateException => (StatusCodes.Status409Conflict, "Conflicto al persistir datos"),
