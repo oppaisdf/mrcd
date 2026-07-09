@@ -2,11 +2,13 @@ using Microsoft.Extensions.Logging;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Role.Contracts;
+using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.Role.AddRole;
 
 internal sealed class AddRoleHandler(
+    ICommonService service,
     IRoleRepository repo,
     IPersistenceContext save,
     ILogger<AddRoleHandler> logs
@@ -15,6 +17,7 @@ internal sealed class AddRoleHandler(
     private readonly IRoleRepository _repo = repo;
     private readonly IPersistenceContext _save = save;
     private readonly ILogger<AddRoleHandler> _logs = logs;
+    private readonly ICommonService _service = service;
 
     public async Task<Result<Guid>> HandleAsync(
         AddRoleCommand command,
@@ -23,6 +26,8 @@ internal sealed class AddRoleHandler(
     {
         if (string.IsNullOrWhiteSpace(command.RoleName))
             return Result<Guid>.Failure("El nombre del rol no puede ser nulo");
+        if (!_service.HasOnlyLetters(command.RoleName))
+            return Result<Guid>.Failure("El nombre del rol solo puede contener letras");
         var alreadExists = await _repo.AlreadyExistsAsync(command.RoleName.Trim(), cancellationToken);
         if (alreadExists)
             return Result<Guid>.Failure("El nombre del rol ya está en uso");
