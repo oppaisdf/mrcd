@@ -1,6 +1,12 @@
 import { Component, ElementRef, OnDestroy, output, signal, ViewChild } from '@angular/core';
 import { BrowserMultiFormatReader, IScannerControls } from '@zxing/browser';
-import { BarcodeFormat, DecodeHintType } from '@zxing/library';
+import {
+  BarcodeFormat,
+  DecodeHintType,
+  ChecksumException,
+  FormatException,
+  NotFoundException,
+} from '@zxing/library';
 
 @Component({
   selector: 'attendances-scanner',
@@ -35,13 +41,21 @@ export class AttendancesScannerComponent implements OnDestroy {
     this._controls = await this._reader.decodeFromVideoDevice(
       undefined,
       this.video.nativeElement,
-      (rst, err) => {
-        if (rst) {
-          this.goScan.emit(rst.getText());
+      (result, error) => {
+        if (result) {
+          this.goScan.emit(result.getText());
           this.stop();
+          return;
         }
-        if (err && err.name !== 'NotFoundException' && err.name !== 'NotFoundException2')
-          console.log('[+] Error inesperado: ', err);
+
+        if (
+          error instanceof NotFoundException ||
+          error instanceof ChecksumException ||
+          error instanceof FormatException
+        ) return;
+
+        if (error)
+          console.error('[+] Error inesperado:', error);
       }
     );
   }
