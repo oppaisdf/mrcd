@@ -21,7 +21,6 @@ export class UsersDetailsComponent {
 
   user = model.required<UserResponse>();
   readonly roles = signal<Array<UsedRoleResponse>>([]);
-  private readonly _request: UpdateUserRequest = {};
   userVM = computed(() => {
     const user = this.user();
     const userVM: UserVM = {
@@ -35,10 +34,7 @@ export class UsersDetailsComponent {
   constructor() {
     effect(() => {
       const user = this.user();
-      const roles = user.roles;
-      this.roles.set(roles);
-      this._request.username = user.username;
-      this._request.isActive = user.isActive;
+      this.roles.set(user.roles);
     });
   }
 
@@ -46,27 +42,44 @@ export class UsersDetailsComponent {
     user: UserVM
   ) {
     if (this._alert.loading()) return;
+
     this._alert.startLoading();
 
-    const request = this._request;
     const currentUser = this.user();
-    if (request.isActive !== user.isActive && user.isActive !== undefined) request.isActive = user.isActive;
-    else user.isActive = undefined;
-    if (request.username !== user.username && user.username !== null) request.username = user.username;
-    else request.username = undefined;
-    if (user.password !== null) request.password = user.password;
-    else request.password = undefined;
+    const request: UpdateUserRequest = {};
 
-    const response = await this._userService.updateAsync(currentUser.id, request);
+    if (
+      user.isActive !== undefined &&
+      currentUser.isActive !== user.isActive
+    ) request.isActive = user.isActive;
+
+    if (
+      user.username !== null &&
+      currentUser.username !== user.username
+    ) request.username = user.username;
+
+    if (user.password !== null)
+      request.password = user.password;
+
+    const response = await this._userService.updateAsync(
+      currentUser.id,
+      request
+    );
+
     this._alert.clear();
+
     if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
     }
-    if (request.isActive !== user.isActive && user.isActive !== undefined)
-      currentUser.isActive = user.isActive;
-    if (request.username !== user.username && user.username !== null)
-      currentUser.username = user.username;
+    this._alert.success('Se ha actualizado el usuario exitosamente');
+
+    if (request.isActive !== undefined)
+      currentUser.isActive = request.isActive;
+
+    if (request.username !== undefined)
+      currentUser.username = request.username;
+
     this.user.set(currentUser);
   }
 
