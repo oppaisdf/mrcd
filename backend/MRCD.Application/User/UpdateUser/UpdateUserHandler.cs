@@ -21,12 +21,15 @@ internal sealed class UpdateUserHandler(
 
     private async Task<bool> UniqueUsernameAsync(
         string username,
+        Guid userId,
         CancellationToken ct
     )
     {
         var users = await _user.ToListAsync(ct);
         var normalizedNames = users
-            .Select(u => _service.NormalizeString(u.Username));
+            .Where(u => u.ID != userId)
+            .Select(u => _service.NormalizeString(u.Username))
+            .ToHashSet();
         var normalizedName = _service.NormalizeString(username);
         return !normalizedNames.Contains(normalizedName);
     }
@@ -42,9 +45,12 @@ internal sealed class UpdateUserHandler(
         if (user == null)
             return Result.Failure("El usuario no existe");
 
+        if (!user.IsActive && (command.IsActive is null || !command.IsActive.Value))
+            return Result.Failure("El usuario se encuentra inactivo");
+
         if (!string.IsNullOrWhiteSpace(command.Username))
         {
-            var uniqName = await UniqueUsernameAsync(command.Username.Trim(), cancellationToken);
+            var uniqName = await UniqueUsernameAsync(command.Username.Trim(), command.Id, cancellationToken);
             if (!uniqName)
                 return Result.Failure("El usuario ya está en uso");
             var error = user.SetUsername(command.Username);
