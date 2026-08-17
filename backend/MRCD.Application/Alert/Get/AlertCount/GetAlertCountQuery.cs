@@ -2,7 +2,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Alert.Common;
 using MRCD.Application.Alert.DTOs;
 
-namespace MRCD.Application.Alert.GetAlertCount;
+namespace MRCD.Application.Alert.Get.AlertCount;
 
 public sealed record GetAlertCountQuery(
     AlertType Alert

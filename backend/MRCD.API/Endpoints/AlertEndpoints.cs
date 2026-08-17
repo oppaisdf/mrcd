@@ -3,7 +3,7 @@ using MRCD.API.Common;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Alert.Common;
 using MRCD.Application.Alert.DTOs;
-using MRCD.Application.Alert.GetAlertCount;
+using MRCD.Application.Alert.Get.AlertCount;
 
 namespace MRCD.API.Endpoints;
 

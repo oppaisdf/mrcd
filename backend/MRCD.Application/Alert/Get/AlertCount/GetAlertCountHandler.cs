@@ -5,7 +5,7 @@ using MRCD.Application.Alert.Contracts;
 using MRCD.Application.Alert.DTOs;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Alert.GetAlertCount;
+namespace MRCD.Application.Alert.Get.AlertCount;
 
 internal sealed class GetAlertCountHandler(
     IAlertRepository repo,
