@@ -33,7 +33,7 @@ var jwt = new TokenOptions(
 );
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.ConfigureSwagger();
 builder.Services.AddApplication();
 builder.Services.AddInfrasctructure(connection, encryptionOptions);
 builder.Services.AddProblemDetails(options =>

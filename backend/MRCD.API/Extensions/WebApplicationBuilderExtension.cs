@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MRCD.API.Security;
 using MRCD.API.Services;
 
@@ -41,5 +42,25 @@ internal static class WebApplicationBuilderExtension {
         builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
         builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
         builder.Services.AddScoped<ITokenService>(sp => new TokenService(jwt));
+    }
+
+    public static void ConfigureSwagger(
+        this WebApplicationBuilder builder
+    )
+    {
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Ingresa el JWT. Swagger agregará automáticamente: Authorization: Bearer {token}"
+            });
+
+            options.OperationFilter<AuthorizeOperationFilter>();
+        });
     }
 }
