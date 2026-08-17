@@ -81,7 +81,7 @@ if (app.Environment.IsDevelopment())
 }
 app.Use(async (context, next) =>
 {
-    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers.XContentTypeOptions = "nosniff";
     await next();
 });
 
