@@ -116,6 +116,7 @@ internal sealed class ParentRepository(
         var totalCount = await query.CountAsync(cancellationToken);
         var skip = (page - 1) * size;
         var parents = await query
+            .OrderBy(p => p.Parent.Name)
             .Skip(skip)
             .Take(size)
             .ToListAsync(cancellationToken);
@@ -150,6 +151,7 @@ internal sealed class ParentRepository(
         var totalCount = await query.CountAsync(cancellationToken);
         var skip = (page - 1) * size;
         var parents = await query
+            .OrderBy(p => p.Name)
             .Skip(skip)
             .Take(size)
             .ToListAsync(cancellationToken);
