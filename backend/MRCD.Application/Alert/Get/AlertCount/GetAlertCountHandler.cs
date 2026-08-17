@@ -49,13 +49,22 @@ internal sealed class GetAlertCountHandler(
             AlertType.WithoutGodparents => "Confirmandos sin padrinos",
             _ => null
         };
+        var route = query.Alert switch
+        {
+            AlertType.ParentsLonely => "parents?alert=lonely-parents",
+            AlertType.PendingCharges => "people?alert=pending-charges",
+            AlertType.PendingDocuments => "people?alert=pending-documents",
+            AlertType.WithoutGodparents => "people?alert=pending-godparents",
+            _ => null
+        };
 
         if (count == -1 || message is null)
             return Result<AlertDTO>.Failure("La alerta no existe");
 
         return Result<AlertDTO>.Success(new(
             count,
-            message
+            message,
+            route
         ));
     }
 }
