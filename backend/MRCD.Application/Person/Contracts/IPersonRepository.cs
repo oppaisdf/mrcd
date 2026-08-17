@@ -12,6 +12,30 @@ public interface IPersonRepository
     Task<bool> ExistsActiveAsync(Guid personId, CancellationToken cancellationToken);
     Task<Domain.Person.Person?> GetByIdAsync(Guid personId, CancellationToken cancellationToken);
     Task<List<Domain.Person.Person>> OnlyActiveToListAsync(CancellationToken cancellationToken);
+    Task<Pagination<SimplePersonDTO>> PendingChargesToListAsync(
+        int page,
+        int size,
+        string? normalizedName,
+        bool? isSunday,
+        bool? isMasculine,
+        CancellationToken cancellationToken
+    );
+    Task<Pagination<SimplePersonDTO>> PendingDocumentsToListAsync(
+        int page,
+        int size,
+        string? normalizedName,
+        bool? isSunday,
+        bool? isMasculine,
+        CancellationToken cancellationToken
+    );
+    Task<Pagination<SimplePersonDTO>> PendingGodparentsToListAsync(
+        int page,
+        int size,
+        string? normalizedName,
+        bool? isSunday,
+        bool? isMasculine,
+        CancellationToken cancellationToken
+    );
     Task<Pagination<SimplePersonDTO>> ToListAsync(
         bool isActive,
         int page,
