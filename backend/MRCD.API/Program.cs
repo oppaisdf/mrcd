@@ -1,9 +1,5 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
 using MRCD.API.Endpoints;
-using MRCD.API.Security;
+using MRCD.API.Extensions;
 using MRCD.API.Services;
 using MRCD.Application;
 using MRCD.Application.Abstracts.Security;
@@ -63,34 +59,7 @@ else builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "mrcd:";
 });
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SigningKey));
-
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = jwt.Issuer,
-            ValidateAudience = true,
-            ValidAudience = jwt.Audience,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = key,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromSeconds(jwt.ClockskewSeconds),
-            RoleClaimType = System.Security.Claims.ClaimTypes.Role,
-            NameClaimType = System.Security.Claims.ClaimTypes.NameIdentifier
-        };
-    });
-builder.Services.AddAuthorizationBuilder()
-    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
-    .RequireAuthenticatedUser()
-    .Build());
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-builder.Services.AddScoped<ITokenService>(sp => new TokenService(jwt));
+builder.ConfigureJWT(jwt);
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
