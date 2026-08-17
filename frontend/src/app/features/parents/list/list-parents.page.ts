@@ -6,7 +6,8 @@ import { ParentService } from '../services/parent.service';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { AccordeonComponent } from '../../../core/ui/accordeon/accordeon.component';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
-import { RouterLink } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
+import { AlertType } from '../../../core/utils/alert.type';
 
 @Component({
   selector: 'app-list-parents.page',
@@ -23,6 +24,7 @@ export class ListParentsPage {
   private readonly _form = inject(FormBuilder);
   private readonly _service = inject(ParentService);
   private readonly _alert = inject(AlertService);
+  private readonly _me = inject(ActivatedRoute);
 
   readonly page = signal<PagedResult<AssignedParentResponse>>({
     items: [],
@@ -55,7 +57,13 @@ export class ListParentsPage {
     const page = this.page().page;
     const parentName = raw.name === null || raw.name.trim() === ''
       ? null : raw.name.trim();
-    const response = await this._service.toListAsync(page, parentName);
+
+    const hasAlert = (this._me.snapshot.data['alerts'] as AlertType[] | undefined)
+      ?.includes(AlertType.LONELY_PARENTS) ?? false;
+    const response = hasAlert 
+      ? await this._service.toListAsync(page, parentName)
+      : await this._service.lonelyToListAsync(page, parentName);
+
     this._alert.clear();
 
     if (!response.isSuccess || response.data === undefined) {

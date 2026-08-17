@@ -1,12 +1,16 @@
 import { Routes } from "@angular/router";
 import { ParentService } from "./services/parent.service";
 import { guidParamGuard } from "../../core/guards/guid-param-guard";
+import { AlertType } from "../../core/utils/alert.type";
 
 export const PARENTS_ROUTES: Routes = [
     {
         path: '',
         title: 'Padres y padrinos',
-        data: { vtIndex: 9001 },
+        data: {
+            vtIndex: 9001,
+            alert: AlertType.LONELY_PARENTS
+        },
         providers: [
             ParentService
         ],
