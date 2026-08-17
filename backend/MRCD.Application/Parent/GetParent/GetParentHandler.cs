@@ -23,7 +23,7 @@ internal sealed class GetParentHandler(
         var page = query.Page < 1 ? 1 : query.Page;
         var size = query.Size is < 1 or > 30 ? 30 : query.Size;
         if (!string.IsNullOrWhiteSpace(query.ParentName)
-            && _service.HasOnlyLettersWithSpaces(query.ParentName)
+            && !_service.HasOnlyLettersWithSpaces(query.ParentName)
         ) return Result<Pagination<ParentDTO>>.Failure("El nombre del padre es inválido");
 
         var parents = query.Alert is null || query.Alert != Alert.Common.AlertType.ParentsLonely
