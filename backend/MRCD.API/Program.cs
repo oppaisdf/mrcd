@@ -85,6 +85,7 @@ app.Use(async (context, next) =>
     await next();
 });
 
+await app.CheckDatabaseConnectionAsync();
 app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -103,4 +104,4 @@ app.MapDegreeEndpoints();
 app.MapParentEndpoints();
 app.MapAlertEndpoints();
 app.MapLogEndpoints();
-app.Run();
+await app.RunAsync();
