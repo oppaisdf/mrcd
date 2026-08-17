@@ -6,15 +6,17 @@ import { UserResponse } from '../users/responses/User.response';
 import { UsedRoleResponse } from '../roles/responses/UsedRole.response';
 import { UpdateUserRequest } from '../users/requests/update-user.request';
 import { AlertService } from '../../shared/alerts/services/alert.service';
+import { RouterLink } from "@angular/router";
 
 type AlertResponse = {
   count: number;
   message: string;
+  route: string;
 };
 
 @Component({
   selector: 'app-dash.page',
-  imports: [UserFormComponent],
+  imports: [UserFormComponent, RouterLink],
   templateUrl: './dash.page.html',
   styleUrl: './dash.page.scss',
 })
@@ -42,7 +44,8 @@ export class DashPage implements OnInit {
             const alerts = this.alerts();
             alerts.push({
               count: response.data?.count ?? 0,
-              message: response.data?.message ?? 'unknow'
+              message: response.data?.message ?? 'unknow',
+              route: response.data?.route ?? ''
             });
             this.alerts.set([...alerts]);
           }
