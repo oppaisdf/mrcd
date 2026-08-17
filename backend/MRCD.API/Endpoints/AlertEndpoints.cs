@@ -4,6 +4,9 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Alert.Common;
 using MRCD.Application.Alert.DTOs;
 using MRCD.Application.Alert.Get.AlertCount;
+using MRCD.Application.Common;
+using MRCD.Application.Parent.DTOs;
+using MRCD.Application.Parent.GetParent;
 
 namespace MRCD.API.Endpoints;
 
@@ -41,5 +44,33 @@ internal static class AlertEndpoints
         .WithOpenApi()
         .Produces<AlertDTO>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound);
+
+        app.MapGet("/parents", async (
+            [FromQuery] ushort page,
+            [FromServices] IQueryHandler<Pagination<ParentDTO>, GetParentQuery> handler,
+            CancellationToken ct,
+            string? parentName = null
+        ) =>
+        {
+            var query = new GetParentQuery(
+                page,
+                20,
+                parentName,
+                AlertType.ParentsLonely
+            );
+            var result = await handler.HandleAsync(query, ct);
+            return ResultsMapper.ToHttp(
+                result,
+                parents => Results.Ok(parents)
+            );
+        })
+        .WithName("GetParentAlert")
+        .WithDisplayName("GET /ParentAlert")
+        .WithSummary("Obtener padres/padrinos sin hijos/ahijados")
+        .WithDescription("Retorna listado de padres/padrinos paginado sin hijos/ahijados")
+        .WithOpenApi()
+        .Produces<Pagination<ParentDTO>>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .RequireAuthorization("perm:Parent.Read");
     }
 }
