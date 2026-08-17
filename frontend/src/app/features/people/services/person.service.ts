@@ -21,6 +21,12 @@ export class PersonService {
     return this._api.getAsync<Array<GeneralListResponse>>('/person/generallist');
   }
 
+  public getByIdAsync(
+    id: string
+  ) {
+    return this._api.getAsync<DetailsPersonResponse>(`/person/${id}`);
+  }
+
   public toListAsync(
     isActive: boolean,
     page: number,
@@ -36,10 +42,49 @@ export class PersonService {
     return this._api.getAsync<PagedResult<SimplePersonResponse>>('/person', params);
   }
 
-  public getByIdAsync(
-    id: string
+  public pendingChargesToListAsync(
+    isActive: boolean,
+    page: number,
+    name?: string,
+    isMasculine?: boolean
   ) {
-    return this._api.getAsync<DetailsPersonResponse>(`/person/${id}`);
+    const params: Record<string, any> = {
+      page: page,
+      isActive: isActive,
+      name: name,
+      isMasculine: isMasculine
+    };
+    return this._api.getAsync<PagedResult<SimplePersonResponse>>('/alert/people/charges', params);
+  }
+
+  public pendingDocumentsToListAsync(
+    isActive: boolean,
+    page: number,
+    name?: string,
+    isMasculine?: boolean
+  ) {
+    const params: Record<string, any> = {
+      page: page,
+      isActive: isActive,
+      name: name,
+      isMasculine: isMasculine
+    };
+    return this._api.getAsync<PagedResult<SimplePersonResponse>>('/alert/people/documents', params);
+  }
+
+  public pendingGodparentsToListAsync(
+    isActive: boolean,
+    page: number,
+    name?: string,
+    isMasculine?: boolean
+  ) {
+    const params: Record<string, any> = {
+      page: page,
+      isActive: isActive,
+      name: name,
+      isMasculine: isMasculine
+    };
+    return this._api.getAsync<PagedResult<SimplePersonResponse>>('/alert/people/godparents', params);
   }
 
   public updateAsync(
