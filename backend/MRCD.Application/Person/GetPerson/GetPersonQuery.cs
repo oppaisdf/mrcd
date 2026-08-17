@@ -1,4 +1,5 @@
 using MRCD.Application.Abstracts.Handlers;
+using MRCD.Application.Alert.Common;
 using MRCD.Application.Common;
 using MRCD.Application.Person.DTOs;
 
@@ -10,5 +11,6 @@ public sealed record GetPersonQuery(
     ushort Page,
     string? Name,
     bool? IsSunday,
-    bool? IsMasculine
+    bool? IsMasculine,
+    AlertType? Alert
 ) : IQuery<Pagination<SimplePersonDTO>>;

@@ -109,7 +109,8 @@ internal static class PersonEndpoints
                 page,
                 name,
                 isSunday,
-                isMasculine
+                isMasculine,
+                Alert: null
             );
             var result = await handler.HandleAsync(query, ct);
             return ResultsMapper.ToHttp(

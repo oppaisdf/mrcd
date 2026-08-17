@@ -18,7 +18,7 @@ internal sealed class GetPersonHandler(
     private readonly IPersonRepository _repo = repo;
     private readonly ICommonService _service = service;
 
-    public Task<Result<Pagination<SimplePersonDTO>>> HandleAsync(
+    public async Task<Result<Pagination<SimplePersonDTO>>> HandleAsync(
         GetPersonQuery query,
         CancellationToken cancellationToken
     )
@@ -33,14 +33,41 @@ internal sealed class GetPersonHandler(
         var normalized = string.IsNullOrWhiteSpace(query.Name)
             ? null
             : _service.NormalizeString(query.Name);
-        return _repo.ToListAsync(
-            query.IsActive,
-            query.Page,
-            20,
-            normalized,
-            query.IsSunday,
-            query.IsMasculine,
-            cancellationToken
-        ).ContinueWith(r => Result<Pagination<SimplePersonDTO>>.Success(r.Result), cancellationToken);
+        var results = query.Alert switch{
+            Alert.Common.AlertType.PendingCharges => await _repo.PendingChargesToListAsync(
+                query.Page,
+                20,
+                normalized,
+                query.IsSunday,
+                query.IsMasculine,
+                cancellationToken
+            ),
+            Alert.Common.AlertType.PendingDocuments => await _repo.PendingDocumentsToListAsync(
+                query.Page,
+                20,
+                normalized,
+                query.IsSunday,
+                query.IsMasculine,
+                cancellationToken
+            ),
+            Alert.Common.AlertType.WithoutGodparents => await _repo.PendingGodparentsToListAsync(
+                query.Page,
+                20,
+                normalized,
+                query.IsSunday,
+                query.IsMasculine,
+                cancellationToken
+            ),
+            _ => await _repo.ToListAsync(
+                query.IsActive,
+                query.Page,
+                20,
+                normalized,
+                query.IsSunday,
+                query.IsMasculine,
+                cancellationToken
+            )
+        };
+        return Result<Pagination<SimplePersonDTO>>.Success(results);
     }
 }
