@@ -7,8 +7,9 @@ import { PagedResult } from '../../../core/api/api.types';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
-import { RouterLink } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import { AccordeonComponent } from "../../../core/ui/accordeon/accordeon.component";
+import { AlertType } from '../../../core/utils/alert.type';
 
 @Component({
   selector: 'people-list.page',
@@ -26,6 +27,7 @@ export class PeopleListPage {
   private readonly _service = inject(PersonService);
   private readonly _form = inject(FormBuilder);
   private readonly _alert = inject(AlertService);
+  private readonly _me = inject(ActivatedRoute);
 
   readonly form = this._form.group({
     isActive: [true, Validators.required],
@@ -47,12 +49,41 @@ export class PeopleListPage {
     this._alert.startLoading();
 
     const form = this.form.getRawValue();
-    const response = await this._service.toListAsync(
-      form.isActive ?? true,
-      this.people().page,
-      form.name ?? undefined,
-      form.isMasculine ?? undefined
-    );
+    const alertType = (this._me.snapshot.queryParamMap.get('alert') as AlertType | undefined);
+    let response;
+    switch(alertType){
+      case AlertType.PENDING_CHARGES:
+        response = await this._service.pendingChargesToListAsync(
+          form.isActive ?? true,
+          this.people().page,
+          form.name ?? undefined,
+          form.isMasculine ?? undefined
+        );
+        break;
+      case AlertType.PENDING_DOCUMENTS:
+        response = await this._service.pendingDocumentsToListAsync(
+          form.isActive ?? true,
+          this.people().page,
+          form.name ?? undefined,
+          form.isMasculine ?? undefined
+        );
+        break;
+      case AlertType.PENDING_GODPARENTS:
+        response = await this._service.pendingGodparentsToListAsync(
+          form.isActive ?? true,
+          this.people().page,
+          form.name ?? undefined,
+          form.isMasculine ?? undefined
+        );
+        break;
+      default: response = await this._service.toListAsync(
+        form.isActive ?? true,
+        this.people().page,
+        form.name ?? undefined,
+        form.isMasculine ?? undefined
+      );
+      break;
+    }
     this._alert.clear();
     if (!response.isSuccess) {
       this._alert.error(response.message);
