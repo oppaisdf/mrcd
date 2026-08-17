@@ -58,7 +58,7 @@ export class ListParentsPage {
     const parentName = raw.name === null || raw.name.trim() === ''
       ? null : raw.name.trim();
 
-    const hasAlert = (this._me.snapshot.data['alert'] as AlertType[] | undefined)
+    const hasAlert = (this._me.snapshot.queryParamMap.get('alert') as AlertType | undefined)
       ?.includes(AlertType.LONELY_PARENTS) ?? false;
     const response = !hasAlert
       ? await this._service.toListAsync(page, parentName)
