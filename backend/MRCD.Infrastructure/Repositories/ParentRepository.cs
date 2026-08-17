@@ -144,10 +144,9 @@ internal sealed class ParentRepository(
         var query = _app
             .Parents
             .AsNoTracking()
-            .Where(p =>
-                normalizedParentName == null || p.NormalizedName.Contains(normalizedParentName)
-            )
             .AsQueryable();
+        if (!string.IsNullOrWhiteSpace(normalizedParentName))
+            query = query.Where(p => p.NormalizedName.Contains(normalizedParentName));
         var totalCount = await query.CountAsync(cancellationToken);
         var skip = (page - 1) * size;
         var parents = await query
