@@ -27,7 +27,7 @@ internal sealed class GetLogsHandler(
         var usersDir = (await _user.ToListAsync(cancellationToken))
             .ToDictionary(k => k.ID.ToString(), k => k.Username);
         var logs = rawLogs with {
-            Items = rawLogs.Items.Select(l => l with {Username = usersDir.TryGetValue(l.Username, out string username) ? username : "unknown"})
+            Items = rawLogs.Items.Select(l => l with {Username = usersDir.TryGetValue(l.Username, out var username) ? username : "unknown"})
         };
         return Result<Pagination<LogDTO>>.Success(logs);
     }
