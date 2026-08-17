@@ -7,6 +7,7 @@ using MRCD.Application.Abstracts.Security;
 using MRCD.Application.BaseEntity.Contracts;
 using MRCD.Application.Security;
 using MRCD.Infrastructure.Caching;
+using MRCD.Infrastructure.HealthCheck;
 using MRCD.Infrastructure.Repositories;
 using MRCD.Infrastructure.Security;
 
@@ -59,6 +60,7 @@ public static class DependencyInjection
                 ServerVersion.AutoDetect(dbConnection)
             );
         });
+        services.AddScoped<IDbConnectionChecker, DbConnectionChecker>();
         services.AddRepositories(typeof(DependencyInjection).Assembly);
         services.AddScoped<ICacheService, RedisCacheService>();
         services.AddScoped<IPermissionCache, DistributedPermissionCache>();
