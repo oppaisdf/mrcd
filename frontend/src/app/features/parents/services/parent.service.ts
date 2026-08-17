@@ -15,6 +15,12 @@ export class ParentService {
     return this._api.postAsync<CreateParentRequest, string>('/parent', request);
   }
 
+  public getByIdAsync(
+    parentId: string
+  ) {
+    return this._api.getAsync<ParentDetailsResponse>(`/parent/${parentId}`);
+  }
+
   public toListAsync(
     page: number,
     parentName: string | null
@@ -26,10 +32,15 @@ export class ParentService {
     return this._api.getAsync<PagedResult<AssignedParentResponse>>('/parent', params);
   }
 
-  public getByIdAsync(
-    parentId: string
-  ) {
-    return this._api.getAsync<ParentDetailsResponse>(`/parent/${parentId}`);
+  public lonelyToListAsync(
+    page: number,
+    parentName: string | null
+  ){
+    const params: Record<string, any> = {
+      page: page,
+      parentName: parentName
+    };
+    return this._api.getAsync<PagedResult<AssignedParentResponse>>('/alert/parents', params);
   }
 
   public unassignAsync(
