@@ -51,10 +51,18 @@ internal sealed class GetAlertCountHandler(
         };
         var route = query.Alert switch
         {
-            AlertType.ParentsLonely => "parents?alert=lonely-parents",
-            AlertType.PendingCharges => "people?alert=pending-charges",
-            AlertType.PendingDocuments => "people?alert=pending-documents",
-            AlertType.WithoutGodparents => "people?alert=pending-godparents",
+            AlertType.ParentsLonely => "/parents",
+            AlertType.PendingCharges => "/people",
+            AlertType.PendingDocuments => "/people",
+            AlertType.WithoutGodparents => "/people",
+            _ => ""
+        };
+        var parameter = query.Alert switch
+        {
+            AlertType.ParentsLonely => new Dictionary<string, string>{["alert"] = "lonely-parents"},
+            AlertType.PendingCharges => new Dictionary<string, string>{["alert"] = "pending-charges"},
+            AlertType.PendingDocuments => new Dictionary<string, string>{["alert"] = "pending-documents"},
+            AlertType.WithoutGodparents => new Dictionary<string, string>{["alert"] = "pending-godparents"},
             _ => null
         };
 
@@ -64,7 +72,8 @@ internal sealed class GetAlertCountHandler(
         return Result<AlertDTO>.Success(new(
             count,
             message,
-            route
+            route,
+            parameter
         ));
     }
 }

@@ -3,5 +3,6 @@ namespace MRCD.Application.Alert.DTOs;
 public sealed record AlertDTO(
     int Count,
     string Message,
-    string Route
+    string Route,
+    Dictionary<string, string>? Parameter
 );
