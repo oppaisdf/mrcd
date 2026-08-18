@@ -12,6 +12,7 @@ type AlertResponse = {
   count: number;
   message: string;
   route: string;
+  parameter?: Record<string, string>;
 };
 
 @Component({
@@ -45,7 +46,8 @@ export class DashPage implements OnInit {
             alerts.push({
               count: response.data?.count ?? 0,
               message: response.data?.message ?? 'unknow',
-              route: response.data?.route ?? ''
+              route: response.data?.route ?? '',
+              parameter: response.data?.parameter ?? {}
             });
             this.alerts.set([...alerts]);
           }
