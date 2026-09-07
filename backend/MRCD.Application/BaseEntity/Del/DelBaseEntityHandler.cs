@@ -4,7 +4,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.BaseEntity.DelBaseEntity;
+namespace MRCD.Application.BaseEntity.Del;
 
 internal sealed class DelBaseEntityHandler<TEntity>(
     IBaseEntityRepository<TEntity> repo,

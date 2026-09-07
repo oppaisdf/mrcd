@@ -4,7 +4,7 @@ using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Add;
-using MRCD.Application.BaseEntity.DelBaseEntity;
+using MRCD.Application.BaseEntity.Del;
 using MRCD.Domain.Degree;
 
 namespace MRCD.API.Endpoints;

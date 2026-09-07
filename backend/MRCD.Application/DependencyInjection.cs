@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Add;
-using MRCD.Application.BaseEntity.DelBaseEntity;
+using MRCD.Application.BaseEntity.Del;
 using MRCD.Application.BaseEntity.GetBaseEntity;
 using MRCD.Application.Person.AssignPersonEntity;
 using MRCD.Application.Security;

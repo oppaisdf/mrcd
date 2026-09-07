@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.BaseEntity.DelBaseEntity;
+namespace MRCD.Application.BaseEntity.Del;
 
 public sealed record DelBaseEntityCommand(
     Guid UserId,
