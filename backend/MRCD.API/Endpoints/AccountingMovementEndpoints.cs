@@ -4,7 +4,7 @@ using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.AccountingMovement.Add;
-using MRCD.Application.AccountingMovement.DelAccountingMovement;
+using MRCD.Application.AccountingMovement.Del;
 using MRCD.Application.AccountingMovement.GetAccountingMovement;
 using MRCD.Domain.AccountingMovement;
 

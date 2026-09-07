@@ -3,7 +3,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.AccountingMovement.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.AccountingMovement.DelAccountingMovement;
+namespace MRCD.Application.AccountingMovement.Del;
 
 internal sealed class DelAccountingMovementHandler(
     IAccountingMovementRepository repo,
