@@ -8,7 +8,7 @@ using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 using MRCD.Domain.Role;
 
-namespace MRCD.Application.Permission.AssignToRole;
+namespace MRCD.Application.Permission.Add.Assign;
 
 internal sealed class AssignToRoleHandler(
     IPermissionRepository permission,
