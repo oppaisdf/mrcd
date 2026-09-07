@@ -1,6 +1,6 @@
 using MRCD.Application.Abstracts.Handlers;
 
-namespace MRCD.Application.Planner.AddActivity;
+namespace MRCD.Application.Planner.Add;
 
 public sealed record AddActivityCommand(
     Guid UserId,

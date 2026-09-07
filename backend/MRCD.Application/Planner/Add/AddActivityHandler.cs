@@ -4,7 +4,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Planner.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Planner.AddActivity;
+namespace MRCD.Application.Planner.Add;
 
 internal sealed class AddActivityHandler(
     IActivityRepository repo,
