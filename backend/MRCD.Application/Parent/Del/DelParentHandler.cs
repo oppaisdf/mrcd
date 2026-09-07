@@ -3,7 +3,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Parent.DelParent;
+namespace MRCD.Application.Parent.Del;
 
 internal sealed class DelParentHandler(
     IParentRepository repo,
