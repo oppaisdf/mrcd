@@ -3,7 +3,7 @@ using MRCD.API.Common;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Common;
 using MRCD.Application.Logs.DTOs;
-using MRCD.Application.Logs.GetLogs;
+using MRCD.Application.Logs.Get;
 
 namespace MRCD.API.Endpoints;
 

@@ -5,7 +5,7 @@ using MRCD.Application.Logs.DTOs;
 using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Logs.GetLogs;
+namespace MRCD.Application.Logs.Get;
 
 internal sealed class GetLogsHandler(
     ILogRepository repo,

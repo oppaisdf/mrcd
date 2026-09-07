@@ -2,7 +2,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Common;
 using MRCD.Application.Logs.DTOs;
 
-namespace MRCD.Application.Logs.GetLogs;
+namespace MRCD.Application.Logs.Get;
 
 public sealed record GetLogsQuery(
     ushort Size,
