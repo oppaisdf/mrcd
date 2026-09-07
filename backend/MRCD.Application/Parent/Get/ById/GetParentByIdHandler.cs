@@ -6,7 +6,7 @@ using MRCD.Application.Person.Contracts;
 using MRCD.Application.Person.DTOs;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Parent.GetparentById;
+namespace MRCD.Application.Parent.Get.ById;
 
 internal sealed class GetParentByIdHandler(
     IParentRepository repo,

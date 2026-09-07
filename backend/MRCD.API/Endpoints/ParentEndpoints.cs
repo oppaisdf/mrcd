@@ -9,7 +9,7 @@ using MRCD.Application.Parent.Add.Assign;
 using MRCD.Application.Parent.Del;
 using MRCD.Application.Parent.DTOs;
 using MRCD.Application.Parent.GetParent;
-using MRCD.Application.Parent.GetparentById;
+using MRCD.Application.Parent.Get.ById;
 
 namespace MRCD.API.Endpoints;
 
