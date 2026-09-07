@@ -8,7 +8,7 @@ using MRCD.Application.Person.Add;
 using MRCD.Application.Person.DTOs;
 using MRCD.Application.Person.Get.GeneralList;
 using MRCD.Application.Person.GetPerson;
-using MRCD.Application.Person.GetPersonById;
+using MRCD.Application.Person.Get.ById;
 using MRCD.Application.Person.Update;
 
 namespace MRCD.API.Endpoints;

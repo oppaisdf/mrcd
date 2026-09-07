@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Person.DTOs;
 
-namespace MRCD.Application.Person.GetPersonById;
+namespace MRCD.Application.Person.Get.ById;
 
 public sealed record GetPersonByIdQuery(
     Guid UserId,

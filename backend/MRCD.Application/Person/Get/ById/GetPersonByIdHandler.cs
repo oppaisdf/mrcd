@@ -6,7 +6,7 @@ using MRCD.Application.Person.Contracts;
 using MRCD.Application.Person.DTOs;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Person.GetPersonById;
+namespace MRCD.Application.Person.Get.ById;
 
 internal sealed class GetPersonByIdHandler(
     IPersonRepository person,
