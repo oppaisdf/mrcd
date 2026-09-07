@@ -3,7 +3,7 @@ using MRCD.Application.Alert.Common;
 using MRCD.Application.Common;
 using MRCD.Application.Person.DTOs;
 
-namespace MRCD.Application.Person.GetPerson;
+namespace MRCD.Application.Person.Get.List;
 
 public sealed record GetPersonQuery(
     Guid UserId,

@@ -9,7 +9,7 @@ using MRCD.Application.Common;
 using MRCD.Application.Parent.DTOs;
 using MRCD.Application.Parent.Get.List;
 using MRCD.Application.Person.DTOs;
-using MRCD.Application.Person.GetPerson;
+using MRCD.Application.Person.Get.List;
 
 namespace MRCD.API.Endpoints;
 

@@ -6,7 +6,7 @@ using MRCD.Application.Person.DTOs;
 using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Person.GetPerson;
+namespace MRCD.Application.Person.Get.List;
 
 internal sealed class GetPersonHandler(
     ILogger<GetPersonHandler> logs,

@@ -7,7 +7,7 @@ using MRCD.Application.Common;
 using MRCD.Application.Person.Add;
 using MRCD.Application.Person.DTOs;
 using MRCD.Application.Person.Get.GeneralList;
-using MRCD.Application.Person.GetPerson;
+using MRCD.Application.Person.Get.List;
 using MRCD.Application.Person.Get.ById;
 using MRCD.Application.Person.Update;
 
