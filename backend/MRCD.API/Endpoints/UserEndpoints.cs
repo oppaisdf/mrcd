@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
-using MRCD.Application.User.AddUser;
+using MRCD.Application.User.Add;
 using MRCD.Application.User.AssignRole;
 using MRCD.Application.User.DTOs;
 using MRCD.Application.User.GetUserById;

@@ -6,7 +6,7 @@ using MRCD.Application.Services.CommonService;
 using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.User.AddUser;
+namespace MRCD.Application.User.Add;
 
 internal sealed class AddUserHandler(
     IUserRepository repo,
