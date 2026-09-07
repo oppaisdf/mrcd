@@ -5,7 +5,7 @@ using MRCD.Application.Charge.Contracts;
 using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Charge.AddCharge;
+namespace MRCD.Application.Charge.Add;
 
 internal sealed class AddChargeHandler(
     IChargeRepository repo,
