@@ -9,7 +9,7 @@ using MRCD.Domain.Common;
 using MRCD.Domain.Degree;
 using MRCD.Domain.Sacrament;
 
-namespace MRCD.Application.Person.AddPerson;
+namespace MRCD.Application.Person.Add;
 
 internal sealed class AddPersonHandler(
     IPersonRepository person,

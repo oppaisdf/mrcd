@@ -4,7 +4,7 @@ using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Common;
-using MRCD.Application.Person.AddPerson;
+using MRCD.Application.Person.Add;
 using MRCD.Application.Person.DTOs;
 using MRCD.Application.Person.GetGeneralList;
 using MRCD.Application.Person.GetPerson;

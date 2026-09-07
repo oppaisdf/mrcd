@@ -1,4 +1,4 @@
-using MRCD.Application.Person.AddPerson;
+using MRCD.Application.Person.Add;
 
 namespace MRCD.API.DTOs;
 

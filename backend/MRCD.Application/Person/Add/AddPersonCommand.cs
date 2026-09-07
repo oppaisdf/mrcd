@@ -1,6 +1,6 @@
 using MRCD.Application.Abstracts.Handlers;
 
-namespace MRCD.Application.Person.AddPerson;
+namespace MRCD.Application.Person.Add;
 
 public sealed record AddPersonCommand(
     Guid UserId,
