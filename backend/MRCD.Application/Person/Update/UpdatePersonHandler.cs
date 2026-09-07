@@ -7,7 +7,7 @@ using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 using MRCD.Domain.Degree;
 
-namespace MRCD.Application.Person.UpdatePerson;
+namespace MRCD.Application.Person.Update;
 
 internal sealed class UpdatePersonHandler(
     IPersonRepository person,
