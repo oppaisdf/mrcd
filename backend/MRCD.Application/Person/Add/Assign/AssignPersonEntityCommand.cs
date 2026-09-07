@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Person.AssignPersonEntity;
+namespace MRCD.Application.Person.Add.Assign;
 
 public sealed record AssignPersonEntityCommand(
     Guid PersonId,

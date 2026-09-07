@@ -5,7 +5,7 @@ using MRCD.Application.BaseEntity.Contracts;
 using MRCD.Application.Person.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Person.AssignPersonEntity;
+namespace MRCD.Application.Person.Add.Assign;
 
 internal sealed class AssignPersonEntityHandler<TEntity>(
     IPersonRepository person,

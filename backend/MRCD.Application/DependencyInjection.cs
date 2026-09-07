@@ -5,7 +5,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Add;
 using MRCD.Application.BaseEntity.Del;
 using MRCD.Application.BaseEntity.Get;
-using MRCD.Application.Person.AssignPersonEntity;
+using MRCD.Application.Person.Add.Assign;
 using MRCD.Application.Security;
 using MRCD.Application.Services.CommonService;
 

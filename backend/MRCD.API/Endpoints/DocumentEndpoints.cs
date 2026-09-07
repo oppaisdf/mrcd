@@ -5,7 +5,7 @@ using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Add;
 using MRCD.Application.BaseEntity.Del;
-using MRCD.Application.Person.AssignPersonEntity;
+using MRCD.Application.Person.Add.Assign;
 using MRCD.Domain.Document;
 
 namespace MRCD.API.Endpoints;
