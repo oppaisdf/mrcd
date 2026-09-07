@@ -4,7 +4,7 @@ using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Planner.Add;
-using MRCD.Application.Planner.AssignStageToActivity;
+using MRCD.Application.Planner.Add.Assign;
 using MRCD.Application.Planner.DelActivity;
 using MRCD.Application.Planner.DTOs;
 using MRCD.Application.Planner.GetActivity;

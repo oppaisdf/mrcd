@@ -6,7 +6,7 @@ using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 using MRCD.Domain.Planner;
 
-namespace MRCD.Application.Planner.AssignStageToActivity;
+namespace MRCD.Application.Planner.Add.Assign;
 
 internal sealed class AssignStageToActivityHandler(
     IBaseEntityRepository<Stage> stage,

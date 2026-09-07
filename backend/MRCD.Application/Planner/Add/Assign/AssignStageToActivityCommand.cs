@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Planner.AssignStageToActivity;
+namespace MRCD.Application.Planner.Add.Assign;
 
 public sealed record AssignStageToActivityCommand(
     Guid StageId,
