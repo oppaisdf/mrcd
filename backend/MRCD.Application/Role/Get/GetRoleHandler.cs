@@ -2,7 +2,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Role.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Role.GetRole;
+namespace MRCD.Application.Role.Get;
 
 internal sealed class GetRoleHandler(
     IRoleRepository repo
