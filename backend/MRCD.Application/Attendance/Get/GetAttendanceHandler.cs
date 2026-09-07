@@ -5,7 +5,7 @@ using MRCD.Application.Person.Contracts;
 using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Attendance.GetAttendance;
+namespace MRCD.Application.Attendance.Get;
 
 internal sealed class GetAttendaceHandler(
     IAttendanceRepository repo,

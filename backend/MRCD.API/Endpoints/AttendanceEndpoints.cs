@@ -6,7 +6,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Attendance.Add;
 using MRCD.Application.Attendance.Del;
 using MRCD.Application.Attendance.DTOs;
-using MRCD.Application.Attendance.GetAttendance;
+using MRCD.Application.Attendance.Get;
 
 namespace MRCD.API.Endpoints;
 
