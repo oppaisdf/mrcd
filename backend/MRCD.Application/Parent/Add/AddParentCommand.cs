@@ -1,6 +1,6 @@
 using MRCD.Application.Abstracts.Handlers;
 
-namespace MRCD.Application.Parent.AddParent;
+namespace MRCD.Application.Parent.Add;
 
 public sealed record AddParentCommand(
     Guid UserId,

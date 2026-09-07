@@ -6,7 +6,7 @@ using MRCD.Application.Person.Contracts;
 using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Parent.AddParent;
+namespace MRCD.Application.Parent.Add;
 
 internal sealed class AddParentHandler(
     IParentRepository repo,
