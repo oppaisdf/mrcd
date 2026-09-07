@@ -5,7 +5,7 @@ using MRCD.Application.Planner.DTOs;
 using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Planner.GetActivity;
+namespace MRCD.Application.Planner.Get.ById;
 
 internal sealed class GetActivityHandler(
     IActivityRepository activity,
