@@ -1,4 +1,4 @@
-namespace MRCD.Application.Services.CommonService;
+namespace MRCD.Application.Services.Common;
 
 public interface ICommonService
 {

@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MRCD.Application.Services.CommonService;
+namespace MRCD.Application.Services.Common;
 
 internal sealed partial class CommonService : ICommonService
 {

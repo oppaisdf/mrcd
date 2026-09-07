@@ -2,7 +2,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Attendance.Contracts;
 using MRCD.Application.Attendance.DTOs;
 using MRCD.Application.Person.Contracts;
-using MRCD.Application.Services.CommonService;
+using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.Attendance.Get;

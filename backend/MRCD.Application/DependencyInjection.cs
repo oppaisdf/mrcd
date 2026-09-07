@@ -7,7 +7,7 @@ using MRCD.Application.BaseEntity.Del;
 using MRCD.Application.BaseEntity.Get;
 using MRCD.Application.Person.Add.Assign;
 using MRCD.Application.Security;
-using MRCD.Application.Services.CommonService;
+using MRCD.Application.Services.Common;
 
 namespace MRCD.Application;
 

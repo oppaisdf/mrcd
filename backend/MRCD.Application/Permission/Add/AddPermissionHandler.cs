@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Permission.Contracts;
-using MRCD.Application.Services.CommonService;
+using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.Permission.Add;

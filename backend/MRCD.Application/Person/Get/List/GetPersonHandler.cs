@@ -3,7 +3,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Common;
 using MRCD.Application.Person.Contracts;
 using MRCD.Application.Person.DTOs;
-using MRCD.Application.Services.CommonService;
+using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.Person.Get.List;

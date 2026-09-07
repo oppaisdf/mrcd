@@ -3,7 +3,7 @@ using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Contracts;
 using MRCD.Application.Person.Contracts;
-using MRCD.Application.Services.CommonService;
+using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 using MRCD.Domain.Degree;
 

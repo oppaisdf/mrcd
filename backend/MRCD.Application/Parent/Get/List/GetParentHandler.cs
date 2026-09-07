@@ -2,7 +2,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Common;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Application.Parent.DTOs;
-using MRCD.Application.Services.CommonService;
+using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.Parent.Get.List;
