@@ -5,7 +5,7 @@ using MRCD.Application.Role.Contracts;
 using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Role.AddRole;
+namespace MRCD.Application.Role.Add;
 
 internal sealed class AddRoleHandler(
     ICommonService service,

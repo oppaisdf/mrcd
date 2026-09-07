@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
-using MRCD.Application.Role.AddRole;
+using MRCD.Application.Role.Add;
 using MRCD.Application.Role.DTOs;
 
 namespace MRCD.API.Endpoints;
