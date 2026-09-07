@@ -1,6 +1,6 @@
 using MRCD.Application.Abstracts.Handlers;
 
-namespace MRCD.Application.AccountingMovement.GetAccountingMovement;
+namespace MRCD.Application.AccountingMovement.Get;
 
 public sealed record GetAccountingMovementQuery(
     Guid UserId,

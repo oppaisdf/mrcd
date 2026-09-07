@@ -3,7 +3,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.AccountingMovement.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.AccountingMovement.GetAccountingMovement;
+namespace MRCD.Application.AccountingMovement.Get;
 
 internal sealed class GetAccountingMovementHandler(
     IAccountingMovementRepository repo,

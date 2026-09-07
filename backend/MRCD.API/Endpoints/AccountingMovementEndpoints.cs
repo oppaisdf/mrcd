@@ -5,7 +5,7 @@ using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.AccountingMovement.Add;
 using MRCD.Application.AccountingMovement.Del;
-using MRCD.Application.AccountingMovement.GetAccountingMovement;
+using MRCD.Application.AccountingMovement.Get;
 using MRCD.Domain.AccountingMovement;
 
 namespace MRCD.API.Endpoints;
