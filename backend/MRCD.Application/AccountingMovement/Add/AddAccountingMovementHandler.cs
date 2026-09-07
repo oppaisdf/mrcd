@@ -4,7 +4,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.AccountingMovement.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.AccountingMovement.AddAccountingMovement;
+namespace MRCD.Application.AccountingMovement.Add;
 
 internal sealed class AddAccountingMovementHandler(
     IAccountingMovementRepository repo,
