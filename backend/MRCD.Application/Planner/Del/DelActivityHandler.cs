@@ -3,7 +3,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Planner.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Planner.DelActivity;
+namespace MRCD.Application.Planner.Del;
 
 internal sealed class DelActivityHandler(
     IActivityRepository repo,
