@@ -5,7 +5,7 @@ using MRCD.Application.Security;
 using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Permission.UnassignToRole;
+namespace MRCD.Application.Permission.Del.Assign;
 
 internal sealed class UnassignToRoleHandler(
     IRolePermissionRepository rolePermission,
