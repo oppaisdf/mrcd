@@ -5,7 +5,7 @@ using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Common;
 using MRCD.Application.Parent.Add;
-using MRCD.Application.Parent.AssignParent;
+using MRCD.Application.Parent.Add.Assign;
 using MRCD.Application.Parent.DelParent;
 using MRCD.Application.Parent.DTOs;
 using MRCD.Application.Parent.GetParent;

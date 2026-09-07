@@ -5,7 +5,7 @@ using MRCD.Application.Person.Contracts;
 using MRCD.Domain.Common;
 using MRCD.Domain.Parent;
 
-namespace MRCD.Application.Parent.AssignParent;
+namespace MRCD.Application.Parent.Add.Assign;
 
 internal sealed class AssignParentHandler(
     IPersonRepository person,
