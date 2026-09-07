@@ -3,7 +3,7 @@ using MRCD.Application.Alert.Common;
 using MRCD.Application.Common;
 using MRCD.Application.Parent.DTOs;
 
-namespace MRCD.Application.Parent.GetParent;
+namespace MRCD.Application.Parent.Get.List;
 
 public sealed record GetParentQuery(
     int Page,

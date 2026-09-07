@@ -5,7 +5,7 @@ using MRCD.Application.Parent.DTOs;
 using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Parent.GetParent;
+namespace MRCD.Application.Parent.Get.List;
 
 internal sealed class GetParentHandler(
     IParentRepository repo,

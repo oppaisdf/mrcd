@@ -7,7 +7,7 @@ using MRCD.Application.Alert.DTOs;
 using MRCD.Application.Alert.Get.AlertCount;
 using MRCD.Application.Common;
 using MRCD.Application.Parent.DTOs;
-using MRCD.Application.Parent.GetParent;
+using MRCD.Application.Parent.Get.List;
 using MRCD.Application.Person.DTOs;
 using MRCD.Application.Person.GetPerson;
 
