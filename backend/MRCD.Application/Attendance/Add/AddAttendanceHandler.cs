@@ -4,7 +4,7 @@ using MRCD.Application.Attendance.Contracts;
 using MRCD.Application.Person.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Attendance.AddAttendance;
+namespace MRCD.Application.Attendance.Add;
 
 internal sealed class AddAttendanceHandler(
     IAttendanceRepository repo,

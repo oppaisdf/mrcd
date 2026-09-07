@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Attendance.AddAttendance;
+namespace MRCD.Application.Attendance.Add;
 
 public sealed record AddAttendanceCommand(
     Guid UserId,

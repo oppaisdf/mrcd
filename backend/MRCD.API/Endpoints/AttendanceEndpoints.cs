@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
-using MRCD.Application.Attendance.AddAttendance;
+using MRCD.Application.Attendance.Add;
 using MRCD.Application.Attendance.DelAttendance;
 using MRCD.Application.Attendance.DTOs;
 using MRCD.Application.Attendance.GetAttendance;
