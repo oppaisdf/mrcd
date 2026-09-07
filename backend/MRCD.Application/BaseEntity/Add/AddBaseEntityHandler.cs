@@ -6,7 +6,7 @@ using MRCD.Application.BaseEntity.Contracts;
 using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.BaseEntity.AddBaseEntity;
+namespace MRCD.Application.BaseEntity.Add;
 
 internal sealed class AddBaseEntityHandler<TEntity>(
     IBaseEntityRepository<TEntity> repo,

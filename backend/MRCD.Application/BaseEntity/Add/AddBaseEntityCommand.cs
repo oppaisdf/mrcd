@@ -1,6 +1,6 @@
 using MRCD.Application.Abstracts.Handlers;
 
-namespace MRCD.Application.BaseEntity.AddBaseEntity;
+namespace MRCD.Application.BaseEntity.Add;
 
 public sealed record AddBaseEntityCommand(
     Guid UserId,
