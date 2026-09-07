@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.User.UpdateUser;
+namespace MRCD.Application.User.Update;
 
 public sealed record UpdateUserCommand(
     Guid UserId,

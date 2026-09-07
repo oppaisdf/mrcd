@@ -5,7 +5,7 @@ using MRCD.Application.Services.CommonService;
 using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.User.UpdateUser;
+namespace MRCD.Application.User.Update;
 
 internal sealed class UpdateUserHandler(
     IUserRepository user,

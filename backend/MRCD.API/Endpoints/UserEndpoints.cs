@@ -7,7 +7,7 @@ using MRCD.Application.User.Add;
 using MRCD.Application.User.Add.Assign;
 using MRCD.Application.User.DTOs;
 using MRCD.Application.User.GetUserById;
-using MRCD.Application.User.UpdateUser;
+using MRCD.Application.User.Update;
 
 namespace MRCD.API.Endpoints;
 
