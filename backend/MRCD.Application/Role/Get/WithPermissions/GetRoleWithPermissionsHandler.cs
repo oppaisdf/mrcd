@@ -4,7 +4,7 @@ using MRCD.Application.Role.Contracts;
 using MRCD.Application.Role.DTOs;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Role.GetRoleWithPermissions;
+namespace MRCD.Application.Role.Get.WithPermissions;
 
 internal sealed class GetRoleWithPermissionsHandler(
     IRoleRepository role,
