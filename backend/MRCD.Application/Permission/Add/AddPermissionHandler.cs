@@ -4,7 +4,7 @@ using MRCD.Application.Permission.Contracts;
 using MRCD.Application.Services.CommonService;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Permission.AddPermission;
+namespace MRCD.Application.Permission.Add;
 
 internal sealed class AddPermissionHandler(
     ICommonService service,
