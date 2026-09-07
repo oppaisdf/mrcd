@@ -3,7 +3,7 @@ using MRCD.Application.Planner.Contracts;
 using MRCD.Application.Planner.DTOs;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Planner.GetCalendar;
+namespace MRCD.Application.Planner.Get.Calendar;
 
 internal sealed class GetCalendarHandler(
     IActivityRepository repo

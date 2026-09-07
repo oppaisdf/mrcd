@@ -8,7 +8,7 @@ using MRCD.Application.Planner.Add.Assign;
 using MRCD.Application.Planner.Del;
 using MRCD.Application.Planner.DTOs;
 using MRCD.Application.Planner.Get.ById;
-using MRCD.Application.Planner.GetCalendar;
+using MRCD.Application.Planner.Get.Calendar;
 
 namespace MRCD.API.Endpoints;
 
