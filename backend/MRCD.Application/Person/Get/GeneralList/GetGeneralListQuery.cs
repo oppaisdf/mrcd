@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Person.DTOs;
 
-namespace MRCD.Application.Person.GetGeneralList;
+namespace MRCD.Application.Person.Get.GeneralList;
 
 public sealed record GetGeneralListQuery(
     Guid UserId

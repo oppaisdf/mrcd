@@ -6,7 +6,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Common;
 using MRCD.Application.Person.Add;
 using MRCD.Application.Person.DTOs;
-using MRCD.Application.Person.GetGeneralList;
+using MRCD.Application.Person.Get.GeneralList;
 using MRCD.Application.Person.GetPerson;
 using MRCD.Application.Person.GetPersonById;
 using MRCD.Application.Person.Update;

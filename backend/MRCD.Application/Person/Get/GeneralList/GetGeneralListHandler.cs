@@ -6,7 +6,7 @@ using MRCD.Application.Person.Contracts;
 using MRCD.Application.Person.DTOs;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Person.GetGeneralList;
+namespace MRCD.Application.Person.Get.GeneralList;
 
 internal sealed class GetGeneralListHandler(
     IPersonRepository person,
