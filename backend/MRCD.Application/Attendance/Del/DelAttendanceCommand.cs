@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Attendance.DelAttendance;
+namespace MRCD.Application.Attendance.Del;
 
 public sealed record DelAttendanceCommand(
     Guid UserId,

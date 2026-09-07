@@ -4,7 +4,7 @@ using MRCD.Application.Attendance.Contracts;
 using MRCD.Application.Person.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Attendance.DelAttendance;
+namespace MRCD.Application.Attendance.Del;
 
 internal sealed class DelAttendanceHandler(
     IAttendanceRepository repo,
