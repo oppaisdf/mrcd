@@ -2,7 +2,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.BaseEntity.GetBaseEntity;
+namespace MRCD.Application.BaseEntity.Get;
 
 internal sealed class GetBaseEntityHandler<TEntity>(
     IBaseEntityRepository<TEntity> repo
