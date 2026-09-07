@@ -5,7 +5,7 @@ using MRCD.Application.User.Contracts;
 using MRCD.Application.User.DTOs;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.User.GetUser;
+namespace MRCD.Application.User.Get.List;
 
 internal sealed class GetUserHandler(
     IUserRepository user,
