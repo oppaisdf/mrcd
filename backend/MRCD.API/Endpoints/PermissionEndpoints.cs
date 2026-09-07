@@ -5,7 +5,7 @@ using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Permission.Add;
 using MRCD.Application.Permission.Add.Assign;
-using MRCD.Application.Permission.DelPermission;
+using MRCD.Application.Permission.Del;
 using MRCD.Application.Permission.UnassignToRole;
 
 namespace MRCD.API.Endpoints;

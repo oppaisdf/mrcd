@@ -3,7 +3,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Permission.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Permission.DelPermission;
+namespace MRCD.Application.Permission.Del;
 
 internal sealed class DelPermissionHandler(
     IPermissionRepository repo,
