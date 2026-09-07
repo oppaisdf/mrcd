@@ -6,7 +6,7 @@ using MRCD.Application.User.Contracts;
 using MRCD.Domain.Common;
 using MRCD.Domain.User;
 
-namespace MRCD.Application.User.AssignRole;
+namespace MRCD.Application.User.Add.Assign;
 
 internal sealed class AssignRoleHandler(
     IUserRepository user,

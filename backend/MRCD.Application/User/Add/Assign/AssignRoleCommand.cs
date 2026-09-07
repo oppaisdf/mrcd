@@ -1,7 +1,7 @@
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.User.AssignRole;
+namespace MRCD.Application.User.Add.Assign;
 
 public sealed record AssignRoleCommand(
     Guid UserId,

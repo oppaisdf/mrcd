@@ -4,7 +4,7 @@ using MRCD.API.Common;
 using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.User.Add;
-using MRCD.Application.User.AssignRole;
+using MRCD.Application.User.Add.Assign;
 using MRCD.Application.User.DTOs;
 using MRCD.Application.User.GetUserById;
 using MRCD.Application.User.UpdateUser;
