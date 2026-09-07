@@ -2,7 +2,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Permission.Contracts;
 using MRCD.Domain.Common;
 
-namespace MRCD.Application.Permission.GetPermission;
+namespace MRCD.Application.Permission.Get;
 
 internal sealed class GetPermissionHandler(
     IPermissionRepository repo
