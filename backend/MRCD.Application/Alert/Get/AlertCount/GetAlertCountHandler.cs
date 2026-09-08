@@ -37,7 +37,7 @@ internal sealed class GetAlertCountHandler(
         CancellationToken cancellationToken
     )
     {
-        var current = await _cache.GetAsync<int>($"alert:{query.Alert}", cancellationToken);
+        var current = await _cache.GetAsync<int?>($"alert:{query.Alert}", cancellationToken);
         var count = current is null
             ? await QueryAsync(query.Alert, cancellationToken)
             : current.Value;

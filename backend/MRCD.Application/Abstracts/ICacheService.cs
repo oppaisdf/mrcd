@@ -5,7 +5,7 @@ public interface ICacheService
     Task<T?> GetAsync<T>(
         string key,
         CancellationToken cancellationToken
-    ) where T : struct;
+    );
     Task SetAsync<T>(
         string key,
         T value,
