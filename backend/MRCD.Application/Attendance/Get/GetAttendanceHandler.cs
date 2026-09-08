@@ -2,6 +2,7 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Attendance.Contracts;
 using MRCD.Application.Attendance.DTOs;
 using MRCD.Application.Person.Contracts;
+using MRCD.Application.Services.Attendance;
 using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 
@@ -9,13 +10,15 @@ namespace MRCD.Application.Attendance.Get;
 
 internal sealed class GetAttendaceHandler(
     IAttendanceRepository repo,
-    ICommonService service,
-    IPersonRepository person
+    ICommonService cservice,
+    IPersonRepository person,
+    IAttendanceService service
 ) : IQueryHandler<IEnumerable<AttendanceDTO>, GetAttendanceQuery>
 {
     private readonly IAttendanceRepository _repo = repo;
-    private readonly ICommonService _service = service;
+    private readonly ICommonService _cservice = cservice;
     private readonly IPersonRepository _person = person;
+    private readonly IAttendanceService _service = service;
 
     public async Task<Result<IEnumerable<AttendanceDTO>>> HandleAsync(
         GetAttendanceQuery query,
@@ -24,7 +27,7 @@ internal sealed class GetAttendaceHandler(
     {
         var normalizedPersonName = string.IsNullOrWhiteSpace(query.PersonName)
             ? null
-            : _service.NormalizeString(query.PersonName);
+            : _cservice.NormalizeString(query.PersonName);
 
         var attendances = await _repo.ToListAsync(
             query.Date,
@@ -41,33 +44,10 @@ internal sealed class GetAttendaceHandler(
             )
             .ToList();
 
-        var peopleIds = people
-            .Select(p => p.ID)
-            .ToHashSet();
-
-        var dates = attendances
-            .Where(a => peopleIds.Contains(a.PersonId))
-            .Select(a => a.Date)
-            .Distinct()
-            .OrderBy(d => d)
-            .ToList();
-
-        var attendanceDir = attendances
-            .GroupBy(a => (a.PersonId, a.Date))
-            .ToDictionary(g => g.Key, g => g.Single());
-
-        return Result<IEnumerable<AttendanceDTO>>.Success(
-            people.Select(p => new AttendanceDTO(
-                p.Name,
-                dates.Select(d => new HasAttendanceDTO(
-                    d,
-                    attendanceDir.TryGetValue((p.ID, d), out var a)
-                        ? a.IsAttendance
-                            ? AttendanceType.Attended
-                            : AttendanceType.Excused
-                        : AttendanceType.Absent
-                ))
-            ))
+        return Result<IEnumerable<AttendanceDTO>>.Success(_service.GetConsumibleAttendances(
+            people,
+            attendances
+        )
         );
     }
 }
