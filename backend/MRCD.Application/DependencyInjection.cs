@@ -7,6 +7,7 @@ using MRCD.Application.BaseEntity.Del;
 using MRCD.Application.BaseEntity.Get;
 using MRCD.Application.Person.Add.Assign;
 using MRCD.Application.Security;
+using MRCD.Application.Services.Attendance;
 using MRCD.Application.Services.Common;
 
 namespace MRCD.Application;
@@ -103,6 +104,7 @@ public static class DependencyInjection
         services.RegisterHandlers(typeof(DependencyInjection).Assembly);
         // Services
         services.AddSingleton<ICommonService, CommonService>();
+        services.AddSingleton<IAttendanceService, AttendanceService>();
         services.AddScoped<PermissionService>();
         return services;
     }
