@@ -8,4 +8,10 @@ public interface IAttendanceService
         IReadOnlyCollection<Domain.Person.Person> people,
         IReadOnlyCollection<Domain.Attendance.Attendance> attendances
     );
+
+    IReadOnlyCollection<AttendanceDTO> GetAlertAttendances(
+        IReadOnlyCollection<Domain.Person.Person> people,
+        IReadOnlyCollection<Domain.Attendance.Attendance> attendances,
+        ushort consecutiveFoulsWeekCount
+    );
 }
