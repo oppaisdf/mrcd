@@ -4,7 +4,7 @@ namespace MRCD.Application.Services.Attendance;
 
 internal sealed class AttendanceService : IAttendanceService
 {
-    public IEnumerable<AttendanceDTO> GetConsumibleAttendances(
+    public IReadOnlyCollection<AttendanceDTO> GetConsumibleAttendances(
         IReadOnlyCollection<Domain.Person.Person> people,
         IReadOnlyCollection<Domain.Attendance.Attendance> attendances
     )
