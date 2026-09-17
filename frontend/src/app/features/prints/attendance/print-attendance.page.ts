@@ -7,6 +7,8 @@ import { AttendanceResponse } from '../../attendances/responses/attendance.respo
 import { AccordeonComponent } from "../../../core/ui/accordeon/accordeon.component";
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { UiPrintComponent } from "../../../core/ui/print/ui-print.component";
+import { ActivatedRoute } from '@angular/router';
+import { AlertType } from '../../../core/utils/alert.type';
 
 @Component({
   selector: 'app-print-attendance.page',
@@ -24,6 +26,7 @@ export class PrintAttendancePage {
   private readonly _service = inject(AttendanceService);
   private readonly _alert = inject(AlertService);
   private readonly _form = inject(FormBuilder);
+  private readonly _me = inject(ActivatedRoute);
   readonly form = this._form.nonNullable.group({
     date: [new Date],
     onlyByYear: [true],
@@ -60,14 +63,17 @@ export class PrintAttendancePage {
   async loadAsync() {
     if (this._alert.loading()) return;
     this._alert.startLoading();
+    const alertType = (this._me.snapshot.queryParamMap.get('alert') as AlertType | undefined);
     const params = this.form.getRawValue();
-    const response = await this._service.toListAsync(
-      this.goodDate(params.date),
-      params.onlyByYear,
-      params.isSunday,
-      params.isMasculine,
-      params.name.trim().length > 0 ? params.name.trim() : undefined
-    );
+    const response = alertType === AlertType.CONSECUTIVE_FOULS
+      ? await this._service.foulsToListAsync()
+      : await this._service.toListAsync(
+        this.goodDate(params.date),
+        params.onlyByYear,
+        params.isSunday,
+        params.isMasculine,
+        params.name.trim().length > 0 ? params.name.trim() : undefined
+      );
     this._alert.clear();
     if (!response.isSuccess)
       this._alert.error(response.message);
