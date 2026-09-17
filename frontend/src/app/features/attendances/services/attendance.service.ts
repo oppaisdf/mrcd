@@ -21,6 +21,10 @@ export class AttendanceService {
     return this._api.delAsync(`/attendance/${personId}/date/${dateString}`);
   }
 
+  foulsToListAsync(){
+    return this._api.getAsync<Array<AttendanceResponse>>('/alert/attendance/fouls');
+  }
+
   toListAsync(
     date: Date,
     filteredOnlyByYear?: boolean,
