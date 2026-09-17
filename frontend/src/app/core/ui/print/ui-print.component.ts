@@ -23,6 +23,7 @@ export class UiPrintComponent implements OnDestroy {
   });
   @HostBinding('attr.data-print-root') printRoot = 'true';
   title = input<string>();
+  paginated = input(false);
   readonly orientations: Array<SelectItem<string>> = [{
     label: 'Vertical',
     value: 'portrait'

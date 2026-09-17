@@ -1,9 +1,25 @@
 :host {
     display: block;
+    min-width: 0;
+    --print-page-width: 186mm;
+    --print-page-height: 273mm;
+}
+
+:host([data-orientation="landscape"]) {
+    --print-page-width: 273mm;
+    --print-page-height: 186mm;
+}
+
+.ui-print__sheet.ui-print__sheet--paginated {
+    width: var(--print-page-width);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
 }
 
 .ui-print__toolbar {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
@@ -46,6 +62,10 @@
 }
 
 @media print {
+    .ui-print__viewport {
+        padding: 0;
+        overflow: visible;
+    }
     .no-print {
         display: none !important;
     }

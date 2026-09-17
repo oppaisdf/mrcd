@@ -12,7 +12,7 @@
 </div>
 
 <div class="ui-print__viewport">
-    <article class="ui-print__sheet" role="document">
+    <article class="ui-print__sheet" [class.ui-print__sheet--paginated]="paginated()" role="document">
         <section class="ui-print__body">
             <ng-content />
         </section>
