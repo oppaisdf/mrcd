@@ -5,6 +5,8 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Alert.Common;
 using MRCD.Application.Alert.DTOs;
 using MRCD.Application.Alert.Get.AlertCount;
+using MRCD.Application.Attendance.DTOs;
+using MRCD.Application.Attendance.Get.ConsecutiveFouls;
 using MRCD.Application.Common;
 using MRCD.Application.Parent.DTOs;
 using MRCD.Application.Parent.Get.List;
@@ -183,5 +185,28 @@ internal static class AlertEndpoints
         .WithOpenApi()
         .Produces<Pagination<SimplePersonDTO>>(StatusCodes.Status200OK)
         .RequireAuthorization("perm:Person.Read");
+
+        app.MapGet("attendance/fouls", async (
+            [FromQuery] bool filteredOnlyByYear,
+            [FromServices] IQueryHandler<IReadOnlyCollection<AttendanceDTO>, GetConsecutiveFoulsQuery> handler,
+            CancellationToken ct
+        ) =>
+        {
+            var query = new GetConsecutiveFoulsQuery(
+                ConsecutiveWeeksCount: 2
+            );
+            var result = await handler.HandleAsync(query, ct);
+            return ResultsMapper.ToHttp(
+                result,
+                a => Results.Ok(a)
+            );
+        })
+        .WithName("GetAttendanceFouls")
+        .WithDisplayName("GET /AttendanceFouls")
+        .WithSummary("Obtener faltas consecutivas de asistencia")
+        .WithDescription("Obtiene listado de asistencias cuyas faltas consecutivas sean por lo menos de dos semanas")
+        .WithOpenApi()
+        .Produces<IReadOnlyCollection<AttendanceDTO>>(StatusCodes.Status200OK)
+        .RequireAuthorization("perm:Attendance.Read");
     }
 }
