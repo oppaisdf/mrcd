@@ -21,5 +21,11 @@ export const PRINTS_ROUTES: Routes = [
         data: { vtIndex: 1013 },
         providers: [AttendanceService],
         loadComponent: () => import('./attendance/print-attendance.page').then(p => p.PrintAttendancePage)
+    }, {
+        path: 'certificates',
+        title: 'Diplomas',
+        data: { vtIndex: 1014 },
+        providers: [PersonService],
+        loadComponent: () => import('./certificates/print-certificate.page').then(p => p.PrintCertificatePage)
     }
 ];

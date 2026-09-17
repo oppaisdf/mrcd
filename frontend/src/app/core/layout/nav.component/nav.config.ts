@@ -64,8 +64,8 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
                 roles: ['usr']
             }, {
                 routeName: "Diplomas",
-                route: "/",
-                roles: ['ukn']
+                route: "/print/certificates",
+                roles: ['adm']
             }, {
                 routeName: "Gafetes",
                 route: "/print/badges",
