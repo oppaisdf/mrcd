@@ -3,6 +3,9 @@
     <div class="ui-control">
         <select #select [id]="id" class="ui-select" [disabled]="disabled()" (blur)="onTouched()"
             (change)="onSelectChange($event)" [value]="value()">
+            @if (type() === 'boolean?') {
+            <option value="">Sin seleccionar</option>
+            }
             @for (item of items(); track $index) {
             <option [value]="item.value.toString()">{{item.label}}</option>
             }

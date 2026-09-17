@@ -20,7 +20,7 @@ let nextId = 0;
 export class UiSelectComponent implements ControlValueAccessor {
   items = input.required<Array<SelectItem<number>> | Array<SelectItem<string>> | Array<SelectItem<boolean>>>();
   label = input.required<string>();
-  type = input.required<'string' | 'number' | 'boolean'>();
+  type = input.required<'string' | 'number' | 'boolean' | 'boolean?'>();
 
   value = signal<string>('');
   id = `ui-select-${++nextId}`;
@@ -31,6 +31,7 @@ export class UiSelectComponent implements ControlValueAccessor {
     effect(() => {
       const value = this.value();
       this.items();
+      this.type();
 
       queueMicrotask(() => {
         const select = this._select()?.nativeElement;
@@ -71,7 +72,7 @@ export class UiSelectComponent implements ControlValueAccessor {
     const type = this.type();
     const value = type === 'number'
       ? Number(rawValue)
-      : type === 'boolean'
+      : type === 'boolean' || type === 'boolean?'
         ? rawValue.trim() === 'true'
         : rawValue;
     this.onChange(value);
