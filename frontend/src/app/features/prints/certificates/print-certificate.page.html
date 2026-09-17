@@ -1,0 +1,69 @@
+<h1>Generación de diplomas</h1>
+<hr>
+<form class="ui-form" [formGroup]="form" (ngSubmit)="getAsync()">
+    <ui-input label="Fecha en la que se impartirá el sacramento" type="date" formControlName="date" [hint]="hint('date')" />
+    <ui-input label="Parroquia donde se impartirá el sacramento" type="text" formControlName="church" [hint]="hint('church')" />
+    <ui-input label="Persona que firma los diplomas" type="text" formControlName="signature" [hint]="hint('signature')" />
+    <ui-input label="Celebrante" type="text" formControlName="officiant" [hint]="hint('officiant')" />
+
+    @let bkImg = backgroundImage();
+    <div class="ui-field">
+        <label class="ui-label" for="certificate-image">Imagen de fondo</label>
+        <input #imageInput id="certificate-image" type="file" accept="image/*" (change)="selectImage($event)" aria-describedby="certificate-image-error" />
+        @if (bkImg) {
+            <button class="ui-button" type="button" (click)="removeImage(imageInput)">Quitar imagen</button>
+        }
+        <span id="certificate-image-error" role="status">{{ imageError() }}</span>
+    </div>
+
+    @if (bkImg) {
+        <div class="ui-field">
+            <label class="ui-label" for="certificate-opacity">Opacidad de la imagen</label>
+            <div class="ui-control">
+                <input id="certificate-opacity" type="range" min="0" max="1" step="0.05" formControlName="opacity" />
+            </div>
+        </div>
+    }
+
+    <div class="ui-field">
+        <label class="ui-label" for="certificate-cite">Cita bíblica</label>
+        <div class="ui-control">
+            <textarea id="certificate-cite" class="ui-label" formControlName="cite" placeholder="Cita bíblica del pie de página"></textarea>
+        </div>
+    </div>
+
+    <button class="ui-button" type="submit">Llenar</button>
+</form>
+
+<br><br>
+
+<ui-print [paginated]="true" title="Vista previa de diplomas">
+    @for (person of people(); track $index) {
+        <section class="certificate" [attr.aria-label]="'Diploma de ' + person.personName">
+            @if (backgroundImage(); as source) {
+                <img class="certificate__background" [src]="source" alt="" [style.opacity]="getValue('opacity') ?? 0.2" />
+            }
+            <div class="certificate__area">
+                <div #certificateContent class="certificate__content">
+                    <div class="certificate__information">
+                        <h2>Diploma de confirmación</h2>
+                        <h3>{{ getValue('church') }}</h3>
+                        <dl>
+                            <div><dt>Certifica que</dt><dd>{{ person.personName }}</dd></div>
+                            <div><dt>Nacido el</dt><dd>{{ GetDOB(person.dob) }}</dd></div>
+                            <div><dt>Hijo de</dt><dd>{{ GetParents(person.parents) }}</dd></div>
+                            <div><dt>Bautizado en</dt><dd>{{ person.parish }}</dd></div>
+                            <div><dt>Siendo sus padrinos</dt><dd>{{ GetParents(person.godparents) }}</dd></div>
+                            <div><dt>Recibió el sacramento de la confirmación el</dt><dd>{{ getValue('date') }}</dd></div>
+                            <div><dt>Impartió el sacramento</dt><dd>{{ getValue('officiant') }}</dd></div>
+                        </dl>
+                        <div class="certificate__signature"><span>{{ getValue('signature') }}</span></div>
+                    </div>
+                    <footer class="certificate__cite">{{ getValue('cite') }}</footer>
+                </div>
+            </div>
+        </section>
+    } @empty {
+        <p>No hay registros para generar diplomas.</p>
+    }
+</ui-print>

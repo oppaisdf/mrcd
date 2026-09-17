@@ -1,0 +1,107 @@
+:host {
+    display: block;
+    min-width: 0;
+}
+
+input[type='file'] {
+    max-width: 100%;
+}
+
+.certificate {
+    position: relative;
+    isolation: isolate;
+    width: var(--print-page-width);
+    height: var(--print-page-height);
+    margin-bottom: 8mm;
+    background: white;
+    color: black;
+    overflow: hidden;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 14pt;
+    line-height: 1.4;
+}
+
+.certificate__background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.certificate__area {
+    position: absolute;
+    inset: 12mm;
+}
+
+.certificate__content {
+    position: absolute;
+    left: 50%;
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    overflow-wrap: anywhere;
+    transform-origin: top center;
+}
+
+.certificate__information {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h2 {
+    margin: 0 0 6mm;
+    font-size: 26pt;
+}
+
+h3 {
+    margin: 6mm 0;
+    font-size: 22pt;
+}
+
+p, dl, dd {
+    margin: 0;
+}
+
+dl {
+    display: grid;
+    gap: 3mm;
+}
+
+dt {
+    font-weight: bold;
+}
+
+.certificate__signature {
+    align-self: flex-end;
+    width: 45%;
+    margin-top: 22mm;
+    padding-top: 2mm;
+    border-top: 1px solid black;
+    text-align: right;
+}
+
+.certificate__cite {
+    margin-top: 10mm;
+    font-size: 10pt;
+    font-style: italic;
+    white-space: pre-wrap;
+}
+
+@media print {
+    .certificate {
+        margin: 0;
+        break-inside: avoid;
+        break-after: page;
+    }
+
+    .certificate:last-child {
+        break-after: auto;
+    }
+}
