@@ -4,8 +4,8 @@
     <form [formGroup]="form" class="ui-form" (ngSubmit)="loadAsync()">
         <ui-input label="Fecha" type="date" formControlName="date" />
         <ui-select label="Tipo de filtrado" type="boolean" [items]="items('onlyByYear')" formControlName="onlyByYear" />
-        <ui-select label="Día" type="boolean" [items]="items('isSunday')" formControlName="isSunday" />
-        <ui-select label="Género" type="boolean" [items]="items('isMasculine')" formControlName="isMasculine" />
+        <ui-select label="Día" type="boolean?" [items]="items('isSunday')" formControlName="isSunday" />
+        <ui-select label="Género" type="boolean?" [items]="items('isMasculine')" formControlName="isMasculine" />
         <ui-input label="Nombre" type="text" formControlName="name" />
         <button class="ui-button" type="submit">Buscar</button>
     </form>

@@ -30,8 +30,8 @@ export class PrintAttendancePage {
   readonly form = this._form.nonNullable.group({
     date: [new Date],
     onlyByYear: [true],
-    isSunday: [true],
-    isMasculine: [true],
+    isSunday: [],
+    isMasculine: [],
     name: ['']
   });
   readonly attendances = signal<Array<AttendanceResponse>>([]);
