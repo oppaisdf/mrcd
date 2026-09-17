@@ -4,7 +4,7 @@
     <form [formGroup]="form" class="ui-form" (ngSubmit)="getAsync()">
         <ui-input label="Nombre" type="text" formControlName="name" />
         <ui-select label="Estado" [items]="getItems('isActive')" type="boolean" formControlName="isActive" />
-        <ui-select label="Género" [items]="getItems('isMasculine')" type="boolean" formControlName="isMasculine" />
+        <ui-select label="Género" [items]="getItems('isMasculine')" type="boolean?" formControlName="isMasculine" />
 
         <button class="ui-button" type="submit">Buscar</button>
     </form>

@@ -32,7 +32,7 @@ export class PeopleListPage {
   readonly form = this._form.group({
     isActive: [true, Validators.required],
     name: [''],
-    isMasculine: [false]
+    isMasculine: []
   });
   readonly people = signal<PagedResult<SimplePersonResponse>>({
     items: [],
