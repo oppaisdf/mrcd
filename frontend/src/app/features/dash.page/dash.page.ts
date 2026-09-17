@@ -23,7 +23,7 @@ type AlertResponse = {
 })
 export class DashPage implements OnInit {
   private readonly _api = inject(ApiService);
-  private readonly _alertIds = ['0', '1', '2', '3'];
+  private readonly _alertIds = ['0', '1', '2', '3', '4'];
   private readonly _alert = inject(AlertService);
   readonly alerts = signal<Array<AlertResponse>>([]);
   readonly roles = signal<Array<UsedRoleResponse>>([]);
