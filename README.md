@@ -154,8 +154,6 @@ backend/
 ## 5. ToDos
 
 - Units tests.
-- Alerta de inasistencias.
 - Alerta de actividad fuera de horario.
-- Registrar logs en entidad propia.
 - Impresión de: diplomas y agenda.
 - Páginas de: agenda, movimientos contables
