@@ -187,7 +187,6 @@ internal static class AlertEndpoints
         .RequireAuthorization("perm:Person.Read");
 
         app.MapGet("attendance/fouls", async (
-            [FromQuery] bool filteredOnlyByYear,
             [FromServices] IQueryHandler<IReadOnlyCollection<AttendanceDTO>, GetConsecutiveFoulsQuery> handler,
             CancellationToken ct
         ) =>
