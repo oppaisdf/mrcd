@@ -2,7 +2,7 @@
 
 <ui-accordeon title="Filtros">
     <form [formGroup]="form" class="ui-form" (ngSubmit)="loadAsync()">
-        <ui-select label="Día" type="boolean" [items]="days" formControlName="isSunday" />
+        <ui-select label="Día" type="boolean?" [items]="days" formControlName="isSunday" />
         <ui-select label="Tipo de asistencia" type="number" [items]="attendanceTypes" formControlName="type" />
         <ui-input label="Fecha" type="date" min="{{year}}-01-01" max="{{year}}-12-31" formControlName="date" />
 

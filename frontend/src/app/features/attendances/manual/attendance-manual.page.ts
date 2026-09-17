@@ -27,7 +27,7 @@ export class AttendanceManualPage {
   private readonly _service = inject(AttendanceService);
   private readonly _people = signal<Array<GeneralListResponse>>([]);
   readonly form = this._form.nonNullable.group({
-    isSunday: [true],
+    isSunday: [],
     date: [new Date()],
     type: [1]
   });
@@ -35,6 +35,7 @@ export class AttendanceManualPage {
   readonly people = computed(() => {
     const isSunday = this.form.controls.isSunday.value;
     const people = this._people();
+    if (isSunday === null) return people;
     return people.filter(p => p.isSunday === isSunday);
   });
   readonly year = new Date().getFullYear();
@@ -67,7 +68,6 @@ export class AttendanceManualPage {
     if (this._alert.loading()) return;
     this._alert.startLoading();
 
-    const form = this.form.getRawValue();
     const response = await this._peopleService.generalListAsync();
     this._alert.clear();
 
