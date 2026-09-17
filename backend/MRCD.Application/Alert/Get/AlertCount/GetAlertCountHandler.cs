@@ -75,7 +75,7 @@ internal sealed class GetAlertCountHandler(
             AlertType.PendingCharges => "Confirmandos con cobros pendientes",
             AlertType.PendingDocuments => "Confirmandos con documentos pendientes de entregar",
             AlertType.WithoutGodparents => "Confirmandos sin padrinos",
-            AlertType.ConsecutiveFouls => "Confirmandos con las 2 últimas faltas seguidas",
+            AlertType.ConsecutiveFouls => "Confirmandos con las últimas 2 faltas seguidas",
             _ => null
         };
         var route = query.Alert switch
@@ -84,7 +84,7 @@ internal sealed class GetAlertCountHandler(
             AlertType.PendingCharges => "/people",
             AlertType.PendingDocuments => "/people",
             AlertType.WithoutGodparents => "/people",
-            AlertType.ConsecutiveFouls => "/attendance",
+            AlertType.ConsecutiveFouls => "/print/attendance",
             _ => ""
         };
         var parameter = query.Alert switch
