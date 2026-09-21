@@ -7,13 +7,15 @@ import { CurrencyEnvironment } from '../../../core/environments/currency.environ
 import { SessionStore } from '../../../core/stores/session.store';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { AccountingMovementService } from '../services/accounting-movement.service';
+import { AccordeonComponent } from '../../../core/ui/accordeon/accordeon.component';
 
 @Component({
   selector: 'app-accounting-movement-list.page',
   imports: [
     ReactiveFormsModule,
     CurrencyPipe,
-    AccountingMovementFilterFormComponent
+    AccountingMovementFilterFormComponent,
+    AccordeonComponent
 ],
   templateUrl: './accounting-movement-list.page.html',
   styleUrl: './accounting-movement-list.page.scss',
@@ -25,15 +27,6 @@ export class AccountingMovementListPage {
   readonly isAdmin = this._session.hasRole('adm');
   private readonly _alert = inject(AlertService);
   private readonly _service = inject(AccountingMovementService);
-  getDate(
-    date: Date
-  ){
-    if (!date) return '';
-    const dob = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)
-      ? new Date(`${date}T00:00:00`) : new Date(date);
-    if (Number.isNaN(dob.getTime())) return '';
-    return `${dob.getDate()} de ${dob.toLocaleString('es-ES', { month: 'long' })} del ${dob.getFullYear()}`;
-  }
 
   toList(
     movements: Array<AccountingMovementResponse>

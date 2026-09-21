@@ -1,34 +1,38 @@
 <h1>Movimientos contables</h1>
 <filters-accounting-movement (movementsSubmit)="toList($event)" />
 <br>
-@let accountingMovements = movements();
-@if (accountingMovements.length > 0) {
-<div class="ui-table-wrap">
-    <table class="ui-table">
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Descripción</th>
-                <th>Monto</th>
-                @if (isAdmin) {
-                    <th>Acción</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @for (movement of accountingMovements; track movement.id) {
-            <tr>
-                <td>{{getDate(movement.date)}}</td>
-                <td>{{movement.description}}</td>
-                <td>{{movement.amount|currency:currencySymbol}}</td>
-                @if (isAdmin) {
-                    <td>
-                        <button class="ui-button is-danger" (click)="delAsync(movement.id)">Eliminar</button>
-                    </td>
-                }
-            </tr>
-            }
-        </tbody>
-    </table>
-</div>
+
+@for (month of movements(); track $index) {
+    <ui-accordeon [title]="month.month.toString()">
+        <div class="ui-table-wrap">
+            <table class="ui-table">
+                <thead>
+                    <tr>
+                        <th>Día</th>
+                        <th>Descripción</th>
+                        <th>Monto</th>
+                        @if (isAdmin) {
+                            <th>Acción</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (day of month.movements; track day.id) {
+                    <tr>
+                        <td>{{day.day}}</td>
+                        <td>{{day.description}}</td>
+                        <td>{{day.amount|currency:currencySymbol}}</td>
+                        @if (isAdmin) {
+                            <td>
+                                <button class="ui-button is-danger" (click)="delAsync(day.id)">Eliminar</button>
+                            </td>
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </ui-accordeon>
+}@empty {
+    <h2>No hay datos</h2>
 }
