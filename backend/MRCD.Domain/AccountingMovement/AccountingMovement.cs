@@ -21,7 +21,7 @@ public sealed class AccountingMovement
             return Result<AccountingMovement>.Failure("La descripción no puede exceder los 50 caractéres");
         if (amount == 0)
             return Result<AccountingMovement>.Failure("El monto debe ser distinto de cero");
-        if (amount < 5000 || amount > 5000)
+        if (amount is < -5000 or > 5000)
             return Result<AccountingMovement>.Failure("El monto no puede ser mayor o menor a 5000");
         return Result<AccountingMovement>.Success(new()
         {
