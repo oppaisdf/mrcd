@@ -1,0 +1,6 @@
+export type AccountingMovementResponse = {
+    id: string;
+    description: string;
+    amount: number;
+    date: Date;
+};
