@@ -1,3 +1,5 @@
+<a class="ui-button" routerLink="/accounting/movement/new">Nuevo</a>
+
 <h1>Movimientos contables</h1>
 <filters-accounting-movement (movementsSubmit)="toList($event)" />
 <br>
@@ -33,6 +35,4 @@
             </table>
         </div>
     </ui-accordeon>
-}@empty {
-    <h2>No hay datos</h2>
 }

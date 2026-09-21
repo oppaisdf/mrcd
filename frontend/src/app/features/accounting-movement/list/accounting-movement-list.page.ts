@@ -8,6 +8,7 @@ import { SessionStore } from '../../../core/stores/session.store';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { AccountingMovementService } from '../services/accounting-movement.service';
 import { AccordeonComponent } from '../../../core/ui/accordeon/accordeon.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-accounting-movement-list.page',
@@ -15,7 +16,8 @@ import { AccordeonComponent } from '../../../core/ui/accordeon/accordeon.compone
     ReactiveFormsModule,
     CurrencyPipe,
     AccountingMovementFilterFormComponent,
-    AccordeonComponent
+    AccordeonComponent,
+    RouterLink
 ],
   templateUrl: './accounting-movement-list.page.html',
   styleUrl: './accounting-movement-list.page.scss',
