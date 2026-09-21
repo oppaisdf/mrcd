@@ -1,0 +1,5 @@
+<form [formGroup]="form" class="ui-form" (ngSubmit)="addAsync()">
+    <ui-input label="Descripción" type="text" [hint]="hint('name')" [maxLength]="50" formControlName="name" />
+    <ui-input label="Monto" type="number" [hint]="hint('amount')" max="5000" min="-5000" formControlName="amount" />
+    <button class="ui-button" type="submit">Agregar</button>
+</form>
