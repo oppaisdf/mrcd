@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.AccountingMovement.Contracts;
+using MRCD.Application.AccountingMovement.DTOs;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.AccountingMovement.Get;
@@ -8,19 +9,19 @@ namespace MRCD.Application.AccountingMovement.Get;
 internal sealed class GetAccountingMovementHandler(
     IAccountingMovementRepository repo,
     ILogger<GetAccountingMovementHandler> logs
-) : IQueryHandler<IEnumerable<Domain.AccountingMovement.AccountingMovement>, GetAccountingMovementQuery>
+) : IQueryHandler<IReadOnlyCollection<AccountingMovementDTO>, GetAccountingMovementQuery>
 {
     private readonly IAccountingMovementRepository _repo = repo;
     private readonly ILogger<GetAccountingMovementHandler> _logs = logs;
 
-    public Task<Result<IEnumerable<Domain.AccountingMovement.AccountingMovement>>> HandleAsync(
+    public async Task<Result<IReadOnlyCollection<AccountingMovementDTO>>> HandleAsync(
         GetAccountingMovementQuery query,
         CancellationToken cancellationToken
     )
     {
-        var results = query.FilterOnlyByYear
-            ? _repo.OnlyByYearToListAsync(query.Date.Year, cancellationToken)
-            : _repo.ByDateToListAsync(query.Date, cancellationToken);
+        var rawMovements = query.FilterOnlyByYear
+            ? await _repo.OnlyByYearToListAsync(query.Date.Year, cancellationToken)
+            : await _repo.ByDateToListAsync(query.Date, cancellationToken);
         using (_logs.BeginScope(new Dictionary<string, object>
         {
             ["UserId"] = query.UserId
@@ -29,10 +30,26 @@ internal sealed class GetAccountingMovementHandler(
             _logs.LogInformation("Accounting movement has been listed in date {date}", query.Date);
         }
 
-        return results
-            .ContinueWith(r =>
-                Result<IEnumerable<Domain.AccountingMovement.AccountingMovement>>.Success(r.Result),
-                cancellationToken
-            );
+        var movements = rawMovements
+            .Select(m => new
+            {
+                m.Amount,
+                m.ID,
+                m.Description,
+                m.Date.Day,
+                m.Date.Month
+            }).GroupBy(m => m.Month)
+            .Select(m => new AccountingMovementDTO(
+                m.Key,
+                [.. m.Select(rm => new SimpleAccountingMovementDTO(
+                    rm.ID,
+                    rm.Description,
+                    rm.Amount,
+                    rm.Day
+                )).OrderBy(rm => rm.Day)]
+            )).OrderBy(rm => rm.Month)
+            .ToArray();
+
+        return Result<IReadOnlyCollection<AccountingMovementDTO>>.Success(movements);
     }
 }

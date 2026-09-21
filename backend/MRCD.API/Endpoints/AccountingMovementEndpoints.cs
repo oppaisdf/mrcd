@@ -5,6 +5,7 @@ using MRCD.API.DTOs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.AccountingMovement.Add;
 using MRCD.Application.AccountingMovement.Del;
+using MRCD.Application.AccountingMovement.DTOs;
 using MRCD.Application.AccountingMovement.Get;
 using MRCD.Domain.AccountingMovement;
 
@@ -82,7 +83,7 @@ internal static class AccountingMovementEndpoints
         app.MapGet("", async (
             [FromQuery] DateOnly date,
             [FromQuery] bool filterOnlyByYear,
-            IQueryHandler<IEnumerable<AccountingMovement>, GetAccountingMovementQuery> handler,
+            IQueryHandler<IReadOnlyCollection<AccountingMovementDTO>, GetAccountingMovementQuery> handler,
             ClaimsPrincipal user,
             CancellationToken ct
         ) =>
