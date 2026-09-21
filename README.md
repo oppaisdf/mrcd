@@ -155,5 +155,6 @@ backend/
 
 - Units tests.
 - Alerta de actividad fuera de horario.
-- Impresión de: diplomas y agenda.
-- Páginas de: agenda, movimientos contables
+- Impresión de: agenda.
+- Páginas de: agenda.
+- Registro de movimientos contables al realizar pagos.
