@@ -74,6 +74,10 @@ export const NAV_CATEGORIES: CategoryMenu[] = [
                 routeName: "Listado general",
                 route: "/print/list",
                 roles: ['usr']
+            }, {
+                routeName: "Movimientos contables",
+                route: "/print/accountingmovements",
+                roles: ['usr']
             }
         ]
     }, {

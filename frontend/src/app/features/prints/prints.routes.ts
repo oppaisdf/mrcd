@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { PersonService } from "../people/services/person.service";
 import { AttendanceService } from "../attendances/services/attendance.service";
+import { AccountingMovementService } from "../accounting-movement/services/accounting-movement.service";
 
 export const PRINTS_ROUTES: Routes = [
     {
@@ -27,5 +28,11 @@ export const PRINTS_ROUTES: Routes = [
         data: { vtIndex: 1014 },
         providers: [PersonService],
         loadComponent: () => import('./certificates/print-certificate.page').then(p => p.PrintCertificatePage)
+    }, {
+        path: 'accountingmovements',
+        title: 'Movimientos contables',
+        data: { vtIndex: 1015 },
+        providers: [AccountingMovementService],
+        loadComponent: () => import('./accounting-movements/accounting-movement-print.page').then(p => p.AccountingMovementPrintPage)
     }
 ];
