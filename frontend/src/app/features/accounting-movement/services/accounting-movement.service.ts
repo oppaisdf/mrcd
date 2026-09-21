@@ -13,6 +13,12 @@ export class AccountingMovementService {
     return this._api.postAsync('/accountingmovement', request);
   }
 
+  delAsync(
+    id: string
+  ){
+    return this._api.delAsync(`/accountingmovement/${id}`);
+  }
+
   toListAsync(
     filterOnlyByYear: boolean,
     date: Date
