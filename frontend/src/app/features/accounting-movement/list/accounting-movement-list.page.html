@@ -1,0 +1,34 @@
+<h1>Movimientos contables</h1>
+<filters-accounting-movement (movementsSubmit)="toList($event)" />
+<br>
+@let accountingMovements = movements();
+@if (accountingMovements.length > 0) {
+<div class="ui-table-wrap">
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Descripción</th>
+                <th>Monto</th>
+                @if (isAdmin) {
+                    <th>Acción</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (movement of accountingMovements; track movement.id) {
+            <tr>
+                <td>{{getDate(movement.date)}}</td>
+                <td>{{movement.description}}</td>
+                <td>{{movement.amount|currency:currencySymbol}}</td>
+                @if (isAdmin) {
+                    <td>
+                        <button class="ui-button is-danger" (click)="delAsync(movement.id)">Eliminar</button>
+                    </td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
