@@ -1,0 +1,61 @@
+:host { display: block; }
+
+.report-heading {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 3px double #222;
+}
+.eyebrow { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; }
+h1 { margin: 0.4rem 0; font: bold 1.6rem Georgia, serif; }
+.report-note { color: #555; font-size: 0.75rem; margin: 0.5rem 0 0; }
+
+.ledger {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-bottom: 1.75rem;
+  font-size: 0.75rem;
+  color: #111;
+
+  caption { text-align: left; font: bold 1.1rem Georgia, serif; padding-bottom: 0.6rem; }
+  th, td { padding: 0.5rem 0.4rem; vertical-align: top; }
+  th { text-align: left; }
+  tbody td { border-bottom: 1px solid #ddd; }
+  .divider { border-left: 2px solid #222; }
+  .amount { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .day { text-align: center; font-variant-numeric: tabular-nums; }
+  .description { overflow-wrap: anywhere; white-space: pre-line; }
+}
+.day-column { width: 6%; }
+.amount-column { width: 19%; }
+.account-head {
+  border-top: 2px solid #222;
+  border-bottom: 2px solid #222;
+  th { text-align: center; font-size: 0.95rem; }
+  span { display: block; font-size: 0.65rem; font-weight: normal; margin-top: 0.15rem; }
+}
+.column-head { border-bottom: 1px solid #777; font-size: 0.65rem; }
+.subtotal { border-top: 2px solid #222; font-weight: bold; }
+.month-result { border-bottom: 3px double #222; }
+.summary {
+  margin-left: auto;
+  width: 65%;
+  border-top: 2px solid #222;
+  break-inside: avoid;
+  h2 { font: bold 1.1rem Georgia, serif; margin: 0.75rem 0; }
+  dl { margin: 0; font-size: 0.85rem; }
+  dl > div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.4rem 0; }
+  dd { margin: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .net-result { border-top: 1px solid #222; border-bottom: 3px double #222; font-weight: bold; }
+}
+@media print {
+  .report-heading { break-inside: avoid; }
+  .ledger {
+    font-size: 9pt;
+    thead { display: table-header-group; }
+    caption { break-after: avoid; }
+    tr { break-inside: avoid; }
+    .subtotal { break-after: avoid; }
+  }
+}
