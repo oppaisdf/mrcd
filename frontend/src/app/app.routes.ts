@@ -133,6 +133,15 @@ export const routes: Routes = [
                     vtTheme: 'admin'
                 },
                 loadChildren: () => import('./features/logs/log.routes').then(r => r.LOG_ROUTES)
+            }, {
+                path: 'accounting/movement',
+                canMatch: [roleGuard],
+                data: {
+                    roles: ['usr'],
+                    vtINdex: 130,
+                    vtTheme: 'admin'
+                },
+                loadChildren: () => import('./features/accounting-movement/accounting-movement.routes').then(r => r.ACCOUNTING_MOVEMENT_ROUTES)
             }
         ]
     },
