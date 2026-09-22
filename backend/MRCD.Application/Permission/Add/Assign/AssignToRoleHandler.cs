@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Permission.Contracts;
@@ -14,7 +14,7 @@ internal sealed class AssignToRoleHandler(
     IPermissionRepository permission,
     IRoleRepository role,
     IRolePermissionRepository rolePermission,
-    ILogger<AssignToRoleHandler> logs,
+    AuditLog<AssignToRoleHandler> logs,
     IPersistenceContext save,
     IUserRepository user,
     IPermissionCache cache
@@ -23,7 +23,7 @@ internal sealed class AssignToRoleHandler(
     private readonly IPermissionRepository _permission = permission;
     private readonly IRoleRepository _role = role;
     private readonly IRolePermissionRepository _rolePermission = rolePermission;
-    private readonly ILogger<AssignToRoleHandler> _logs = logs;
+    private readonly AuditLog<AssignToRoleHandler> _logs = logs;
     private readonly IPersistenceContext _save = save;
     private readonly IPermissionCache _cache = cache;
     private readonly IUserRepository _user = user;
@@ -56,14 +56,7 @@ internal sealed class AssignToRoleHandler(
         var rolePermission = new RolePermission(command.RoleId, command.PermissionId);
         _rolePermission.Add(rolePermission);
         await _save.SaveChangesAsync(cancellationToken);
-        await ClearCache(cancellationToken);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = command.UserId
-        }))
-        {
-            _logs.LogInformation("Permission {permission} has been assigned to role {role}", command.PermissionId, command.RoleId);
-        }
+        _logs.Write(command.UserId, "Permission {permission} has been assigned to role {role}", command.PermissionId, command.RoleId);
         return Result.Success();
     }
 }
