@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Charge.Contracts;
@@ -10,13 +10,13 @@ namespace MRCD.Application.Charge.Add;
 internal sealed class AddChargeHandler(
     IChargeRepository repo,
     IPersistenceContext save,
-    ILogger<AddChargeHandler> logs,
+    AuditLog<AddChargeHandler> logs,
     ICommonService service
 ) : ICommandHandler<AddChargeCommand, Guid>
 {
     private readonly IChargeRepository _repo = repo;
     private readonly IPersistenceContext _save = save;
-    private readonly ILogger<AddChargeHandler> _logs = logs;
+    private readonly AuditLog<AddChargeHandler> _logs = logs;
     private readonly ICommonService _service = service;
 
     public async Task<Result<Guid>> HandleAsync(
@@ -35,13 +35,7 @@ internal sealed class AddChargeHandler(
             return Result<Guid>.Failure("El nombre del cobro ya está en uso");
         _repo.Add(charge.Value!);
         await _save.SaveChangesAsync(cancellationToken);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = command.UserId
-        }))
-        {
-            _logs.LogInformation("Charge {charge} with ID {id} has been created.", command.Name, charge.Value!.ID);
-        }
+        _logs.Write(command.UserId, "Charge {charge} with ID {id} has been created.", command.Name, charge.Value!.ID);
         return Result<Guid>.Success(charge.Value!.ID);
     }
 }
