@@ -51,6 +51,12 @@ public sealed class Person
             return Result<Person>.Failure("La dirección no puede ser nula");
         if (address.Trim().Length > 100)
             return Result<Person>.Failure("La dirección no puede exceder los 100 caracteres");
+        if (!ContactRules.IsName(normalizedName))
+            return Result<Person>.Failure("El nombre del confirmando solo debe contener letras");
+        if (!ContactRules.IsPhone(phone))
+            return Result<Person>.Failure("El número telefónico no es válido");
+        if (phone?.Trim().Length > 10)
+            return Result<Person>.Failure("El número telefónico no puede exceder los 10 dígitos");
         var validDOB = ValidDOB(dob);
         if (!validDOB.IsSuccess && validDOB.Error is not null)
             return Result<Person>.Failure(validDOB.Error);
@@ -62,7 +68,7 @@ public sealed class Person
             IsMasculine = isMasculine,
             IsSunday = isSunday,
             DOB = dob,
-            Phone = phone,
+            Phone = string.IsNullOrWhiteSpace(phone) ? null : phone.Trim(),
             Address = address.Trim(),
             RegistrationDate = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6)),
             IsActive = true,
@@ -75,7 +81,9 @@ public sealed class Person
         string normalized
     )
     {
-        if (name.Trim().Equals(Name))
+        if (!ContactRules.IsName(normalized))
+            return Result.Failure("El nombre del confirmando solo debe contener letras");
+        if (name?.Trim().Equals(Name) == true)
             return Result.Failure("No se puede asignar el mismo nombre");
         if (string.IsNullOrWhiteSpace(name))
             return Result.Failure("El nombre no puede estar vacío");
@@ -108,6 +116,8 @@ public sealed class Person
     {
         if (string.IsNullOrWhiteSpace(phone))
             return Result.Failure("El número telefónico no puede estar vacío");
+        if (!ContactRules.IsPhone(phone))
+            return Result.Failure("El número telefónico solo puede contener números");
         if (phone.Trim().Equals(Phone))
             return Result.Failure("No se puede asignar el mismo número telefónico");
         if (phone.Trim().Length > 10)
