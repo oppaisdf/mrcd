@@ -27,15 +27,14 @@ internal sealed class GetActivityHandler(
         var activity = await _activity.GetByIdAsync(query.ActivityId, cancellationToken);
         if (activity is null)
             return Result<ActivityDTO>.Failure("La actividad no existe");
-        var stagesTask = _stage.ToListAsync(cancellationToken);
-        var activityStagesTask = _activityStage.StagesByActivityToListAsync(query.ActivityId, cancellationToken);
-        var userTask = _user.ToListAsync(cancellationToken);
-        await Task.WhenAll(stagesTask, activityStagesTask, userTask);
+        var availableStages = await _stage.ToListAsync(cancellationToken);
+        var assignedStages = await _activityStage.StagesByActivityToListAsync(query.ActivityId, cancellationToken);
+        var users = await _user.ToListAsync(cancellationToken);
 
         var stages =
-            from s in stagesTask.Result
-            join a in activityStagesTask.Result on s.ID equals a.StageId
-            join u in userTask.Result on a.UserId equals u.ID into tempU
+            from s in availableStages
+            join a in assignedStages on s.ID equals a.StageId
+            join u in users on a.UserId equals u.ID into tempU
             from u in tempU.DefaultIfEmpty()
             select new StageDTO(
                 s.ID,
@@ -44,7 +43,7 @@ internal sealed class GetActivityHandler(
                 a.UserId,
                 a.UserId is null
                     ? null
-                    : u.Username,
+                    : u?.Username,
                 a.Notes
             );
         return Result<ActivityDTO>.Success(new ActivityDTO(
