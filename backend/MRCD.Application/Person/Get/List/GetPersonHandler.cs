@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Common;
 using MRCD.Application.Person.Contracts;
@@ -9,12 +9,12 @@ using MRCD.Domain.Common;
 namespace MRCD.Application.Person.Get.List;
 
 internal sealed class GetPersonHandler(
-    ILogger<GetPersonHandler> logs,
+    AuditLog<GetPersonHandler> logs,
     IPersonRepository repo,
     ICommonService service
 ) : IQueryHandler<Pagination<SimplePersonDTO>, GetPersonQuery>
 {
-    private readonly ILogger<GetPersonHandler> _logs = logs;
+    private readonly AuditLog<GetPersonHandler> _logs = logs;
     private readonly IPersonRepository _repo = repo;
     private readonly ICommonService _service = service;
 
@@ -23,13 +23,7 @@ internal sealed class GetPersonHandler(
         CancellationToken cancellationToken
     )
     {
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = query.UserId
-        }))
-        {
-            _logs.LogInformation("Paginated people has been consulted. Page {page}", query.Page);
-        }
+        _logs.Write(query.UserId, "Paginated people has been consulted. Page {page}", query.Page);
         var normalized = string.IsNullOrWhiteSpace(query.Name)
             ? null
             : _service.NormalizeString(query.Name);
