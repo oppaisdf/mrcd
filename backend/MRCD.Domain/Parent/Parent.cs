@@ -26,6 +26,10 @@ public sealed class Parent
             return Result<Parent>.Failure("El nombre del padre/padrino no puede exceder los 80 caracteres");
         if (normalizedName.Trim().Length > 80 || normalizedName.Trim().Length > name.Trim().Length)
             return Result<Parent>.Failure("El nombre normalizado del padre/padrino no puede exceder la longitud del nombre original ni puede ser mayor a los 80 caracteres");
+        if (!ContactRules.IsName(normalizedName))
+            return Result<Parent>.Failure("El nombre del padre/padrino solo puede contener letras");
+        if (!ContactRules.IsPhone(phone))
+            return Result<Parent>.Failure("El número telefónico no es válido");
         if (string.IsNullOrWhiteSpace(phone)) phone = null;
         return Result<Parent>.Success(new()
         {
