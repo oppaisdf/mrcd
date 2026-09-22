@@ -52,17 +52,11 @@ internal sealed class AssignStageToActivityHandler(
         );
         if (alreadyExists)
             return Result.Failure("La fase ya ha sido agregada a la actividad");
-        var notes = string.IsNullOrWhiteSpace(command.Notes)
-            ? null : command.Notes.Trim();
-        if (notes is not null && notes.Length > 50)
-            return Result.Failure("Las nota no puede exceder los 50 caracteres");
-
-        var stageTask = _stage.GetByIdAsync(command.StageId, ct);
-        var activityTask = _activity.ExistsIdAsync(command.ActivityId, ct);
-        await Task.WhenAll(stageTask, activityTask);
-        if (!activityTask.Result)
+        var created = ActivityStage.Create(command.ActivityId, command.StageId, command.IsUserMain, command.UserId, command.Notes);
+        if (!created.IsSuccess) return Result.Failure(created.Error!);
+        if (!await _activity.ExistsIdAsync(command.ActivityId, ct))
             return Result.Failure("La actividad no existe");
-        if (stageTask.Result is null)
+        if (await _stage.GetByIdAsync(command.StageId, ct) is null)
             return Result.Failure("La fase de actividad no existe");
         if (command.UserId is not null)
         {
@@ -71,13 +65,7 @@ internal sealed class AssignStageToActivityHandler(
                 return Result.Failure("El usuario no existe o está inactivo");
         }
 
-        _activityStage.Add(new(
-            command.ActivityId,
-            command.StageId,
-            command.IsUserMain,
-            command.UserId,
-            notes
-        ));
+        _activityStage.Add(created.Value!);
         await _save.SaveChangesAsync(ct);
         return Result.Success();
     }
