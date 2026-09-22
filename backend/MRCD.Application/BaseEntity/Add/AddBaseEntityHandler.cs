@@ -1,53 +1,36 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts;
-using MRCD.Application.Abstracts.Factories;
+using MRCD.Application.BaseEntity.Services;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Contracts;
-using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.BaseEntity.Add;
 
 internal sealed class AddBaseEntityHandler<TEntity>(
     IBaseEntityRepository<TEntity> repo,
-    IBaseEntityFactory<TEntity> fact,
+    NamedEntityPreparation<TEntity> preparation,
     IPersistenceContext save,
-    ICommonService service,
-    ILogger<AddBaseEntityHandler<TEntity>> logs
+    AuditLog<AddBaseEntityHandler<TEntity>> logs
 ) : ICommandHandler<AddBaseEntityCommand, Guid, TEntity>
     where TEntity : Domain.Common.BaseEntity
 {
     private readonly IBaseEntityRepository<TEntity> _repo = repo;
-    private readonly IBaseEntityFactory<TEntity> _fact = fact;
+    private readonly NamedEntityPreparation<TEntity> _preparation = preparation;
     private readonly IPersistenceContext _save = save;
-    private readonly ICommonService _service = service;
-    private readonly ILogger<AddBaseEntityHandler<TEntity>> _logs = logs;
+    private readonly AuditLog<AddBaseEntityHandler<TEntity>> _logs = logs;
 
     public async Task<Result<Guid>> HandleAsync(
         AddBaseEntityCommand command,
         CancellationToken cancellationToken
     )
     {
-        var normalizedName = _service.NormalizeString(command.Name.Trim());
-        if (!_service.HasOnlyLetters(normalizedName))
-            return Result<Guid>.Failure("El nombre solo debe contener letras");
-        var records = await _repo.ToListAsync(cancellationToken);
-        var normalizedRecords = records
-            .Select(r => _service.NormalizeString(r.Name));
-        if (normalizedRecords.Contains(normalizedName))
-            return Result<Guid>.Failure("El nombre ya se encuentra en uso");
-        var newRecord = _fact.Create(command.Name.Trim());
+        var newRecord = await _preparation.PrepareAsync(command.Name, cancellationToken);
         if (!newRecord.IsSuccess)
             return Result<Guid>.Failure(newRecord.Error!);
         _repo.Add(newRecord.Value!);
         await _save.SaveChangesAsync(cancellationToken);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = command.UserId
-        }))
-        {
-            _logs.LogInformation("Record {record} with ID {id} has been created.", command.Name, newRecord.Value!.ID);
-        }
+        _logs.Write(command.UserId, "Record {record} with ID {id} has been created.", command.Name, newRecord.Value!.ID);
         return Result<Guid>.Success(newRecord.Value!.ID);
     }
 }
