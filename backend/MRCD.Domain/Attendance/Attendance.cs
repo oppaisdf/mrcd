@@ -1,3 +1,5 @@
+using MRCD.Domain.Common;
+
 namespace MRCD.Domain.Attendance;
 
 public sealed class Attendance
@@ -9,17 +11,22 @@ public sealed class Attendance
     public bool IsAttendance { get; private set; }
     public DateOnly Date { get; private set; }
 
-    public static Attendance Create(
+    public static Result<Attendance> Create(
         Guid user,
         Guid person,
         bool isAttendance,
         DateOnly date
-    ) => new()
+    )
     {
-        ID = Guid.NewGuid(),
-        UserId = user,
-        PersonId = person,
-        IsAttendance = isAttendance,
-        Date = date
-    };
+        if (date.Year != DateTime.UtcNow.Year)
+            return Result<Attendance>.Failure("Solo se admiten fechas para el año en curso");
+        return Result<Attendance>.Success(new()
+        {
+            ID = Guid.NewGuid(),
+            UserId = user,
+            PersonId = person,
+            IsAttendance = isAttendance,
+            Date = date
+        });
+    }
 }

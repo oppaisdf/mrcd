@@ -24,18 +24,17 @@ internal sealed class AddAttendanceHandler(
         var personIsActive = await _person.ExistsActiveAsync(command.PersonId, cancellationToken);
         if (!personIsActive)
             return Result.Failure("El confirmando no existe o se encuentra inactivo");
-        if (command.Date.Year != DateTime.UtcNow.Year)
-            return Result.Failure("Solo se admiten fechas para el año en curso");
         var attendance = Domain.Attendance.Attendance.Create(
             command.UserId,
             command.PersonId,
             command.IsAttendance,
             command.Date
         );
-        var alreadyExists = await _repo.AlreadyExistsAsync(attendance, cancellationToken);
+        if (!attendance.IsSuccess) return Result.Failure(attendance.Error!);
+        var alreadyExists = await _repo.AlreadyExistsAsync(attendance.Value!, cancellationToken);
         if (alreadyExists)
             return Result.Failure("Ya se ha pasado asistencia a este confirmando");
-        _repo.Add(attendance);
+        _repo.Add(attendance.Value!);
         await _save.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }
