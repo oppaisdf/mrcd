@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Contracts;
@@ -9,13 +9,13 @@ namespace MRCD.Application.BaseEntity.Del;
 internal sealed class DelBaseEntityHandler<TEntity>(
     IBaseEntityRepository<TEntity> repo,
     IPersistenceContext save,
-    ILogger<DelBaseEntityHandler<TEntity>> logs
+    AuditLog<DelBaseEntityHandler<TEntity>> logs
 ) : IBaseCommandHandler<DelBaseEntityCommand, TEntity>
     where TEntity : Domain.Common.BaseEntity
 {
     private readonly IBaseEntityRepository<TEntity> _repo = repo;
     private readonly IPersistenceContext _save = save;
-    private readonly ILogger<DelBaseEntityHandler<TEntity>> _logs = logs;
+    private readonly AuditLog<DelBaseEntityHandler<TEntity>> _logs = logs;
 
     public async Task<Result> HandleAsync(
         DelBaseEntityCommand command,
@@ -26,13 +26,7 @@ internal sealed class DelBaseEntityHandler<TEntity>(
         if (record is null)
             return Result.Failure("El registro no existe");
         _repo.Remove(record);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = command.UserId
-        }))
-        {
-            _logs.LogInformation("Record {record} with ID {id} has been deleted.", record.Name, record.ID);
-        }
+        _logs.Write(command.UserId, "Record {record} with ID {id} has been deleted.", record.Name, record.ID);
         await _save.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }
