@@ -39,6 +39,34 @@ public sealed partial class User
         });
     }
 
+    public Result Update(
+        string? username,
+        string? password,
+        bool? isActive
+    )
+    {
+        if (!IsActive && isActive != true)
+            return Result.Failure("El usuario se encuentra inactivo");
+        var candidate = (User)MemberwiseClone();
+        var changes = new List<Func<Result>>();
+        if (!string.IsNullOrWhiteSpace(username)) changes.Add(() => candidate.SetUsername(username));
+        if (!string.IsNullOrWhiteSpace(password)) changes.Add(() => candidate.SetPassword(password));
+        if (isActive.HasValue) changes.Add(() => candidate.SetActive(isActive.Value));
+        if (changes.Count == 0) return Result.Failure("No se encontraron datos a actualizar");
+
+        foreach (var change in changes)
+        {
+            var result = change();
+            if (!result.IsSuccess) return result;
+        }
+        
+        Username = candidate.Username;
+        Password = candidate.Password;
+        IsActive = candidate.IsActive;
+        LastPasswordUpdate = candidate.LastPasswordUpdate;
+        return Result.Success();
+    }
+
     public Result SetPassword(
         string pass
     )
