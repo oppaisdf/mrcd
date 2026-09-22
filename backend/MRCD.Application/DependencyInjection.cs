@@ -108,6 +108,7 @@ public static class DependencyInjection
         services.AddSingleton<ICommonService, CommonService>();
         services.AddSingleton<IAttendanceService, AttendanceService>();
         services.AddScoped<PermissionService>();
+        services.AddScoped<PermissionCacheInvalidator>();
         return services;
     }
 }
