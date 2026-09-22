@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.AccountingMovement.Contracts;
 using MRCD.Application.AccountingMovement.DTOs;
@@ -8,11 +8,11 @@ namespace MRCD.Application.AccountingMovement.Get;
 
 internal sealed class GetAccountingMovementHandler(
     IAccountingMovementRepository repo,
-    ILogger<GetAccountingMovementHandler> logs
+    AuditLog<GetAccountingMovementHandler> logs
 ) : IQueryHandler<IReadOnlyCollection<AccountingMovementDTO>, GetAccountingMovementQuery>
 {
     private readonly IAccountingMovementRepository _repo = repo;
-    private readonly ILogger<GetAccountingMovementHandler> _logs = logs;
+    private readonly AuditLog<GetAccountingMovementHandler> _logs = logs;
 
     public async Task<Result<IReadOnlyCollection<AccountingMovementDTO>>> HandleAsync(
         GetAccountingMovementQuery query,
@@ -22,13 +22,7 @@ internal sealed class GetAccountingMovementHandler(
         var rawMovements = query.FilterOnlyByYear
             ? await _repo.OnlyByYearToListAsync(query.Date.Year, cancellationToken)
             : await _repo.ByDateToListAsync(query.Date, cancellationToken);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = query.UserId
-        }))
-        {
-            _logs.LogInformation("Accounting movement has been listed in date {date}", query.Date);
-        }
+        _logs.Write(query.UserId, "Accounting movement has been listed in date {date}", query.Date);
 
         var movements = rawMovements
             .Select(m => new
