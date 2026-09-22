@@ -46,19 +46,30 @@ internal sealed class ParentResolver(
         CancellationToken ct
     )
     {
-        if (input is null) return Result<IReadOnlyList<ResolvedParent>>.Failure("La lista de padres es requerida");
+        if (input is null)
+            return Result<IReadOnlyList<ResolvedParent>>.Failure("La lista de padres es requerida");
         var items = input.ToList();
         if (items.Any(p => p is null))
             return Result<IReadOnlyList<ResolvedParent>>.Failure("Los datos de los padres son requeridos");
-        var distinct = items.DistinctBy(p => normalizer.NormalizeString(p.Name)).ToList();
+        
+        var distinct = items
+            .DistinctBy(p => normalizer.NormalizeString(p.Name))
+            .ToList();
         var count = ParentAssignmentRules.ValidateCount(distinct.Count);
-        if (!count.IsSuccess) return Result<IReadOnlyList<ResolvedParent>>.Failure(count.Error!);
+        if (!count.IsSuccess)
+            return Result<IReadOnlyList<ResolvedParent>>.Failure(count.Error!);
         var result = new List<ResolvedParent>();
 
         foreach (var item in distinct)
         {
-            var resolved = await ResolveAsync(item.Name, item.IsMasculine, item.Phone, ct);
-            if (!resolved.IsSuccess) return Result<IReadOnlyList<ResolvedParent>>.Failure(resolved.Error!);
+            var resolved = await ResolveAsync(
+                item.Name,
+                item.IsMasculine,
+                item.Phone,
+                ct
+            );
+            if (!resolved.IsSuccess)
+                return Result<IReadOnlyList<ResolvedParent>>.Failure(resolved.Error!);
             result.Add(resolved.Value!);
         }
         return Result<IReadOnlyList<ResolvedParent>>.Success(result);
