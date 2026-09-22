@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.AccountingMovement.Contracts;
@@ -9,12 +9,12 @@ namespace MRCD.Application.AccountingMovement.Add;
 internal sealed class AddAccountingMovementHandler(
     IAccountingMovementRepository repo,
     IPersistenceContext save,
-    ILogger<AddAccountingMovementHandler> logs
+    AuditLog<AddAccountingMovementHandler> logs
 ) : ICommandHandler<AddAccountingMovementCommand, Guid>
 {
     private readonly IAccountingMovementRepository _repo = repo;
     private readonly IPersistenceContext _save = save;
-    private readonly ILogger<AddAccountingMovementHandler> _logs = logs;
+    private readonly AuditLog<AddAccountingMovementHandler> _logs = logs;
 
     public async Task<Result<Guid>> HandleAsync(
         AddAccountingMovementCommand command,
@@ -26,13 +26,7 @@ internal sealed class AddAccountingMovementHandler(
             return Result<Guid>.Failure(movement.Error!);
         _repo.Add(movement.Value!);
         await _save.SaveChangesAsync(cancellationToken);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = command.UserId
-        }))
-        {
-            _logs.LogInformation("Accounting movement {movement} has been added with ID {id}.", command.Description, movement.Value!.ID);
-        }
+        _logs.Write(command.UserId, "Accounting movement {movement} has been added with ID {id}.", command.Description, movement.Value!.ID);
         return Result<Guid>.Success(movement.Value!.ID);
     }
 }
