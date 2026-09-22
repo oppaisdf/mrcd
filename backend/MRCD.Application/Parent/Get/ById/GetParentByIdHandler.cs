@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Application.Parent.DTOs;
@@ -11,12 +11,12 @@ namespace MRCD.Application.Parent.Get.ById;
 internal sealed class GetParentByIdHandler(
     IParentRepository repo,
     IPersonRepository person,
-    ILogger<GetParentByIdHandler> logs
+    AuditLog<GetParentByIdHandler> logs
 ) : IQueryHandler<ParentDetailsDTO, GetParentByIdQuery>
 {
     private readonly IParentRepository _repo = repo;
     private readonly IPersonRepository _person = person;
-    private readonly ILogger<GetParentByIdHandler> _logs = logs;
+    private readonly AuditLog<GetParentByIdHandler> _logs = logs;
 
     public async Task<Result<ParentDetailsDTO>> HandleAsync(
         GetParentByIdQuery query,
@@ -27,13 +27,7 @@ internal sealed class GetParentByIdHandler(
         if (parent is null)
             return Result<ParentDetailsDTO>.Failure("El padre/padrino no existe");
         var people = await _person.ByPaerentToListAsync(query.ParentId, cancellationToken);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = query.UserId
-        }))
-        {
-            _logs.LogInformation("Parent {parent} with ID {id} has been consulted.", parent.Name, query.ParentId);
-        }
+        _logs.Write(query.UserId, "Parent {parent} with ID {id} has been consulted.", parent.Name, query.ParentId);
         return Result<ParentDetailsDTO>.Success(new(
             parent.Name,
             parent.IsMasculine,
