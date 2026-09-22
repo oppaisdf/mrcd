@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Application.Parent.DTOs;
@@ -11,12 +11,12 @@ namespace MRCD.Application.Person.Get.GeneralList;
 internal sealed class GetGeneralListHandler(
     IPersonRepository person,
     IParentRepository parent,
-    ILogger<GetGeneralListHandler> logs
+    AuditLog<GetGeneralListHandler> logs
 ) : IQueryHandler<IEnumerable<GeneralListDTO>, GetGeneralListQuery>
 {
     private readonly IPersonRepository _person = person;
     private readonly IParentRepository _parent = parent;
-    private readonly ILogger<GetGeneralListHandler> _logs = logs;
+    private readonly AuditLog<GetGeneralListHandler> _logs = logs;
 
     public async Task<Result<IEnumerable<GeneralListDTO>>> HandleAsync(
         GetGeneralListQuery query,
@@ -46,13 +46,7 @@ internal sealed class GetGeneralListHandler(
                 parentsDir.TryGetValue((p.ID, false), out var godparents)
                     ? godparents.Select(p => new SimpleParentDTO(p.ParentName, p.Phone)) : []
             ));
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = query.UserId
-        }))
-        {
-            _logs.LogInformation("General list has been consulted");
-        }
+        _logs.Write(query.UserId, "General list has been consulted");
         return Result<IEnumerable<GeneralListDTO>>.Success(result);
     }
 }
