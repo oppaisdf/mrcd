@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Domain.Common;
@@ -7,11 +7,11 @@ namespace MRCD.Application.Parent.Del;
 
 internal sealed class DelParentHandler(
     IParentRepository repo,
-    ILogger<DelParentHandler> logs
+    AuditLog<DelParentHandler> logs
 ) : ICommandHandler<DelParentCommand>
 {
     private readonly IParentRepository _repo = repo;
-    private readonly ILogger<DelParentHandler> _logs = logs;
+    private readonly AuditLog<DelParentHandler> _logs = logs;
 
     public async Task<Result> HandleAsync(
         DelParentCommand command,
@@ -22,13 +22,7 @@ internal sealed class DelParentHandler(
         if (!exists)
             return Result.Failure("El padre/padrino no existe");
         await _repo.DeleteAsync(command.ParentId, cancellationToken);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = command.UserId
-        }))
-        {
-            _logs.LogInformation("Parent {parent} has been deleted.", command.ParentId);
-        }
+        _logs.Write(command.UserId, "Parent {parent} has been deleted.", command.ParentId);
         return Result.Success();
     }
 }
