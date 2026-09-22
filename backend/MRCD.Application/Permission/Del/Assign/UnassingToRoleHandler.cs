@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Role.Contracts;
 using MRCD.Application.Security;
@@ -9,27 +9,11 @@ namespace MRCD.Application.Permission.Del.Assign;
 
 internal sealed class UnassignToRoleHandler(
     IRolePermissionRepository rolePermission,
-    ILogger<UnassignToRoleHandler> logs,
-    IUserRepository user,
-    IPermissionCache cache
+    AuditLog<UnassignToRoleHandler> logs,
 ) : ICommandHandler<UnassignToRoleCommand>
 {
     private readonly IRolePermissionRepository _rolePermission = rolePermission;
-    private readonly ILogger<UnassignToRoleHandler> _logs = logs;
-    private readonly IUserRepository _user = user;
-    private readonly IPermissionCache _cache = cache;
-
-    private async Task ClearCache(
-        CancellationToken ct
-    )
-    {
-        var users = await _user.ToListAsync(ct);
-        var ids = users
-            .Where(u => u.IsActive)
-            .Select(u => u.ID);
-        foreach (var id in ids)
-            await _cache.InvalidateAsync(id, ct);
-    }
+    private readonly AuditLog<UnassignToRoleHandler> _logs = logs;
 
     public async Task<Result> HandleAsync(
         UnassignToRoleCommand command,
@@ -40,14 +24,7 @@ internal sealed class UnassignToRoleHandler(
         if (!exists)
             return Result.Failure("El permiso asignado al rol no existe");
         await _rolePermission.DeleteAsync(command.RoleId, command.PermissionId, cancellationToken);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = command.UserId
-        }))
-        {
-            _logs.LogInformation("The permission {permission} has been removed from role {role}", command.PermissionId, command.RoleId);
-        }
-        await ClearCache(cancellationToken);
+        _logs.Write(command.UserId, "The permission {permission} has been removed from role {role}", command.PermissionId, command.RoleId);
         return Result.Success();
     }
 }
