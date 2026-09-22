@@ -13,6 +13,8 @@ public sealed class Role : BaseEntity
             return Result<Role>.Failure("El nombre del rol no puede venir vacío");
         if (name.Trim().Length > 3)
             return Result<Role>.Failure("El nombre del rol no puede exceder los tres caracteres");
+        if (!ContactRules.IsName(name.Trim()))
+            return Result<Role>.Failure("El nombre del rol solo puede contener letras");
         return Result<Role>.Success(new()
         {
             ID = Guid.NewGuid(),
