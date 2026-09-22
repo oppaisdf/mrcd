@@ -1,119 +1,60 @@
-using Microsoft.Extensions.Logging;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
+using MRCD.Application.Logs;
+using MRCD.Application.Parent.Services;
 using MRCD.Application.Parent.Contracts;
-using MRCD.Application.Person.Contracts;
-using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.Parent.Add;
 
 internal sealed class AddParentHandler(
-    IParentRepository repo,
-    ICommonService service,
-    IPersonRepository person,
-    IParentPersonRepository parentPerson,
+    ParentResolver parents,
+    IParentRepository repository,
+    ParentAssignments assignments,
     IPersistenceContext save,
-    ILogger<AddParentHandler> logs
+    AuditLog<AddParentHandler> audit
 ) : ICommandHandler<AddParentCommand, Guid>
 {
-    private readonly IParentRepository _repo = repo;
-    private readonly ICommonService _service = service;
-    private readonly IPersonRepository _person = person;
-    private readonly IParentPersonRepository _parentPerson = parentPerson;
-    private readonly IPersistenceContext _save = save;
-    private readonly ILogger<AddParentHandler> _logs = logs;
-
-    private async Task<Result> AssignAsync(
-        Guid parentId,
-        Guid? personId,
-        bool isParent,
-        CancellationToken ct
-    )
-    {
-        if (personId is null) return Result.Success();
-        var existsActive = await _person.ExistsActiveAsync(personId.Value, ct);
-        if (!existsActive)
-            return Result.Failure("El confirmando/ahijado no existe o está inactivo");
-        var exists = await _parentPerson.GetAsync(personId.Value, parentId, isParent, ct);
-        if (exists is not null)
-            return Result.Failure("El padre/padrino ya se ha asignado al confirmando");
-        var parentsCount = await _parentPerson.AssignedCountAsync(personId.Value, isParent, ct);
-        if (parentsCount == 2)
-            return Result.Failure("Ya se ha asignado el máximo de padre/padrinos al confirmando");
-        _parentPerson.Add(new(
-            parentId,
-            personId.Value,
-            isParent
-        ));
-        _logs.LogInformation("Parent {parent} has been assigned to person {person}", parentId, personId.Value);
-        return Result.Success();
-    }
-
-    private async Task<Result<Guid>> CreateAsync(
-        AddParentCommand command,
-        string normalizedName,
-        CancellationToken ct
-    )
-    {
-        if (
-            !string.IsNullOrWhiteSpace(command.Phone)
-            && !_service.HasOnlyNumbers(command.Phone)
-        ) return Result<Guid>.Failure("El número telefónico no es válido");
-
-        var result = Domain.Parent.Parent.Create(
-            command.ParentName,
-            normalizedName,
-            command.IsMasculine,
-            command.Phone
-        );
-        if (!result.IsSuccess)
-            return Result<Guid>.Failure(result.Error!);
-        _repo.Add(result.Value!);
-
-        var resultAssign = await AssignAsync(result.Value!.ID, command.PersonId, command.IsParent, ct);
-        if (!resultAssign.IsSuccess)
-            return Result<Guid>.Failure(resultAssign.Error!);
-
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = command.UserId
-        }))
-        {
-            _logs.LogInformation("Parent {parent} with ID {id} has been created.", command.ParentName, result.Value!.ID);
-        }
-        return Result<Guid>.Success(result.Value!.ID);
-    }
-
     public async Task<Result<Guid>> HandleAsync(
         AddParentCommand command,
         CancellationToken cancellationToken
     )
     {
-        var normalizedName = _service.NormalizeString(command.ParentName);
-        if (!_service.HasOnlyLetters(normalizedName))
-            return Result<Guid>.Failure("El nombre del padre/padrino solo puede contener letras");
-        var currentParent = await _repo.GetByNameAsync(normalizedName, cancellationToken);
+        var result = await parents.ResolveAsync(
+            command.ParentName,
+            command.IsMasculine,
+            command.Phone,
+            cancellationToken
+        );
+        if (!result.IsSuccess) return Result<Guid>.Failure(result.Error!);
 
-        if (currentParent is not null && command.PersonId is null)
+        var parent = result.Value!;
+        if (!parent.IsNew && command.PersonId is null)
             return Result<Guid>.Failure("El nombre del padre/padrino ya se ha registrado");
 
-        Guid id;
-        if (currentParent is null)
+        if (command.PersonId is Guid personId)
         {
-            var resultCreate = await CreateAsync(command, normalizedName, cancellationToken);
-            if (!resultCreate.IsSuccess)
-                return Result<Guid>.Failure(resultCreate.Error!);
-            id = resultCreate.Value;
+            var valid = await assignments.ValidateAsync(
+                personId,
+                parent.Entity.ID,
+                command.IsParent,
+                cancellationToken
+            );
+            if (!valid.IsSuccess) return Result<Guid>.Failure(valid.Error!);
         }
-        else
-        {
-            var resultAssign = await AssignAsync(currentParent.ID, command.PersonId, command.IsParent, cancellationToken);
-            if (!resultAssign.IsSuccess)
-                return Result<Guid>.Failure(resultAssign.Error!);
-            id = currentParent.ID;
-        }
-        await _save.SaveChangesAsync(cancellationToken);
-        return Result<Guid>.Success(id);
+
+        if (parent.IsNew) repository.Add(parent.Entity);
+        if (command.PersonId is Guid targetId)
+            assignments.Add(
+                targetId,
+                parent.Entity.ID,
+                command.IsParent
+            );
+        await save.SaveChangesAsync(cancellationToken);
+        if (parent.IsNew)
+            audit.Write(command.UserId, "Parent {parent} with ID {id} has been created.", parent.Entity.Name, parent.Entity.ID);
+        if (command.PersonId is Guid assignedId)
+            audit.Write(command.UserId, "Parent {parent} has been assigned to person {person}", parent.Entity.ID, assignedId);
+        return Result<Guid>.Success(parent.Entity.ID);
     }
 }
