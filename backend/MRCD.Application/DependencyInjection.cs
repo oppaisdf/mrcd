@@ -1,4 +1,5 @@
 using System.Reflection;
+using MRCD.Application.Logs;
 using Microsoft.Extensions.DependencyInjection;
 using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.Abstracts.Handlers;
@@ -100,6 +101,7 @@ public static class DependencyInjection
         this IServiceCollection services
     )
     {
+        services.AddScoped(typeof(AuditLog<>));
         services.RegisterFactories(typeof(DependencyInjection).Assembly);
         services.RegisterHandlers(typeof(DependencyInjection).Assembly);
         // Services
