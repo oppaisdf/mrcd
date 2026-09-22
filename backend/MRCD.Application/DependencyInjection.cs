@@ -6,10 +6,14 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.BaseEntity.Add;
 using MRCD.Application.BaseEntity.Del;
 using MRCD.Application.BaseEntity.Get;
+using MRCD.Application.BaseEntity.Services;
+using MRCD.Application.Parent.Services;
 using MRCD.Application.Person.Add.Assign;
+using MRCD.Application.Person.Services;
 using MRCD.Application.Security;
 using MRCD.Application.Services.Attendance;
 using MRCD.Application.Services.Common;
+using MRCD.Application.User.Services;
 
 namespace MRCD.Application;
 
@@ -104,6 +108,15 @@ public static class DependencyInjection
         services.AddScoped(typeof(AuditLog<>));
         services.RegisterFactories(typeof(DependencyInjection).Assembly);
         services.RegisterHandlers(typeof(DependencyInjection).Assembly);
+        services.AddScoped(typeof(NamedEntityPreparation<>));
+        services.AddScoped<UserNames>();
+        services.AddScoped<UserRegistration>();
+        services.AddScoped(typeof(PersonEntityAssignments<>));
+        services.AddScoped<PersonFactory>();
+        services.AddScoped<PersonReferences>();
+        services.AddScoped<ParentResolver>();
+        services.AddScoped<ParentAssignments>();
+        services.AddScoped<PersonRegistration>();
         // Services
         services.AddSingleton<ICommonService, CommonService>();
         services.AddSingleton<IAttendanceService, AttendanceService>();
