@@ -76,6 +76,51 @@ public sealed class Person
         });
     }
 
+    // Validate a detached copy so a failed update cannot alter a tracked entity.
+    public Result Update(
+        string? name,
+        string? normalizedName,
+        DateOnly? dob,
+        bool? isActive,
+        bool? isSunday,
+        string? parish,
+        string? address,
+        string? phone,
+        Guid? degreeId
+    )
+    {
+        if (!IsActive && isActive != true)
+            return Result.Failure("Debe activar el confirmando antes de actualizar sus datos");
+        var candidate = (Person)MemberwiseClone();
+        var changes = new List<Func<Result>>();
+        if (isActive.HasValue) changes.Add(() => candidate.SetActive(isActive.Value));
+        if (isSunday.HasValue) changes.Add(() => candidate.SetDay(isSunday.Value));
+        if (degreeId.HasValue) changes.Add(() => candidate.SetDegree(degreeId.Value));
+        if (!string.IsNullOrWhiteSpace(name)) changes.Add(() => candidate.SetName(name, normalizedName!));
+        if (dob.HasValue) changes.Add(() => candidate.SetDOB(dob.Value));
+        if (!string.IsNullOrWhiteSpace(phone)) changes.Add(() => candidate.SetPhone(phone));
+        if (!string.IsNullOrWhiteSpace(address)) changes.Add(() => candidate.SetAddress(address));
+        if (!string.IsNullOrWhiteSpace(parish)) changes.Add(() => candidate.SetParish(parish));
+        if (changes.Count == 0) return Result.Failure("No se han encontrado datos para actualizar");
+
+        foreach (var change in changes)
+        {
+            var result = change();
+            if (!result.IsSuccess) return result;
+        }
+        
+        Name = candidate.Name;
+        NormalizedName = candidate.NormalizedName;
+        DOB = candidate.DOB;
+        IsActive = candidate.IsActive;
+        IsSunday = candidate.IsSunday;
+        Parish = candidate.Parish;
+        Address = candidate.Address;
+        Phone = candidate.Phone;
+        LastDegreeId = candidate.LastDegreeId;
+        return Result.Success();
+    }
+
     public Result SetName(
         string name,
         string normalized
