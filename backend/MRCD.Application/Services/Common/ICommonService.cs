@@ -3,7 +3,7 @@ namespace MRCD.Application.Services.Common;
 public interface ICommonService
 {
     /// <summary>
-    ///  Devuelve cadena normalizada sin espacios, en minúscula y sin números
+    ///  Devuelve cadena normalizada sin espacios ni tildes y en minúscula
     /// </summary>
     /// <param name="text"></param>
     /// <returns>string</returns>
