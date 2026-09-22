@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Application.Parent.DTOs;
@@ -14,7 +14,7 @@ internal sealed class GetPersonByIdHandler(
     IPersonChargeRepository charge,
     IPersonDocumentRepository document,
     IPersonSacramentRepository sacrament,
-    ILogger<GetPersonByIdHandler> logs
+    AuditLog<GetPersonByIdHandler> logs
 ) : IQueryHandler<PersonDTO, GetPersonByIdQuery>
 {
     private readonly IPersonRepository _person = person;
@@ -22,7 +22,7 @@ internal sealed class GetPersonByIdHandler(
     private readonly IPersonChargeRepository _charge = charge;
     private readonly IPersonDocumentRepository _document = document;
     private readonly IPersonSacramentRepository _sacrament = sacrament;
-    private readonly ILogger<GetPersonByIdHandler> _logs = logs;
+    private readonly AuditLog<GetPersonByIdHandler> _logs = logs;
 
     public async Task<Result<PersonDTO>> HandleAsync(
         GetPersonByIdQuery query,
@@ -53,13 +53,7 @@ internal sealed class GetPersonByIdHandler(
             documents,
             sacraments
         );
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = query.UserId
-        }))
-        {
-            _logs.LogInformation("Person {person} with ID {id} has been consulted.", person.Name, person.ID);
-        }
+        _logs.Write(query.UserId, "Person {person} with ID {id} has been consulted.", person.Name, person.ID);
         return Result<PersonDTO>.Success(response);
     }
 }
