@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using MRCD.Application.Logs;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Attendance.Contracts;
 using MRCD.Application.Person.Contracts;
@@ -9,12 +9,12 @@ namespace MRCD.Application.Attendance.Del;
 internal sealed class DelAttendanceHandler(
     IAttendanceRepository repo,
     IPersonRepository person,
-    ILogger<DelAttendanceHandler> logs
+    AuditLog<DelAttendanceHandler> logs
 ) : ICommandHandler<DelAttendanceCommand>
 {
     private readonly IAttendanceRepository _repo = repo;
     private readonly IPersonRepository _person = person;
-    private readonly ILogger<DelAttendanceHandler> _logs = logs;
+    private readonly AuditLog<DelAttendanceHandler> _logs = logs;
 
     public async Task<Result> HandleAsync(
         DelAttendanceCommand command,
@@ -28,13 +28,7 @@ internal sealed class DelAttendanceHandler(
         if (!exists)
             return Result.Failure($"No se ha pasado asistencia a este confirmando en la fecha {command.Date:dd/MM/yyyy}");
         await _repo.DeleteAsync(command.PersonId, command.Date, cancellationToken);
-        using (_logs.BeginScope(new Dictionary<string, object>
-        {
-            ["UserId"] = command.UserId
-        }))
-        {
-            _logs.LogInformation("Attendance {date} has been deleted to person {person}.", command.Date, command.PersonId);
-        }
+        _logs.Write(command.UserId, "Attendance {date} has been deleted to person {person}.", command.Date, command.PersonId);
         return Result.Success();
     }
 }
