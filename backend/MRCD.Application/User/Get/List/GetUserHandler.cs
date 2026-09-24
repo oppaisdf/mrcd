@@ -13,17 +13,13 @@ internal sealed class GetUserHandler(
     IUserRoleRepository userRole
 ) : IQueryHandler<IEnumerable<UserDTO>>
 {
-    private readonly IUserRepository _user = user;
-    private readonly IRoleRepository _role = role;
-    private readonly IUserRoleRepository _userRole = userRole;
-
     public async Task<Result<IEnumerable<UserDTO>>> HandleAsync(
         CancellationToken cancellationToken
     )
     {
-        var users = await _user.ToListAsync(cancellationToken);
-        var roles = await _role.ToListAsync(cancellationToken);
-        var userRoles = await _userRole.ToListAsync(cancellationToken);
+        var users = await user.ToListAsync(cancellationToken);
+        var roles = await role.ToListAsync(cancellationToken);
+        var userRoles = await userRole.ToListAsync(cancellationToken);
 
         var assigned = userRoles
             .Select(ur => (ur.UserID, ur.RoleID))
