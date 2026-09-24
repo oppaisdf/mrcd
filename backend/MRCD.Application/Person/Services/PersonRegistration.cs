@@ -19,7 +19,7 @@ internal sealed class PersonRegistration(
         CancellationToken ct
     )
     {
-        if (ids is null) return Result<IReadOnlyList<Guid>>.Failure("La lista de sacramentos es requerida");
+        if (ids is null) return Result<IReadOnlyList<Guid>>.Success([]);
         var available = await sacraments.ToListAsync(ct);
         // Preserve the existing API behavior: unknown IDs are ignored.
         return Result<IReadOnlyList<Guid>>.Success([.. ids.Intersect(available.Select(s => s.ID))]);
@@ -38,6 +38,9 @@ internal sealed class PersonRegistration(
             assignments.Add(person.ID, parent.Entity.ID, true);
         }
 
-        links.AddRange(sacramentIds.Select(id => new Domain.Person.PersonSacrament(person.ID, id)));
+        if (sacramentIds.Count == 0) return;
+        links.AddRange(
+            sacramentIds.Select(id => new Domain.Person.PersonSacrament(person.ID, id))
+        );
     }
 }
