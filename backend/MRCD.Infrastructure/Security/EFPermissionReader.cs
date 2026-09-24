@@ -7,17 +7,15 @@ internal sealed class EFPermmissionReader(
     Persistence.AppContext app
 ) : IPermissionReader
 {
-    private readonly Persistence.AppContext _app = app;
-
     public async Task<PermissionSet> GetEffectivePermissionsAsync(
         Guid userId,
         CancellationToken cancellationToken
     )
     {
         var permissions = await (
-            from ur in _app.UserRoles
-            join rp in _app.RolesPermissions on ur.RoleID equals rp.RoleID
-            join p in _app.Permissions on rp.PermissionID equals p.ID
+            from ur in app.UserRoles
+            join rp in app.RolesPermissions on ur.RoleID equals rp.RoleID
+            join p in app.Permissions on rp.PermissionID equals p.ID
             where
                 ur.UserID == userId
             select p.Name
