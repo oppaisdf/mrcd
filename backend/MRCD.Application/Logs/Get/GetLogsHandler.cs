@@ -12,22 +12,26 @@ internal sealed class GetLogsHandler(
     IUserRepository user
 ) : IQueryHandler<Pagination<LogDTO>, GetLogsQuery>
 {
-    private readonly ILogRepository _repo = repo;
-    private readonly IUserRepository _user = user;
-
     public async Task<Result<Pagination<LogDTO>>> HandleAsync(
         GetLogsQuery query,
         CancellationToken cancellationToken
-    ) {
-        var rawLogs = await _repo.ToListAsync(
+    )
+    {
+        var rawLogs = await repo.ToListAsync(
             query.Size > 100 ? (ushort)100 : query.Size,
             query.Page,
             cancellationToken
         );
-        var usersDir = (await _user.ToListAsync(cancellationToken))
+        var usersDir = (await user.ToListAsync(cancellationToken))
             .ToDictionary(k => k.ID.ToString(), k => k.Username);
-        var logs = rawLogs with {
-            Items = rawLogs.Items.Select(l => l with {Username = usersDir.TryGetValue(l.Username, out var username) ? username : "unknown"})
+        var logs = rawLogs with
+        {
+            Items = rawLogs.Items.Select(l => l with
+            {
+                Username = usersDir.TryGetValue(l.Username, out var username)
+                    ? username
+                    : "unknown"
+            })
         };
         return Result<Pagination<LogDTO>>.Success(logs);
     }
