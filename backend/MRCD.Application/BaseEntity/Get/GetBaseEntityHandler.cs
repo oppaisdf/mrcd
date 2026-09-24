@@ -9,11 +9,9 @@ internal sealed class GetBaseEntityHandler<TEntity>(
 ) : IBaseQueryHandler<TEntity>
     where TEntity : Domain.Common.BaseEntity
 {
-    private readonly IBaseEntityRepository<TEntity> _repo = repo;
-
     public Task<Result<IEnumerable<TEntity>>> HandleAsync(
         CancellationToken cancellationToken
-    ) => _repo
+    ) => repo
         .ToListAsync(cancellationToken)
         .ContinueWith(r =>
             Result<IEnumerable<TEntity>>.Success(r.Result),
