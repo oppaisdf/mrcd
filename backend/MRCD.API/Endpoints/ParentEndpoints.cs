@@ -145,7 +145,7 @@ internal static class ParentEndpoints
         .ProducesProblem(StatusCodes.Status404NotFound)
         .RequireAuthorization("perm:Parent.Delete");
 
-        app.MapDelete("/person/{personId}/parent/{parentId}/type/{isParent}", async (
+        app.MapDelete("/{parentId}/person/{personId}/type/{isParent}", async (
             Guid personId,
             Guid parentId,
             bool isParent,
