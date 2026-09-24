@@ -10,9 +10,6 @@ internal sealed class AddPermissionHandler(
     IPersistenceContext save
 ) : ICommandHandler<AddPermissionCommand, Guid>
 {
-    private readonly IPermissionRepository _repo = repo;
-    private readonly IPersistenceContext _save = save;
-
     public async Task<Result<Guid>> HandleAsync(
         AddPermissionCommand command,
         CancellationToken cancellationToken
@@ -20,11 +17,11 @@ internal sealed class AddPermissionHandler(
     {
         var permission = Domain.Role.Permission.Create(command.PermissionName);
         if (!permission.IsSuccess) return Result<Guid>.Failure(permission.Error!);
-        var alreadyExists = await _repo.AlreadyExistsAsync(command.PermissionName.Trim(), cancellationToken);
+        var alreadyExists = await repo.AlreadyExistsAsync(command.PermissionName.Trim(), cancellationToken);
         if (alreadyExists)
             return Result<Guid>.Failure("El nombre del permiso ya existe");
-        _repo.Add(permission.Value!);
-        await _save.SaveChangesAsync(cancellationToken);
+        repo.Add(permission.Value!);
+        await save.SaveChangesAsync(cancellationToken);
         return Result<Guid>.Success(permission.Value!.ID);
     }
 }
