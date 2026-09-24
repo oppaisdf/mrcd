@@ -14,20 +14,16 @@ internal sealed class GetParentByIdHandler(
     AuditLog<GetParentByIdHandler> logs
 ) : IQueryHandler<ParentDetailsDTO, GetParentByIdQuery>
 {
-    private readonly IParentRepository _repo = repo;
-    private readonly IPersonRepository _person = person;
-    private readonly AuditLog<GetParentByIdHandler> _logs = logs;
-
     public async Task<Result<ParentDetailsDTO>> HandleAsync(
         GetParentByIdQuery query,
         CancellationToken cancellationToken
     )
     {
-        var parent = await _repo.GetByIdAsync(query.ParentId, cancellationToken);
+        var parent = await repo.GetByIdAsync(query.ParentId, cancellationToken);
         if (parent is null)
             return Result<ParentDetailsDTO>.Failure("El padre/padrino no existe");
-        var people = await _person.ByPaerentToListAsync(query.ParentId, cancellationToken);
-        _logs.Write(query.UserId, "Parent {parent} with ID {id} has been consulted.", parent.Name, query.ParentId);
+        var people = await person.ByPaerentToListAsync(query.ParentId, cancellationToken);
+        logs.Write(query.UserId, "Parent {parent} with ID {id} has been consulted.", parent.Name, query.ParentId);
         return Result<ParentDetailsDTO>.Success(new(
             parent.Name,
             parent.IsMasculine,
