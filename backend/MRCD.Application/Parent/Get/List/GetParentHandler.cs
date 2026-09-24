@@ -11,8 +11,6 @@ internal sealed class GetParentHandler(
     IParentRepository repo
 ) : IQueryHandler<Pagination<ParentDTO>, GetParentQuery>
 {
-    private readonly IParentRepository _repo = repo;
-
     public async Task<Result<Pagination<ParentDTO>>> HandleAsync(
         GetParentQuery query,
         CancellationToken cancellationToken
@@ -25,7 +23,7 @@ internal sealed class GetParentHandler(
         ) return Result<Pagination<ParentDTO>>.Failure("El nombre del padre es inválido");
 
         var parents = query.Alert is null || query.Alert != Alert.Common.AlertType.ParentsLonely
-            ? await _repo
+            ? await repo
                 .ToListAsync(
                     page,
                     size,
@@ -34,7 +32,7 @@ internal sealed class GetParentHandler(
                         : StringNormalizer.NormalizeString(query.ParentName),
                     cancellationToken
                 )
-            : await _repo.NoChildrenToListAsync(
+            : await repo.NoChildrenToListAsync(
                 page,
                 size,
                 cancellationToken
