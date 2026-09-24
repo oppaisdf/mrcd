@@ -14,11 +14,6 @@ internal sealed class PersonEntityAssignments<TEntity>(
 )
     where TEntity : Domain.Common.BaseEntity
 {
-    private readonly IPersonChargeRepository _charge = charge;
-    private readonly IPersonDocumentRepository _document = document;
-    private readonly IPersonSacramentRepository _sacrament = sacrament;
-    private readonly IBaseEntityRepository<TEntity> _entity = entity;
-
     private static bool Matches(BaseEntityType entity) => entity switch
     {
         BaseEntityType.Charge => typeof(TEntity) == typeof(Domain.Charge.Charge),
@@ -33,7 +28,7 @@ internal sealed class PersonEntityAssignments<TEntity>(
     )
     {
         if (!Matches(command.Entity)) return Result.Failure("El tipo de entidad no es válido para esta asociación");
-        var existsId = await _entity.GetByIdAsync(command.EntityId, ct) is not null;
+        var existsId = await entity.GetByIdAsync(command.EntityId, ct) is not null;
         var entityName = command.Entity switch
         {
             BaseEntityType.Charge => "cobro",
@@ -48,19 +43,19 @@ internal sealed class PersonEntityAssignments<TEntity>(
         switch (command.Entity)
         {
             case BaseEntityType.Charge:
-                if (await _charge.GetAsync(command.PersonId, command.EntityId, ct) is not null)
+                if (await charge.GetAsync(command.PersonId, command.EntityId, ct) is not null)
                     return Result.Failure(assignedError);
-                _charge.Add(new(command.PersonId, command.EntityId));
+                charge.Add(new(command.PersonId, command.EntityId));
                 break;
             case BaseEntityType.Document:
-                if (await _document.GetAsync(command.PersonId, command.EntityId, ct) is not null)
+                if (await document.GetAsync(command.PersonId, command.EntityId, ct) is not null)
                     return Result.Failure(assignedError);
-                _document.Add(new(command.PersonId, command.EntityId));
+                document.Add(new(command.PersonId, command.EntityId));
                 break;
             case BaseEntityType.Sacrament:
-                if (await _sacrament.GetAsync(command.PersonId, command.EntityId, ct) is not null)
+                if (await sacrament.GetAsync(command.PersonId, command.EntityId, ct) is not null)
                     return Result.Failure(assignedError);
-                _sacrament.Add(new(command.PersonId, command.EntityId));
+                sacrament.Add(new(command.PersonId, command.EntityId));
                 break;
             default:
                 return Result.Failure("El tipo de entidad no es válido para esta asociación");
@@ -86,19 +81,19 @@ internal sealed class PersonEntityAssignments<TEntity>(
         switch (command.Entity)
         {
             case BaseEntityType.Charge:
-                var charge = await _charge.GetAsync(command.PersonId, command.EntityId, ct);
-                if (charge is null) return Result.Failure(existsError);
-                _charge.Remove(charge);
+                var chg = await charge.GetAsync(command.PersonId, command.EntityId, ct);
+                if (chg is null) return Result.Failure(existsError);
+                charge.Remove(chg);
                 break;
             case BaseEntityType.Document:
-                var document = await _document.GetAsync(command.PersonId, command.EntityId, ct);
-                if (document is null) return Result.Failure(existsError);
-                _document.Remove(document);
+                var doc = await document.GetAsync(command.PersonId, command.EntityId, ct);
+                if (doc is null) return Result.Failure(existsError);
+                document.Remove(doc);
                 break;
             case BaseEntityType.Sacrament:
-                var sacrament = await _sacrament.GetAsync(command.PersonId, command.EntityId, ct);
-                if (sacrament is null) return Result.Failure(existsError);
-                _sacrament.Remove(sacrament);
+                var sac = await sacrament.GetAsync(command.PersonId, command.EntityId, ct);
+                if (sac is null) return Result.Failure(existsError);
+                sacrament.Remove(sac);
                 break;
             default:
                 return Result.Failure("El tipo de entidad no es válido para esta asociación");
