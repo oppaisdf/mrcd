@@ -7,14 +7,12 @@ internal sealed class AlertRepository(
     Persistence.AppContext app
 ) : IAlertRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public Task<int> ParentsLonelyCountAsync(
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Parents
         .GroupJoin(
-            _app.ParentsPersons,
+            app.ParentsPersons,
             p => p.ID,
             pp => pp.ParentId,
             (p, pp) => new
@@ -29,10 +27,10 @@ internal sealed class AlertRepository(
         CancellationToken cancellationToken
     )
     {
-        var totalCharges = await _app.Charges.CountAsync(cancellationToken);
-        return await _app.People
+        var totalCharges = await app.Charges.CountAsync(cancellationToken);
+        return await app.People
             .GroupJoin(
-                _app.PersonCharges,
+                app.PersonCharges,
                 p => p.ID,
                 pc => pc.PersonId,
                 (p, pc) => new
@@ -49,10 +47,10 @@ internal sealed class AlertRepository(
         CancellationToken cancellationToken
     )
     {
-        var documentsCount = await _app.Documents.CountAsync(cancellationToken);
-        return await _app.People
+        var documentsCount = await app.Documents.CountAsync(cancellationToken);
+        return await app.People
             .GroupJoin(
-                _app.PersonDocuments,
+                app.PersonDocuments,
                 p => p.ID,
                 pd => pd.PersonId,
                 (p, pd) => new
@@ -67,9 +65,9 @@ internal sealed class AlertRepository(
 
     public Task<int> WithoutGodparentsCountAsync(
         CancellationToken cancellationToken
-    ) => _app.People
+    ) => app.People
         .GroupJoin(
-            _app.ParentsPersons,
+            app.ParentsPersons,
             p => p.ID,
             pp => pp.PersonId,
             (p, pp) => new
