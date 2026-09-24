@@ -13,22 +13,18 @@ internal sealed class GetConsecutiveFoulsHandler(
     IAttendanceService service
 ) : IQueryHandler<IReadOnlyCollection<AttendanceDTO>, GetConsecutiveFoulsQuery>
 {
-    private readonly IAttendanceRepository _repo = repo;
-    private readonly IPersonRepository _person = person;
-    private readonly IAttendanceService _service = service;
-
     public async Task<Result<IReadOnlyCollection<AttendanceDTO>>> HandleAsync(
         GetConsecutiveFoulsQuery query,
         CancellationToken cancellationToken
     )
     {
-        var attendances = await _repo.ToListAsync(
+        var attendances = await repo.ToListAsync(
             DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6)),
             filteredOnlyByYear: true,
             cancellationToken
         );
-        var activePeople = await _person.OnlyActiveToListAsync(cancellationToken);
-        var results = _service.GetAlertAttendances(
+        var activePeople = await person.OnlyActiveToListAsync(cancellationToken);
+        var results = service.GetAlertAttendances(
             activePeople,
             attendances,
             query.ConsecutiveWeeksCount
