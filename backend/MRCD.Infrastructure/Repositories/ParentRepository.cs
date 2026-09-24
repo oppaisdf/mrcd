@@ -10,18 +10,16 @@ internal sealed class ParentRepository(
     Persistence.AppContext app
 ) : IParentRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         Parent parent
-    ) => _app
+    ) => app
         .Parents
         .Add(parent);
 
     public Task<bool> AlreadyExists(
         string normalizedParentName,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Parents
         .AnyAsync(p => p.NormalizedName.Equals(normalizedParentName), cancellationToken);
 
@@ -29,8 +27,8 @@ internal sealed class ParentRepository(
         Guid personId,
         CancellationToken cancellationToken
     ) => (
-        from p in _app.Parents
-        join pp in _app.ParentsPersons on p.ID equals pp.ParentId
+        from p in app.Parents
+        join pp in app.ParentsPersons on p.ID equals pp.ParentId
         where
             pp.PersonId == personId
         select new ParentByPersonDTO(
@@ -46,7 +44,7 @@ internal sealed class ParentRepository(
     public Task DeleteAsync(
         Guid parentId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Parents
         .Where(p => p.ID == parentId)
         .ExecuteDeleteAsync(cancellationToken);
@@ -54,16 +52,16 @@ internal sealed class ParentRepository(
     public Task<bool> ExistsAsync(
         Guid parentId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Parents
         .AnyAsync(p => p.ID == parentId, cancellationToken);
 
     public Task<List<ParentByPersonDTO>> FilteredByActivePersonToListAsync(
         CancellationToken cancellationToken
     ) => (
-        from person in _app.People
-        join pp in _app.ParentsPersons on person.ID equals pp.PersonId
-        join parent in _app.Parents on pp.ParentId equals parent.ID
+        from person in app.People
+        join pp in app.ParentsPersons on person.ID equals pp.PersonId
+        join parent in app.Parents on pp.ParentId equals parent.ID
         where
             person.IsActive
         select new ParentByPersonDTO(
@@ -79,7 +77,7 @@ internal sealed class ParentRepository(
     public Task<Parent?> GetByIdAsync(
         Guid parentId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Parents
         .AsNoTracking()
         .SingleOrDefaultAsync(p => p.ID == parentId, cancellationToken);
@@ -87,7 +85,7 @@ internal sealed class ParentRepository(
     public Task<Parent?> GetByNameAsync(
         string normalizedName,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Parents
         .SingleOrDefaultAsync(p =>
             p.NormalizedName.Equals(normalizedName),
@@ -100,10 +98,10 @@ internal sealed class ParentRepository(
         CancellationToken cancellationToken
     )
     {
-        var query = _app
+        var query = app
             .Parents
             .GroupJoin(
-                _app.ParentsPersons,
+                app.ParentsPersons,
                 p => p.ID,
                 pp => pp.ParentId,
                 (p, pp) => new
@@ -141,7 +139,7 @@ internal sealed class ParentRepository(
         CancellationToken cancellationToken
     )
     {
-        var query = _app
+        var query = app
             .Parents
             .AsNoTracking()
             .AsQueryable();
