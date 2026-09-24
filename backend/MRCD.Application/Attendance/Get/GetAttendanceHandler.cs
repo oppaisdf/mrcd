@@ -14,10 +14,6 @@ internal sealed class GetAttendaceHandler(
     IAttendanceService service
 ) : IQueryHandler<IEnumerable<AttendanceDTO>, GetAttendanceQuery>
 {
-    private readonly IAttendanceRepository _repo = repo;
-    private readonly IPersonRepository _person = person;
-    private readonly IAttendanceService _service = service;
-
     public async Task<Result<IEnumerable<AttendanceDTO>>> HandleAsync(
         GetAttendanceQuery query,
         CancellationToken cancellationToken
@@ -27,13 +23,13 @@ internal sealed class GetAttendaceHandler(
             ? null
             : StringNormalizer.NormalizeString(query.PersonName);
 
-        var attendances = await _repo.ToListAsync(
+        var attendances = await repo.ToListAsync(
             query.Date,
             query.FilteredOnlyByYear,
             cancellationToken
         );
 
-        var rawPeople = await _person.OnlyActiveToListAsync(cancellationToken);
+        var rawPeople = await person.OnlyActiveToListAsync(cancellationToken);
         var people = rawPeople
             .Where(p =>
                 (query.IsSunday is null || query.IsSunday == p.IsSunday)
@@ -42,7 +38,7 @@ internal sealed class GetAttendaceHandler(
             )
             .ToList();
 
-        return Result<IEnumerable<AttendanceDTO>>.Success(_service.GetConsumibleAttendances(
+        return Result<IEnumerable<AttendanceDTO>>.Success(service.GetConsumibleAttendances(
             people,
             attendances
         )
