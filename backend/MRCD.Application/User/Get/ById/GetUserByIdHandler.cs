@@ -8,23 +8,19 @@ using MRCD.Domain.Common;
 namespace MRCD.Application.User.Get.ById;
 
 internal sealed class GetUserByIdHandler(
-    IUserRepository user,
+    IUserRepository userRepo,
     IRoleRepository role,
     IUserRoleRepository userRole
 ) : IQueryHandler<UserDTO, GetUserByIdQuery>
 {
-    private readonly IUserRepository _user = user;
-    private readonly IRoleRepository _role = role;
-    private readonly IUserRoleRepository _userRole = userRole;
-
     public async Task<Result<UserDTO>> HandleAsync(
         GetUserByIdQuery query,
         CancellationToken cancellationToken
     )
     {
-        var user = await _user.GetByIdAsync(query.Id, cancellationToken);
-        var roles = await _role.ToListAsync(cancellationToken);
-        var userRoles = await _userRole.RolesByUserIdToListAsync(query.Id, cancellationToken);
+        var user = await userRepo.GetByIdAsync(query.Id, cancellationToken);
+        var roles = await role.ToListAsync(cancellationToken);
+        var userRoles = await userRole.RolesByUserIdToListAsync(query.Id, cancellationToken);
 
         var assigned = userRoles
             .Select(ur => ur.RoleID)
