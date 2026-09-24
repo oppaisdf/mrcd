@@ -10,15 +10,13 @@ internal sealed class TokenService(
     TokenOptions options
 ) : ITokenService
 {
-    private readonly TokenOptions _options = options;
-
     public TokenDTO Create(
         Guid subject,
         IEnumerable<string> roles
     )
     {
         var now = DateTimeOffset.UtcNow;
-        var expires = now.AddMinutes(_options.LifetimeMinutes);
+        var expires = now.AddMinutes(options.LifetimeMinutes);
 
         var claims = new List<Claim>
         {
@@ -31,13 +29,13 @@ internal sealed class TokenService(
         foreach (var role in roles.Distinct(StringComparer.OrdinalIgnoreCase))
             claims.Add(new Claim(ClaimTypes.Role, role));
 
-        var keyBytes = Encoding.UTF8.GetBytes(_options.SigningKey);
+        var keyBytes = Encoding.UTF8.GetBytes(options.SigningKey);
         var signingKey = new SymmetricSecurityKey(keyBytes);
         var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _options.Issuer,
-            audience: _options.Audience,
+            issuer: options.Issuer,
+            audience: options.Audience,
             claims: claims,
             notBefore: now.UtcDateTime,
             expires: expires.UtcDateTime,
