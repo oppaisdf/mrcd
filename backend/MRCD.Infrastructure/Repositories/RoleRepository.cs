@@ -8,16 +8,14 @@ internal sealed class RoleRepository(
     Persistence.AppContext app
 ) : IRoleRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         Role role
-    ) => _app.Roles.Add(role);
+    ) => app.Roles.Add(role);
 
     public Task<bool> AlreadyExistsAsync(
         string name,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Roles
         .AnyAsync(r => r.Name == name, cancellationToken);
 
@@ -25,8 +23,8 @@ internal sealed class RoleRepository(
         Guid userId,
         CancellationToken cancellationToken
     ) => (
-        from r in _app.Roles
-        join ur in _app.UserRoles on r.ID equals ur.RoleID
+        from r in app.Roles
+        join ur in app.UserRoles on r.ID equals ur.RoleID
         where
             ur.UserID == userId
         select r
@@ -35,19 +33,19 @@ internal sealed class RoleRepository(
     public Task<Role?> GetByIdAsync(
         Guid roleId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Roles
         .SingleOrDefaultAsync(r => r.ID == roleId, cancellationToken);
 
     public Task<bool> IdExistsAsync(
         Guid id,
         CancellationToken cancellationToken
-    ) => _app.Roles
+    ) => app.Roles
         .AnyAsync(r => r.ID == id, cancellationToken);
 
     public Task<List<Role>> ToListAsync(
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Roles
         .AsNoTracking()
         .ToListAsync(cancellationToken);
