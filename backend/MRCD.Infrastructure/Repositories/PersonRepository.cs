@@ -1,4 +1,3 @@
-using System.Runtime.Intrinsics.Arm;
 using Microsoft.EntityFrameworkCore;
 using MRCD.Application.Common;
 using MRCD.Application.Person.Contracts;
@@ -11,8 +10,6 @@ internal sealed class PersonRepository(
     Persistence.AppContext app
 ) : IPersonRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     private static async Task<Pagination<SimplePersonDTO>> GetPaginatedPeopleAsync(
         IQueryable<Person> query,
         int page,
@@ -43,7 +40,7 @@ internal sealed class PersonRepository(
 
     public void Add(
         Person person
-    ) => _app
+    ) => app
         .People
         .Add(person);
 
@@ -51,7 +48,7 @@ internal sealed class PersonRepository(
         string normalizedName,
         Guid personId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .People
         .AnyAsync(p =>
             p.NormalizedName.Equals(normalizedName)
@@ -62,7 +59,7 @@ internal sealed class PersonRepository(
     public Task<bool> AlreadyExistsNameAsync(
         string normalizedName,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .People
         .AnyAsync(p =>
             p.NormalizedName.Equals(normalizedName),
@@ -73,8 +70,8 @@ internal sealed class PersonRepository(
         Guid parentId,
         CancellationToken cancellationToken
     ) => (
-        from p in _app.People
-        join pp in _app.ParentsPersons on p.ID equals pp.PersonId
+        from p in app.People
+        join pp in app.ParentsPersons on p.ID equals pp.PersonId
         where
             pp.ParentId == parentId
         orderby p.Name
@@ -88,7 +85,7 @@ internal sealed class PersonRepository(
     public Task<bool> ExistsActiveAsync(
         Guid personId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .People
         .AnyAsync(p =>
             p.ID == personId
@@ -99,7 +96,7 @@ internal sealed class PersonRepository(
     public Task<Person?> GetByIdAsync(
         Guid personId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .People
         .SingleOrDefaultAsync(p =>
             p.ID == personId,
@@ -108,7 +105,7 @@ internal sealed class PersonRepository(
 
     public Task<List<Person>> OnlyActiveToListAsync(
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .People
         .AsNoTracking()
         .Where(p => p.IsActive)
@@ -124,13 +121,13 @@ internal sealed class PersonRepository(
         CancellationToken cancellationToken
     )
     {
-        var query = _app.People
+        var query = app.People
             .AsNoTracking()
             .AsQueryable()
             .Where(p =>
                 p.IsActive
-                && _app.Charges.Any(c =>
-                    !_app.PersonCharges.Any(pc =>
+                && app.Charges.Any(c =>
+                    !app.PersonCharges.Any(pc =>
                         pc.PersonId == p.ID
                         && pc.ChargeId == c.ID
                     )
@@ -156,13 +153,13 @@ internal sealed class PersonRepository(
         CancellationToken cancellationToken
     )
     {
-        var query = _app.People
+        var query = app.People
             .AsNoTracking()
             .AsQueryable()
             .Where(p =>
                 p.IsActive
-                && _app.Documents.Any(d =>
-                    !_app.PersonDocuments.Any(pd =>
+                && app.Documents.Any(d =>
+                    !app.PersonDocuments.Any(pd =>
                         pd.PersonId == p.ID
                         && pd.DocumentId == d.ID
                     )
@@ -188,12 +185,12 @@ internal sealed class PersonRepository(
         CancellationToken cancellationToken
     )
     {
-        var query = _app.People
+        var query = app.People
             .AsNoTracking()
             .AsQueryable()
             .Where(p =>
                 p.IsActive
-                && !_app.ParentsPersons.Any(pp =>
+                && !app.ParentsPersons.Any(pp =>
                     pp.ParentId == p.ID
                     && !pp.IsParent
                 )
@@ -219,7 +216,7 @@ internal sealed class PersonRepository(
         CancellationToken cancellationToken
     )
     {
-        var query = _app.People.AsNoTracking().AsQueryable();
+        var query = app.People.AsNoTracking().AsQueryable();
         query = query.Where(p => p.IsActive == isActive);
         return await GetPaginatedPeopleAsync(
             query,
