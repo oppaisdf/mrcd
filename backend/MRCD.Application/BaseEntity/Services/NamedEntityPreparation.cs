@@ -1,5 +1,6 @@
 using MRCD.Application.Abstracts.Factories;
 using MRCD.Application.BaseEntity.Contracts;
+using MRCD.Application.Services;
 using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 
@@ -18,7 +19,7 @@ internal sealed class NamedEntityPreparation<TEntity>(
     )
     {
         var normalized = normalizer.NormalizeString(name);
-        if (!normalizer.HasOnlyLetters(normalized))
+        if (!StringValidator.HasOnlyLetters(normalized))
             return Result<TEntity>.Failure("El nombre solo debe contener letras");
         var created = factory.Create(name.Trim());
         if (!created.IsSuccess) return created;
