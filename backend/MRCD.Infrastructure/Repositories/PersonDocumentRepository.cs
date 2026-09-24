@@ -9,11 +9,9 @@ internal sealed class PersonDocumentRepository(
     Persistence.AppContext app
 ) : IPersonDocumentRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         PersonDocument personDocument
-    ) => _app
+    ) => app
         .PersonDocuments
         .Add(personDocument);
 
@@ -21,8 +19,8 @@ internal sealed class PersonDocumentRepository(
         Guid personId,
         CancellationToken cancellationToken
     ) => (
-        from d in _app.Documents
-        join dp in _app
+        from d in app.Documents
+        join dp in app
             .PersonDocuments
             .Where(p => p.PersonId == personId)
             on d.ID equals dp.DocumentId into pds
@@ -37,7 +35,7 @@ internal sealed class PersonDocumentRepository(
         Guid personId,
         Guid documentId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .PersonDocuments
         .SingleOrDefaultAsync(pd =>
             pd.PersonId == personId
@@ -47,7 +45,7 @@ internal sealed class PersonDocumentRepository(
 
     public void Remove(
         PersonDocument personDocument
-    ) => _app
+    ) => app
         .PersonDocuments
         .Remove(personDocument);
 }
