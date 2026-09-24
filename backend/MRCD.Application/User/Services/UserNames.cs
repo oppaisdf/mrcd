@@ -1,11 +1,10 @@
-using MRCD.Application.Services.Common;
+using MRCD.Application.Services;
 using MRCD.Application.User.Contracts;
 
 namespace MRCD.Application.User.Services;
 
 internal sealed class UserNames(
-    IUserRepository users,
-    ICommonService normalizer
+    IUserRepository users
 )
 {
     public async Task<bool> ExistsAsync(
@@ -14,11 +13,11 @@ internal sealed class UserNames(
         CancellationToken ct
     )
     {
-        var normalized = normalizer.NormalizeString(username);
+        var normalized = StringNormalizer.NormalizeString(username);
         var existing = await users.ToListAsync(ct);
         return existing.Any(u =>
             u.ID != exceptId
-            && normalizer.NormalizeString(u.Username) == normalized
+            && StringNormalizer.NormalizeString(u.Username) == normalized
         );
     }
 }
