@@ -3,14 +3,13 @@ using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Logs;
 using MRCD.Application.Person.Contracts;
 using MRCD.Application.Person.Services;
-using MRCD.Application.Services.Common;
+using MRCD.Application.Services;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.Person.Update;
 
 internal sealed class UpdatePersonHandler(
     IPersonRepository people,
-    ICommonService normalizer,
     PersonReferences references,
     IPersistenceContext save,
     AuditLog<UpdatePersonHandler> audit
@@ -25,7 +24,7 @@ internal sealed class UpdatePersonHandler(
         if (person is null) return Result.Failure("El confirmando no existe :0");
         var normalizedName = string.IsNullOrWhiteSpace(command.Name)
             ? null
-            : normalizer.NormalizeString(command.Name);
+            : StringNormalizer.NormalizeString(command.Name);
         var valid = await references.ValidateAsync(
             normalizedName,
             command.LastDegreeId,
