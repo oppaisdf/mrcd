@@ -10,19 +10,16 @@ internal sealed class DelParentHandler(
     AuditLog<DelParentHandler> logs
 ) : ICommandHandler<DelParentCommand>
 {
-    private readonly IParentRepository _repo = repo;
-    private readonly AuditLog<DelParentHandler> _logs = logs;
-
     public async Task<Result> HandleAsync(
         DelParentCommand command,
         CancellationToken cancellationToken
     )
     {
-        var exists = await _repo.ExistsAsync(command.ParentId, cancellationToken);
+        var exists = await repo.ExistsAsync(command.ParentId, cancellationToken);
         if (!exists)
             return Result.Failure("El padre/padrino no existe");
-        await _repo.DeleteAsync(command.ParentId, cancellationToken);
-        _logs.Write(command.UserId, "Parent {parent} has been deleted.", command.ParentId);
+        await repo.DeleteAsync(command.ParentId, cancellationToken);
+        logs.Write(command.UserId, "Parent {parent} has been deleted.", command.ParentId);
         return Result.Success();
     }
 }
