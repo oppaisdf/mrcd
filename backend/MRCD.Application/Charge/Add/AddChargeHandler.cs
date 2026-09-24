@@ -2,22 +2,20 @@ using MRCD.Application.Logs;
 using MRCD.Application.Abstracts;
 using MRCD.Application.Abstracts.Handlers;
 using MRCD.Application.Charge.Contracts;
-using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
+using MRCD.Application.Services;
 
 namespace MRCD.Application.Charge.Add;
 
 internal sealed class AddChargeHandler(
     IChargeRepository repo,
     IPersistenceContext save,
-    AuditLog<AddChargeHandler> logs,
-    ICommonService service
+    AuditLog<AddChargeHandler> logs
 ) : ICommandHandler<AddChargeCommand, Guid>
 {
     private readonly IChargeRepository _repo = repo;
     private readonly IPersistenceContext _save = save;
     private readonly AuditLog<AddChargeHandler> _logs = logs;
-    private readonly ICommonService _service = service;
 
     public async Task<Result<Guid>> HandleAsync(
         AddChargeCommand command,
@@ -27,10 +25,10 @@ internal sealed class AddChargeHandler(
         var charge = Domain.Charge.Charge.Create(command.Name, command.Amount);
         if (!charge.IsSuccess)
             return Result<Guid>.Failure(charge.Error!);
-        var normalizedName = _service.NormalizeString(charge.Value!.Name);
+        var normalizedName = StringNormalizer.NormalizeString(charge.Value!.Name);
         var charges = await _repo.ToListAsync(cancellationToken);
         var normalizedNames = charges
-            .Select(c => _service.NormalizeString(c.Name));
+            .Select(c => StringNormalizer.NormalizeString(c.Name));
         if (normalizedNames.Contains(normalizedName))
             return Result<Guid>.Failure("El nombre del cobro ya está en uso");
         _repo.Add(charge.Value!);
