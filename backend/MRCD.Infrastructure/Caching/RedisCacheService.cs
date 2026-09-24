@@ -8,7 +8,6 @@ internal sealed class RedisCacheService(
     IDistributedCache cache
 ) : ICacheService
 {
-    private readonly IDistributedCache _cache = cache;
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -20,7 +19,7 @@ internal sealed class RedisCacheService(
         CancellationToken cancellationToken
     )
     {
-        var bytes = await _cache.GetAsync(key, cancellationToken);
+        var bytes = await cache.GetAsync(key, cancellationToken);
         if (bytes is null || bytes.Length == 0) return default;
         return JsonSerializer.Deserialize<T>(bytes, _serializerOptions);
     }
@@ -28,7 +27,7 @@ internal sealed class RedisCacheService(
     public Task RemoveAsync(
         string key,
         CancellationToken cancellationToken
-    ) => _cache.RemoveAsync(key, cancellationToken);
+    ) => cache.RemoveAsync(key, cancellationToken);
 
     public async Task SetAsync<T>(
         string key,
@@ -42,6 +41,6 @@ internal sealed class RedisCacheService(
         {
             AbsoluteExpirationRelativeToNow = absoluteExpiration ?? TimeSpan.FromMinutes(5)
         };
-        await _cache.SetAsync(key, bytes, options, cancellationToken);
+        await cache.SetAsync(key, bytes, options, cancellationToken);
     }
 }
