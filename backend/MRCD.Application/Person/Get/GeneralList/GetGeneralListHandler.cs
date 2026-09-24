@@ -14,17 +14,13 @@ internal sealed class GetGeneralListHandler(
     AuditLog<GetGeneralListHandler> logs
 ) : IQueryHandler<IEnumerable<GeneralListDTO>, GetGeneralListQuery>
 {
-    private readonly IPersonRepository _person = person;
-    private readonly IParentRepository _parent = parent;
-    private readonly AuditLog<GetGeneralListHandler> _logs = logs;
-
     public async Task<Result<IEnumerable<GeneralListDTO>>> HandleAsync(
         GetGeneralListQuery query,
         CancellationToken cancellationToken
     )
     {
-        var people = await _person.OnlyActiveToListAsync(cancellationToken);
-        var parents = await _parent.FilteredByActivePersonToListAsync(cancellationToken);
+        var people = await person.OnlyActiveToListAsync(cancellationToken);
+        var parents = await parent.FilteredByActivePersonToListAsync(cancellationToken);
         var parentsDir = parents
             .GroupBy(p => (p.PersonId, p.IsParent))
             .ToDictionary(
@@ -46,7 +42,7 @@ internal sealed class GetGeneralListHandler(
                 parentsDir.TryGetValue((p.ID, false), out var godparents)
                     ? godparents.Select(p => new SimpleParentDTO(p.ParentName, p.Phone)) : []
             ));
-        _logs.Write(query.UserId, "General list has been consulted");
+        logs.Write(query.UserId, "General list has been consulted");
         return Result<IEnumerable<GeneralListDTO>>.Success(result);
     }
 }
