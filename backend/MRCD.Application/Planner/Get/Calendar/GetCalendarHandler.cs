@@ -9,8 +9,6 @@ internal sealed class GetCalendarHandler(
     IActivityRepository repo
 ) : IQueryHandler<IEnumerable<CalendarDTO>, GetCalendarQuery>
 {
-    private readonly IActivityRepository _repo = repo;
-
     public async Task<Result<IEnumerable<CalendarDTO>>> HandleAsync(
         GetCalendarQuery query,
         CancellationToken cancellationToken
@@ -21,7 +19,7 @@ internal sealed class GetCalendarHandler(
         if (query.Month < 1 || query.Month > 12)
             return Result<IEnumerable<CalendarDTO>>.Failure("El mes no existe");
         var date = new DateOnly(query.Year, query.Month, 1);
-        var activities = await _repo.ToListAsync(date, date.AddMonths(1).AddDays(-1), cancellationToken);
+        var activities = await repo.ToListAsync(date, date.AddMonths(1).AddDays(-1), cancellationToken);
         var activitiesDir = activities
             .GroupBy(a => a.Date.Day)
             .ToDictionary(
