@@ -8,17 +8,15 @@ internal sealed class ChargeRepository(
     Persistence.AppContext app
 ) : IChargeRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         Charge charge
-    ) => _app
+    ) => app
         .Charges
         .Add(charge);
 
     public Task<List<Charge>> ToListAsync(
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Charges
         .AsNoTracking()
         .ToListAsync(cancellationToken);
