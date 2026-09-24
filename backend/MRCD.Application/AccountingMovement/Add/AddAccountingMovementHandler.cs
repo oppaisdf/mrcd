@@ -12,9 +12,6 @@ internal sealed class AddAccountingMovementHandler(
     AuditLog<AddAccountingMovementHandler> logs
 ) : ICommandHandler<AddAccountingMovementCommand, Guid>
 {
-    private readonly IAccountingMovementRepository _repo = repo;
-    private readonly IPersistenceContext _save = save;
-    private readonly AuditLog<AddAccountingMovementHandler> _logs = logs;
 
     public async Task<Result<Guid>> HandleAsync(
         AddAccountingMovementCommand command,
@@ -24,9 +21,9 @@ internal sealed class AddAccountingMovementHandler(
         var movement = Domain.AccountingMovement.AccountingMovement.Create(command.Description, command.Amount);
         if (!movement.IsSuccess)
             return Result<Guid>.Failure(movement.Error!);
-        _repo.Add(movement.Value!);
-        await _save.SaveChangesAsync(cancellationToken);
-        _logs.Write(command.UserId, "Accounting movement {movement} has been added with ID {id}.", command.Description, movement.Value!.ID);
+        repo.Add(movement.Value!);
+        await save.SaveChangesAsync(cancellationToken);
+        logs.Write(command.UserId, "Accounting movement {movement} has been added with ID {id}.", command.Description, movement.Value!.ID);
         return Result<Guid>.Success(movement.Value!.ID);
     }
 }
