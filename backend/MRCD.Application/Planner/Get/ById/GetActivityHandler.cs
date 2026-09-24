@@ -8,28 +8,23 @@ using MRCD.Domain.Common;
 namespace MRCD.Application.Planner.Get.ById;
 
 internal sealed class GetActivityHandler(
-    IActivityRepository activity,
+    IActivityRepository repo,
     IBaseEntityRepository<Domain.Planner.Stage> stage,
     IActivityStageRepository activityStage,
     IUserRepository user
 ) : IQueryHandler<ActivityDTO, GetActivityQuery>
 {
-    private readonly IActivityRepository _activity = activity;
-    private readonly IBaseEntityRepository<Domain.Planner.Stage> _stage = stage;
-    private readonly IActivityStageRepository _activityStage = activityStage;
-    private readonly IUserRepository _user = user;
-
     public async Task<Result<ActivityDTO>> HandleAsync(
         GetActivityQuery query,
         CancellationToken cancellationToken
     )
     {
-        var activity = await _activity.GetByIdAsync(query.ActivityId, cancellationToken);
+        var activity = await repo.GetByIdAsync(query.ActivityId, cancellationToken);
         if (activity is null)
             return Result<ActivityDTO>.Failure("La actividad no existe");
-        var availableStages = await _stage.ToListAsync(cancellationToken);
-        var assignedStages = await _activityStage.StagesByActivityToListAsync(query.ActivityId, cancellationToken);
-        var users = await _user.ToListAsync(cancellationToken);
+        var availableStages = await stage.ToListAsync(cancellationToken);
+        var assignedStages = await activityStage.StagesByActivityToListAsync(query.ActivityId, cancellationToken);
+        var users = await user.ToListAsync(cancellationToken);
 
         var stages =
             from s in availableStages
