@@ -18,23 +18,17 @@ internal sealed class GetAlertCountHandler(
     IAttendanceService attService
 ) : IQueryHandler<AlertDTO, GetAlertCountQuery>
 {
-    private readonly IAlertRepository _repo = repo;
-    private readonly ICacheService _cache = cache;
-    private readonly IPersonRepository _person = person;
-    private readonly IAttendanceRepository _attendance = attendance;
-    private readonly IAttendanceService _attService = attService;
-
     private async Task<int> GetAttendanceCountAsync(
         CancellationToken ct
     )
     {
-        var attendances = await _attendance.ToListAsync(
+        var attendances = await attendance.ToListAsync(
             DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6)),
             filteredOnlyByYear: true,
             ct
         );
-        var activePeople = await _person.OnlyActiveToListAsync(ct);
-        var consecutiveFoulsPeople = _attService.GetAlertAttendances(
+        var activePeople = await person.OnlyActiveToListAsync(ct);
+        var consecutiveFoulsPeople = attService.GetAlertAttendances(
             activePeople,
             attendances,
             consecutiveFoulsWeekCount: 2
@@ -49,14 +43,14 @@ internal sealed class GetAlertCountHandler(
     {
         var count = alert switch
         {
-            AlertType.ParentsLonely => await _repo.ParentsLonelyCountAsync(ct),
-            AlertType.PendingCharges => await _repo.PendingChargesCountAsync(ct),
-            AlertType.PendingDocuments => await _repo.PendingDocumentsCountAsync(ct),
-            AlertType.WithoutGodparents => await _repo.WithoutGodparentsCountAsync(ct),
+            AlertType.ParentsLonely => await repo.ParentsLonelyCountAsync(ct),
+            AlertType.PendingCharges => await repo.PendingChargesCountAsync(ct),
+            AlertType.PendingDocuments => await repo.PendingDocumentsCountAsync(ct),
+            AlertType.WithoutGodparents => await repo.WithoutGodparentsCountAsync(ct),
             AlertType.ConsecutiveFouls => await GetAttendanceCountAsync(ct),
             _ => -1
         };
-        await _cache.SetAsync($"alert:{alert}", count, ct, TimeSpan.FromMinutes(60));
+        await cache.SetAsync($"alert:{alert}", count, ct, TimeSpan.FromMinutes(60));
         return count;
     }
 
@@ -65,7 +59,7 @@ internal sealed class GetAlertCountHandler(
         CancellationToken cancellationToken
     )
     {
-        var current = await _cache.GetAsync<int?>($"alert:{query.Alert}", cancellationToken);
+        var current = await cache.GetAsync<int?>($"alert:{query.Alert}", cancellationToken);
         var count = current is null
             ? await QueryAsync(query.Alert, cancellationToken)
             : current.Value;
@@ -89,11 +83,11 @@ internal sealed class GetAlertCountHandler(
         };
         var parameter = query.Alert switch
         {
-            AlertType.ParentsLonely => new Dictionary<string, string>{["alert"] = "lonely-parents"},
-            AlertType.PendingCharges => new Dictionary<string, string>{["alert"] = "pending-charges"},
-            AlertType.PendingDocuments => new Dictionary<string, string>{["alert"] = "pending-documents"},
-            AlertType.WithoutGodparents => new Dictionary<string, string>{["alert"] = "pending-godparents"},
-            AlertType.ConsecutiveFouls => new Dictionary<string, string>{["alert"] = "consecutive-fouls"},
+            AlertType.ParentsLonely => new Dictionary<string, string> { ["alert"] = "lonely-parents" },
+            AlertType.PendingCharges => new Dictionary<string, string> { ["alert"] = "pending-charges" },
+            AlertType.PendingDocuments => new Dictionary<string, string> { ["alert"] = "pending-documents" },
+            AlertType.WithoutGodparents => new Dictionary<string, string> { ["alert"] = "pending-godparents" },
+            AlertType.ConsecutiveFouls => new Dictionary<string, string> { ["alert"] = "consecutive-fouls" },
             _ => null
         };
 
