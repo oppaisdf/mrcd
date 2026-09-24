@@ -8,18 +8,16 @@ internal sealed class ActivityRepository(
     Persistence.AppContext app
 ) : IActivityRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         Activity activity
-    ) => _app
+    ) => app
         .Activities
         .Add(activity);
 
     public Task DeleteAsync(
         Guid activityId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Activities
         .Where(a => a.ID == activityId)
         .ExecuteDeleteAsync(cancellationToken);
@@ -27,14 +25,14 @@ internal sealed class ActivityRepository(
     public Task<bool> ExistsIdAsync(
         Guid activityId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Activities
         .AnyAsync(a => a.ID == activityId, cancellationToken);
 
     public Task<Activity?> GetByIdAsync(
         Guid activityId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Activities
         .SingleOrDefaultAsync(a => a.ID == activityId, cancellationToken);
 
@@ -42,7 +40,7 @@ internal sealed class ActivityRepository(
         DateOnly startDate,
         DateOnly endDate,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Activities
         .Where(a =>
             a.Date >= startDate
