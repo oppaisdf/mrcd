@@ -21,8 +21,6 @@ internal sealed class AppContext(
     IEncryptionService service
 ) : DbContext(options), IPersistenceContext
 {
-    private readonly IEncryptionService _service = service;
-
     public DbSet<Attendance> Attendances => Set<Attendance>();
     public DbSet<Charge> Charges => Set<Charge>();
     public DbSet<Degree> Degrees => Set<Degree>();
@@ -52,19 +50,19 @@ internal sealed class AppContext(
         builder.Entity<User>()
             .Property(u => u.Password)
             .HasColumnType("longtext")
-            .HasConversion(new EncryptedRequiredStringConverter(_service));
+            .HasConversion(new EncryptedRequiredStringConverter(service));
         builder.Entity<Person>()
             .Property(e => e.Address)
             .HasColumnType("longtext")
-            .HasConversion(new EncryptedStringConverter(_service));
+            .HasConversion(new EncryptedStringConverter(service));
         builder.Entity<Person>()
             .Property(e => e.Phone)
             .HasColumnType("longtext")
-            .HasConversion(new EncryptedStringConverter(_service));
+            .HasConversion(new EncryptedStringConverter(service));
         builder.Entity<Parent>()
             .Property(e => e.Phone)
             .HasColumnType("longtext")
-            .HasConversion(new EncryptedStringConverter(_service));
+            .HasConversion(new EncryptedStringConverter(service));
         base.OnModelCreating(builder);
     }
 
