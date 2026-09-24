@@ -8,11 +8,9 @@ internal sealed class RolePermissionRepository(
     Persistence.AppContext app
 ) : IRolePermissionRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         RolePermission rolePermission
-    ) => _app
+    ) => app
         .RolesPermissions
         .Add(rolePermission);
 
@@ -20,7 +18,7 @@ internal sealed class RolePermissionRepository(
         Guid roleId,
         Guid permissionId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .RolesPermissions
         .AnyAsync(rp =>
             rp.RoleID == roleId
@@ -32,7 +30,7 @@ internal sealed class RolePermissionRepository(
         Guid roleId,
         Guid permissionId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .RolesPermissions
         .Where(rp =>
             rp.RoleID == roleId
@@ -41,7 +39,7 @@ internal sealed class RolePermissionRepository(
 
     public Task<List<RolePermission>> ToListAsync(
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .RolesPermissions
         .AsNoTracking()
         .ToListAsync(cancellationToken);
