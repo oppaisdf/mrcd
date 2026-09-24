@@ -9,17 +9,15 @@ internal sealed class PersonSacramentRepository(
     Persistence.AppContext app
 ) : IPersonSacramentRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         PersonSacrament personSacrament
-    ) => _app
+    ) => app
         .PersonSacraments
         .Add(personSacrament);
 
     public void AddRange(
         IEnumerable<PersonSacrament> sacraments
-    ) => _app
+    ) => app
         .PersonSacraments
         .AddRange(sacraments);
 
@@ -27,8 +25,8 @@ internal sealed class PersonSacramentRepository(
         Guid personId,
         CancellationToken cancellationToken
     ) => (
-        from s in _app.Sacraments
-        join ps in _app
+        from s in app.Sacraments
+        join ps in app
             .PersonSacraments
             .Where(p => p.PersonId == personId)
             on s.ID equals ps.SacramentId into pss
@@ -43,7 +41,7 @@ internal sealed class PersonSacramentRepository(
         Guid personId,
         Guid sacramentId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .PersonSacraments
         .SingleOrDefaultAsync(ps =>
             ps.PersonId == personId
@@ -53,7 +51,7 @@ internal sealed class PersonSacramentRepository(
 
     public void Remove(
         PersonSacrament personSacrament
-    ) => _app
+    ) => app
         .PersonSacraments
         .Remove(personSacrament);
 }
