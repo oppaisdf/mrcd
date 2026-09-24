@@ -12,7 +12,6 @@ using MRCD.Application.Person.Add.Assign;
 using MRCD.Application.Person.Services;
 using MRCD.Application.Security;
 using MRCD.Application.Services.Attendance;
-using MRCD.Application.Services.Common;
 using MRCD.Application.User.Services;
 
 namespace MRCD.Application;
@@ -118,7 +117,6 @@ public static class DependencyInjection
         services.AddScoped<ParentAssignments>();
         services.AddScoped<PersonRegistration>();
         // Services
-        services.AddSingleton<ICommonService, CommonService>();
         services.AddSingleton<IAttendanceService, AttendanceService>();
         services.AddScoped<PermissionService>();
         services.AddScoped<PermissionCacheInvalidator>();
