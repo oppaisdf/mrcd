@@ -1,7 +1,6 @@
 using MRCD.Application.Parent.Contracts;
 using MRCD.Application.Person.Add;
 using MRCD.Application.Services;
-using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 using MRCD.Domain.Parent;
 
@@ -14,8 +13,7 @@ internal sealed record ResolvedParent(
 
 // Resolves and creates detached entities. No repository writes or commits occur here.
 internal sealed class ParentResolver(
-    IParentRepository parents,
-    ICommonService normalizer
+    IParentRepository parents
 )
 {
     public async Task<Result<ResolvedParent>> ResolveAsync(
@@ -25,7 +23,7 @@ internal sealed class ParentResolver(
         CancellationToken ct
     )
     {
-        var normalized = normalizer.NormalizeString(name);
+        var normalized = StringNormalizer.NormalizeString(name);
         if (!StringValidator.HasOnlyLetters(normalized))
             return Result<ResolvedParent>.Failure("El nombre del padre/padrino solo puede contener letras");
         var existing = await parents.GetByNameAsync(normalized, ct);
@@ -54,7 +52,7 @@ internal sealed class ParentResolver(
             return Result<IReadOnlyList<ResolvedParent>>.Failure("Los datos de los padres son requeridos");
 
         var distinct = items
-            .DistinctBy(p => normalizer.NormalizeString(p.Name))
+            .DistinctBy(p => StringNormalizer.NormalizeString(p.Name))
             .ToList();
         var count = ParentAssignmentRules.ValidateCount(distinct.Count);
         if (!count.IsSuccess)
