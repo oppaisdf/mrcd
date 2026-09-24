@@ -8,7 +8,6 @@ internal sealed class DistributedPermissionCache(
     IDistributedCache cache
 ) : IPermissionCache
 {
-    private readonly IDistributedCache _cache = cache;
     private static string Key(Guid userId) => $"permissions:user:{userId:D}";
     private static readonly JsonSerializerOptions _jsonOptions = new(
         JsonSerializerDefaults.Web
@@ -19,7 +18,7 @@ internal sealed class DistributedPermissionCache(
         CancellationToken cancellationToken
     )
     {
-        var bytes = await _cache.GetAsync(Key(userId), cancellationToken);
+        var bytes = await cache.GetAsync(Key(userId), cancellationToken);
         if (bytes is null) return null;
 
         var values = JsonSerializer.Deserialize<HashSet<string>>(bytes, _jsonOptions);
@@ -31,7 +30,7 @@ internal sealed class DistributedPermissionCache(
     public Task InvalidateAsync(
         Guid userId,
         CancellationToken cancellationToken
-    ) => _cache.RemoveAsync(Key(userId), cancellationToken);
+    ) => cache.RemoveAsync(Key(userId), cancellationToken);
 
     public async Task SetAsync(
         Guid userId,
@@ -42,7 +41,7 @@ internal sealed class DistributedPermissionCache(
     {
         var bytes = JsonSerializer.SerializeToUtf8Bytes(permissions.Values, _jsonOptions);
 
-        await _cache.SetAsync(
+        await cache.SetAsync(
             Key(userId),
             bytes,
             new DistributedCacheEntryOptions
