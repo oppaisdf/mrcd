@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Domain.Parent;
-using MRCD.Domain.Person;
 
 namespace MRCD.Infrastructure.Repositories;
 
@@ -9,11 +8,9 @@ internal sealed class ParentPersonRepository(
     Persistence.AppContext app
 ) : IParentPersonRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         ParentPerson parentPerson
-    ) => _app
+    ) => app
         .ParentsPersons
         .Add(parentPerson);
 
@@ -21,7 +18,7 @@ internal sealed class ParentPersonRepository(
         Guid personId,
         bool isParent,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .ParentsPersons
         .Where(pp =>
             pp.IsParent == isParent
@@ -30,7 +27,7 @@ internal sealed class ParentPersonRepository(
 
     public void Del(
         ParentPerson parentPerson
-    ) => _app
+    ) => app
         .ParentsPersons
         .Remove(parentPerson);
 
@@ -39,7 +36,7 @@ internal sealed class ParentPersonRepository(
         Guid parentId,
         bool isParent,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .ParentsPersons
         .AsNoTracking()
         .Where(pp =>
