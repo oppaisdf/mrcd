@@ -8,18 +8,16 @@ internal sealed class AttendanceRepository(
     Persistence.AppContext app
 ) : IAttendanceRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         Attendance attendance
-    ) => _app
+    ) => app
         .Attendances
         .Add(attendance);
 
     public Task<bool> AlreadyExistsAsync(
         Attendance attendance,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Attendances
         .AnyAsync(a =>
             a.Date == attendance.Date
@@ -31,7 +29,7 @@ internal sealed class AttendanceRepository(
         Guid personId,
         DateOnly date,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Attendances
         .Where(a =>
             a.PersonId == personId
@@ -42,7 +40,7 @@ internal sealed class AttendanceRepository(
         Guid personId,
         DateOnly date,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Attendances
         .AnyAsync(a =>
             a.PersonId == personId
@@ -54,7 +52,7 @@ internal sealed class AttendanceRepository(
         DateOnly date,
         bool filteredOnlyByYear,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .Attendances
         .AsNoTracking()
         .Where(a =>
