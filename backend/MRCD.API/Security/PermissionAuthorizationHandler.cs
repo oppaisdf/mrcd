@@ -9,9 +9,6 @@ internal sealed class PermissionAuthorizationHandler(
     IHttpContextAccessor http
 ) : AuthorizationHandler<PermissionRequirement>
 {
-    private readonly PermissionService _service = service;
-    private readonly IHttpContextAccessor _http = http;
-
     protected override async Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
         PermissionRequirement requirement
@@ -21,8 +18,8 @@ internal sealed class PermissionAuthorizationHandler(
                   ?? context.User.FindFirstValue("sub");
 
         if (!Guid.TryParse(sub, out var userId)) return;
-        var ct = _http.HttpContext?.RequestAborted ?? CancellationToken.None;
-        if (await _service.HasPermissionAsync(userId, requirement.Permission, ct))
+        var ct = http.HttpContext?.RequestAborted ?? CancellationToken.None;
+        if (await service.HasPermissionAsync(userId, requirement.Permission, ct))
             context.Succeed(requirement);
     }
 }
