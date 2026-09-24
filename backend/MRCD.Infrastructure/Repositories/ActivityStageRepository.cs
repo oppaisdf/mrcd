@@ -8,11 +8,9 @@ internal sealed class ActivityStageRepository(
     Persistence.AppContext app
 ) : IActivityStageRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         ActivityStage activityStage
-    ) => _app
+    ) => app
         .Add(activityStage);
 
     public Task<bool> AlreadyExistsAsync(
@@ -20,7 +18,7 @@ internal sealed class ActivityStageRepository(
         Guid stageId,
         Guid? userId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .ActivitiesStages
         .AnyAsync(a =>
             a.ActivityId == activityId
@@ -34,7 +32,7 @@ internal sealed class ActivityStageRepository(
         Guid stageId,
         Guid? userId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .ActivitiesStages
         .Where(a =>
             a.ActivityId == activityId
@@ -45,7 +43,7 @@ internal sealed class ActivityStageRepository(
     public Task<List<ActivityStage>> StagesByActivityToListAsync(
         Guid activityId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .ActivitiesStages
         .Where(a => a.ActivityId == activityId)
         .ToListAsync(cancellationToken);
