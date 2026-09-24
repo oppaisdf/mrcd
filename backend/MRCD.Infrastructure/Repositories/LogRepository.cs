@@ -9,8 +9,6 @@ internal sealed class LogRepository(
     Persistence.AppContext app
 ) : ILogRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public async Task<Pagination<LogDTO>> ToListAsync(
         ushort size,
         uint page,
@@ -18,11 +16,11 @@ internal sealed class LogRepository(
     )
     {
         var skip = (page - 1) * size;
-        var total = await _app
+        var total = await app
             .Database
             .SqlQuery<int>($"select count(1) as Value from logs where Properties ->> '$.UserId' != 'null'")
             .SingleAsync(cancellationToken);
-        var logs = await _app
+        var logs = await app
             .Database
             .SqlQuery<LogDTO>($"""
             select
