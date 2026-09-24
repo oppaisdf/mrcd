@@ -7,22 +7,18 @@ using MRCD.Domain.Common;
 namespace MRCD.Application.Role.Get.WithPermissions;
 
 internal sealed class GetRoleWithPermissionsHandler(
-    IRoleRepository role,
-    IPermissionRepository permission,
-    IRolePermissionRepository rolePermission
+    IRoleRepository roleRepo,
+    IPermissionRepository permissionRepo,
+    IRolePermissionRepository rolePermissionRepo
 ) : IQueryHandler<IEnumerable<RoleWithPermissionDTO>>
 {
-    private readonly IRoleRepository _role = role;
-    private readonly IPermissionRepository _permmission = permission;
-    private readonly IRolePermissionRepository _rolePermission = rolePermission;
-
     public async Task<Result<IEnumerable<RoleWithPermissionDTO>>> HandleAsync(
         CancellationToken cancellationToken
     )
     {
-        var roles = await _role.ToListAsync(cancellationToken);
-        var rolePermission = await _rolePermission.ToListAsync(cancellationToken);
-        var rawPermissions = await _permmission.ToListAsync(cancellationToken);
+        var roles = await roleRepo.ToListAsync(cancellationToken);
+        var rolePermission = await rolePermissionRepo.ToListAsync(cancellationToken);
+        var rawPermissions = await permissionRepo.ToListAsync(cancellationToken);
 
         var permissionByRole = rolePermission
             .GroupBy(rp => rp.RoleID)
