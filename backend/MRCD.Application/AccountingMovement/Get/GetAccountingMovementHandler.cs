@@ -11,18 +11,15 @@ internal sealed class GetAccountingMovementHandler(
     AuditLog<GetAccountingMovementHandler> logs
 ) : IQueryHandler<IReadOnlyCollection<AccountingMovementDTO>, GetAccountingMovementQuery>
 {
-    private readonly IAccountingMovementRepository _repo = repo;
-    private readonly AuditLog<GetAccountingMovementHandler> _logs = logs;
-
     public async Task<Result<IReadOnlyCollection<AccountingMovementDTO>>> HandleAsync(
         GetAccountingMovementQuery query,
         CancellationToken cancellationToken
     )
     {
         var rawMovements = query.FilterOnlyByYear
-            ? await _repo.OnlyByYearToListAsync(query.Date.Year, cancellationToken)
-            : await _repo.ByDateToListAsync(query.Date, cancellationToken);
-        _logs.Write(query.UserId, "Accounting movement has been listed in date {date}", query.Date);
+            ? await repo.OnlyByYearToListAsync(query.Date.Year, cancellationToken)
+            : await repo.ByDateToListAsync(query.Date, cancellationToken);
+        logs.Write(query.UserId, "Accounting movement has been listed in date {date}", query.Date);
 
         var movements = rawMovements
             .Select(m => new
