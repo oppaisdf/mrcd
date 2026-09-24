@@ -8,17 +8,15 @@ internal sealed class UserRoleRepository(
     Persistence.AppContext app
 ) : IUserRoleRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         UserRole userRole
-    ) => _app
+    ) => app
         .UserRoles
         .Add(userRole);
 
     public void AddRange(
         IEnumerable<UserRole> userRoles
-    ) => _app
+    ) => app
         .UserRoles
         .AddRange(userRoles);
 
@@ -26,7 +24,7 @@ internal sealed class UserRoleRepository(
         Guid userId,
         Guid roleId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .UserRoles
         .Where(ur =>
             ur.UserID == userId
@@ -37,14 +35,14 @@ internal sealed class UserRoleRepository(
     public Task<List<UserRole>> RolesByUserIdToListAsync(
         Guid id,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .UserRoles
         .Where(ur => ur.UserID == id)
         .ToListAsync(cancellationToken);
 
     public Task<List<UserRole>> ToListAsync(
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .UserRoles
         .ToListAsync(cancellationToken);
 }
