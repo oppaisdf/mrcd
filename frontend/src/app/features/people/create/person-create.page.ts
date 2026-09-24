@@ -72,6 +72,16 @@ export class PersonCreatePage implements OnInit {
     }
     this._alert.success("Se ha inscrito el confirmando correctamente");
     this._parents.set([]);
+    this.restoreSacraments();
+  }
+
+  private restoreSacraments() {
+    this.sacraments.update(sacraments =>
+      sacraments.map(s => ({
+        ...s,
+        hasAssociation: false
+      }))
+    );
   }
 
   assignSacrament(
