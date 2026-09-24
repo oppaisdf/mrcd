@@ -13,21 +13,17 @@ internal sealed class DelBaseEntityHandler<TEntity>(
 ) : IBaseCommandHandler<DelBaseEntityCommand, TEntity>
     where TEntity : Domain.Common.BaseEntity
 {
-    private readonly IBaseEntityRepository<TEntity> _repo = repo;
-    private readonly IPersistenceContext _save = save;
-    private readonly AuditLog<DelBaseEntityHandler<TEntity>> _logs = logs;
-
     public async Task<Result> HandleAsync(
         DelBaseEntityCommand command,
         CancellationToken cancellationToken
     )
     {
-        var record = await _repo.GetByIdAsync(command.Id, cancellationToken);
+        var record = await repo.GetByIdAsync(command.Id, cancellationToken);
         if (record is null)
             return Result.Failure("El registro no existe");
-        _repo.Remove(record);
-        _logs.Write(command.UserId, "Record {record} with ID {id} has been deleted.", record.Name, record.ID);
-        await _save.SaveChangesAsync(cancellationToken);
+        repo.Remove(record);
+        logs.Write(command.UserId, "Record {record} with ID {id} has been deleted.", record.Name, record.ID);
+        await save.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }
 }
