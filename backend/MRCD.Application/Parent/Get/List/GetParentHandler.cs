@@ -3,18 +3,15 @@ using MRCD.Application.Common;
 using MRCD.Application.Parent.Contracts;
 using MRCD.Application.Parent.DTOs;
 using MRCD.Application.Services;
-using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 
 namespace MRCD.Application.Parent.Get.List;
 
 internal sealed class GetParentHandler(
-    IParentRepository repo,
-    ICommonService service
+    IParentRepository repo
 ) : IQueryHandler<Pagination<ParentDTO>, GetParentQuery>
 {
     private readonly IParentRepository _repo = repo;
-    private readonly ICommonService _service = service;
 
     public async Task<Result<Pagination<ParentDTO>>> HandleAsync(
         GetParentQuery query,
@@ -34,7 +31,7 @@ internal sealed class GetParentHandler(
                     size,
                     string.IsNullOrWhiteSpace(query.ParentName)
                         ? null
-                        : _service.NormalizeString(query.ParentName),
+                        : StringNormalizer.NormalizeString(query.ParentName),
                     cancellationToken
                 )
             : await _repo.NoChildrenToListAsync(
