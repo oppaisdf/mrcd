@@ -12,10 +12,6 @@ internal sealed class AddRoleHandler(
     AuditLog<AddRoleHandler> logs
 ) : ICommandHandler<AddRoleCommand, Guid>
 {
-    private readonly IRoleRepository _repo = repo;
-    private readonly IPersistenceContext _save = save;
-    private readonly AuditLog<AddRoleHandler> _logs = logs;
-
     public async Task<Result<Guid>> HandleAsync(
         AddRoleCommand command,
         CancellationToken cancellationToken
@@ -23,13 +19,13 @@ internal sealed class AddRoleHandler(
     {
         var role = Domain.Role.Role.Create(command.RoleName);
         if (!role.IsSuccess) return Result<Guid>.Failure(role.Error!);
-        var alreadExists = await _repo.AlreadyExistsAsync(command.RoleName.Trim(), cancellationToken);
+        var alreadExists = await repo.AlreadyExistsAsync(command.RoleName.Trim(), cancellationToken);
         if (alreadExists)
             return Result<Guid>.Failure("El nombre del rol ya está en uso");
 
-        _repo.Add(role.Value!);
-        await _save.SaveChangesAsync(cancellationToken);
-        _logs.Write(command.UserId, "Role {role} with ID {id} has been created.", command.RoleName, role.Value!.ID);
+        repo.Add(role.Value!);
+        await save.SaveChangesAsync(cancellationToken);
+        logs.Write(command.UserId, "Role {role} with ID {id} has been created.", command.RoleName, role.Value!.ID);
         return Result<Guid>.Success(role.Value!.ID);
     }
 }
