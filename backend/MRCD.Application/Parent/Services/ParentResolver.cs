@@ -1,5 +1,6 @@
 using MRCD.Application.Parent.Contracts;
 using MRCD.Application.Person.Add;
+using MRCD.Application.Services;
 using MRCD.Application.Services.Common;
 using MRCD.Domain.Common;
 using MRCD.Domain.Parent;
@@ -25,7 +26,7 @@ internal sealed class ParentResolver(
     )
     {
         var normalized = normalizer.NormalizeString(name);
-        if (!normalizer.HasOnlyLetters(normalized))
+        if (!StringValidator.HasOnlyLetters(normalized))
             return Result<ResolvedParent>.Failure("El nombre del padre/padrino solo puede contener letras");
         var existing = await parents.GetByNameAsync(normalized, ct);
         if (existing is not null)
@@ -51,7 +52,7 @@ internal sealed class ParentResolver(
         var items = input.ToList();
         if (items.Any(p => p is null))
             return Result<IReadOnlyList<ResolvedParent>>.Failure("Los datos de los padres son requeridos");
-        
+
         var distinct = items
             .DistinctBy(p => normalizer.NormalizeString(p.Name))
             .ToList();
