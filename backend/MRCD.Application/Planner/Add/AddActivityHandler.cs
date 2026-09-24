@@ -12,10 +12,6 @@ internal sealed class AddActivityHandler(
     AuditLog<AddActivityHandler> logs
 ) : ICommandHandler<AddActivityCommand, Guid>
 {
-    private readonly IActivityRepository _repo = repo;
-    private readonly IPersistenceContext _save = save;
-    private readonly AuditLog<AddActivityHandler> _logs = logs;
-
     public async Task<Result<Guid>> HandleAsync(
         AddActivityCommand command,
         CancellationToken cancellationToken
@@ -24,9 +20,9 @@ internal sealed class AddActivityHandler(
         var activityResult = Domain.Planner.Activity.Create(command.ActivityName, command.Date);
         if (!activityResult.IsSuccess)
             return Result<Guid>.Failure(activityResult.Error!);
-        _repo.Add(activityResult.Value!);
-        await _save.SaveChangesAsync(cancellationToken);
-        _logs.Write(command.UserId, "Activity {activity} with ID {id} has been created.", command.ActivityName, activityResult.Value!.ID);
+        repo.Add(activityResult.Value!);
+        await save.SaveChangesAsync(cancellationToken);
+        logs.Write(command.UserId, "Activity {activity} with ID {id} has been created.", command.ActivityName, activityResult.Value!.ID);
         return Result<Guid>.Success(activityResult.Value!.ID);
     }
 }
