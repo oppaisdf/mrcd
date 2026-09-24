@@ -8,9 +8,11 @@ internal sealed class GlobalExceptionHandler(
     IProblemDetailsService problemDetails
 ) : IExceptionHandler
 {
-    private readonly IProblemDetailsService _problemDetails = problemDetails;
-
-    public async ValueTask<bool> TryHandleAsync(HttpContext http, Exception ex, CancellationToken ct)
+    public async ValueTask<bool> TryHandleAsync(
+        HttpContext http,
+        Exception ex,
+        CancellationToken ct
+    )
     {
         // Clasificación mínima de excepciones conocidas de infra
         var (status, title) = ex switch
@@ -42,7 +44,7 @@ internal sealed class GlobalExceptionHandler(
 
         problem.Extensions["errorId"] = http.TraceIdentifier;
 
-        return await _problemDetails.TryWriteAsync(new ProblemDetailsContext
+        return await problemDetails.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext = http,
             ProblemDetails = problem,
