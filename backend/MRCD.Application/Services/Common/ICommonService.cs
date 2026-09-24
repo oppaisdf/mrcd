@@ -6,10 +6,8 @@ public interface ICommonService
     ///  Devuelve cadena normalizada sin espacios ni tildes y en minúscula
     /// </summary>
     /// <param name="text"></param>
-    /// <returns>string</returns>
+    /// <returns>string</returns>s
     string NormalizeString(string text);
     bool HasOnlyLetters(string text);
     bool HasOnlyLettersWithSpaces(string text);
-    bool HasOnlyNumbers(string text);
-    bool IsValidPermission(string permission);
 }

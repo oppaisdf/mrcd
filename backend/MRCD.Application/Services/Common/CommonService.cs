@@ -9,10 +9,6 @@ internal sealed partial class CommonService : ICommonService
     private static partial Regex OnlyLettersRegex();
     [GeneratedRegex(@"^[\p{L} ]+$")]
     private static partial Regex OnlyLettersWithSpacesRegex();
-    [GeneratedRegex("^[0-9]+$")]
-    private static partial Regex OnlyNumbersRegex();
-    [GeneratedRegex("^[A-Za-z]+\\.[A-Za-z]+$")]
-    private static partial Regex PermissionRegex();
 
     public bool HasOnlyLetters(
         string text
@@ -23,16 +19,6 @@ internal sealed partial class CommonService : ICommonService
         string text
     ) => OnlyLettersWithSpacesRegex()
         .IsMatch(text);
-
-    public bool HasOnlyNumbers(
-        string text
-    ) => OnlyNumbersRegex()
-        .IsMatch(text);
-
-    public bool IsValidPermission(
-        string permission
-    ) => !string.IsNullOrWhiteSpace(permission)
-        && PermissionRegex().IsMatch(permission);
 
     public string NormalizeString(
         string text
