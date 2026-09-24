@@ -9,11 +9,9 @@ internal sealed class PersonChargeRepository(
     Persistence.AppContext app
 ) : IPersonChargeRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         PersonCharge personCharge
-    ) => _app
+    ) => app
         .PersonCharges
         .Add(personCharge);
 
@@ -21,8 +19,8 @@ internal sealed class PersonChargeRepository(
         Guid personId,
         CancellationToken cancellationToken
     ) => (
-        from c in _app.Charges
-        join pc in _app
+        from c in app.Charges
+        join pc in app
             .PersonCharges
             .Where(p => p.PersonId == personId)
             on c.ID equals pc.ChargeId into pcs
@@ -37,7 +35,7 @@ internal sealed class PersonChargeRepository(
         Guid personId,
         Guid chargeId,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .PersonCharges
         .SingleOrDefaultAsync(pc =>
             pc.PersonId == personId
@@ -47,7 +45,7 @@ internal sealed class PersonChargeRepository(
 
     public void Remove(
         PersonCharge personCharge
-    ) => _app
+    ) => app
         .PersonCharges
         .Remove(personCharge);
 }
