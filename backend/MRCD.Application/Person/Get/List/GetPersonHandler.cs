@@ -13,21 +13,18 @@ internal sealed class GetPersonHandler(
     IPersonRepository repo
 ) : IQueryHandler<Pagination<SimplePersonDTO>, GetPersonQuery>
 {
-    private readonly AuditLog<GetPersonHandler> _logs = logs;
-    private readonly IPersonRepository _repo = repo;
-
     public async Task<Result<Pagination<SimplePersonDTO>>> HandleAsync(
         GetPersonQuery query,
         CancellationToken cancellationToken
     )
     {
-        _logs.Write(query.UserId, "Paginated people has been consulted. Page {page}", query.Page);
+        logs.Write(query.UserId, "Paginated people has been consulted. Page {page}", query.Page);
         var normalized = string.IsNullOrWhiteSpace(query.Name)
             ? null
             : StringNormalizer.NormalizeString(query.Name);
         var results = query.Alert switch
         {
-            Alert.Common.AlertType.PendingCharges => await _repo.PendingChargesToListAsync(
+            Alert.Common.AlertType.PendingCharges => await repo.PendingChargesToListAsync(
                 query.Page,
                 20,
                 normalized,
@@ -35,7 +32,7 @@ internal sealed class GetPersonHandler(
                 query.IsMasculine,
                 cancellationToken
             ),
-            Alert.Common.AlertType.PendingDocuments => await _repo.PendingDocumentsToListAsync(
+            Alert.Common.AlertType.PendingDocuments => await repo.PendingDocumentsToListAsync(
                 query.Page,
                 20,
                 normalized,
@@ -43,7 +40,7 @@ internal sealed class GetPersonHandler(
                 query.IsMasculine,
                 cancellationToken
             ),
-            Alert.Common.AlertType.WithoutGodparents => await _repo.PendingGodparentsToListAsync(
+            Alert.Common.AlertType.WithoutGodparents => await repo.PendingGodparentsToListAsync(
                 query.Page,
                 20,
                 normalized,
@@ -51,7 +48,7 @@ internal sealed class GetPersonHandler(
                 query.IsMasculine,
                 cancellationToken
             ),
-            _ => await _repo.ToListAsync(
+            _ => await repo.ToListAsync(
                 query.IsActive,
                 query.Page,
                 20,
