@@ -9,7 +9,7 @@ using MRCD.Domain.Common;
 namespace MRCD.Application.Person.Get.ById;
 
 internal sealed class GetPersonByIdHandler(
-    IPersonRepository person,
+    IPersonRepository personRepo,
     IParentRepository parent,
     IPersonChargeRepository charge,
     IPersonDocumentRepository document,
@@ -17,26 +17,19 @@ internal sealed class GetPersonByIdHandler(
     AuditLog<GetPersonByIdHandler> logs
 ) : IQueryHandler<PersonDTO, GetPersonByIdQuery>
 {
-    private readonly IPersonRepository _person = person;
-    private readonly IParentRepository _parent = parent;
-    private readonly IPersonChargeRepository _charge = charge;
-    private readonly IPersonDocumentRepository _document = document;
-    private readonly IPersonSacramentRepository _sacrament = sacrament;
-    private readonly AuditLog<GetPersonByIdHandler> _logs = logs;
-
     public async Task<Result<PersonDTO>> HandleAsync(
         GetPersonByIdQuery query,
         CancellationToken cancellationToken
     )
     {
-        var person = await _person.GetByIdAsync(query.PersonId, cancellationToken);
+        var person = await personRepo.GetByIdAsync(query.PersonId, cancellationToken);
         if (person is null)
             return Result<PersonDTO>.Failure("El confirmando no existe :c");
 
-        var parents = await _parent.ByPersonToListAsync(query.PersonId, cancellationToken);
-        var charges = await _charge.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
-        var documents = await _document.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
-        var sacraments = await _sacrament.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
+        var parents = await parent.ByPersonToListAsync(query.PersonId, cancellationToken);
+        var charges = await charge.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
+        var documents = await document.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
+        var sacraments = await sacrament.AssignationByPersonToListAsync(query.PersonId, cancellationToken);
         var response = new PersonDTO(
             person.Name,
             person.IsActive,
@@ -53,7 +46,7 @@ internal sealed class GetPersonByIdHandler(
             documents,
             sacraments
         );
-        _logs.Write(query.UserId, "Person {person} with ID {id} has been consulted.", person.Name, person.ID);
+        logs.Write(query.UserId, "Person {person} with ID {id} has been consulted.", person.Name, person.ID);
         return Result<PersonDTO>.Success(response);
     }
 }
