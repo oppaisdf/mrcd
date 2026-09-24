@@ -13,10 +13,6 @@ internal sealed class AddChargeHandler(
     AuditLog<AddChargeHandler> logs
 ) : ICommandHandler<AddChargeCommand, Guid>
 {
-    private readonly IChargeRepository _repo = repo;
-    private readonly IPersistenceContext _save = save;
-    private readonly AuditLog<AddChargeHandler> _logs = logs;
-
     public async Task<Result<Guid>> HandleAsync(
         AddChargeCommand command,
         CancellationToken cancellationToken
@@ -26,14 +22,14 @@ internal sealed class AddChargeHandler(
         if (!charge.IsSuccess)
             return Result<Guid>.Failure(charge.Error!);
         var normalizedName = StringNormalizer.NormalizeString(charge.Value!.Name);
-        var charges = await _repo.ToListAsync(cancellationToken);
+        var charges = await repo.ToListAsync(cancellationToken);
         var normalizedNames = charges
             .Select(c => StringNormalizer.NormalizeString(c.Name));
         if (normalizedNames.Contains(normalizedName))
             return Result<Guid>.Failure("El nombre del cobro ya está en uso");
-        _repo.Add(charge.Value!);
-        await _save.SaveChangesAsync(cancellationToken);
-        _logs.Write(command.UserId, "Charge {charge} with ID {id} has been created.", command.Name, charge.Value!.ID);
+        repo.Add(charge.Value!);
+        await save.SaveChangesAsync(cancellationToken);
+        logs.Write(command.UserId, "Charge {charge} with ID {id} has been created.", command.Name, charge.Value!.ID);
         return Result<Guid>.Success(charge.Value!.ID);
     }
 }
