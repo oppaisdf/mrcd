@@ -8,18 +8,16 @@ internal sealed class AccountingMovementRepository(
     Persistence.AppContext app
 ) : IAccountingMovementRepository
 {
-    private readonly Persistence.AppContext _app = app;
-
     public void Add(
         AccountingMovement movement
-    ) => _app
+    ) => app
         .AccountingMovements
         .Add(movement);
 
     public Task<List<AccountingMovement>> ByDateToListAsync(
         DateOnly date,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .AccountingMovements
         .AsNoTracking()
         .Where(m => m.Date.Year == date.Year && m.Date.Month == date.Month)
@@ -28,7 +26,7 @@ internal sealed class AccountingMovementRepository(
     public Task DeleteAsync(
         Guid id,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .AccountingMovements
         .Where(m => m.ID == id)
         .ExecuteDeleteAsync(cancellationToken);
@@ -36,14 +34,14 @@ internal sealed class AccountingMovementRepository(
     public Task<bool> ExistsIdAsync(
         Guid id,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .AccountingMovements
         .AnyAsync(m => m.ID == id, cancellationToken);
 
     public Task<List<AccountingMovement>> OnlyByYearToListAsync(
         int year,
         CancellationToken cancellationToken
-    ) => _app
+    ) => app
         .AccountingMovements
         .Where(m => m.Date.Year == year)
         .ToListAsync(cancellationToken);
