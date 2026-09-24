@@ -16,18 +16,12 @@ internal sealed class AssignStageToActivityHandler(
     IPersistenceContext save
 ) : ICommandHandler<AssignStageToActivityCommand>
 {
-    private readonly IBaseEntityRepository<Stage> _stage = stage;
-    private readonly IActivityRepository _activity = activity;
-    private readonly IActivityStageRepository _activityStage = activityStage;
-    private readonly IUserRepository _user = user;
-    private readonly IPersistenceContext _save = save;
-
     private async Task<Result> DeleteAsync(
         AssignStageToActivityCommand command,
         CancellationToken ct
     )
     {
-        var exists = await _activityStage.AlreadyExistsAsync(
+        var exists = await activityStage.AlreadyExistsAsync(
             command.ActivityId,
             command.StageId,
             command.UserId,
@@ -35,7 +29,7 @@ internal sealed class AssignStageToActivityHandler(
         );
         if (!exists)
             return Result.Failure("La fase no ha sido asignada a la actividad");
-        await _activityStage.DeleteAsync(command.ActivityId, command.StageId, command.UserId, ct);
+        await activityStage.DeleteAsync(command.ActivityId, command.StageId, command.UserId, ct);
         return Result.Success();
     }
 
@@ -44,7 +38,7 @@ internal sealed class AssignStageToActivityHandler(
         CancellationToken ct
     )
     {
-        var alreadyExists = await _activityStage.AlreadyExistsAsync(
+        var alreadyExists = await activityStage.AlreadyExistsAsync(
             command.ActivityId,
             command.StageId,
             command.UserId,
@@ -54,19 +48,19 @@ internal sealed class AssignStageToActivityHandler(
             return Result.Failure("La fase ya ha sido agregada a la actividad");
         var created = ActivityStage.Create(command.ActivityId, command.StageId, command.IsUserMain, command.UserId, command.Notes);
         if (!created.IsSuccess) return Result.Failure(created.Error!);
-        if (!await _activity.ExistsIdAsync(command.ActivityId, ct))
+        if (!await activity.ExistsIdAsync(command.ActivityId, ct))
             return Result.Failure("La actividad no existe");
-        if (await _stage.GetByIdAsync(command.StageId, ct) is null)
+        if (await stage.GetByIdAsync(command.StageId, ct) is null)
             return Result.Failure("La fase de actividad no existe");
         if (command.UserId is not null)
         {
-            var userExistsActive = await _user.IsActiveAsync(command.UserId.Value, ct);
+            var userExistsActive = await user.IsActiveAsync(command.UserId.Value, ct);
             if (!userExistsActive)
                 return Result.Failure("El usuario no existe o está inactivo");
         }
 
-        _activityStage.Add(created.Value!);
-        await _save.SaveChangesAsync(ct);
+        activityStage.Add(created.Value!);
+        await save.SaveChangesAsync(ct);
         return Result.Success();
     }
 
