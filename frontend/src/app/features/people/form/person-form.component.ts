@@ -113,7 +113,7 @@ export class PersonFormComponent implements OnInit {
     isMax: boolean
   ) {
     const now = new Date();
-    now.setFullYear(now.getFullYear() - (isMax ? 15 : 25));
+    now.setFullYear(now.getFullYear() - (isMax ? 14 : 25));
     return now.toISOString().split('T')[0];
   }
 
@@ -139,8 +139,8 @@ export class PersonFormComponent implements OnInit {
         if (!isCreateMode) return 'La parroquia de bautizo no puede exceder los 30 caracteres';
         break;
       case 'dob':
-        if (isCreateMode) return 'La fecha de nacimiento es requerida y el confirmando debe tener entre 15-25 años';
-        else return 'El confirmando debe tener entre 15-25 años';
+        if (isCreateMode) return 'La fecha de nacimiento es requerida y el confirmando debe tener entre 14-25 años';
+        else return 'El confirmando debe tener entre 14-25 años';
     }
     return null;
   }

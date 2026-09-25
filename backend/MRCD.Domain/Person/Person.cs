@@ -25,7 +25,7 @@ public sealed class Person
         var now = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-6));
         if (now.Year - dob.Year > 25)
             return Result.Failure("El confirmando es mayor para este grupo");
-        if (now.Year - dob.Year < 15)
+        if (now.Year - dob.Year < 14)
             return Result.Failure("El confirmando es muy joven para este sacramento");
         return Result.Success();
     }
