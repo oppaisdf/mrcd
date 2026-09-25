@@ -76,7 +76,7 @@ export class PersonFormComponent implements OnInit {
     const controls = this.form.controls;
     controls.name.setValidators([Validators.maxLength(65)]);
     controls.address.setValidators([Validators.maxLength(100)]);
-    controls.dob.setValidators([dateRangeValidator(15, 25)]);
+    controls.dob.setValidators([dateRangeValidator(14, 25)]);
 
     if (isCreate) {
       controls.name.addValidators(Validators.required);
