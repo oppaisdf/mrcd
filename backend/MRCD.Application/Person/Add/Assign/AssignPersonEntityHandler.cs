@@ -18,11 +18,12 @@ internal sealed class AssignPersonEntityHandler<TEntity>(
         CancellationToken cancellationToken
     )
     {
-        if (!await people.ExistsActiveAsync(command.PersonId, cancellationToken))
+        var person = await people.GetByIdAsync(command.PersonId, cancellationToken);
+        if (person is null || !person.IsActive)
             return Result.Failure("El confirmando no existe o se encuentra inactivo");
         var result = command.IsAssignation
-            ? await assignments.AddAsync(command, cancellationToken)
-            : await assignments.DeleteAsync(command, cancellationToken);
+            ? await assignments.AddAsync(command, person.Name, cancellationToken)
+            : await assignments.DeleteAsync(command, person.Name, cancellationToken);
         if (result.IsSuccess) await save.SaveChangesAsync(cancellationToken);
         return result;
     }
