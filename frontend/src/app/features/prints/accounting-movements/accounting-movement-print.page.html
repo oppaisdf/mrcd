@@ -1,66 +1,100 @@
 <filters-accounting-movement #filters (movementsSubmit)="toList($event, filters.form.getRawValue())" />
 
 @if (totals().count > 0) {
-  <ui-print title="Movimientos contables">
-    <header class="report-heading">
-      <p class="eyebrow">Registro contable</p>
-      <h1>Movimientos contables</h1>
-      <p>Período: {{ period() }}</p>
-      <p class="report-note">Moneda: {{ currencySymbol }} · {{ totals().count }} movimientos</p>
-    </header>
-    @for (month of ledger(); track $index) {
-      @if (month.rows.length > 0) {
-        <table class="ledger">
-          <caption>Mes {{ month.month }}</caption>
-          <colgroup>
-            <col class="day-column"><col><col class="amount-column">
-            <col class="day-column"><col><col class="amount-column">
-          </colgroup>
-          <thead>
-            <tr class="account-head">
-              <th colspan="3" scope="colgroup">Ingresos <span>(+)</span></th>
-              <th colspan="3" scope="colgroup" class="divider">Egresos <span>(-)</span></th>
-            </tr>
-            <tr class="column-head">
-              <th scope="col">Día</th><th scope="col">Concepto</th><th scope="col" class="amount">Importe</th>
-              <th scope="col" class="divider">Día</th><th scope="col">Concepto</th><th scope="col" class="amount">Importe</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (row of month.rows; track $index) {
-              <tr>
-                <td class="day">{{ row.positive.day }}</td>
-                <td class="description">{{ row.positive.description }}</td>
-                <td class="amount">@if (row.positive) { {{ row.positive.amount | currency:currencySymbol:'symbol':'1.2-2' }} }</td>
-                <td class="day divider">{{ row.negative.day }}</td>
-                <td class="description">{{ row.negative.description }}</td>
-                <td class="amount">@if (row.negative) { {{ -row.negative.amount | currency:currencySymbol:'symbol':'1.2-2' }} }</td>
-              </tr>
-            }
-            <tr class="subtotal">
-              <th colspan="2" scope="row">Total entradas</th>
-              <td class="amount">{{ month.incoming / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</td>
-              <th colspan="2" scope="row" class="divider">Total salidas</th>
-              <td class="amount">{{ month.outgoing / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</td>
-            </tr>
-            <tr class="month-result">
-              <th colspan="5" scope="row">Resultado neto del mes</th>
-              <td class="amount">{{ (month.incoming - month.outgoing) / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</td>
-            </tr>
-          </tbody>
-        </table>
+<ui-print title="Movimientos contables">
+  <header class="report-heading">
+    <p class="eyebrow">Registro contable</p>
+    <h1>Movimientos contables</h1>
+    <p>Período: {{ period() }}</p>
+    <p class="report-note">Moneda: {{ currencySymbol }} · {{ totals().count }} movimientos</p>
+  </header>
+  @for (month of ledger(); track $index) {
+  @if (month.rows.length > 0) {
+  <table class="ledger">
+    <caption>Mes {{ month.month }}</caption>
+    <colgroup>
+      <col class="day-column">
+      <col>
+      <col class="amount-column">
+      <col class="day-column">
+      <col>
+      <col class="amount-column">
+    </colgroup>
+    <thead>
+      <tr class="account-head">
+        <th colspan="3" scope="colgroup">Ingresos <span>(+)</span></th>
+        <th colspan="3" scope="colgroup" class="divider">Egresos <span>(-)</span></th>
+      </tr>
+      <tr class="column-head">
+        <th scope="col">Día</th>
+        <th scope="col">Concepto</th>
+        <th scope="col" class="amount">Importe</th>
+        <th scope="col" class="divider">Día</th>
+        <th scope="col">Concepto</th>
+        <th scope="col" class="amount">Importe</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of month.rows; track $index) {
+      <tr>
+        @if (row.positive; as positive) {
+        <td class="day">{{ positive.day }}</td>
+        <td class="description">{{ positive.description }}</td>
+        <td class="amount">
+          {{ positive.amount | currency:currencySymbol:'symbol':'1.2-2' }}
+        </td>
+        } @else {
+        <td class="day"></td>
+        <td class="description"></td>
+        <td class="amount"></td>
+        }
+
+        @if (row.negative; as negative) {
+        <td class="day divider">{{ negative.day }}</td>
+        <td class="description">{{ negative.description }}</td>
+        <td class="amount">
+          {{ -negative.amount | currency:currencySymbol:'symbol':'1.2-2' }}
+        </td>
+        } @else {
+        <td class="day divider"></td>
+        <td class="description"></td>
+        <td class="amount"></td>
+        }
+      </tr>
       }
-    }
-    <section class="summary" aria-labelledby="summary-title">
-      <h2 id="summary-title">Resumen del período</h2>
-      <dl>
-        <div><dt>Total entradas</dt><dd>{{ totals().incoming / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</dd></div>
-        <div><dt>Total salidas</dt><dd>{{ totals().outgoing / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</dd></div>
-        <div class="net-result"><dt>Resultado neto</dt><dd>{{ (totals().incoming - totals().outgoing) / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</dd></div>
-      </dl>
-      <p class="report-note">Resultado neto = entradas − salidas. No incluye saldo inicial.</p>
-    </section>
-  </ui-print>
+      <tr class="subtotal">
+        <th colspan="2" scope="row">Total entradas</th>
+        <td class="amount">{{ month.incoming / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</td>
+        <th colspan="2" scope="row" class="divider">Total salidas</th>
+        <td class="amount">{{ month.outgoing / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</td>
+      </tr>
+      <tr class="month-result">
+        <th colspan="5" scope="row">Resultado neto del mes</th>
+        <td class="amount">{{ (month.incoming - month.outgoing) / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  }
+  }
+  <section class="summary" aria-labelledby="summary-title">
+    <h2 id="summary-title">Resumen del período</h2>
+    <dl>
+      <div>
+        <dt>Total entradas</dt>
+        <dd>{{ totals().incoming / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</dd>
+      </div>
+      <div>
+        <dt>Total salidas</dt>
+        <dd>{{ totals().outgoing / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</dd>
+      </div>
+      <div class="net-result">
+        <dt>Resultado neto</dt>
+        <dd>{{ (totals().incoming - totals().outgoing) / 100 | currency:currencySymbol:'symbol':'1.2-2' }}</dd>
+      </div>
+    </dl>
+    <p class="report-note">Resultado neto = entradas − salidas. No incluye saldo inicial.</p>
+  </section>
+</ui-print>
 } @else if (searched()) {
-  <p role="status">No hay movimientos contables para el período seleccionado.</p>
+<p role="status">No hay movimientos contables para el período seleccionado.</p>
 }
