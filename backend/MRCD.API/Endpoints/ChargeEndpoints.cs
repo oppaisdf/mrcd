@@ -105,14 +105,19 @@ internal static class ChargeEndpoints
             Guid chargeId,
             Guid personId,
             [FromServices] IBaseCommandHandler<AssignPersonEntityCommand, Charge> handler,
+            ClaimsPrincipal user,
             CancellationToken ct
         ) =>
         {
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out Guid userId))
+                return ResultsMapper.Unauthorized();
             var command = new AssignPersonEntityCommand(
                 personId,
                 chargeId,
-                true,
-                Application.BaseEntity.Common.BaseEntityType.Charge
+                IsAssignation: true,
+                Application.BaseEntity.Common.BaseEntityType.Charge,
+                userId
             );
             var result = await handler.HandleAsync(command, ct);
             return ResultsMapper.ToHttp(
@@ -136,14 +141,19 @@ internal static class ChargeEndpoints
             Guid chargeId,
             Guid personId,
             [FromServices] IBaseCommandHandler<AssignPersonEntityCommand, Charge> handler,
+            ClaimsPrincipal user,
             CancellationToken ct
         ) =>
         {
+            var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdString, out Guid userId))
+                return ResultsMapper.Unauthorized();
             var command = new AssignPersonEntityCommand(
                 personId,
                 chargeId,
-                false,
-                Application.BaseEntity.Common.BaseEntityType.Charge
+                IsAssignation: false,
+                Application.BaseEntity.Common.BaseEntityType.Charge,
+                userId
             );
             var result = await handler.HandleAsync(command, ct);
             return ResultsMapper.ToHttp(

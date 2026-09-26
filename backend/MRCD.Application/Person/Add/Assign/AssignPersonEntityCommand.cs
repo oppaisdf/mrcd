@@ -7,5 +7,6 @@ public sealed record AssignPersonEntityCommand(
     Guid PersonId,
     Guid EntityId,
     bool IsAssignation,
-    BaseEntity.Common.BaseEntityType Entity
+    BaseEntity.Common.BaseEntityType Entity,
+    Guid? UserId = null
 ) : ICommand<Result>;
