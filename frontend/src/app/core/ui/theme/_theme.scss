@@ -1,99 +1,82 @@
+/* Catppuccin Latte: tema inicial antes de aplicar ThemeService. */
 :root {
     color-scheme: light;
 
-    /* Base */
-    --color-bg: #0f1220;
-    --color-surface: rgba(255, 255, 255, .06);
-    --color-surface-2: rgba(255, 255, 255, .10);
-    --color-border: rgba(255, 255, 255, .14);
+    --ctp-base: #eff1f5;
+    --ctp-mantle: #e6e9ef;
+    --ctp-crust: #dce0e8;
+    --ctp-surface-0: #ccd0da;
+    --ctp-surface-1: #bcc0cc;
+    --ctp-text: #4c4f69;
+    --ctp-subtext-1: #5c5f77;
+    --ctp-mauve: #8839ef;
+    --ctp-blue: #1e66f5;
+    --ctp-green: #40a02b;
+    --ctp-peach: #fe640b;
+    --ctp-red: #d20f39;
+    --ctp-yellow: #df8e1d;
 
-    /* Texto */
-    --color-text: rgba(255, 255, 255, .92);
-    --color-text-muted: rgba(255, 255, 255, .70);
+    /* Tokens semánticos compartidos por todos los componentes. */
+    --color-bg: var(--ctp-base);
+    --color-surface: var(--ctp-mantle);
+    --color-surface-2: var(--ctp-crust);
+    --color-border: var(--ctp-surface-1);
+    --color-text: var(--ctp-text);
+    --color-fg: var(--color-text);
+    --color-text-muted: var(--ctp-subtext-1);
+    --color-accent: var(--ctp-mauve);
+    --color-accent-contrast: var(--ctp-base);
+    --color-danger: var(--ctp-red);
+    --color-danger-contrast: var(--ctp-base);
+    --color-warning: var(--ctp-yellow);
+    --color-success: var(--ctp-green);
+    --color-overlay: #11111b;
+    --color-focus: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    --shadow-1: 0 1px 2px color-mix(in srgb, var(--ctp-text) 15%, transparent);
+    --shadow-2: 0 8px 24px color-mix(in srgb, var(--ctp-text) 18%, transparent);
 
-    /* Marca / acento */
-    --color-accent: #7c5cff;
-    --color-accent-contrast: #0b0b12;
-
-    /* Estados */
-    --color-danger: #ff4d4d;
-    --color-warning: #ffcc00;
-    --color-success: #42d392;
-
-    /* Focus */
-    --color-focus: rgba(124, 92, 255, .55);
-
-    /* Layout */
     --nav-rail-w: 76px;
     --content-max: 1200px;
-
     --page-bg: var(--color-bg);
 }
 
-/* Tema oscuro explícito */
+/* Catppuccin Mocha. Los tokens semánticos heredan esta paleta. */
 :root[data-theme="dark"] {
     color-scheme: dark;
 
-    --color-bg: #0b0e18;
-    --color-surface: rgba(255, 255, 255, .06);
-    --color-surface-2: rgba(255, 255, 255, .10);
-    --color-border: rgba(255, 255, 255, .14);
+    --ctp-base: #1e1e2e;
+    --ctp-mantle: #181825;
+    --ctp-crust: #11111b;
+    --ctp-surface-0: #313244;
+    --ctp-surface-1: #45475a;
+    --ctp-text: #cdd6f4;
+    --ctp-subtext-1: #bac2de;
+    --ctp-mauve: #cba6f7;
+    --ctp-blue: #89b4fa;
+    --ctp-green: #a6e3a1;
+    --ctp-peach: #fab387;
+    --ctp-red: #f38ba8;
+    --ctp-yellow: #f9e2af;
 
-    --color-text: rgba(255, 255, 255, .92);
-    --color-text-muted: rgba(255, 255, 255, .70);
-
-    --color-accent: #7c5cff;
-    --color-accent-contrast: #0b0b12;
-
-    --color-focus: rgba(124, 92, 255, .55);
+    --color-surface: var(--ctp-surface-0);
+    --color-surface-2: var(--ctp-surface-1);
+    --shadow-1: 0 1px 2px color-mix(in srgb, var(--ctp-crust) 40%, transparent);
+    --shadow-2: 0 8px 24px color-mix(in srgb, var(--ctp-crust) 55%, transparent);
 }
 
-/* Tema claro */
-:root[data-theme="light"] {
-    color-scheme: light;
-
-    --color-bg: #f6f7fb;
-    --color-surface: rgba(10, 12, 20, .05);
-    --color-surface-2: rgba(10, 12, 20, .08);
-    --color-border: rgba(10, 12, 20, .12);
-
-    --color-text: rgba(10, 12, 20, .92);
-    --color-text-muted: rgba(10, 12, 20, .66);
-
-    --color-accent: #5b5cff;
-    --color-accent-contrast: #ffffff;
-
-    --color-focus: rgba(91, 92, 255, .35);
+/* Las secciones conservan su identidad con tintes de la paleta activa. */
+:root[data-route-theme="system"] {
+    --page-bg: color-mix(in srgb, var(--ctp-blue) 8%, var(--color-bg));
 }
 
-:root[data-theme="light"][data-route-theme="system"] {
-    --page-bg: #9caee7;
+:root[data-route-theme="admin"] {
+    --page-bg: color-mix(in srgb, var(--ctp-green) 8%, var(--color-bg));
 }
 
-:root[data-theme="dark"][data-route-theme="system"] {
-    --page-bg: #0f172a;
+:root[data-route-theme="people"] {
+    --page-bg: color-mix(in srgb, var(--ctp-mauve) 8%, var(--color-bg));
 }
 
-:root[data-theme="light"][data-route-theme="admin"] {
-    --page-bg: #9ce7b2;
-}
-
-:root[data-theme="dark"][data-route-theme="admin"] {
-    --page-bg: #112a0f;
-}
-
-:root[data-theme="light"][data-route-theme="people"] {
-    --page-bg: #d39ce7;
-}
-
-:root[data-theme="dark"][data-route-theme="people"] {
-    --page-bg: #290f2a;
-}
-
-:root[data-theme="light"][data-route-theme="prints"] {
-    --page-bg: #e7b79c;
-}
-
-:root[data-theme="dark"][data-route-theme="prints"] {
-    --page-bg: #2a1a0f;
+:root[data-route-theme="prints"] {
+    --page-bg: color-mix(in srgb, var(--ctp-peach) 8%, var(--color-bg));
 }

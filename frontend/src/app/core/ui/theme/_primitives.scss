@@ -84,15 +84,10 @@
     height: 16px;
     margin-top: -8px;
     border-radius: 999px;
-    border: 2px solid rgba(255, 255, 255, .25);
+    border: 2px solid var(--color-border);
     border-top-color: var(--color-accent);
     animation: ui-spin 700ms linear infinite;
     pointer-events: none;
-}
-
-:root[data-theme="light"] .ui-control.is-loading::after {
-    border-color: rgba(10, 12, 20, .18);
-    border-top-color: var(--color-accent);
 }
 
 @keyframes ui-spin {
@@ -212,7 +207,7 @@
 
 .ui-button.is-danger {
     background: var(--color-danger);
-    color: var(--color-text);
+    color: var(--color-danger-contrast);
 }
 
 /* Checkbox */
