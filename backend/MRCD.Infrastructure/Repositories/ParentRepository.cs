@@ -65,8 +65,8 @@ internal sealed class ParentRepository(
         where
             person.IsActive
         select new ParentByPersonDTO(
-            parent.ID,
             person.ID,
+            parent.ID,
             parent.Name,
             pp.IsParent,
             parent.IsMasculine,
