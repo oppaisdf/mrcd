@@ -1,6 +1,8 @@
 <ui-accordeon title="Filtros">
     <form [formGroup]="form" class="ui-form">
         <ui-select label="Ordenamiento" type="boolean" [items]="items('orderByName')" formControlName="orderByName" />
+        <ui-select label="Mostrar día" type="boolean" [items]="items('showDOB')" formControlName="showDay" />
+        <ui-select label="Mostrar género" type="boolean" [items]="items('showDOB')" formControlName="showGender" />
         <ui-select label="Mostrar fecha de nacimiento" type="boolean" [items]="items('showDOB')"
             formControlName="showDOB" />
         <ui-select label="Mostrar padrinos" type="boolean" [items]="items('showGodparents')"
@@ -23,8 +25,12 @@
         <thead>
             <tr>
                 <th>Nombre</th>
+                @if (value('showDay')) {
                 <th>Día</th>
+                }
+                @if (value('showGender')) {
                 <th>Género</th>
+                }
                 @if (value('showDOB')) {
                 <th>Fecha de nacimiento</th>
                 }
@@ -46,12 +52,16 @@
             @for (person of people; track person.personId) {
             <tr>
                 <td>{{person.personName}}</td>
+                @if (value('showDay')) {
                 <td>
                     @if (person.isSunday) {Domingo} @else {Sábado}
                 </td>
+                }
+                @if (value('showGender')) {
                 <td>
                     @if (person.isMasculine) {Masculino} @else {Femenino}
                 </td>
+                }
                 @if (value('showDOB')) {
                 <td>{{formatedDOB(person.dob)}}</td>
                 }

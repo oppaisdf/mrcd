@@ -25,6 +25,8 @@ export class GeneralListPage implements OnInit {
   private readonly _form = inject(FormBuilder);
   private readonly _people = signal<Array<GeneralListResponse>>([]);
   readonly form = this._form.nonNullable.group({
+    showDay: [true],
+    showGender: [true],
     showDOB: [false],
     showGodparents: [false],
     showParents: [false],
@@ -55,6 +57,8 @@ export class GeneralListPage implements OnInit {
     controlName: keyof typeof this.form.controls
   ) {
     var labelA = ({
+      "showDay": "Mostrar día",
+      "showGender": "Mostrar género",
       "showDOB": "Mostrar fecha de nacimiento",
       "showGodparents": "Mostrar padrinos",
       "showParents": "Mostrar padres",
@@ -63,6 +67,8 @@ export class GeneralListPage implements OnInit {
       "orderByName": "Order por nombre"
     } as const)[controlName];
     var labelB = ({
+      "showDay": "Ocultar día",
+      "showGender": "Ocultar género",
       "showDOB": "Ocultar fecha de nacimiento",
       "showGodparents": "Ocultar padrinos",
       "showParents": "Ocultar padres",
