@@ -2,6 +2,15 @@
     "name": "C# .NET 8 Dev Container",
     "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
     "customizations": {
+        "settings": {
+            "terminal.integrated.profiles.linux": {
+                "PowerShell": {
+                    "path": "pwsh",
+                    "icon": "terminal-powershell"
+                }
+            },
+            "terminal.integrated.defaultProfile.linux": "pwsh"
+        },
         "vscode": {
             "extensions": [
                 "ms-dotnettools.csdevkit"
