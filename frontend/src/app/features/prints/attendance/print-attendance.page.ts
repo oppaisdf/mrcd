@@ -37,21 +37,22 @@ export class PrintAttendancePage {
   readonly attendances = signal<Array<AttendanceResponse>>([]);
   readonly headers = computed(() => {
     const attendances = this.attendances();
-    if (!attendances) return [];
+    if (!attendances?.length) return [];
 
     const formatter = new Intl.DateTimeFormat('es-ES', {
       day: '2-digit',
-      month: 'short'
+      month: 'short',
+      timeZone: 'UTC'
     });
-    return attendances[0].dates.map(d => {
-      const [year, month, day] = new Date(d.date).toISOString().split("T")[0].split("-").map(Number)
-      return formatter.format(new Date(year, month - 1, day)).replace(" ", "-");
-    });
+
+    return attendances[0].dates.map(d =>
+      formatter.format(new Date(d.date)).replace(/\s+/g, '-')
+    );
   });
 
   private goodDate(
     date: unknown
-  ){
+  ) {
     if (date instanceof Date) return date;
     if (typeof date !== 'string') return new Date();
     const dateString = date.toString();

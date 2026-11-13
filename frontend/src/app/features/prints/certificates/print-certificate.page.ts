@@ -105,7 +105,10 @@ export class PrintCertificatePage {
     const dob = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)
       ? new Date(`${date}T00:00:00`) : new Date(date);
     if (Number.isNaN(dob.getTime())) return '';
-    return `${dob.getDate()} de ${dob.toLocaleString('es-ES', { month: 'long' })} del ${dob.getFullYear()}`;
+    return `${dob.getUTCDate()} de ${dob.toLocaleString('es-ES', {
+      month: 'long',
+      timeZone: 'UTC'
+    })} del ${dob.getUTCFullYear()}`;
   }
 
   hint(
@@ -114,7 +117,7 @@ export class PrintCertificatePage {
     const control = this.form.get(controlName);
     if (!control) return 'Control not found :c';
     if (!control.touched || control.valid) return null;
-    switch(controlName){
+    switch (controlName) {
       case 'date': return 'La fecha es requerida';
       case 'church': return 'La parroquia es requerida';
       case 'signature': return 'La firma es requerida';
@@ -124,7 +127,7 @@ export class PrintCertificatePage {
     }
   }
 
-  async getAsync(){
+  async getAsync() {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
     if (this._alert.loading()) return;
@@ -132,7 +135,7 @@ export class PrintCertificatePage {
 
     const response = await this._service.generalListAsync();
     this._alert.clear();
-    if (!response.isSuccess){
+    if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
     }
@@ -141,7 +144,7 @@ export class PrintCertificatePage {
 
   getValue(
     controlName: keyof typeof this.form.controls
-  ){
+  ) {
     const control = this.form.get(controlName);
     if (!control) return null;
     return control.value;

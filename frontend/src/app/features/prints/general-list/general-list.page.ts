@@ -107,6 +107,9 @@ export class GeneralListPage implements OnInit {
     date: Date
   ) {
     const dob = new Date(date);
-    return `${dob.getDate()} de ${dob.toLocaleString('es-ES', { month: 'long' })} del ${dob.getFullYear()}`;
+    return `${dob.getUTCDate()} de ${dob.toLocaleString('es-ES', {
+      month: 'long',
+      timeZone: 'UTC'
+    })} del ${dob.getUTCFullYear()}`;
   }
 }
