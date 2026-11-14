@@ -100,7 +100,7 @@ export class PrintCertificatePage {
     }, '');
   }
 
-  GetDOB(
+  getDate(
     date: Date | string | null
   ) {
     if (!date) return '';

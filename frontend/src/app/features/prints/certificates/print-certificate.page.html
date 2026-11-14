@@ -69,7 +69,7 @@
                         </div>
                         <div>
                             <dt>Nacido el</dt>
-                            <dd>{{ GetDOB(person.dob) }}</dd>
+                            <dd>{{ getDate(person.dob) }}</dd>
                         </div>
                         <div>
                             <dt>Hijo de</dt>
@@ -85,7 +85,7 @@
                         </div>
                         <div>
                             <dt>Recibió el sacramento de la confirmación el</dt>
-                            <dd>{{ getValue('date') }}</dd>
+                            <dd>{{ getDate(getValue('date')!.toString()) }}</dd>
                         </div>
                         <div>
                             <dt>Impartió el sacramento</dt>
