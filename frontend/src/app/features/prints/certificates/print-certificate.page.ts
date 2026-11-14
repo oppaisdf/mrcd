@@ -24,7 +24,8 @@ export class PrintCertificatePage {
     signature: ['', Validators.required],
     cite: ['', Validators.required],
     officiant: ['', Validators.required],
-    opacity: [0.2]
+    opacity: [0.2],
+    fontSize: this._form.nonNullable.control(100, [Validators.min(70), Validators.max(180)])
   });
   readonly backgroundImage = signal<string | null>(null);
   readonly imageError = signal<string | null>(null);
@@ -35,8 +36,9 @@ export class PrintCertificatePage {
     afterEveryRender(() => {
       for (const ref of this.contents()) {
         const content = ref.nativeElement;
-        const available = content.parentElement!.clientHeight;
-        const scale = Math.min(1, available / content.scrollHeight);
+        const area = content.parentElement!;
+        const scale = Math.min(1, area.clientHeight / content.scrollHeight,
+          area.clientWidth / content.scrollWidth);
         content.style.transform = `translateX(-50%) scale(${scale})`;
       }
     });

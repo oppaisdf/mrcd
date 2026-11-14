@@ -9,6 +9,14 @@
         [hint]="hint('signature')" />
     <ui-input label="Celebrante" type="text" formControlName="officiant" [hint]="hint('officiant')" />
 
+    <div class="ui-field">
+        <label class="ui-label" for="certificate-font-size">Tamaño de letra: {{ getValue('fontSize') }}%</label>
+        <div class="ui-control">
+            <input id="certificate-font-size" type="range" min="70" max="180" step="5" formControlName="fontSize"
+                aria-describedby="certificate-font-size-help" />
+        </div>
+    </div>
+
     @let bkImg = backgroundImage();
     <div class="ui-field">
         <label class="ui-label" for="certificate-image">Imagen de fondo</label>
@@ -44,7 +52,8 @@
 
 <ui-print [paginated]="true" title="Vista previa de diplomas">
     @for (person of people(); track $index) {
-    <section class="certificate" [attr.aria-label]="'Diploma de ' + person.personName">
+    <section class="certificate" [attr.aria-label]="'Diploma de ' + person.personName"
+        [style.font-size.pt]="14 * form.controls.fontSize.value / 100">
         @if (backgroundImage(); as source) {
         <img class="certificate__background" [src]="source" alt="" [style.opacity]="getValue('opacity') ?? 0.2" />
         }
