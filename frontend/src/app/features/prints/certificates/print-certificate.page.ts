@@ -6,10 +6,12 @@ import { UiPrintComponent } from '../../../core/ui/print/ui-print.component';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { PersonService } from '../../people/services/person.service';
 import { GeneralListResponse } from '../../people/responses/general-list.response';
+import { UiSelectComponent } from '../../../core/ui/select/ui-select.component';
+import { SelectItem } from '../../../core/ui/select/SelectItem';
 
 @Component({
   selector: 'app-print-certificate.page',
-  imports: [ReactiveFormsModule, UiInputComponent, UiPrintComponent],
+  imports: [ReactiveFormsModule, UiInputComponent, UiPrintComponent, UiSelectComponent],
   templateUrl: './print-certificate.page.html',
   styleUrl: './print-certificate.page.scss',
 })
@@ -19,6 +21,7 @@ export class PrintCertificatePage {
   private readonly _service = inject(PersonService);
   private readonly today = new Date();
   readonly form = this._form.group({
+    singleLine: [false],
     date: [`${this.today.getFullYear()}-${String(this.today.getMonth() + 1).padStart(2, '0')}-${String(this.today.getDate()).padStart(2, '0')}`, Validators.required],
     church: ['', Validators.required],
     signature: ['', Validators.required],
@@ -31,6 +34,15 @@ export class PrintCertificatePage {
   readonly imageError = signal<string | null>(null);
   private readonly contents = viewChildren<ElementRef<HTMLElement>>('certificateContent');
   private imageSelection = 0;
+  readonly contentLines: Array<SelectItem<boolean>> = [
+    {
+      label: 'Campos en dos líneas',
+      value: false
+    }, {
+      label: 'Campos en una línea',
+      value: true
+    }
+  ];
 
   constructor() {
     afterEveryRender(() => {

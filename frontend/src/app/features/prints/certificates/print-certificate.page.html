@@ -1,6 +1,8 @@
 <h1>Generación de diplomas</h1>
 <hr>
 <form class="ui-form" [formGroup]="form" (ngSubmit)="getAsync()">
+    <ui-select type="boolean" label="Mostrar información en líneas" [items]="contentLines"
+        formControlName="singleLine" />
     <ui-input label="Fecha en la que se impartirá el sacramento" type="date" formControlName="date"
         [hint]="hint('date')" />
     <ui-input label="Parroquia donde se impartirá el sacramento" type="text" formControlName="church"
@@ -62,7 +64,7 @@
                 <div class="certificate__information">
                     <h2>Diploma de Confirmación</h2>
                     <h3>{{ getValue('church') }}</h3>
-                    <dl>
+                    <dl [class.certificate__fields--inline]="getValue('singleLine')">
                         <div>
                             <dt>Otorga el presente diploma a</dt>
                             <dd>{{ person.personName }}</dd>
