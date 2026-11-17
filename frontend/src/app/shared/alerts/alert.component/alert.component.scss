@@ -35,7 +35,7 @@
     width: min(520px, calc(100vw - var(--space-6) * 2));
     background: var(--color-surface, var(--color-bg, #111));
     color: var(--color-fg, #fff);
-    border: 1px solid var(--color-border, rgba(255, 255, 255, .12));
+    border: 2px solid var(--comic-ink);
     border-radius: var(--radius-3);
     box-shadow: var(--shadow-2);
 
@@ -60,7 +60,8 @@
 
 .am__title {
     margin: 0;
-    font-size: 18px;
+    font-family: var(--font-display);
+    font-size: 22px;
     line-height: var(--line);
     font-weight: 650;
     flex: 1;
