@@ -1,119 +1,53 @@
+/* Only the workspace turns; navigation remains anchored beside the comic. */
 @supports (view-transition-name: none) {
+    .vt-content { view-transition-name: vt-content; }
+
     ::view-transition-group(vt-content) {
-        animation-duration: var(--dur-3);
-        animation-timing-function: var(--ease-out);
+        perspective: 1800px;
+        animation-duration: 580ms;
+        animation-timing-function: cubic-bezier(.22, .7, .25, 1);
     }
 
+    ::view-transition-image-pair(vt-content) { isolation: isolate; }
     ::view-transition-old(vt-content),
     ::view-transition-new(vt-content) {
         mix-blend-mode: normal;
         backface-visibility: hidden;
+        transform-origin: left center;
+        animation-duration: 580ms;
+        animation-timing-function: cubic-bezier(.22, .7, .25, 1);
+        animation-fill-mode: both;
     }
 
-    /* Forward */
-    html[data-nav-dir="forward"]::view-transition-old(vt-content) {
-        animation: vt-exit-left var(--dur-3) var(--ease-out) both;
+    ::view-transition-old(vt-content) { z-index: 2; animation-name: comic-page-out; }
+    ::view-transition-new(vt-content) { z-index: 1; animation-name: comic-page-under; }
+
+    html[data-nav-dir='back']::view-transition-old(vt-content) {
+        z-index: 1;
+        animation-name: comic-page-under;
+        animation-direction: reverse;
+    }
+    html[data-nav-dir='back']::view-transition-new(vt-content) {
+        z-index: 2;
+        animation-name: comic-page-out;
+        animation-direction: reverse;
     }
 
-    html[data-nav-dir="forward"]::view-transition-new(vt-content) {
-        animation: vt-enter-right var(--dur-3) var(--ease-out) both;
+    @keyframes comic-page-out {
+        0% { transform: perspective(1800px) rotateY(0) rotateZ(0); opacity: 1; filter: brightness(1); }
+        65% { opacity: 1; }
+        100% { transform: perspective(1800px) rotateY(-85deg) rotateZ(-1deg); opacity: 0; filter: brightness(.65); }
     }
-
-    /* Back */
-    html[data-nav-dir="back"]::view-transition-old(vt-content) {
-        animation: vt-exit-right var(--dur-3) var(--ease-out) both;
-    }
-
-    html[data-nav-dir="back"]::view-transition-new(vt-content) {
-        animation: vt-enter-left var(--dur-3) var(--ease-out) both;
-    }
-
-    /* Si no hay dirección, se hace un fade suave */
-    html[data-nav-dir="none"]::view-transition-old(vt-content) {
-        animation: vt-fade-out var(--dur-2) var(--ease-out) both;
-    }
-
-    html[data-nav-dir="none"]::view-transition-new(vt-content) {
-        animation: vt-fade-in var(--dur-2) var(--ease-out) both;
-    }
-
-    @keyframes vt-enter-right {
-        from {
-            transform: translateX(100%);
-            opacity: .55;
-            filter: blur(3px);
-        }
-
-        to {
-            transform: translateX(0);
-            opacity: 1;
-            filter: blur(0);
-        }
-    }
-
-    @keyframes vt-exit-left {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        to {
-            transform: translateX(-35%);
-            opacity: .55;
-            filter: blur(2px);
-        }
-    }
-
-    @keyframes vt-enter-left {
-        from {
-            transform: translateX(-100%);
-            opacity: .55;
-            filter: blur(3px);
-        }
-
-        to {
-            transform: translateX(0);
-            opacity: 1;
-            filter: blur(0);
-        }
-    }
-
-    @keyframes vt-exit-right {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        to {
-            transform: translateX(35%);
-            opacity: .55;
-            filter: blur(2px);
-        }
-    }
-
-    @keyframes vt-fade-in {
-        from {
-            opacity: .6;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes vt-fade-out {
-        from {
-            opacity: 1;
-        }
-
-        to {
-            opacity: .6;
-        }
+    @keyframes comic-page-under {
+        from { transform: scale(.985) translateX(12px); filter: brightness(.8); }
+        to { transform: scale(1) translateX(0); filter: brightness(1); }
     }
 }
 
-@supports (view-transition-name: none) {
-    .vt-content {
-        view-transition-name: vt-content;
-    }
+/* Pseudo-elements need explicit motion protection, too. */
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) { animation: none !important; }
 }
+@media print { .vt-content { view-transition-name: none; } }
