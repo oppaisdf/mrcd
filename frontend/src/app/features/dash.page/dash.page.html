@@ -1,4 +1,12 @@
-<h1>Alertas</h1>
+<header class="dashboard-hero">
+    <div>
+        <p class="dashboard-eyebrow">✦ Tu espacio de trabajo</p>
+        <h1>Todo listo.<br><em>Confirma :3</em></h1>
+        <p class="dashboard-intro">Consulta los pendientes y mantén tu información al día.</p>
+    </div>
+    <span class="dashboard-sticker">Panel de control ↗</span>
+</header>
+<h2>Alertas y pendientes</h2>
 <section class="ui-kpi-grid">
     @for (alert of alerts(); track $index) {
     <article class="ui-kpi" role="group" [attr.aria-label]="alert.message">
@@ -11,10 +19,10 @@
             <a class="ui-kpi__link" [routerLink]="alert.route" [queryParams]="alert.parameter">Ver</a>
         </footer>
     </article>
+    } @empty {
+    <article class="ui-box dashboard-empty">No hay alertas para mostrar en este momento.</article>
     }
 </section>
 
-<br>
-<h1>Mi usuario</h1>
-<hr>
+<h2 class="profile-title">Mi usuario</h2>
 <user-form mode="Actualizarme" [roles]="roles()" [user]="user()" (formSubmit)="updateMeAsync($event)" />
