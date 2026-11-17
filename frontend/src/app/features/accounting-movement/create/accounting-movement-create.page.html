@@ -1,4 +1,8 @@
 <form [formGroup]="form" class="ui-form" (ngSubmit)="addAsync()">
+    <header class="ui-form__header">
+        <div><h2>Movimiento contable</h2><p>Completa los datos del movimiento.</p></div>
+        <span class="ui-form__tag">Registro</span>
+    </header>
     <ui-input label="Descripción" type="text" [hint]="hint('name')" [maxLength]="50" formControlName="name" />
     <ui-input label="Monto" type="number" [hint]="hint('amount')" max="5000" min="-5000" formControlName="amount" />
     <button class="ui-button" type="submit">Agregar</button>
