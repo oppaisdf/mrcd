@@ -1,55 +1,55 @@
-@let currentCategory = selectedCategory();
-<aside class="nav" [class.nav--drawer-open]="isDrawerOpen()">
-    <!-- RAIL -->
-    <div class="rail">
-        <div class="rail__top">
-            <a class="brand" title="Home" (click)="closeDrawer()" routerLink="/">
-                <img src="favicon.ico" width="30" height="30" alt="Home" />
-            </a>
-        </div>
-
-        <ul class="rail__menu" role="list">
-            @for (category of categories(); track $index) {
-            <li>
-                <a class="rail__item" [class.is-active]="currentCategory?.id === category.id" [title]="category.id"
-                    (click)="selectCategory(category.id)">
-                    <img class="rail__icon" aria-hidden="true" [src]="category.icon">
-                </a>
-            </li>
-            }
-        </ul>
-
-        <div class="rail__bottom">
-            <button class="rail__btn" type="button" title="Theme" (click)="toggleTheme.emit()">
-                <img src="/icons/theme.png">
-            </button>
-            <button class="rail__btn" type="button" title="Logout" (click)="logout()">
-                <img src="/icons/logout.png">
-            </button>
-        </div>
+@let current = selectedCategory();
+<nav class="rail" aria-label="Navegación principal">
+    <a class="brand" routerLink="/" aria-label="Ir al inicio" (click)="closeDrawer()">M<span>✦</span></a>
+    <div class="rail__menu">
+        @for (category of categories(); track category.id) {
+        <button type="button" class="rail__item"
+            [class.is-active]="desktopOpen() ? current?.id === category.id : activeCategory() === category.id"
+            [attr.aria-label]="category.id" [attr.aria-expanded]="desktopOpen() && current?.id === category.id"
+            aria-controls="desktop-navigation" (click)="selectCategory(category.id)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="icons[category.id]" /></svg>
+            <span class="rail__tip">{{ category.id }}</span>
+        </button>
+        }
     </div>
-
-    <!-- DRAWER -->
-    @if (isDrawerOpen()) {
-    <div class="drawer" role="navigation" aria-label="Section">
-        <div class="drawer__header">
-            <div class="drawer__title">
-                <img [src]="currentCategory?.icon" alt="" class="drawwer__icon">
-                <span class="drawer__text">{{ currentCategory?.id }}</span>
-            </div>
-
-            <button class="drawer__close" type="button" title="Close" (click)="closeDrawer()">✕</button>
-        </div>
-
-        <ul class="drawer__menu" role="list">
-            @for (option of currentCategory?.options; track $index) {
-            <li>
-                <a class="drawer__item" [routerLink]="option.route" (click)="closeDrawer()">
-                    <span>{{ option.routeName }}</span>
-                </a>
-            </li>
-            }
-        </ul>
+    <div class="rail__bottom">
+        <button type="button" class="rail__item" (click)="toggleTheme.emit()" [attr.aria-label]="theme() === 'dark' ? 'Activar tema claro' : 'Activar tema oscuro'">
+            <span aria-hidden="true">{{ theme() === 'dark' ? '☀' : '☾' }}</span><span class="rail__tip">Cambiar tema</span>
+        </button>
+        <button type="button" class="rail__item" (click)="logout()" aria-label="Cerrar sesión"><span aria-hidden="true">⏻</span><span class="rail__tip">Cerrar sesión</span></button>
+    </div>
+</nav>
+@if (desktopOpen() || mobileOpen()) {
+<button class="nav-backdrop" [class.is-mobile]="mobileOpen()" type="button" aria-label="Cerrar menú" (click)="closeDrawer()"></button>
+<section class="drawer" [class.drawer--mobile]="mobileOpen()" [attr.id]="mobileOpen() ? 'mobile-navigation' : 'desktop-navigation'" aria-label="Opciones de navegación">
+    <header class="drawer__header">
+        <span class="eyebrow">✦ Tu mapa de navegación</span>
+        <button class="drawer__close" type="button" aria-label="Cerrar menú" (click)="closeDrawer()">✕</button>
+    </header>
+    <h2>{{ mobileOpen() ? '¿A dónde vamos?' : current?.id }}</h2>
+    <p class="drawer__intro">Elige una acción para continuar.</p>
+    @if (mobileOpen()) {
+    <div class="mobile-tabs" aria-label="Categorías">
+        @for (category of categories(); track category.id) {
+        <button type="button" [class.is-active]="current?.id === category.id" [attr.aria-pressed]="current?.id === category.id" (click)="selectedId.set(category.id)">{{ category.id }}</button>
+        }
     </div>
     }
-</aside>
+    <div class="drawer__menu">
+        @for (option of current?.options; track option.route; let i = $index) {
+        <a class="drawer__item" [routerLink]="option.route" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeDrawer()">
+            <span class="nav-badge">{{ i + 1 < 10 ? '0' : '' }}{{ i + 1 }}</span>
+            <span class="nav-copy">{{ option.routeName }}</span><span class="nav-arrow" aria-hidden="true">↗</span>
+        </a>
+        }
+    </div>
+    <footer class="drawer__footer">
+        @if (mobileOpen()) {
+        <a routerLink="/" (click)="closeDrawer()">Inicio</a>
+        <button type="button" (click)="toggleTheme.emit()">Tema {{ theme() === 'dark' ? 'claro' : 'oscuro' }}</button>
+        <button type="button" (click)="logout()">Salir ⏻</button>
+        } @else { <span>Tu siguiente paso, a un clic. ✦</span> }
+    </footer>
+</section>
+}
+<button class="mobile-fab" type="button" [class.is-open]="mobileOpen()" [attr.aria-label]="mobileOpen() ? 'Cerrar menú' : 'Abrir menú'" [attr.aria-expanded]="mobileOpen()" aria-controls="mobile-navigation" (click)="toggleMobile()"><span aria-hidden="true">{{ mobileOpen() ? '✕' : '☰' }}</span></button>

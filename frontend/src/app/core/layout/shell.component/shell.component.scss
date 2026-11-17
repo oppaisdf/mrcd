@@ -1,55 +1,14 @@
-.shell {
-    min-height: 100dvh;
-    display: grid;
-    grid-template-columns: var(--nav-rail-w) 1fr;
-    position: relative;
+.shell { min-height: 100dvh; display: grid; grid-template-columns: var(--nav-rail-w) minmax(0, 1fr); position: relative; }
+.shell--guest { grid-template-columns: minmax(0, 1fr); }
+.shell__nav { position: relative; z-index: 20; }
+.shell__content { min-width: 0; padding: 38px clamp(22px, 4vw, 68px) 72px; position: relative; background: var(--page-bg); color: var(--color-text); }
+.footer { border-top: 1px dashed var(--color-border); background: var(--ctp-mantle); color: var(--color-text-muted); padding: 20px 24px; font-size: 12px; }
+.container { max-width: var(--content-max); margin: 0 auto; }
+@media (max-width: 680px) {
+    .shell { grid-template-columns: minmax(0, 1fr); }
+    .shell__nav { position: fixed; inset: 0; pointer-events: none; }
+    .shell__nav ::ng-deep button, .shell__nav ::ng-deep a, .shell__nav ::ng-deep .drawer { pointer-events: auto; }
+    .shell__content { padding: 27px 19px 115px; }
+    .footer { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
 }
-
-.shell__nav {
-    position: sticky;
-    top: 0;
-    height: 100dvh;
-    z-index: 20;
-
-    @supports (view-transition-name: foo) {
-        view-transition-name: none;
-    }
-}
-
-.shell__content {
-    min-width: 0;
-    padding: var(--space-6);
-    position: relative;
-    z-index: 1;
-    background: var(--page-bg);
-    color: var(--color-text);
-}
-
-.footer {
-    border-top: 1px solid var(--color-border);
-    background: var(--color-bg);
-    color: var(--color-text-muted);
-    padding: var(--space-4) var(--space-6);
-}
-
-.container {
-    max-width: var(--content-max);
-    margin: 0 auto;
-}
-
-@supports (view-transition-name: none) {
-
-    ::view-transition-old(root) .shell__nav,
-    ::view-transition-new(root) .shell__nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: var(--nav-rail-w);
-        height: 100dvh;
-    }
-
-    ::view-transition-old(root) .shell__content,
-    ::view-transition-new(root) .shell__content {
-        margin-left: var(--nav-rail-w);
-    }
-}
+@media print { .shell { display: block; } .shell__nav, .footer { display: none; } .shell__content { padding: 0; } }
