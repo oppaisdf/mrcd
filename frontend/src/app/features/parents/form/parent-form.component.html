@@ -1,4 +1,8 @@
 <form [formGroup]="form" class="ui-form" (ngSubmit)="onSubmit()">
+    <header class="ui-form__header">
+        <div><h2>Datos de la persona</h2><p>Información del padre, madre o padrino.</p></div>
+        <span class="ui-form__tag">Familia</span>
+    </header>
     <ui-input label="Nombre" type="text" [hint]="hint('name')" [maxlength]="80" formControlName="name" />
     <ui-select label="Género" [items]="items('genders')" type="boolean" formControlName="isMasculine" />
     @if (!hideIsParent()) {
