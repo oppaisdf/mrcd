@@ -4,7 +4,7 @@
         <p>✦ Bienvenido de vuelta</p>
         <h1>Tu espacio.<br>Todo en orden.</h1>
     </header>
-    <form class="ui-box ui-form" [formGroup]="form" (ngSubmit)="loginAsync()">
+    <form class="ui-box ui-form ui-form--stacked" [formGroup]="form" (ngSubmit)="loginAsync()">
         <ui-input label="Usuario" type="text" [hint]="invalidField('username')" formControlName="username" />
         <ui-input label="Contraseña" type="password" [hint]="invalidField('password')" formControlName="password" />
 
