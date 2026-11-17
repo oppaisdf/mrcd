@@ -1,0 +1,6 @@
+:host { display: grid; place-items: center; min-height: 75dvh; }
+.ui-section { width: min(100%, 640px); }
+.login-heading { margin-bottom: 30px; }
+.login-heading p { color: var(--color-accent); font: 700 11px var(--font-display); letter-spacing: 2px; text-transform: uppercase; margin-top: 28px; }
+.login-heading h1 { font-size: clamp(36px, 5vw, 60px); }
+.login-mark { display: inline-grid; place-items: center; width: 58px; height: 58px; background: var(--color-accent); color: var(--color-accent-contrast); border: 2px solid var(--comic-ink); border-radius: 16px; transform: rotate(-8deg); box-shadow: var(--shadow-1); font: 800 24px var(--font-display); }
