@@ -22,8 +22,8 @@
 /* Box / Panel */
 .ui-box {
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-2);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-3);
     box-shadow: var(--shadow-1);
     padding: var(--space-6);
 }
@@ -103,7 +103,7 @@
     min-height: var(--control-h);
     padding: var(--control-pad-y) var(--control-pad-x);
     border-radius: var(--radius-2);
-    border: 1px solid var(--color-border);
+    border: 1.5px solid var(--color-border);
     background: var(--color-surface-2);
     color: var(--color-text);
     font: 500 var(--text-lg)/var(--line) var(--font-sans);
@@ -172,7 +172,7 @@
     min-height: var(--control-h);
     padding: 0 var(--space-6);
     border-radius: var(--radius-2);
-    border: 1px solid transparent;
+    border: 2px solid var(--comic-ink);
     background: var(--color-accent);
     color: var(--color-accent-contrast);
     font: 700 var(--text-lg)/1 var(--font-sans);
@@ -183,13 +183,13 @@
 }
 
 .ui-button:hover {
-    transform: translateY(-1px);
+    transform: translate(-1px, -2px);
     box-shadow: var(--shadow-2);
 }
 
 .ui-button:active {
-    transform: translateY(0);
-    box-shadow: var(--shadow-1);
+    transform: translate(2px, 2px);
+    box-shadow: none;
 }
 
 .ui-button:disabled {
@@ -233,7 +233,7 @@
 .ui-table-wrap {
     width: 100%;
     overflow-x: auto;
-    border: 1px solid var(--color-border);
+    border: 1.5px solid var(--color-border);
     border-radius: var(--radius-2);
     background: var(--color-surface);
     box-shadow: var(--shadow-1);

@@ -3,6 +3,8 @@
 @use './app/core/ui/theme/primitives';
 @use './app/core/ui/theme/view-transitions';
 
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 *,
 *::before,
 *::after {
@@ -64,4 +66,19 @@ a {
     html.print-mode ui-print .no-print {
         display: none !important;
     }
+}
+/* Shared screen typography; printed documents keep their own typesetting. */
+@media screen {
+    button, input, select, textarea { font-family: inherit; }
+    h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.04em; }
+    h1 { font-size: clamp(30px, 4vw, 48px); line-height: 1.1; margin: 0 0 28px; }
+    h2 { font-size: clamp(22px, 2.5vw, 30px); }
+    hr { border: 0; border-top: 1px dashed var(--color-border); margin-block: 24px; }
+    ::selection { background: var(--color-accent); color: var(--color-accent-contrast); }
+    .ui-box { border-top: 3px solid var(--color-accent); }
+    .ui-table thead th { font-family: var(--font-display); color: var(--color-accent); }
+    .ui-table tbody tr:last-child td { border-bottom: 0; }
+    .ui-button { white-space: normal; line-height: 1.3; padding-block: 11px; }
+    .ui-label { font-size: 14px; }
+    .ui-container { padding: clamp(12px, 2vw, 24px); }
 }

@@ -18,24 +18,28 @@
 
     /* Tokens semánticos compartidos por todos los componentes. */
     --color-bg: var(--ctp-base);
-    --color-surface: var(--ctp-mantle);
-    --color-surface-2: var(--ctp-crust);
+    --color-surface: #f7f8fc;
+    --color-surface-2: var(--ctp-mantle);
     --color-border: var(--ctp-surface-1);
     --color-text: var(--ctp-text);
     --color-fg: var(--color-text);
     --color-text-muted: var(--ctp-subtext-1);
     --color-accent: var(--ctp-mauve);
-    --color-accent-contrast: var(--ctp-base);
+    --color-accent-contrast: #ffffff;
     --color-danger: var(--ctp-red);
-    --color-danger-contrast: var(--ctp-base);
+    --color-danger-contrast: #ffffff;
     --color-warning: var(--ctp-yellow);
     --color-success: var(--ctp-green);
     --color-overlay: #11111b;
-    --color-focus: color-mix(in srgb, var(--color-accent) 35%, transparent);
-    --shadow-1: 0 1px 2px color-mix(in srgb, var(--ctp-text) 15%, transparent);
-    --shadow-2: 0 8px 24px color-mix(in srgb, var(--ctp-text) 18%, transparent);
+    --color-focus: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    --comic-ink: #11111b;
+    --comic-paper: var(--color-surface);
+    --comic-panel: var(--color-surface);
+    --color-link: var(--color-accent);
+    --shadow-1: 3px 3px 0 var(--comic-ink);
+    --shadow-2: 7px 7px 0 var(--comic-ink);
 
-    --nav-rail-w: 76px;
+    --nav-rail-w: 78px;
     --content-max: 1200px;
     --page-bg: var(--color-bg);
 }
@@ -58,10 +62,14 @@
     --ctp-red: #f38ba8;
     --ctp-yellow: #f9e2af;
 
-    --color-surface: var(--ctp-surface-0);
-    --color-surface-2: var(--ctp-surface-1);
-    --shadow-1: 0 1px 2px color-mix(in srgb, var(--ctp-crust) 40%, transparent);
-    --shadow-2: 0 8px 24px color-mix(in srgb, var(--ctp-crust) 55%, transparent);
+    --color-surface: #242436;
+    --comic-panel: #28283b;
+    --color-accent-contrast: var(--comic-ink);
+    --color-danger-contrast: var(--comic-ink);
+    --color-surface-2: var(--ctp-surface-0);
+    --color-border: #585b70;
+    --shadow-1: 3px 3px 0 var(--comic-ink);
+    --shadow-2: 7px 7px 0 var(--comic-ink);
 }
 
 /* Las secciones conservan su identidad con tintes de la paleta activa. */
