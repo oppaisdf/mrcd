@@ -1,21 +1,31 @@
+@let current = alert();
 <div class="am-wrap" (click)="close()">
     <div class="am__backdrop" aria-hidden="true"></div>
 
-    <section class="am" [class.am--loading]="alert()?.type === 'loading'" [attr.data-type]="alert()?.type" role="dialog"
-        aria-modal="true" [attr.aria-label]="alert()?.title || 'Alert'" (click)="$event.stopPropagation()">
+    <section #panel class="am" [class.am--loading]="current?.type === 'loading'"
+        [attr.data-type]="current?.type" [attr.role]="current?.type === 'loading' ? 'dialog' : 'alertdialog'"
+        aria-modal="true" aria-labelledby="alert-title" aria-describedby="alert-message"
+        [attr.aria-busy]="isBlocking()" tabindex="-1" (click)="$event.stopPropagation()">
         <header class="am__head">
-            <h2 class="am__title">{{ alert()?.title }}</h2>
-
             @if (!isBlocking()) {
-            <button #closeBtn class="am__x" type="button" (click)="close()" aria-label="Cerrar">×</button>
+            <span class="am__badge" aria-hidden="true">{{ current?.type === 'success' ? '✓' : current?.type === 'error' ? '!' : '?' }}</span>
+            }
+            <h2 id="alert-title" class="am__title">{{ current?.title }}</h2>
+            @if (!isBlocking() && current?.type !== 'confirmation') {
+            <button class="am__x" type="button" (click)="close()" aria-label="Cerrar">×</button>
             }
         </header>
 
         <div class="am__body">
-            <p class="am__msg">{{ alert()?.message }}</p>
-
-            @if (alert()?.type === 'loading') {
+            <p id="alert-message" class="am__msg">{{ current?.message }}</p>
+            @if (isBlocking()) {
             <div class="am__spinner" aria-hidden="true"></div>
+            }
+            @if (current?.type === 'confirmation') {
+            <div class="am__actions">
+                <button class="ui-button is-ghost" type="button" (click)="close()">Cancelar</button>
+                <button class="ui-button" type="button" (click)="accept()">Sí, confirmar</button>
+            </div>
             }
         </div>
     </section>
