@@ -20,10 +20,17 @@ export class CreateParentsPage {
     request: CreateParentRequest
   ) {
     if (this._alert.loading()) return;
-    this._alert.startLoading();
+    this._alert.confirm(
+      '¿Agregar al padre/padrino?',
+      () => this.saveAsync(request)
+    );
+  }
 
+  private async saveAsync(
+    request: CreateParentRequest
+  ) {
+    this._alert.startLoading();
     const response = await this._service.createAsync(request);
-    this._alert.clear();
     if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
