@@ -25,6 +25,21 @@ export class AssignBaseEntityComponent {
     const item = items.find(i => i.id == id);
     if (!item) return;
     if (this._alert.loading()) return;
+    let prefix = item.hasAssociation
+      ? "des"
+      : '';
+
+    this._alert.confirm(
+      `¿Deasea ${prefix}asignar el ${this.title()} al confirmando?`,
+      () => this.saveAsync(item, items, prefix)
+    );
+  }
+
+  private async saveAsync(
+    item: AssignedBaseEntityResponse,
+    items: Array<AssignedBaseEntityResponse>,
+    prefix: string
+  ) {
     this._alert.startLoading();
 
     const response = item.hasAssociation
@@ -37,12 +52,11 @@ export class AssignBaseEntityComponent {
         this.personId(),
         item.id
       );
-    this._alert.clear();
     if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
     }
-    this._alert.success(`Se ha ${item.hasAssociation ? "des" : ''}asignado correctamente`);
+    this._alert.success(`Se ha ${prefix}asignado correctamente`);
     item.hasAssociation = !item.hasAssociation;
     this.items.set([...items]);
   }
