@@ -39,14 +39,21 @@ export class BaseEntitiesCreatePage {
     if (this._alert.loading()) return;
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
-
-    this._alert.startLoading();
     this.form.disable();
 
     const request: BaseEntityRequest = this.form.getRawValue();
+    this._alert.confirm(
+      `Desea agregar el ${this.title()} ${request.name}?`,
+      () => this.saveAsync(request)
+    );
+  }
+
+  private async saveAsync(
+    request: BaseEntityRequest
+  ) {
+    this._alert.startLoading();
     const response = await this._service.createAsync(this.endpoint(), request);
 
-    this._alert.clear();
     this.form.enable();
 
     if (!response.isSuccess) {
