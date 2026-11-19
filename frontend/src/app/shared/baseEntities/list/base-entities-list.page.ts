@@ -28,6 +28,17 @@ export class BaseEntitiesListPage {
     id: string
   ) {
     if (this._alert.loading()) return;
+    let label = this.items().find(i => i.id === id)?.name;
+    this._alert.confirm(
+      `¿Desea eliminar ${label}?`,
+      () => this.saveAsync(id),
+      `Eliminando ${this.title()}...`
+    );
+  }
+
+  private async saveAsync(
+    id: string
+  ) {
     this._alert.startLoading();
 
     const response = await this._service.deleteAsync(this.endpoint(), id);
