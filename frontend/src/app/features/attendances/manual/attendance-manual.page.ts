@@ -80,9 +80,7 @@ export class AttendanceManualPage {
     personId: string
   ) {
     if (this._alert.loading()) return;
-    this._alert.startLoading();
     const form = this.form.getRawValue();
-
     const now = new Date().toISOString().split("T")[0];
     const date = new Date(form.date).toISOString().split("T")[0];
     const request: AttendanceRequest = {
@@ -90,15 +88,28 @@ export class AttendanceManualPage {
       isAttendance: form.type === 1,
       date: now !== date ? date : undefined
     };
-    const response = form.type !== 3
+
+    this._alert.confirm(
+      `¿Desea ${form.type !== 3
+        ? 'agregar'
+        : 'remover'
+      } la asistencia a ${this._people().find(p => p.personId === personId)?.personName}?`,
+      () => this.saveAsync(request, personId, form.type)
+    );
+  }
+
+  private async saveAsync(
+    request: AttendanceRequest,
+    personId: string,
+    type: number
+  ) {
+    this._alert.startLoading();
+    const response = type !== 3
       ? await this._service.addAsync(request)
       : await this._service.delAsync(personId, request.date);
-    this._alert.clear();
-
-    if (!response.isSuccess) {
+    if (!response.isSuccess)
       this._alert.error(response.message);
-      return;
-    }
-    this._alert.success(`Se ha registrado la asistencia correctamente`);
+    else
+      this._alert.success(`Se ha registrado la asistencia correctamente`);
   }
 }
