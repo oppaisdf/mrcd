@@ -49,7 +49,6 @@ export class PersonCreatePage implements OnInit {
     person: PersonVM
   ) {
     if (this._alert.loading()) return;
-    this._alert.startLoading();
 
     const request: CreatePersonRequest = {
       name: person.name ?? '',
@@ -64,8 +63,19 @@ export class PersonCreatePage implements OnInit {
         .filter(s => s.hasAssociation)
         .map(s => s.id)
     };
+
+    this._alert.confirm(
+      `¿Desea registrar al confirmando ${request.name}?`,
+      () => this.saveAsync(request),
+      "Inscribir confirmando"
+    );
+  }
+
+  private async saveAsync(
+    request: CreatePersonRequest
+  ) {
+    this._alert.startLoading();
     const response = await this._service.addAsync(request);
-    this._alert.clear();
     if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
