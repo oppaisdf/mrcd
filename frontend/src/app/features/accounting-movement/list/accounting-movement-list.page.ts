@@ -18,7 +18,7 @@ import { RouterLink } from '@angular/router';
     AccountingMovementFilterFormComponent,
     AccordeonComponent,
     RouterLink
-],
+  ],
   templateUrl: './accounting-movement-list.page.html',
   styleUrl: './accounting-movement-list.page.scss',
 })
@@ -32,19 +32,29 @@ export class AccountingMovementListPage {
 
   toList(
     movements: Array<AccountingMovementResponse>
-  ){
+  ) {
     this.movements.set(movements);
   }
 
   async delAsync(
     id: string
-  ){
+  ) {
     if (this._alert.loading()) return;
+    this._alert.confirm(
+      '¿Desea eliminar este movimiento contable?',
+      () => this.saveAsync(id),
+      'Eliminando movimiento contable...'
+    );
+  }
+
+  private async saveAsync(
+    id: string
+  ) {
     this._alert.startLoading();
 
     const response = await this._service.delAsync(id);
     this._alert.clear();
-    if (!response.isSuccess){
+    if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
     }
