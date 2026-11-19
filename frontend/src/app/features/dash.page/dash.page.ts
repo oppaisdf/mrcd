@@ -78,8 +78,17 @@ export class DashPage implements OnInit {
 
     if (!request.username && !request.password) return;
     if (this._alert.loading()) return;
-    this._alert.startLoading();
+    this._alert.confirm(
+      "¿Proseguimos a actualizar mi información?",
+      () => this.saveAsync(request, user)
+    );
+  }
 
+  private async saveAsync(
+    request: UpdateUserRequest,
+    user: UserVM
+  ) {
+    this._alert.startLoading();
     const response = await this._api.patchAsync('/user/me', request);
     if (!response.isSuccess) {
       this._alert.error(response.message);
