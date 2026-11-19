@@ -72,7 +72,6 @@ export class PeopleDetailsPage implements OnInit {
     person: PersonVM
   ) {
     if (this._alert.loading()) return;
-    this._alert.startLoading();
 
     const current = this.person();
     const request: UpdatePersonRequest = {
@@ -84,12 +83,25 @@ export class PeopleDetailsPage implements OnInit {
       address: person.address !== null && person.address !== current.address ? person.address : undefined,
       phone: person.phone !== null && person.phone !== current.phone ? person.phone : undefined
     };
+
+    this._alert.confirm(
+      "¿Actualizar el confirmando?",
+      () => this.saveAsync(request),
+      "Actualizando confirmando..."
+    );
+  }
+
+  private async saveAsync(
+    request: UpdatePersonRequest
+  ) {
+    this._alert.startLoading();
     const response = await this._service.updateAsync(this.id, request);
     if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
     }
     this._alert.success("Se ha actualizado al confirmando correctamente");
+
     const newPerson = this.person();
     if (request.name !== undefined) newPerson.name = request.name;
     if (request.isActive !== undefined) newPerson.isActive = request.isActive;
