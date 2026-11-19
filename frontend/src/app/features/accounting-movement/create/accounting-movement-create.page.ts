@@ -28,27 +28,34 @@ export class AccountingMovementCreatePage {
     const control = this.form.get(controlName);
     if (!control) return 'Control not found :c';
     if (!control.touched || control.valid) return null;
-    switch(controlName){
+    switch (controlName) {
       case 'name': return 'El nombre es requerido y no puede exceder los 50 caracteres';
       case 'amount': return 'El monto es requerido y no puede ser mayor o menor a 5000';
       default: return null;
     }
   }
 
-  async addAsync(){
+  async addAsync() {
     if (this._alert.loading()) return;
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
-    this._alert.startLoading();
 
     const rawRequest = this.form.getRawValue();
     const request: CreateAccountingMovementRequest = {
       name: rawRequest.name ?? '',
       amount: rawRequest.amount ?? 0
     };
-    const response = await this._service.addAsync(request);
+    this._alert.confirm(
+      '¿Agregar movimiento contable?',
+      () => this.saveAsync(request)
+    );
+  }
 
-    this._alert.clear();
+  private async saveAsync(
+    request: CreateAccountingMovementRequest
+  ) {
+    this._alert.startLoading();
+    const response = await this._service.addAsync(request);
     if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
