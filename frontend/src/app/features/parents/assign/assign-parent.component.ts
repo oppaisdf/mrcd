@@ -35,10 +35,23 @@ export class AssignParentComponent {
     if (this._alert.loading()) return;
     request.personId = this.personId();
     request.isParent = this.typeParent();
-    this._alert.startLoading();
 
+    var label = request.isParent
+      ? "padre"
+      : "padrino";
+
+    this._alert.confirm(
+      `¿Agregar al ${label} al confirmando?`,
+      () => this.createAsync(request),
+      `Agregando ${label}...`
+    );
+  }
+
+  private async createAsync(
+    request: CreateParentRequest
+  ) {
+    this._alert.startLoading();
     const response = await this._service.createAsync(request);
-    this._alert.clear();
     if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
