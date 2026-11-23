@@ -2,7 +2,8 @@
 <hr>
 <form class="ui-form" [formGroup]="form">
     <ui-select label="Columnas" type="number" [items]="items('columns')" formControlName="columns" />
-    <ui-select label="Ordenamiento" type="boolean" [items]="order" formControlName="orderByName" />
+    <ui-switch label="Ordenamiento" activeLabel="Ordenear por nombre" inactiveLabel="Ordenar por fecha de inscripción"
+        formControlName="orderByName" />
     <ui-select label="Tamaño de QR" type="number" [items]="items('qrSize')" formControlName="qrSize" />
     <ui-select label="Tamaño de fuente" type="number" [items]="items('fontSize')" formControlName="fontSize" />
 </form>

@@ -5,10 +5,10 @@ import { PersonService } from '../../people/services/person.service';
 import { PersonBadgeVM } from '../../people/vms/person-badge.vm';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { FormBuilder, ɵInternalFormsSharedModule, ReactiveFormsModule } from '@angular/forms';
-import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AccordeonComponent } from "../../../core/ui/accordeon/accordeon.component";
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'app-badges.page',
@@ -16,9 +16,9 @@ import { AccordeonComponent } from "../../../core/ui/accordeon/accordeon.compone
     UiPrintComponent,
     QRCodeComponent,
     UiSelectComponent,
-    ɵInternalFormsSharedModule,
     ReactiveFormsModule,
-    AccordeonComponent
+    AccordeonComponent,
+    UiSwitchComponent
   ],
   templateUrl: './badges.page.html',
   styleUrl: './badges.page.scss',
@@ -85,14 +85,6 @@ export class BadgesPage implements OnInit {
       value: 4
     }];
   }
-
-  readonly order: Array<SelectItem<boolean>> = [{
-    label: 'Por nombre',
-    value: true
-  }, {
-    label: 'Por fecha de inscripción',
-    value: false
-  }];
 
   async ngOnInit() {
     if (this._alert.loading()) return;
