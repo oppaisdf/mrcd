@@ -1,15 +1,15 @@
 import { Component, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UiSelectComponent } from '../../../core/ui/select/ui-select.component';
 import { UiInputComponent } from '../../../core/ui/input/ui-input.component';
 import { CreateParentRequest } from '../requests/create-parent.request';
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'parents-form',
   imports: [
     ReactiveFormsModule,
-    UiSelectComponent,
-    UiInputComponent
+    UiInputComponent,
+    UiSwitchComponent
   ],
   templateUrl: './parent-form.component.html',
   styleUrl: './parent-form.component.scss',
@@ -40,26 +40,6 @@ export class ParentFormComponent {
       'phone': 'El teléfono debe ser numérico'
     } as const)[controlName];
     return error;
-  }
-
-  items(
-    type: 'genders' | 'typeParent'
-  ) {
-    const labelA = ({
-      'genders': 'Masculino',
-      'typeParent': 'Padre'
-    } as const)[type];
-    const labelB = ({
-      'genders': 'Femenino',
-      'typeParent': 'Padrino'
-    } as const)[type];
-    return [{
-      label: labelA,
-      value: true
-    }, {
-      label: labelB,
-      value: false
-    }];
   }
 
   onSubmit() {

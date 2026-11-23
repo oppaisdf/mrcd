@@ -1,12 +1,15 @@
 <form [formGroup]="form" class="ui-form" (ngSubmit)="onSubmit()">
     <header class="ui-form__header">
-        <div><h2>Datos de la persona</h2><p>Información del padre, madre o padrino.</p></div>
+        <div>
+            <h2>Datos de la persona</h2>
+            <p>Información del padre, madre o padrino.</p>
+        </div>
         <span class="ui-form__tag">Familia</span>
     </header>
     <ui-input label="Nombre" type="text" [hint]="hint('name')" [maxlength]="80" formControlName="name" />
-    <ui-select label="Género" [items]="items('genders')" type="boolean" formControlName="isMasculine" />
+    <ui-switch label="Género" activeLabel="Masculino" inactiveLabel="Femenino" formControlName="isMasculine" />
     @if (!hideIsParent()) {
-    <ui-select label="Tipo" [items]="items('typeParent')" type="boolean" formControlName="isParent" />
+    <ui-switch label="Tipo" activeLabel="Padre" inactiveLabel="Padrino" formControlName="isParent" />
     }
     <ui-input label="Teléfono" type="text" [hint]="hint('phone')" formControlName="phone" />
 
