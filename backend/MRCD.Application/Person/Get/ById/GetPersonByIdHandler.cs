@@ -34,7 +34,7 @@ internal sealed class GetPersonByIdHandler(
             person.Name,
             person.IsActive,
             person.IsMasculine,
-            person.IsActive,
+            person.IsSunday,
             person.DOB,
             person.LastDegreeId,
             person.Parish,
