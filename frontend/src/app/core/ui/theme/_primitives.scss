@@ -318,7 +318,8 @@
 
     .ui-form > * { min-width: 0; grid-column: 1 / -1; }
     .ui-form > ui-input,
-    .ui-form > ui-select { display: block; grid-column: auto; }
+    .ui-form > ui-select,
+    .ui-form > ui-switch { display: block; grid-column: auto; }
     .ui-form > .ui-field--wide { grid-column: 1 / -1; }
     .ui-form > .ui-button { justify-self: end; min-width: 180px; margin-top: 6px; }
     .ui-form .ui-field { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 9px; }

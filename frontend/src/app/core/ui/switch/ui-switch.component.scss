@@ -1,0 +1,81 @@
+:host { display: block; min-width: 0; }
+
+.switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    max-width: 100%;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* The native checkbox supplies keyboard, focus and form behavior. */
+.switch__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.switch__track {
+    position: relative;
+    flex: 0 0 66px;
+    width: 66px;
+    height: 36px;
+    border: 3px solid var(--comic-ink);
+    border-radius: var(--radius-pill);
+    background: var(--ctp-surface-1);
+    box-shadow: 3px 3px 0 var(--comic-ink);
+    transition: background var(--dur-1) var(--ease-out);
+}
+
+.switch__thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--comic-ink);
+    border-radius: 50%;
+    background: var(--ctp-subtext-1);
+    transition: transform var(--dur-1) var(--ease-out), background var(--dur-1) var(--ease-out);
+}
+
+.switch__label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--color-text-muted);
+    font: 700 13px/1.5 var(--font-sans);
+}
+
+.switch--active {
+    .switch__track { background: var(--color-accent); }
+    .switch__thumb { transform: translateX(30px); background: var(--ctp-base); }
+    .switch__label { color: var(--color-success); }
+}
+
+.switch__input:focus-visible + .switch__track {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 5px;
+}
+
+.switch--disabled { opacity: .55; cursor: not-allowed; }
+
+@media (prefers-reduced-motion: reduce) {
+    .switch__track, .switch__thumb { transition: none; }
+}
+
+@media (forced-colors: active) {
+    .switch__track { border-color: ButtonText; background: Canvas; }
+    .switch__thumb { background: ButtonText; border-color: ButtonText; }
+    .switch--active .switch__track { background: Highlight; }
+    .switch--active .switch__thumb { background: HighlightText; }
+    .switch__input:focus-visible + .switch__track { outline-color: Highlight; }
+}
