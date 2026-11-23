@@ -5,11 +5,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { PagedResult } from '../../../core/api/api.types';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
-import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { AccordeonComponent } from "../../../core/ui/accordeon/accordeon.component";
 import { AlertType } from '../../../core/utils/alert.type';
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'people-list.page',
@@ -18,7 +18,8 @@ import { AlertType } from '../../../core/utils/alert.type';
     UiInputComponent,
     UiSelectComponent,
     RouterLink,
-    AccordeonComponent
+    AccordeonComponent,
+    UiSwitchComponent
   ],
   templateUrl: './people-list.page.html',
   styleUrl: './people-list.page.scss',
@@ -51,7 +52,7 @@ export class PeopleListPage {
     const form = this.form.getRawValue();
     const alertType = (this._me.snapshot.queryParamMap.get('alert') as AlertType | undefined);
     let response;
-    switch(alertType){
+    switch (alertType) {
       case AlertType.PENDING_CHARGES:
         response = await this._service.pendingChargesToListAsync(
           form.isActive ?? true,
@@ -82,7 +83,7 @@ export class PeopleListPage {
         form.name ?? undefined,
         form.isMasculine ?? undefined
       );
-      break;
+        break;
     }
     this._alert.clear();
     if (!response.isSuccess) {
@@ -93,27 +94,14 @@ export class PeopleListPage {
     this.people.set(response.data);
   }
 
-  getItems(
-    controlName: keyof typeof this.form.controls
-  ) {
-    const labelA = ({
-      'isActive': 'Activo',
-      'isMasculine': 'Masculino',
-      'name': ''
-    } as const)[controlName];
-    const labelB = ({
-      'isActive': 'Inactivo',
-      'isMasculine': 'Femenino',
-      'name': ''
-    } as const)[controlName];
-    const response: Array<SelectItem<boolean>> = [{
-      label: labelA,
+  getItems() {
+    return [{
+      label: 'Masculino',
       value: true
     }, {
-      label: labelB,
+      label: 'Femenino',
       value: false
     }];
-    return response;
   }
 
   async changePageAsync(
