@@ -1,7 +1,12 @@
-<label class="switch" [class.switch--active]="value()" [class.switch--disabled]="disabled()" [attr.for]="id">
-    <input class="switch__input" type="checkbox" role="switch" [id]="id"
-        [attr.aria-label]="label()" [checked]="value()" [disabled]="disabled()"
-        (change)="onToggle($event)" (blur)="onTouched()">
-    <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
-    <span class="switch__label" aria-hidden="true">{{ value() ? activeLabel() : inactiveLabel() }}</span>
-</label>
+<div class="ui-field">
+    <label [id]="id + '-label'" [attr.for]="id" class="ui-label">{{ label() }}</label>
+    <div class="ui-control">
+        <label class="switch" [class.switch--active]="value()" [class.switch--disabled]="disabled()" [attr.for]="id">
+            <input class="switch__input" type="checkbox" role="switch" [id]="id"
+                [attr.aria-labelledby]="id + '-label'" [checked]="value()" [disabled]="disabled()"
+                (change)="onToggle($event)" (blur)="onTouched()">
+            <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
+            <span class="switch__label" aria-hidden="true">{{ value() ? activeLabel() : inactiveLabel() }}</span>
+        </label>
+    </div>
+</div>
