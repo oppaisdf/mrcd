@@ -2,7 +2,10 @@
 
 <form [formGroup]="form" class="ui-form" (ngSubmit)="createAsync()">
     <header class="ui-form__header">
-        <div><h2>Datos del registro</h2><p>Completa la información para continuar.</p></div>
+        <div>
+            <h2>Datos del registro</h2>
+            <p>Completa la información para continuar.</p>
+        </div>
         <span class="ui-form__tag">Registro</span>
     </header>
     <ui-input label="Nombre" type="text" formControlName="name" [hint]="hint()" [maxLength]="maxLength()" />
