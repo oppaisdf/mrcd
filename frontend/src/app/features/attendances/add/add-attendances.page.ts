@@ -7,6 +7,7 @@ import { AttendancesScannerComponent } from "../scanner/attendances-scanner.comp
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { AttendanceRequest } from '../requests/attendance.request';
 import { AttendanceService } from '../services/attendance.service';
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'app-add-attendances.page',
@@ -15,7 +16,8 @@ import { AttendanceService } from '../services/attendance.service';
     ReactiveFormsModule,
     UiSelectComponent,
     UiInputComponent,
-    AttendancesScannerComponent
+    AttendancesScannerComponent,
+    UiSwitchComponent
   ],
   templateUrl: './add-attendances.page.html',
   styleUrl: './add-attendances.page.scss',
@@ -32,18 +34,8 @@ export class AddAttendancesPage {
   });
   readonly openScanner = signal<boolean>(false);
 
-  items(
-    controlName: 'typeAttendance' | 'closeToScann'
-  ) {
-    if (controlName === 'closeToScann')
-      return [{
-        label: 'Cerrar al escanear',
-        value: true
-      }, {
-        label: 'Mantener visible al escanear',
-        value: false
-      }];
-    else return [{
+  items() {
+    return [{
       label: 'Asistencia',
       value: 1
     }, {
