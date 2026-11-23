@@ -5,17 +5,16 @@ import { SimplePersonResponse } from '../../people/responses/simple-person.respo
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
-import { SelectItem } from '../../../core/ui/select/SelectItem';
-import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
 import { AccordeonComponent } from "../../../core/ui/accordeon/accordeon.component";
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'parents-details.page',
   imports: [
     ReactiveFormsModule,
     UiInputComponent,
-    UiSelectComponent,
-    AccordeonComponent
+    AccordeonComponent,
+    UiSwitchComponent
   ],
   templateUrl: './parents-details.page.html',
   styleUrl: './parents-details.page.scss',
@@ -29,13 +28,6 @@ export class ParentsDetailsPage {
   readonly id: string;
   readonly children = signal<Array<SimplePersonResponse>>([]);
   readonly goodchildren = signal<Array<SimplePersonResponse>>([]);
-  readonly genders: Array<SelectItem<boolean>> = [{
-    label: 'Masculino',
-    value: true
-  }, {
-    label: 'Femenino',
-    value: false
-  }];
   readonly form = this._form.nonNullable.group({
     name: [''],
     isMasculine: [false],

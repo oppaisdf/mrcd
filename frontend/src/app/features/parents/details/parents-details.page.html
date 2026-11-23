@@ -3,7 +3,7 @@
 <form class="ui-form" [formGroup]="form">
     <ui-input label="Nombre" type="text" formControlName="name" />
     <ui-input label="Teléfono" type="text" formControlName="phone" />
-    <ui-select label="Género" type="boolean" [items]="genders" formControlName="isMasculine" />
+    <ui-switch label="Género" activeLabel="Masculino" inactiveLabel="Femenino" formControlName="isMasculine" />
 </form>
 
 @let _children = children();
