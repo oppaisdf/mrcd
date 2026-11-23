@@ -37,9 +37,22 @@ export class ChargesListPage implements OnInit {
     chargeId: string
   ) {
     if (this._alert.loading()) return;
+    const charge = this.charges()
+      .find(c => c.id === chargeId)
+      ?.name;
+
+    this._alert.confirm(
+      `¿Desea eliminar el cobro ${charge}?`,
+      () => this.saveAsync(chargeId)
+    );
+  }
+
+  private async saveAsync(
+    chargeId: string
+  ) {
     this._alert.startLoading();
     const response = await this._service.deleteAsync(chargeId);
-    this._alert.clear();
+
     if (!response.isSuccess) {
       this._alert.error(response.message);
       return;
