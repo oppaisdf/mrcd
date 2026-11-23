@@ -7,13 +7,15 @@ import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { BaseEntitiesService } from '../../../shared/baseEntities/services/base-entities.service';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'person-form',
   imports: [
     ReactiveFormsModule,
     UiInputComponent,
-    UiSelectComponent
+    UiSelectComponent,
+    UiSwitchComponent
   ],
   templateUrl: './person-form.component.html',
   styleUrl: './person-form.component.scss',
@@ -143,27 +145,5 @@ export class PersonFormComponent implements OnInit {
         else return 'El confirmando debe tener entre 14-25 años';
     }
     return null;
-  }
-
-  arrayBoolean(
-    type: 'states' | 'genders' | 'days'
-  ) {
-    const labelA = ({
-      'states': 'Activo',
-      'genders': 'Masculino',
-      'days': 'Domingo'
-    } as const)[type] ?? 'unknow';
-    const labelB = ({
-      'states': 'Inactivo',
-      'genders': 'Femenino',
-      'days': 'Sábado'
-    } as const)[type] ?? 'unknow';
-    return [{
-      label: labelA,
-      value: true
-    }, {
-      label: labelB,
-      value: false
-    }];
   }
 }

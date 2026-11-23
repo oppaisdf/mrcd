@@ -1,17 +1,22 @@
 <form [formGroup]="form" class="ui-form" (ngSubmit)="onSubmit()">
     <header class="ui-form__header">
-        <div><h2>Datos del confirmando</h2><p>Información personal y de contacto.</p></div>
+        <div>
+            <h2>Datos del confirmando</h2>
+            <p>Información personal y de contacto.</p>
+        </div>
         <span class="ui-form__tag">Ficha personal</span>
     </header>
-    <ui-input class="ui-field--wide" label="Nombre" type="text" [hint]="hint('name')" formControlName="name" [maxLength]="65" />
-    <ui-select label="Género" type="boolean" [items]="arrayBoolean('genders')" formControlName="isMasculine" />
-    <ui-select label="Día" type="boolean" [items]="arrayBoolean('days')" formControlName="isSunday" />
+    <ui-input class="ui-field--wide" label="Nombre" type="text" [hint]="hint('name')" formControlName="name"
+        [maxLength]="65" />
+    <ui-switch label="Género" activeLabel="Masculito" inactiveLabel="Femenino" formControlName="isMasculine" />
+    <ui-switch label="Día" activeLabel="Domingo" inactiveLabel="Sábado" formControlName="isSunday" />
 
     @if (mode() !== 'Inscribir') {
-    <ui-select label="Estado" type="boolean" [items]="arrayBoolean('states')" formControlName="isActive" />
+    <ui-switch label="Estado" activeLabel="Activo" inactiveLabel="Inactivo" formControlName="isActive" />
     <ui-input label="Parroquia de bautizo" type="text" [hint]="hint('parish')" formControlName="parish" />
     }
-    <ui-input class="ui-field--wide" label="Dirección" type="text" [hint]="hint('address')" formControlName="address" [maxLength]="100" />
+    <ui-input class="ui-field--wide" label="Dirección" type="text" [hint]="hint('address')" formControlName="address"
+        [maxLength]="100" />
     <ui-input label="Teléfono" type="text" [hint]="hint('phone')" formControlName="phone" />
     <ui-input label="Fecha de nacimiento" type="date" [hint]="hint('dob')" [min]="dateLimit(false)"
         [max]="dateLimit(true)" formControlName="dob" />
