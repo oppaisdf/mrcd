@@ -6,12 +6,16 @@ import { UiPrintComponent } from '../../../core/ui/print/ui-print.component';
 import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { PersonService } from '../../people/services/person.service';
 import { GeneralListResponse } from '../../people/responses/general-list.response';
-import { UiSelectComponent } from '../../../core/ui/select/ui-select.component';
-import { SelectItem } from '../../../core/ui/select/SelectItem';
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'app-print-certificate.page',
-  imports: [ReactiveFormsModule, UiInputComponent, UiPrintComponent, UiSelectComponent],
+  imports: [
+    ReactiveFormsModule,
+    UiInputComponent,
+    UiPrintComponent,
+    UiSwitchComponent
+  ],
   templateUrl: './print-certificate.page.html',
   styleUrl: './print-certificate.page.scss',
 })
@@ -34,15 +38,6 @@ export class PrintCertificatePage {
   readonly imageError = signal<string | null>(null);
   private readonly contents = viewChildren<ElementRef<HTMLElement>>('certificateContent');
   private imageSelection = 0;
-  readonly contentLines: Array<SelectItem<boolean>> = [
-    {
-      label: 'Campos en dos líneas',
-      value: false
-    }, {
-      label: 'Campos en una línea',
-      value: true
-    }
-  ];
 
   constructor() {
     afterEveryRender(() => {

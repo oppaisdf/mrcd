@@ -1,7 +1,7 @@
 <h1>Generación de diplomas</h1>
 <hr>
 <form class="ui-form" [formGroup]="form" (ngSubmit)="getAsync()">
-    <ui-select type="boolean" label="Mostrar información en líneas" [items]="contentLines"
+    <ui-switch label="Formato de información en campos" activeLabel="En la misma línea" inactiveLabel="En dos líneas"
         formControlName="singleLine" />
     <ui-input label="Fecha en la que se impartirá el sacramento" type="date" formControlName="date"
         [hint]="hint('date')" />
