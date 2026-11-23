@@ -9,6 +9,7 @@ import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
 import { UiPrintComponent } from "../../../core/ui/print/ui-print.component";
 import { ActivatedRoute } from '@angular/router';
 import { AlertType } from '../../../core/utils/alert.type';
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'app-print-attendance.page',
@@ -17,7 +18,8 @@ import { AlertType } from '../../../core/utils/alert.type';
     ReactiveFormsModule,
     AccordeonComponent,
     UiInputComponent,
-    UiPrintComponent
+    UiPrintComponent,
+    UiSwitchComponent
   ],
   templateUrl: './print-attendance.page.html',
   styleUrl: './print-attendance.page.scss',
@@ -82,15 +84,13 @@ export class PrintAttendancePage {
   }
 
   items(
-    controlName: 'onlyByYear' | 'isSunday' | 'isMasculine'
+    controlName: 'isSunday' | 'isMasculine'
   ) {
     const labelA = ({
-      'onlyByYear': 'Solo por año',
       'isSunday': 'Domingo',
       'isMasculine': 'Masculino'
     } as const)[controlName];
     const labelB = ({
-      'onlyByYear': 'Filtrado por fecha',
       'isSunday': 'Sábado',
       'isMasculine': 'Femenino'
     } as const)[controlName];
