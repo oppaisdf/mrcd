@@ -1,16 +1,15 @@
 <ui-accordeon title="Filtros">
     <form [formGroup]="form" class="ui-form">
-        <ui-select label="Ordenamiento" type="boolean" [items]="items('orderByName')" formControlName="orderByName" />
-        <ui-select label="Mostrar día" type="boolean" [items]="items('showDay')" formControlName="showDay" />
-        <ui-select label="Mostrar género" type="boolean" [items]="items('showGender')" formControlName="showGender" />
-        <ui-select label="Mostrar fecha de nacimiento" type="boolean" [items]="items('showDOB')"
-            formControlName="showDOB" />
-        <ui-select label="Mostrar padrinos" type="boolean" [items]="items('showGodparents')"
-            formControlName="showGodparents" />
-        <ui-select label="Mostrar padres" type="boolean" [items]="items('showParents')" formControlName="showParents" />
-        <ui-select label="Mostrar teléfonos" type="boolean" [items]="items('showPhones')"
-            formControlName="showPhones" />
-        <ui-select label="Mostrar parroquia de bautizo" type="boolean" [items]="items('showParish')"
+        <ui-switch label="Forma de ordenamiento" activeLabel="Por nombre" inactiveLabel="Por fecha de inscripción"
+            formControlName="orderByName" />
+        <ui-switch label="¿Mostrar día?" activeLabel="Sí" inactiveLabel="No" formControlName="showDay" />
+        <ui-switch label="¿Mostrar género?" activeLabel="Sí" inactiveLabel="No" formControlName="showGender" />
+        <ui-switch label="¿Mostrar fecha de nacimiento?" activeLabel="Sí" inactiveLabel="No"
+            formControlName="whowDOB" />
+        <ui-switch label="¿Mostrar padres?" activeLabel="Sí" inactiveLabel="No" formControlName="showParents" />
+        <ui-switch label="¿Mostrar padrinos?" activeLabel="Sí" inactiveLabel="No" formControlName="showGodparents" />
+        <ui-switch label="¿Mostrar teléfonos?" activeLabel="Sí" inactiveLabel="No" formControlName="showPhones" />
+        <ui-switch label="¿Mostrar parroquia de bautizo?" activeLabel="Sí" inactiveLabel="No"
             formControlName="showParish" />
     </form>
 </ui-accordeon>

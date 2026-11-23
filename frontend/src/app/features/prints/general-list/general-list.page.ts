@@ -4,17 +4,17 @@ import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { GeneralListResponse } from '../../people/responses/general-list.response';
 import { AccordeonComponent } from '../../../core/ui/accordeon/accordeon.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { UiSelectComponent } from '../../../core/ui/select/ui-select.component';
 import { UiPrintComponent } from '../../../core/ui/print/ui-print.component';
 import { SimpleParentResposne } from '../../parents/responses/simple-parent.response';
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'app-general-list.page',
   imports: [
     AccordeonComponent,
     ReactiveFormsModule,
-    UiSelectComponent,
-    UiPrintComponent
+    UiPrintComponent,
+    UiSwitchComponent
   ],
   templateUrl: './general-list.page.html',
   styleUrl: './general-list.page.scss',
@@ -51,38 +51,6 @@ export class GeneralListPage implements OnInit {
       this._alert.error(response.message);
     else
       this._people.set(response.data ?? []);
-  }
-
-  items(
-    controlName: keyof typeof this.form.controls
-  ) {
-    var labelA = ({
-      "showDay": "Mostrar día",
-      "showGender": "Mostrar género",
-      "showDOB": "Mostrar fecha de nacimiento",
-      "showGodparents": "Mostrar padrinos",
-      "showParents": "Mostrar padres",
-      "showPhones": "Mostrar teléfonos",
-      "showParish": "Mostrar parroquia de bautizo",
-      "orderByName": "Order por nombre"
-    } as const)[controlName];
-    var labelB = ({
-      "showDay": "Ocultar día",
-      "showGender": "Ocultar género",
-      "showDOB": "Ocultar fecha de nacimiento",
-      "showGodparents": "Ocultar padrinos",
-      "showParents": "Ocultar padres",
-      "showPhones": "Ocultar teléfonos",
-      "showParish": "Ocultar parroquia de bautizo",
-      "orderByName": "Order por fecha de inscripción"
-    } as const)[controlName];
-    return [{
-      label: labelA,
-      value: true
-    }, {
-      label: labelB,
-      value: false
-    }];
   }
 
   value(
