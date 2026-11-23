@@ -1,17 +1,16 @@
 import { Component, effect, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UiInputComponent } from '../../../core/ui/input/ui-input.component';
-import { UiSelectComponent } from "../../../core/ui/select/ui-select.component";
-import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { UserVM } from '../vms/User.vm';
 import { UsedRoleResponse } from '../../roles/responses/UsedRole.response';
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'user-form',
   imports: [
     ReactiveFormsModule,
     UiInputComponent,
-    UiSelectComponent
+    UiSwitchComponent
   ],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.scss',
@@ -29,15 +28,6 @@ export class UserFormComponent {
   roles = input.required<Array<UsedRoleResponse>>();
   formSubmit = output<UserVM>();
   roleSubmit = output<string>();
-  readonly states: Array<SelectItem<boolean>> = [
-    {
-      label: 'Activo',
-      value: true
-    }, {
-      label: 'Inactivo',
-      value: false
-    }
-  ];
 
   constructor() {
     effect(() => {
