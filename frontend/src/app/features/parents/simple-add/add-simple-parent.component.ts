@@ -1,6 +1,5 @@
 import { Component, input, model } from '@angular/core';
 import { CreateSimpleParentRequest } from '../requests/create-simple-parent.request';
-import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { CreateParentRequest } from '../requests/create-parent.request';
 import { ParentFormComponent } from "../form/parent-form.component";
 
@@ -15,13 +14,6 @@ export class AddSimpleParentComponent {
   title = input.required<string>();
 
   get fullParents() { return this.parents().length === 2; }
-  readonly genders: Array<SelectItem<boolean>> = [{
-    label: 'Masculino',
-    value: true
-  }, {
-    label: 'Femenino',
-    value: false
-  }];
 
   removeParent(
     parent: CreateSimpleParentRequest
