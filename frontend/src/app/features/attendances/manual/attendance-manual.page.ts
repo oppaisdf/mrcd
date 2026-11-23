@@ -8,6 +8,7 @@ import { AttendanceRequest } from '../requests/attendance.request';
 import { AttendanceService } from '../services/attendance.service';
 import { UiSelectComponent } from '../../../core/ui/select/ui-select.component';
 import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'app-attendance-manual.page',
@@ -15,7 +16,8 @@ import { UiInputComponent } from "../../../core/ui/input/ui-input.component";
     AccordeonComponent,
     ReactiveFormsModule,
     UiSelectComponent,
-    UiInputComponent
+    UiInputComponent,
+    UiSwitchComponent
   ],
   templateUrl: './attendance-manual.page.html',
   styleUrl: './attendance-manual.page.scss',
@@ -39,14 +41,6 @@ export class AttendanceManualPage {
     return people.filter(p => p.isSunday === isSunday);
   });
   readonly year = new Date().getFullYear();
-
-  readonly days = [{
-    label: 'Domingo',
-    value: true
-  }, {
-    label: 'Sábado',
-    value: false
-  }];
 
   readonly attendanceTypes = [{
     label: 'Asistencia',
