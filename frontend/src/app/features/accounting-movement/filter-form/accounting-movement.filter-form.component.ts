@@ -4,19 +4,18 @@ import { AlertService } from '../../../shared/alerts/services/alert.service';
 import { AccountingMovementService } from '../services/accounting-movement.service';
 import { AccountingMovementResponse } from '../responses/accounting-movement.response';
 import { CurrencyEnvironment } from '../../../core/environments/currency.environment';
-import { SelectItem } from '../../../core/ui/select/SelectItem';
 import { AccordeonComponent } from '../../../core/ui/accordeon/accordeon.component';
-import { UiSelectComponent } from '../../../core/ui/select/ui-select.component';
 import { UiInputComponent } from '../../../core/ui/input/ui-input.component';
+import { UiSwitchComponent } from '../../../core/ui/switch/ui-switch.component';
 
 @Component({
   selector: 'filters-accounting-movement',
   imports: [
     AccordeonComponent,
     ReactiveFormsModule,
-    UiSelectComponent,
-    UiInputComponent
-],
+    UiInputComponent,
+    UiSwitchComponent
+  ],
   templateUrl: './accounting-movement.filter-form.component.html',
   styleUrl: './accounting-movement.filter-form.component.scss',
 })
@@ -31,17 +30,7 @@ export class AccountingMovementFilterFormComponent {
   readonly movementsSubmit = output<Array<AccountingMovementResponse>>();
   readonly currencySymbol = CurrencyEnvironment.currencySymbol;
 
-  readonly filterItems: Array<SelectItem<boolean>> = [
-    {
-      label: 'Filtrar por año',
-      value: true
-    }, {
-      label: 'Filtrar por mes',
-      value: false
-    }
-  ];
-
-  async sendData(){
+  async sendData() {
     if (this._alert.loading()) return;
     this._alert.startLoading();
 
@@ -49,7 +38,7 @@ export class AccountingMovementFilterFormComponent {
     const response = await this._service.toListAsync(filters.filterOnlyByYear, filters.date);
 
     this._alert.clear();
-    if (!this._alert.success){
+    if (!this._alert.success) {
       this._alert.error(response.message);
       return;
     }

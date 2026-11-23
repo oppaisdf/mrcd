@@ -1,7 +1,8 @@
 <ui-accordeon title="Filtros">
     <form [formGroup]="form" class="ui-form" (ngSubmit)="sendData()">
         <ui-input label="Fecha" type="date" formControlName="date" />
-        <ui-select label="Filtrar por" type="boolean" [items]="filterItems" formControlName="filterOnlyByYear" />
+        <ui-switch label="Filtrar por" activeLabel="Filtrar por año" inactiveLabel="Filtrar por año/mes"
+            formControlName="filterOnlyByYear" />
         <button class="ui-button" type="submit">Buscar</button>
     </form>
 </ui-accordeon>
