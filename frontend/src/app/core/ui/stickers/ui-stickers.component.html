@@ -1,0 +1,21 @@
+<div class="stickers" role="group" [attr.aria-label]="label()">
+    <div class="stickers__intro">
+        <p>{{ description() }}</p>
+        <span class="stickers__count" aria-live="polite">{{ selectedCount() }} de {{ items().length }} seleccionadas</span>
+    </div>
+    <div class="stickers__options">
+        @for (item of items(); track item.id) {
+        <button class="sticker" type="button" [class.sticker--selected]="item.selected"
+            [attr.aria-pressed]="item.selected" [disabled]="disabled()" (click)="toggle(item.id)">
+            <span class="sticker__icon" aria-hidden="true">{{ item.selected ? '✓' : '+' }}</span>
+            <span class="sticker__copy">
+                <span class="sticker__name">{{ item.name }}</span>
+                <span class="sticker__state">{{ item.selected ? selectedLabel() : unselectedLabel() }}</span>
+            </span>
+            <span class="sticker__corner" aria-hidden="true"></span>
+        </button>
+        } @empty {
+        <p class="stickers__empty">No hay opciones disponibles.</p>
+        }
+    </div>
+</div>

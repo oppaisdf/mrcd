@@ -1,0 +1,103 @@
+:host { display: block; min-width: 0; }
+
+.stickers { min-width: 0; }
+.stickers__intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 18px;
+    margin-bottom: 20px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+.stickers__intro p { margin: 0; }
+.stickers__count {
+    padding: 5px 9px;
+    border: 1px dashed var(--color-border);
+    border-radius: 6px;
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+.stickers__options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 14px;
+    padding: 3px 6px 7px 1px;
+}
+.sticker {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    max-width: 100%;
+    min-width: min(170px, 100%);
+    min-height: 65px;
+    padding: 12px 24px 12px 13px;
+    border: 2px dashed var(--color-border);
+    border-radius: 13px 7px 13px 7px;
+    background: var(--color-surface-2);
+    color: var(--color-text);
+    box-shadow: 3px 3px 0 var(--comic-ink);
+    font-family: var(--font-sans);
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform var(--dur-1) var(--ease-out), background var(--dur-1) var(--ease-out), box-shadow var(--dur-1) var(--ease-out);
+}
+.sticker__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 27px;
+    height: 27px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 50%;
+    color: var(--color-text-muted);
+    font: 700 20px/1 var(--font-display);
+}
+.sticker__copy { display: grid; gap: 4px; min-width: 0; }
+.sticker__name { font: 700 14px/1.35 var(--font-display); overflow-wrap: anywhere; }
+.sticker__state { color: var(--color-text-muted); font-size: 10px; line-height: 1.4; }
+.sticker__corner {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 13px;
+    height: 13px;
+    background: var(--color-border);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    border-bottom-right-radius: 7px;
+    pointer-events: none;
+}
+.sticker--selected {
+    border: 2px solid var(--comic-ink);
+    border-radius: 7px 13px 7px 13px;
+    background: color-mix(in srgb, var(--color-accent) 18%, var(--color-surface));
+    box-shadow: 3px 3px 0 var(--color-accent), 5px 5px 0 var(--comic-ink);
+
+    .sticker__icon { border-color: var(--comic-ink); background: var(--color-success); color: var(--comic-ink); border-radius: 7px; }
+    .sticker__state { color: var(--color-accent); font-weight: 700; }
+    .sticker__corner { background: var(--color-accent); }
+}
+@media (hover: hover) {
+    .sticker:hover:not(:disabled) { transform: translateY(-3px) rotate(-1deg); background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface-2)); }
+}
+.sticker:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 4px; }
+.sticker:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--comic-ink); }
+.sticker:disabled { opacity: .6; cursor: wait; }
+@media (max-width: 480px) {
+    .stickers__options { gap: 12px; }
+    .sticker { flex: 1 1 145px; min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .sticker { transition: none; }
+    .sticker:hover:not(:disabled) { transform: none; }
+}
+@media (forced-colors: active) {
+    .sticker--selected { border: 3px solid Highlight; }
+    .sticker:focus-visible { outline-color: Highlight; }
+}
+
+.stickers__empty { margin: 0; color: var(--color-text-muted); font-size: 13px; }
