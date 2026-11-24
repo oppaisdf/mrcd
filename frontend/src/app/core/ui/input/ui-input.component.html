@@ -5,8 +5,16 @@
             [class.is-invalid]="hint()" [attr.aria-invalid]="hint() ? true : null"
             [attr.aria-describedby]="hint() ? id + '-hint' : null" [value]="value()" [disabled]="disabled()" (blur)="onTouched()"
             (input)="onInput($event)" [attr.max]="max()" [attr.min]="min()">
-        @if(hint()){
-        <small class="ui-help is-danger" [id]="id + '-hint'">{{hint()}}</small>
-        }
+        <div class="validation-feedback" aria-live="polite" aria-atomic="true">
+            @if (hint()) {
+            <div class="validation-bubble" [id]="id + '-hint'">
+                <span class="validation-bubble__icon" aria-hidden="true">!</span>
+                <div class="validation-bubble__copy">
+                    <strong class="validation-bubble__title">Revisa este campo</strong>
+                    <p class="validation-bubble__message">{{ hint() }}</p>
+                </div>
+            </div>
+            }
+        </div>
     </div>
 </div>

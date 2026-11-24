@@ -1,0 +1,67 @@
+:host { display: block; min-width: 0; }
+
+.validation-feedback { min-width: 0; }
+.validation-feedback:empty { display: none; }
+
+.validation-bubble {
+    --bubble-bg: color-mix(in srgb, var(--color-danger) 12%, var(--comic-panel));
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+    margin: 12px 5px 5px 0;
+    padding: 14px 16px;
+    border: 2px solid var(--comic-ink);
+    border-radius: 9px;
+    background: var(--bubble-bg);
+    box-shadow: 4px 4px 0 var(--comic-ink);
+    color: var(--color-text);
+    transform-origin: 32px top;
+    animation: validation-bubble-in 220ms var(--ease-out) both;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 24px;
+        width: 17px;
+        height: 17px;
+        background: var(--bubble-bg);
+        border-left: 2px solid var(--comic-ink);
+        border-top: 2px solid var(--comic-ink);
+        transform: rotate(45deg);
+        pointer-events: none;
+    }
+}
+
+.validation-bubble__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 23px;
+    height: 23px;
+    margin-top: 1px;
+    border: 2px solid var(--comic-ink);
+    border-radius: 5px;
+    background: var(--color-danger);
+    color: var(--color-danger-contrast);
+    transform: rotate(-7deg);
+    font: 800 16px/1 var(--font-display);
+}
+.validation-bubble__copy { min-width: 0; overflow-wrap: anywhere; }
+.validation-bubble__title { display: block; color: var(--color-danger); font: 700 12px/1.5 var(--font-display); }
+.validation-bubble__message { margin: 3px 0 0; font: 400 12px/1.6 var(--font-sans); white-space: pre-line; }
+
+@media (forced-colors: active) {
+    .validation-bubble { border-color: CanvasText; }
+    .validation-bubble::after { border-color: CanvasText; }
+}
+
+@keyframes validation-bubble-in {
+    from { opacity: 0; transform: translateY(5px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .validation-bubble { animation: none; }
+}
