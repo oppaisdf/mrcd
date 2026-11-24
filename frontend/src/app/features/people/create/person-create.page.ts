@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { UiStickersComponent } from '../../../core/ui/stickers/ui-stickers.component';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { PersonFormComponent } from "../form/person-form.component";
 import { PersonVM } from '../vms/person.vm';
 import { CreatePersonRequest } from '../requests/create-person.request';
@@ -14,7 +15,8 @@ import { AssignedBaseEntityResponse } from '../../../shared/baseEntities/reponse
   selector: 'person-create.page',
   imports: [
     PersonFormComponent,
-    AddSimpleParentComponent
+    AddSimpleParentComponent,
+    UiStickersComponent
   ],
   templateUrl: './person-create.page.html',
   styleUrl: './person-create.page.scss',
@@ -32,6 +34,15 @@ export class PersonCreatePage implements OnInit {
 
   private readonly _parents = signal<Array<CreateSimpleParentRequest>>([]);
   readonly sacraments = signal<Array<AssignedBaseEntityResponse>>([]);
+  readonly loading = this._alert.loading;
+  readonly sacramentStickers = computed(() =>
+    this.sacraments()
+      .map(item => ({
+        id: item.id,
+        name: item.name,
+        selected: item.hasAssociation
+      }))
+  );
   get parents() { return this._parents(); }
   set parents(value) { this._parents.set(value); }
 
@@ -97,10 +108,11 @@ export class PersonCreatePage implements OnInit {
   assignSacrament(
     sacramentId: string
   ) {
-    const sacraments = this.sacraments();
-    const sacrament = sacraments.find(s => s.id === sacramentId);
-    if (!sacrament) return;
-    sacrament.hasAssociation = !sacrament.hasAssociation;
-    this.sacraments.set(sacraments);
+    if (this.loading()) return;
+    this.sacraments.update(items => items.map(item =>
+      item.id === sacramentId
+        ? { ...item, hasAssociation: !item.hasAssociation }
+        : item
+    ));
   }
 }
