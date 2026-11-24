@@ -1,4 +1,5 @@
-import { Component, inject, input, model } from '@angular/core';
+import { Component, computed, inject, input, model } from '@angular/core';
+import { UiStickersComponent } from '../../../core/ui/stickers/ui-stickers.component';
 import { AccordeonComponent } from "../../../core/ui/accordeon/accordeon.component";
 import { AssignedBaseEntityResponse } from '../reponses/Assigned-BaseEntity.response';
 import { AlertService } from '../../alerts/services/alert.service';
@@ -6,7 +7,7 @@ import { BaseEntitiesService } from '../services/base-entities.service';
 
 @Component({
   selector: 'shared-assign-base-entity',
-  imports: [AccordeonComponent],
+  imports: [AccordeonComponent, UiStickersComponent],
   templateUrl: './assign-base-entity.component.html',
   styleUrl: './assign-base-entity.component.scss',
 })
@@ -17,6 +18,16 @@ export class AssignBaseEntityComponent {
   endpoint = input.required<string>();
   personId = input.required<string>();
   items = model.required<Array<AssignedBaseEntityResponse>>();
+
+  readonly loading = this._alert.loading;
+  readonly stickers = computed(() =>
+    this.items()
+      .map(item => ({
+        id: item.id,
+        name: item.name,
+        selected: item.hasAssociation
+      }))
+  );
 
   async assignAsync(
     id: string
@@ -30,7 +41,7 @@ export class AssignBaseEntityComponent {
       : '';
 
     this._alert.confirm(
-      `¿Deasea ${prefix}asignar el ${this.title()} al confirmando?`,
+      `¿Deseas ${item.hasAssociation ? 'quitar' : 'asociar'} «${item.name}» ${item.hasAssociation ? 'del' : 'al'} confirmando?`,
       () => this.saveAsync(item, items, prefix)
     );
   }

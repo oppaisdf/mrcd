@@ -1,29 +1,7 @@
-@let _items = items();
-
-@if (_items.length > 0) {
+@if (items().length > 0) {
 <ui-accordeon [title]="title()">
-    <div class="ui-table wrap">
-        <table class="ui-table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (item of _items; track item.id) {
-                <tr>
-                    <td>{{item.name}}</td>
-                    <td>
-                        <button class="ui-button" [class.is-danger]="item.hasAssociation"
-                            (click)="assignAsync(item.id)">
-                            @if (item.hasAssociation) {Remover}@else {Asignar}
-                        </button>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    <ui-stickers [label]="title()" [items]="stickers()" [disabled]="loading()"
+        description="Elige una pegatina para asociarla o quitarla." selectedLabel="Asociado · Quitar"
+        unselectedLabel="Disponible · Asociar" (itemToggle)="assignAsync($event)" />
 </ui-accordeon>
 }
